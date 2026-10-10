@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+.env*.local
+/media
+*.tsbuildinfo
+next-env.d.ts
+.postgres-data
+.next-dev

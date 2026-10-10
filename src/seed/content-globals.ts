@@ -1,0 +1,240 @@
+import type { Payload } from 'payload'
+import { L } from './l10n'
+import { image, md } from './helpers'
+
+const FORM18 = 'https://form18.rohandeshmukh.in/'
+const REGISTER = 'https://register.rohandeshmukh.in/'
+
+export const settings = (p: Payload) => ({
+  siteName: L('रोहन सुभाष देशमुख', 'Rohan Subhash Deshmukh'),
+  tagline: L('सोलापूरच्या मातीने घडवलेलं व्यक्तिमत्त्व, संस्कारांनी दिलेली दिशा आणि समाजासाठीची बांधिलकी.', 'Shaped by the soil of Solapur, guided by values, committed to society.'),
+  logoLight: image(p, '/images/brand/logo-light.webp', 'रोहन सुभाष देशमुख'),
+  defaultShareImage: image(p, '/images/og-default.webp', 'रोहन सुभाष देशमुख'),
+  phone: '+91 8208737624',
+  email: 'connect@rohandeshmukh.in',
+  address: L('सोलापूर, महाराष्ट्र', 'Solapur, Maharashtra'),
+  whatsappNumber: '918208737624',
+  social: {
+    facebook: 'https://www.facebook.com/rohandeshmukh.official/',
+    instagram: 'https://www.instagram.com/rohan1942',
+    twitter: 'https://twitter.com/rohandeshmukhh',
+    youtube: 'https://youtube.com/@rd.connects',
+    linkedin: 'https://www.linkedin.com/in/rohan-deshmukh-politician',
+  },
+  ctaLabel: L('मतदार नोंदणी', 'Voter Registration'),
+  ctaUrl: FORM18,
+  connectTagLabel: '#ConnectWithRohan',
+  connectTagUrl: '/grievance',
+  appealHeading: L('चांगल्या महाराष्ट्राच्या उभारणीसाठी आम्हाला साथ द्या', 'Join us in building a better Maharashtra'),
+  appealButtonLabel: L('हो! मी तयार आहे!!!', 'YES! I AM IN!!!'),
+  appealButtonUrl: REGISTER,
+  formNotifyEmails: ['connect@rohandeshmukh.in'],
+  formConsentText: L('मी माझी माहिती संपर्कासाठी वापरण्यास संमती देतो/देते.', 'I consent to my details being used to contact me.'),
+})
+
+const n = (mr: string, en: string, url?: string, children?: unknown[], newTab = false) => ({ label: L(mr, en), url, newTab, children })
+/** level-3 items are stored as `subItems` */
+const n2 = (mr: string, en: string, url: string | undefined, sub: unknown[]) => ({ label: L(mr, en), url, subItems: sub })
+
+export const header = () => ({
+  nav: [
+    n('मुख्य पृष्ठ', 'Home', '/'),
+    n('परिचय', 'About', '/about/biography', [
+      n('जीवनचरित्र', 'Biography', '/about/biography'),
+      n('पुरस्कार व सन्मान', 'Achievements & Awards', '/about/achievements'),
+      n('विचार', 'Thoughts / Quotes', '/about/thoughts'),
+      n('मान्यवरांच्या भेटी', 'Meetings with Leaders', '/about/leaders'),
+      n('पक्ष व संघटन', 'Party & Organisation', '/about/party-organisation'),
+    ]),
+    n('लोकमंगल', 'Lokmangal', '/social-work', [
+      n2('संस्था', 'Organisations', undefined, [
+        n('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'),
+        n('लोकमंगल परिवार', 'Lokmangal Parivar', '/lokmangal/parivar'),
+        n('विश्वमंगल', 'Vishwamangal', '/lokmangal/vishwamangal'),
+      ]),
+      n2('सामाजिक कार्य', 'Social Work', '/social-work', [
+        n('सर्व उपक्रम', 'All initiatives', '/social-work'),
+        n('लोकमंगल अन्नपूर्णा योजना', 'Annapurna Yojana', '/social-work/annapurna-yojana'),
+        n('लोटस', 'LOTUS', '/social-work/lotus'),
+        n('जलसंधारण प्रकल्प', 'Water Conservation', '/social-work/jalsandharan'),
+      ]),
+      n2('कार्यक्रम', 'Events', undefined, [
+        n('सामुदायिक विवाह सोहळा', 'Community Weddings', '/events/samudayik-vivah-sohala'),
+        n('फोटो संग्रह', 'Photo Gallery', '/media/photos'),
+      ]),
+    ]),
+    n('पुणे पदवीधर मतदारसंघ', 'Graduate Constituency', '/pune-graduate-constituency'),
+    n('राजकीय कारकीर्द', 'Political Career', '/political-career'),
+    n('मीडिया', 'Media', '/media/photos', [
+      n('फोटो संग्रह', 'Photo Gallery', '/media/photos'),
+      n('व्हिडिओ संग्रह', 'Video Gallery', '/media/videos'),
+      n('अधिकृत फोटो डाउनलोड', 'Download Photos', '/media/downloads'),
+      n('ब्लॉग', 'Blog', '/blog'),
+    ]),
+    n('संपर्क', 'Connect', '/contact', [
+      n('व्हिजन', 'Vision', '/vision'),
+      n('आवाहन', 'Appeal', '/appeal'),
+      n('संपर्क', 'Contact', '/contact'),
+      n('तक्रार / सूचना', 'Grievance / Suggestion', '/grievance'),
+      n('करिअर / स्वयंसेवक', 'Careers / Volunteer', '/careers'),
+      n('मतदार नोंदणी (Form 18)', 'Voter Registration (Form 18)', FORM18, undefined, true),
+    ]),
+  ],
+})
+
+const lk = (mr: string, en: string, url: string) => ({ label: L(mr, en), url })
+
+export const footer = () => ({
+  columns: [
+    { title: L('महत्त्वाचे दुवे', 'Quick links'), links: [lk('मुख्य पृष्ठ', 'Home', '/'), lk('पुणे पदवीधर मतदारसंघ', 'Pune Graduate Constituency', '/pune-graduate-constituency'), lk('राजकीय कारकीर्द', 'Political Career', '/political-career'), lk('व्हिजन', 'Vision', '/vision'), lk('आवाहन', 'Appeal', '/appeal'), lk('ब्लॉग', 'Blog', '/blog')] },
+    { title: L('परिचय', 'About'), links: [lk('जीवनचरित्र', 'Biography', '/about/biography'), lk('पुरस्कार व सन्मान', 'Awards', '/about/achievements'), lk('विचार', 'Thoughts', '/about/thoughts'), lk('फोटो संग्रह', 'Photo Gallery', '/media/photos'), lk('संपर्क', 'Contact', '/contact'), lk('तक्रार / सूचना', 'Grievance', '/grievance')] },
+    { title: L('सामाजिक उपक्रम', 'Social initiatives'), links: [lk('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'), lk('अन्नपूर्णा योजना', 'Annapurna Yojana', '/social-work/annapurna-yojana'), lk('लोटस', 'LOTUS', '/social-work/lotus'), lk('सामुदायिक विवाह', 'Community Weddings', '/social-work/samudayik-vivah'), lk('जलसंधारण', 'Water Conservation', '/social-work/jalsandharan'), lk('सर्व उपक्रम', 'All initiatives', '/social-work')] },
+  ],
+  legalLinks: [lk('गोपनीयता धोरण', 'Privacy Policy', '/privacy-policy'), lk('अटी व शर्ती', 'Terms & Conditions', '/terms'), lk('अस्वीकरण', 'Disclaimer', '/disclaimer')],
+  copyright: L('© २०२६. सर्व हक्क राखीव — रोहन देशमुख', '© 2026. All Rights Reserved by Rohan Deshmukh'),
+})
+
+const ans = (p: Payload, mr: string, en: string) => L(md(p, mr), md(p, en))
+
+export const FAQ: [string, string, string, string][] = [
+  ['पुणे पदवीधर मतदारसंघ म्हणजे काय?', 'हा महाराष्ट्र विधान परिषद (Vidhan Parishad) मधील एक मतदारसंघ आहे, जो फक्त नोंदणीकृत पदवीधर मतदारांसाठी राखीव आहे.', 'What is the Pune Graduate Constituency?', 'It is a Legislative Council (Vidhan Parishad) seat in Maharashtra, reserved exclusively for graduates who are registered voters in this constituency.'],
+  ['पुणे पदवीधर मतदारसंघाच्या निवडणुकीत कोण मतदान करू शकतो?', 'खालील अटी पूर्ण करणारा कोणताही भारतीय नागरिक मतदान करू शकतो:\n\n- तो मतदारसंघातील कायम रहिवासी असावा.\n- त्याच्याकडे मान्यताप्राप्त विद्यापीठाची 3 वर्षे किंवा त्यापेक्षा अधिक कालावधीची पदवी/डिप्लोमा असावा.\n- 2022 पूर्वी पदवी घेतलेली असावी (2026 च्या निवडणुकीसाठी).\n- त्याने पदवीधर मतदार म्हणून नोंदणी केलेली असावी.', 'Who can vote in the Pune Graduate Constituency election?', 'Any Indian citizen who:\n\n- Is a permanent resident of the constituency.\n- Has a degree/diploma (3 years or more) from a recognized university.\n- Graduated before 2022 (for the upcoming 2026 election).\n- Has registered as a Graduate Voter.'],
+  ['पुणे पदवीधर मतदारसंघात कोणते जिल्हे येतात?', 'या मतदारसंघात खालील पाच जिल्हे समाविष्ट आहेत:\n\nपुणे, कोल्हापूर, सोलापूर, सांगली आणि सातारा.', 'Which areas are covered under the Pune Graduate Constituency?', 'It includes five districts:\n\nPune, Kolhapur, Solapur, Sangli, and Satara.'],
+  ['या मतदारसंघाची निवडणूक किती वर्षांनी होते?', 'प्रत्येक 6 वर्षांनी निवडणूक घेतली जाते, किंवा गरज असल्यास पोटनिवडणूक घेतली जाते.', 'How often are elections held for this constituency?', 'Every 6 years, unless a by-election is required.'],
+  ['पदवीधर मतदार म्हणून नोंदणी कशी करावी?', 'Form 18 (Graduate Constituency Voter Registration Form) भरून नोंदणी करता येते.\n\nहा फॉर्म महाराष्ट्र निवडणूक आयोगाच्या (CEO Maharashtra) वेबसाइटवर किंवा निवडणूक कार्यालयात उपलब्ध असतो.', 'How can I register as a voter for the Pune Graduate Constituency?', 'By filling out Form 18 (Graduate Constituency Voter Registration Form).\n\nThe form is available on the CEO Maharashtra website or at the Election Office.'],
+  ['नोंदणीसाठी कोणती कागदपत्रे आवश्यक आहेत?', 'आपल्याला खालील कागदपत्रे द्यावी लागतील:\n\n- पदवी/डिप्लोमा प्रमाणपत्राची छायांकित प्रत\n- राहत्या पत्त्याचा पुरावा (आधार, मतदार ओळखपत्र, वीज बिल इ.)\n- पासपोर्ट आकाराचा फोटो', 'What documents are required to register?', 'You’ll need:\n\n- A copy of your Degree/Diploma certificate\n- Proof of residence (Aadhaar, Voter ID, electricity bill, etc.)\n- Passport-size photograph'],
+  ['पदव्युत्तर (Postgraduate) किंवा डॉक्टरेट (PhD) धारक नोंदणी करू शकतात का?', 'कोणत्याही मान्यताप्राप्त पदवी किंवा त्यापेक्षा उच्च पदवी असलेले नागरिक पात्र आहेत.', 'Can postgraduate or doctorate holders also register?', 'Yes. Anyone with a recognized graduate or higher degree is eligible.'],
+  ['पदवीधर मतदारांना वेगळे मतदार ओळखपत्र मिळते का?', 'नाही. आपले विद्यमान EPIC (Election Photo ID Card) वापरले जाते.\n\nपरंतु, आपले नाव स्वतंत्र Graduate Electoral Roll मध्ये नोंदवले जाते.', 'Do graduate voters get a separate voter ID card?', 'No. You use the same EPIC (Election Photo ID Card).\n\nHowever, your name is separately entered in the Graduate Electoral Roll.'],
+  ['मतदान कुठे केले जाते?', 'मतदान पाचही जिल्ह्यांतील निर्धारित मतदान केंद्रांवर केले जाते.\n\nमतदान केंद्रांची माहिती निवडणूक आयोगाद्वारे आधीच प्रसिद्ध केली जाते.', 'Where will voting take place?', 'At designated polling booths across all five districts.\n\nBooth details will be notified in advance by the Election Commission.'],
+  ['जर माझे नाव सर्वसाधारण मतदार यादीत असेल पण पदवीधर मतदार यादीत नसेल, तर मी मतदान करू शकतो का?', 'नाही. फक्त पदवीधर मतदार यादीत नाव असलेल्या व्यक्तीलाच या निवडणुकीत मतदानाचा अधिकार आहे.', 'Can I vote if I am not on the Graduate Voter List but on the General Voter List?', 'No. Only voters whose names are on the Graduate Electoral Roll can vote in this election.'],
+  ['NOTA (None of the Above) पर्याय उपलब्ध आहे का?', 'होय, इतर निवडणुकांप्रमाणे NOTA पर्याय उपलब्ध आहे.', 'Is there a NOTA (None of the Above) option?', 'Yes, NOTA is available just like in other elections.'],
+  ['ही निवडणूक सामान्य विधानसभेच्या निवडणुकीपेक्षा कशी वेगळी आहे?', '**विधानसभा निवडणूक** — सर्व 18 वर्षांवरील नागरिकांवर आधारित, सामान्य मतदार यादी, प्रत्येक 5 वर्षांनी निवडणूक.\n\n**पदवीधर मतदारसंघ निवडणूक** — फक्त नोंदणीकृत पदवीधरांवर आधारित, पदवीधर मतदार यादी, प्रत्येक 6 वर्षांनी निवडणूक.', 'How is this election different from a normal Vidhan Sabha election?', '**Vidhan Sabha Election** — based on all citizens aged 18+, general voter list, conducted every 5 years.\n\n**Graduate Constituency Election** — based only on registered graduates, Graduate Electoral Roll, conducted every 6 years.'],
+  ['महाराष्ट्रात अशा किती पदवीधर मतदारसंघ आहेत?', 'महाराष्ट्रात एकूण 7 पदवीधर मतदारसंघ आहेत:\n\nपुणे, मुंबई, नाशिक, औरंगाबाद, अमरावती, नागपूर आणि कोकण.', 'How many Graduate Constituencies are there in Maharashtra?', 'There are 7 Graduate Constituencies:\n\nPune, Mumbai, Nashik, Aurangabad, Amravati, Nagpur, and Konkan.'],
+  ['ताज्या सूचना आणि अद्ययावत माहिती कुठे मिळेल?', 'खालील संकेतस्थळांवर भेट द्या:\n\n- मुख्य निवडणूक अधिकारी, महाराष्ट्र (CEO Maharashtra) — [Website](https://ceoelection.maharashtra.gov.in/ceo/)\n- भारत निवडणूक आयोग (Election Commission of India) — [Website](https://www.eci.gov.in/)', 'Where can I find the latest notifications and updates?', 'Visit:\n\n- CEO Maharashtra — [Website](https://ceoelection.maharashtra.gov.in/ceo/)\n- Election Commission of India — [Website](https://www.eci.gov.in/)'],
+]
+
+export const faqItems = (p: Payload, count = FAQ.length) =>
+  FAQ.slice(0, count).map(([qmr, amr, qen, aen]) => ({ question: L(qmr, qen), answer: ans(p, amr, aen) }))
+
+export const FAMILY = [
+  {
+    img: '/images/about/family-suresh-deshmukh.webp', relation: L('आजोबा', 'Grandfather'), name: L('कै. सुरेश्चंद्र केशवराव देशमुख', 'Late Sureshchandra Keshavrao Deshmukh'),
+    text: L(
+      'आजोबा व्यवसायाने शिक्षक होते आणि निवृत्तीनंतर त्यांनी आपले जीवन अध्यात्माला वाहून घेतले. पंढरपूरची वारी करणे, नामस्मरण करणे, भजन-कीर्तनात सहभागी होणे हा त्यांच्या दैनंदिन जीवनाचा भाग होता. शिक्षक असल्यामुळे मुलांमध्ये चांगले संस्कार आणि योग्य मूल्ये रुजवण्याला त्यांनी नेहमी महत्त्व दिले.\n\nनिवृत्तीनंतर त्यांनी आपला बराच वेळ अध्यात्माचा प्रसार आणि समाजातील विद्यार्थ्यांसाठी काम करण्यासाठी देण्यास सुरुवात केली. येडशी, जि. उस्मानाबाद येथे त्यांनी गुरुकुल सुरू केले. या गुरुकुलाच्या माध्यमातून विद्यार्थ्यांना शिक्षणासोबत चांगले संस्कार आणि जीवनमूल्ये देण्याचे काम त्यांनी केले. विद्यार्थ्यांचे भविष्य घडवण्याचे हे काम त्यांनी मनापासून केले.\n\nआजोबांच्या निधनानंतरही हे गुरुकुल त्याच विचाराने आणि प्रामाणिकपणे सुरू आहे. विद्यार्थ्यांना चांगले शिक्षण, संस्कार आणि योग्य दिशा देण्याचे काम आजही येथे केले जाते.',
+      'My grandfather was a teacher by profession and, after retirement, devoted his life to spirituality — the Pandharpur wari, naamsmaran and bhajan-kirtan were part of his daily life. As a teacher he always stressed instilling good values in children.\n\nAfter retirement he founded a gurukul at Yedshi, Osmanabad district, giving students education along with values and life skills.\n\nEven after his passing, the gurukul continues in the same spirit, guiding students with education, values and direction.',
+    ),
+  },
+  {
+    img: '/images/about/family-subhash-deshmukh.webp', relation: L('वडिल', 'Father'), name: L('सुभाष सुरेश्चंद्र देशमुख', 'Subhash Sureshchandra Deshmukh'),
+    text: L(
+      'माझे वडील सुभाष देशमुख उर्फ बापूसाहेब हे लोकमंगल समूहाचे संस्थापक अध्यक्ष आहेत. त्यांनी व्यवसायाच्या माध्यमातून अनेक लोकांना रोजगाराच्या संधी उपलब्ध करून दिल्या. लोकमंगल सहकारी बँक, लोकमंगल साखर कारखाना, प्रिंटिंग व्यवसाय, कुक्कुटपालन, शॉपिंग सेंटर, मसाले उद्योग तसेच शेतीशी संबंधित अनेक व्यवसाय लोकमंगल समूहाच्या माध्यमातून सुरू झाले.\n\nया विविध व्यवसायांमुळे हजारो लोकांना रोजगार मिळाला. शेतकरी, कामगार, छोटे व्यावसायिक आणि ग्रामीण भागातील अनेक लोकांना या व्यवसायांचा फायदा झाला.\n\nव्यवसायासोबतच माझ्या वडिलांनी सामाजिक आणि सार्वजनिक जीवनातही काम केले. विधानसभा आणि लोकसभेचे लोकप्रतिनिधी म्हणून काम करताना त्यांनी शेतकरी, कष्टकरी, शेतमजूर, बेरोजगार तरुण, महिला आणि समाजातील इतर घटकांच्या प्रश्नांवर काम केले. व्यवसाय, समाजसेवा आणि सार्वजनिक जीवन या तिन्ही क्षेत्रांत काम करत त्यांनी लोकमंगल समूहाचा विस्तार केला.',
+      'My father, Subhash Deshmukh alias Bapusaheb, is the founder-chairman of the Lokmangal Group. Through enterprise he created jobs for many — a cooperative bank, a sugar factory, printing, poultry, a shopping centre, spices and many agriculture-linked businesses.\n\nThese ventures gave employment to thousands — farmers, workers, small traders and rural families.\n\nAlongside business he served in public life as a representative in the Legislative Assembly and the Lok Sabha, working on the issues of farmers, labourers, unemployed youth and women.',
+    ),
+  },
+  {
+    img: '/images/about/family-manish-deshmukh.webp', relation: L('भाऊ', 'Brother'), name: L('मनीष देशमुख', 'Manish Deshmukh'),
+    text: L(
+      'माझे लहान भाऊ, लोकमंगल पतसंस्थेचे अध्यक्ष मनीष देशमुख हे लोकमंगल बायोटेकचे चेअरमन तसेच लोकमंगल फाऊंडेशनचे उपाध्यक्ष आहेत. याव्यतिरिक्त, ते सोलापूर कृषी उत्पन्न बाजार समितीचे संचालक असून लोकमंगल प्रिंट एन पॅकच्या दोन युनिट्सच्या उद्योगांची जबाबदारीदेखील त्यांच्यावर आहे.',
+      'My younger brother Manish Deshmukh, president of Lokmangal Patsanstha, is chairman of Lokmangal Biotech and vice-president of Lokmangal Foundation. He is also a director of the Solapur APMC and oversees two units of Lokmangal Print n Pack.',
+    ),
+  },
+]
+
+export const home = (p: Payload) => {
+  const g = (s: string) => image(p, `/images/gallery/${s}.webp`)
+  return {
+    sections: [
+      {
+        blockType: 'heroSlider', autoplaySeconds: 6,
+        slides: [
+          { image: image(p, '/images/gallery/prachar-sabha-03.webp', 'रोहन सुभाष देशमुख'), heading: L('मी रोहन सुभाष देशमुख', 'I am Rohan Subhash Deshmukh'), subheading: L('सोलापूरच्या मातीने घडवलेलं व्यक्तिमत्त्व, संस्कारांनी दिलेली दिशा आणि समाजासाठीची बांधिलकी.', 'Shaped by the soil of Solapur, guided by values, committed to society.'), buttons: [{ label: L('मतदार नोंदणी', 'Voter Registration'), url: FORM18 }, { label: L('अधिक वाचा', 'Read more'), url: '/about/biography' }] },
+          { image: image(p, '/images/home/hero-01.webp', 'समाजात बदल घडवण्यासाठी केलेला छोटासा प्रयत्नही खूप मोठा असतो'), heading: L('समाजात बदल घडवण्यासाठी केलेला छोटासा प्रयत्नही खूप मोठा असतो', 'Even a small effort to change society is a big one'), subheading: L('लोकमंगल फाऊंडेशनच्या माध्यमातून ग्रामीण समाजाच्या उन्नतीसाठी काम.', 'Working for rural upliftment through Lokmangal Foundation.'), buttons: [{ label: L('सामाजिक कार्य', 'Social work'), url: '/social-work' }] },
+          { image: image(p, '/images/home/hero-02.webp', 'संयम, सातत्य आणि परिश्रम'), heading: L('संयम, सातत्य आणि परिश्रम', 'Patience, consistency and hard work'), subheading: L('शिक्षण, आरोग्य, पाणी आणि रोजगार — प्रत्येक घटकापर्यंत पोहोचणारे काम.', 'Education, health, water and jobs — work that reaches everyone.'), buttons: [{ label: L('राजकीय कारकीर्द', 'Political career'), url: '/political-career' }] },
+          { image: image(p, '/images/home/hero-03.webp', 'उत्तम शासकाचा जन्म हा तळागाळातल्या जनतेच्या समस्या आणि गरजा जाणून होतो'), heading: L('उत्तम शासकाचा जन्म हा तळागाळातल्या जनतेच्या समस्या आणि गरजा जाणून होतो', 'A good leader is born by understanding the needs of people at the grassroots'), buttons: [{ label: L('व्हिजन', 'Vision'), url: '/vision' }] },
+        ],
+        badge: [{ value: '३,२२१+', label: L('विवाहित जोडपी', 'Couples married') }],
+      },
+      {
+        blockType: 'quickLinks',
+        items: [
+          { icon: 'vote', label: L('मतदार नोंदणी (Form 18)', 'Voter Registration'), url: FORM18, newTab: true },
+          { icon: 'heart', label: L('सामाजिक उपक्रम', 'Initiatives'), url: '/social-work' },
+          { icon: 'book', label: L('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto'), url: '/vision' },
+          { icon: 'camera', label: L('फोटो संग्रह', 'Photo Gallery'), url: '/media/photos' },
+          { icon: 'pen', label: L('तक्रार / सूचना', 'Grievance'), url: '/grievance' },
+          { icon: 'phone', label: L('संपर्क', 'Contact'), url: '/contact' },
+        ],
+      },
+      {
+        blockType: 'aboutIntro', eyebrow: L('परिचय', 'About'), heading: L('मी रोहन सुभाष देशमुख', 'I am Rohan Subhash Deshmukh'),
+        image: image(p, '/images/about/portrait-solapur.webp', 'रोहन सुभाष देशमुख'),
+        text: L('नव्या विचारांकडे सकारात्मकतेने पाहणारा, नव्या ऊर्जेसह काहीतरी वेगळं करण्याची इच्छा बाळगणारा आणि समाजासाठी आपल्या परीने योगदान देण्याची जिद्द मनात ठेवून पुढे जाणारा एक तरुण.', 'A young man who looks at new ideas positively, wants to do something different with fresh energy, and is determined to contribute to society in his own way.'),
+        pledge: L('सुरुवात आपल्या विचारातून, चांगल्या हेतूतून आणि त्या हेतूला कृतीची जोड देण्यापासूनच झाली पाहिजे.', 'Change must begin with our own thinking, good intent — and turning that intent into action.'),
+        stats: [{ value: '३,०००+', label: L('सामुदायिक विवाह आयोजित', 'Community weddings organised') }, { value: '४', label: L('प्रत्यक्ष चालवलेल्या संस्था', 'Institutions led') }, { value: '५५०', label: L('रोज जेवणाचे डबे', 'Meals delivered daily') }],
+        buttonLabel: L('अधिक वाचा', 'Read more'), buttonUrl: '/about/biography',
+      },
+      {
+        blockType: 'biography', eyebrow: L('जीवनचरित्र', 'Biography'), heading: L('श्री. रोहन सुभाष देशमुख यांचे जीवनचरित्र', 'The life of Shri. Rohan Subhash Deshmukh'),
+        intro: L('उत्तम शासकाचा जन्म हा तळागाळातल्या जनतेच्या समस्या आणि गरजा जाणून होतो.', 'A good leader is born by understanding the problems and needs of people at the grassroots.'),
+        image: image(p, '/images/blog/author-02.webp', 'रोहन सुभाष देशमुख'),
+        items: [
+          { title: L('कौटुंबिक पार्श्वभूमी', 'Family background'), text: L('सोलापूर, मराठवाड्यासह संपूर्ण महाराष्ट्राला परिचित असलेल्या परिवारात रोहन यांचा जन्म. या परिवाराला अध्यात्माचा गंध लाभला.', 'Born into a family known across Solapur, Marathwada and Maharashtra, rooted in spirituality.'), url: '/about/biography' },
+          { title: L('सामाजिक उपक्रम', 'Social initiatives'), text: L('लोकमंगल मल्टीस्टेटच्या माध्यमातून आतापर्यंत उद्योजकांना पाच कोटी रुपयांचे अर्थसहाय्य.', 'Rs 5 crore in financial support to entrepreneurs through Lokmangal Multistate.'), url: '/social-work' },
+          { title: L('सामाजिक कारकीर्द', 'Social career'), text: L('लोकमंगल फाउंडेशन या संस्थेच्या माध्यमातून विविध सामाजिक उपक्रम राबविले जातात.', 'Many social initiatives run through Lokmangal Foundation.'), url: '/lokmangal/foundation' },
+        ],
+      },
+      {
+        blockType: 'workHighlights', eyebrow: L('विकास कार्य', 'Work'), heading: L('समाजात बदल घडवण्यासाठी केलेला छोटासा प्रयत्नही खूप मोठा असतो', 'Even a small effort to change society is a big one'),
+        items: [
+          { image: image(p, '/images/home/work-yuva-morcha.webp', 'भारतीय जनता युवा मोर्चा'), title: L('भारतीय जनता युवा मोर्चा', 'Bharatiya Janata Yuva Morcha'), text: L('भारतीय जनता युवा मोर्चाचे सरचिटणीस म्हणून उल्लेखनीय काम. संपूर्ण महाराष्ट्रात प्रवास, विविध सामाजिक समस्यांसाठी राजकीय पातळीवर आंदोलने.', 'Notable work as General Secretary of BJYM — travelling across Maharashtra and leading agitations on social issues.'), url: '/political-career' },
+          { image: image(p, '/images/home/work-vivekanand-yatra.webp', 'स्वामी विवेकानंद विचार यात्रा'), title: L('स्वामी विवेकानंद विचार यात्रा', 'Swami Vivekananda Vichar Yatra'), text: L('तुळजापूर - उमरगा - लोहारा - वाशी - भूम - परांडा - बार्शी - उस्मानाबाद', 'Tuljapur – Umarga – Lohara – Washi – Bhoom – Paranda – Barshi – Osmanabad'), url: '/political-career' },
+          { image: image(p, '/images/vision/book.webp', 'न्यू इंडिया मॅनिफेस्टो'), title: L('न्यू इंडिया मॅनिफेस्टो', 'The New India Manifesto'), text: L('‘न्यू इंडिया मॅनिफेस्टो’ हे पुस्तक मी लिहिलं आहे.', 'I have written the book ‘The New India Manifesto’.'), url: '/vision' },
+          { image: g('tuljapur-sabha-03'), title: L('पुणे पदवीधर मतदारसंघ', 'Pune Graduate Constituency'), text: L('Graduate Constituency Election 2026 — पुणे, कोल्हापूर, सोलापूर, सांगली आणि सातारा.', 'Graduate Constituency Election 2026 — Pune, Kolhapur, Solapur, Sangli and Satara.'), url: '/pune-graduate-constituency' },
+        ],
+      },
+      {
+        blockType: 'initiativesShowcase', eyebrow: L('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation'), heading: L('लोकमंगल फाऊंडेशनचे उपक्रम', 'Lokmangal Foundation initiatives'),
+        intro: L('लोकमंगल फाऊंडेशन ग्रामीण समाजाच्या उन्नतीसाठी काम करते. आम्ही त्यांचे जीवन सुधारण्याचा प्रयत्न करतो.', 'Lokmangal Foundation works for the upliftment of rural communities and to improve their lives.'),
+      },
+      {
+        blockType: 'featuredVideo', eyebrow: L('व्हिडिओ', 'Video'), heading: L('लोकमंगल अन्नपूर्णा योजना — एक डबा, माणुसकीचा हात', 'Annapurna Yojana — a tiffin carried with care'),
+        youtubeUrl: 'https://www.youtube.com/watch?v=xqe6JKzo11I',
+        text: L('दररोज ५०० ते ५५० निराधार ज्येष्ठ नागरिकांपर्यंत दोन वेळचं जेवण.', 'Two meals a day for 500–550 destitute senior citizens, every day.'),
+        links: [
+          { label: L('व्हिडिओ संग्रह', 'Video Gallery'), description: L('सर्व व्हिडिओ पहा', 'Watch all videos'), url: '/media/videos' },
+          { label: L('YouTube चॅनेल', 'YouTube channel'), description: L('@rd.connects', '@rd.connects'), url: 'https://youtube.com/@rd.connects', newTab: true },
+          { label: L('ब्लॉग', 'Blog'), description: L('रोहन देशमुख यांचे लेख', 'Articles by Rohan Deshmukh'), url: '/blog' },
+        ],
+      },
+      { blockType: 'family', eyebrow: L('परिवार', 'Family'), heading: L('कौटुंबिक पार्श्वभूमी', 'Family background'), members: FAMILY.map((f) => ({ image: image(p, f.img, ''), relation: f.relation, name: f.name, text: f.text })) },
+      {
+        blockType: 'homeGallery', eyebrow: L('लोकमंगल परिवार', 'Lokmangal family'), heading: L('फोटो संग्रह', 'Photo Gallery'),
+        images: ['tuljapur-sabha-01', 'samudayik-vivah-13', 'prachar-sabha-02', 'annapurna-03', 'cm-chashak-04', 'lotus-05', 'shikshanratna-puraskar-02', 'rakshabandhan-02', 'jalsandharan-02', 'bakshis-samarambh-01', 'samudayik-vivah-16', 'prachar-sabha-06', 'tuljapur-sabha-05', 'cm-chashak-09'].map(g),
+      },
+      {
+        blockType: 'homeStats', eyebrow: L('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto'), heading: L('प्रत्यक्ष कामाचे परिणाम', 'Results on the ground'), image: g('cm-chashak-03'),
+        items: [{ value: '१,००,०००', label: L('घडवायचे उद्योजक (लक्ष्य) — ग्रामीण भारतातून', 'Entrepreneurs to build (target) — from rural India') }, { value: '३,०००+', label: L('सामुदायिक विवाह आयोजित', 'Community weddings organised') }, { value: '४', label: L('प्रत्यक्ष चालवलेल्या संस्था', 'Institutions led') }],
+        buttonLabel: L('व्हिजन', 'Vision'), buttonUrl: '/vision',
+      },
+      {
+        blockType: 'homeFaq', eyebrow: L('सामान्य प्रश्नोत्तर (FAQs)', 'FAQs'), heading: L('पुणे पदवीधर मतदारसंघ', 'Pune Graduate Constituency'),
+        text: L('Graduate Constituency Election 2026 — Form 18 (Graduate Constituency Voter Registration Form) भरून नोंदणी करता येते.', 'Graduate Constituency Election 2026 — register by filling Form 18.'),
+        items: faqItems(p, 6),
+        buttons: [{ label: L('मतदार नोंदणी', 'Voter Registration'), url: FORM18, newTab: true }, { label: L('सर्व प्रश्नोत्तरे', 'All FAQs'), url: '/pune-graduate-constituency' }],
+      },
+      { blockType: 'latestBlog', eyebrow: L('लेखक: रोहन देशमुख', 'By Rohan Deshmukh'), heading: L('ब्लॉग', 'Blog'), limit: 3 },
+      {
+        blockType: 'socialFeeds', eyebrow: L('सोशल मीडिया', 'Social media'), heading: L('इंस्टाग्रामवरील ताज्या पोस्ट', 'Latest on Instagram'),
+        text: L('@rohan1942 • अधिकृत इंस्टाग्राम पेज · @rohandeshmukh.official • अधिकृत फेसबुक पेज', '@rohan1942 • Official Instagram · @rohandeshmukh.official • Official Facebook'),
+        instagramPosts: [
+          { url: 'https://www.instagram.com/rohan1942/p/CtotJz7ItWS/', title: L('Happy Father\'s Day विशेष पोस्ट', 'Happy Father\'s Day') },
+          { url: 'https://www.instagram.com/rohan1942/p/DdY210PvXEg/', title: L('मा. श्री. प्रतापराव जाधव साहेबांची सदिच्छा भेट', 'Courtesy visit with Shri Prataprao Jadhav') },
+          { url: 'https://www.instagram.com/rohan1942/reel/DdEk-nVvP7k/', title: L('लोकमंगल परिवार व्यवसायवृद्धी मेळावा', 'Lokmangal business growth meet') },
+          { url: 'https://www.instagram.com/rohan1942/p/Dc76No_sC9D/', title: L('सूर्यकुमार यादव यांच्यासोबत भेट', 'Meeting Suryakumar Yadav') },
+          { url: 'https://www.instagram.com/rohan1942/reel/DcoDuGQs7fB/', title: L('व्यवसाय वृद्धीसाठी नवा उपक्रम', 'A new initiative for business growth') },
+        ],
+        showFacebook: true, showYoutube: true,
+      },
+    ],
+  }
+}
