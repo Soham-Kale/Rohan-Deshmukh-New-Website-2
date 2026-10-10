@@ -14,19 +14,6 @@ export async function Footer({ locale }: { locale: Locale }) {
 
   return (
     <footer className="on-dark grain bg-maroon-950 text-white/80">
-      {settings.appealHeading && (
-        <div className="border-b border-white/10">
-          <div className="container-x flex flex-col items-start justify-between gap-6 py-12 md:flex-row md:items-center">
-            <h2 className="max-w-2xl font-display text-3xl text-white md:text-4xl">{settings.appealHeading}</h2>
-            {settings.appealButtonUrl && (
-              <CMSLink url={settings.appealButtonUrl} className="btn btn-primary text-lg">
-                {settings.appealButtonLabel}
-              </CMSLink>
-            )}
-          </div>
-        </div>
-      )}
-
       <div className="container-x grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
           {logo ? <Image src={logo} alt={settings.siteName} width={200} height={52} className="h-12 w-auto" /> : <p className="font-display text-2xl text-white">{settings.siteName}</p>}

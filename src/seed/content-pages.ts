@@ -1,18 +1,16 @@
 import type { Payload } from 'payload'
 import { L } from './l10n'
 import { image, md } from './helpers'
-import { FAMILY, faqItems } from './content-globals'
+import { FAMILY } from './content-globals'
 import { OTHER } from './content-collections'
 
-const FORM18 = 'https://form18.rohandeshmukh.in/'
-const REGISTER = 'https://register.rohandeshmukh.in/'
 const gi = (p: Payload, n: string, alt = '') => image(p, `/images/gallery/${n}.webp`, alt)
 const rt = (p: Payload, mr: string, en?: string) => L(md(p, mr), en ? md(p, en) : undefined)
 const btn = (mr: string, en: string, url: string, newTab = false) => ({ label: L(mr, en), url, newTab })
 const appealCta = (p: Payload) => ({
   blockType: 'cta', heading: L('चांगल्या महाराष्ट्राच्या उभारणीसाठी आम्हाला साथ द्या', 'Join us in building a better Maharashtra'),
   image: gi(p, 'tuljapur-sabha-02', 'जनतेशी संवाद साधताना रोहन देशमुख'),
-  buttons: [btn('हो! मी तयार आहे!!!', 'YES! I AM IN!!!', REGISTER, true), btn('संपर्क साधा', 'Contact', '/contact')],
+  buttons: [btn('संपर्क साधा', 'Get in touch', '/contact'), btn('आवाहन', 'Appeal', '/appeal')],
 })
 
 export const pages = (p: Payload) => [
@@ -65,7 +63,6 @@ export const pages = (p: Payload) => [
         items: [
           { title: L('सरचिटणीस', 'General Secretary'), meta: L('भारतीय जनता युवा मोर्चा', 'BJYM') },
           { title: L('अध्यक्ष', 'Chairman'), meta: L('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation') },
-          { title: L('उमेदवार', 'Candidate'), meta: L('पुणे पदवीधर मतदारसंघ २०२६', 'Pune Graduate Constituency 2026'), url: '/pune-graduate-constituency' },
         ],
       },
     ],
@@ -187,17 +184,6 @@ export const pages = (p: Payload) => [
     ],
   },
   {
-    path: '/pune-graduate-constituency', section: 'constituency', menuOrder: 1, showSideMenu: false,
-    title: L('पुणे पदवीधर मतदारसंघ', 'Pune Graduate Constituency'),
-    subtitle: L('Graduate Constituency Election 2026', 'Graduate Constituency Election 2026'),
-    bannerImage: gi(p, 'tuljapur-sabha-05'),
-    layout: [
-      { blockType: 'stats', items: [{ value: '५', label: L('जिल्हे — पुणे, कोल्हापूर, सोलापूर, सांगली, सातारा', 'Districts — Pune, Kolhapur, Solapur, Sangli, Satara') }, { value: '६ वर्षे', label: L('प्रत्येक 6 वर्षांनी निवडणूक', 'Election every 6 years') }, { value: '७', label: L('महाराष्ट्रातील पदवीधर मतदारसंघ', 'Graduate constituencies in Maharashtra') }, { value: 'Form 18', label: L('पदवीधर मतदार नोंदणी', 'Graduate voter registration') }] },
-      { blockType: 'cta', heading: L('पदवीधर मतदार नोंदणी करा', 'Register as a graduate voter'), text: L('Form 18 भरून नोंदणी करा आणि आपल्या मित्रांनाही सांगा.', 'Fill Form 18 to register, and tell your friends too.'), buttons: [btn('Voter Registration', 'Voter Registration', FORM18, true), btn('REFER YOUR FRIENDS', 'REFER YOUR FRIENDS', 'https://form18.rohandeshmukh.in/refer-friend/', true)] },
-      { blockType: 'faq', eyebrow: L('FAQs', 'FAQs'), heading: L('सामान्य प्रश्नोत्तर', 'Frequently asked questions'), items: faqItems(p) },
-    ],
-  },
-  {
     path: '/political-career', section: 'political', menuOrder: 1, showSideMenu: false,
     title: L('राजकीय कारकीर्द', 'Political Career'), subtitle: L('रोहन देशमुख', 'Rohan Deshmukh'),
     bannerImage: image(p, '/images/political/yuva-morcha.webp', 'भारतीय जनता युवा मोर्चा'),
@@ -283,7 +269,7 @@ export const pages = (p: Payload) => [
           'I am privileged to head three organizations that embody my belief in service, empowerment, and transformation. Each is not just an institution — it is a movement.\n\n**Lokmangal Foundation** — Built on the principle of dignity and opportunity, the Foundation has organized over 3,000 community weddings — removing barriers, easing burdens, and proving that marriage can be a celebration of unity rather than financial struggle.\n\n**Community Kitchen** — With a vision of building a Hunger-Free Society, our kitchen serves 550 fresh, healthy meals every single day to the sick, the abandoned, and the severely handicapped.\n\n**Lokmangal Multi-State Cooperative** — Creating employment for the unemployable and ensuring financial inclusion for those locked out of the system.\n\n**Shri Ram Prathisthan** — On a 200-acre campus in Wadala, Solapur, we run 7 colleges. Already, 50% of our students are educated free of cost, and one day, I hope this number will be 100%.\n\nThis is not just my work. This is an invitation.'),
       },
       { blockType: 'quote', text: L('आपण सगळे मिळून असा भारत घडवू शकतो, जो फक्त मोठी स्वप्नं पाहणार नाही, तर ती पूर्ण करण्यासाठी पुढेही येईल.', 'Together, we can build a country that does not just dream, but dares. A country that does not just grow, but grows for all.'), author: L('रोहन सुभाष देशमुख', 'Rohan Subash Deshmukh') },
-      { blockType: 'cta', heading: L('तुम्ही माझ्यासोबत याल का?', 'Will you join me?'), text: L('माझ्यासोबत म्हणा: हो! मी तयार आहे!!!', 'Say it with me: YES! I AM IN!!! Vote for me as your Graduate Constituency Representative.'), buttons: [btn('हो! मी तयार आहे!!!', 'YES! I AM IN!!!', REGISTER, true)] },
+      { blockType: 'cta', heading: L('तुम्ही माझ्यासोबत याल का?', 'Will you join me?'), text: L('माझ्यासोबत म्हणा: हो! मी तयार आहे!!!', 'Say it with me: YES! I AM IN!!!'), buttons: [btn('हो! मी तयार आहे!!!', 'YES! I AM IN!!!', '/contact')] },
     ],
   },
   ...legal(p),
@@ -305,7 +291,7 @@ const legal = (p: Payload) => [
   {
     path: '/disclaimer', section: 'legal', showSideMenu: true, menuOrder: 3, title: L('अस्वीकरण', 'Disclaimer'),
     layout: [{ blockType: 'content', body: rt(p,
-      'या संकेतस्थळावरील माहिती सर्वसामान्य माहितीसाठी आहे. ती अचूक व अद्ययावत ठेवण्याचा आमचा प्रयत्न असतो, तरीही निवडणूक व मतदार नोंदणीसंबंधी अधिकृत माहितीसाठी कृपया मुख्य निवडणूक अधिकारी, महाराष्ट्र (ceoelection.maharashtra.gov.in) व भारत निवडणूक आयोग (eci.gov.in) यांच्या संकेतस्थळांचा संदर्भ घ्या.',
-      'Information on this website is for general purposes. We try to keep it accurate and up to date; for official election and voter-registration information, please refer to the Chief Electoral Officer, Maharashtra (ceoelection.maharashtra.gov.in) and the Election Commission of India (eci.gov.in).') }],
+      'या संकेतस्थळावरील माहिती सर्वसामान्य माहितीसाठी आहे. ती अचूक व अद्ययावत ठेवण्याचा आमचा प्रयत्न असतो, तरीही त्यातील कोणत्याही त्रुटीसाठी किंवा बाह्य संकेतस्थळांवरील मजकुरासाठी आम्ही जबाबदार राहणार नाही.',
+      'Information on this website is for general purposes. We try to keep it accurate and up to date, but we are not responsible for any errors or for the content of external websites linked from here.') }],
   },
 ]

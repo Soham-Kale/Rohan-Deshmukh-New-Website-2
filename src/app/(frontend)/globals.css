@@ -29,6 +29,8 @@
 }
 
 @layer base {
+  /* never allow sideways scrolling (clip keeps sticky header working, unlike hidden) */
+  html, body { overflow-x: clip; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); line-height: 1.7; }
   h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.25; text-wrap: balance; }

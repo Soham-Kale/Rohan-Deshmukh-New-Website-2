@@ -2,8 +2,6 @@ import type { Payload } from 'payload'
 import { L } from './l10n'
 import { image, md } from './helpers'
 
-const FORM18 = 'https://form18.rohandeshmukh.in/'
-const REGISTER = 'https://register.rohandeshmukh.in/'
 
 export const settings = (p: Payload) => ({
   siteName: L('रोहन सुभाष देशमुख', 'Rohan Subhash Deshmukh'),
@@ -21,13 +19,13 @@ export const settings = (p: Payload) => ({
     youtube: 'https://youtube.com/@rd.connects',
     linkedin: 'https://www.linkedin.com/in/rohan-deshmukh-politician',
   },
-  ctaLabel: L('मतदार नोंदणी', 'Voter Registration'),
-  ctaUrl: FORM18,
+  ctaLabel: L('साथ द्या', 'Join us'),
+  ctaUrl: '/appeal',
   connectTagLabel: '#ConnectWithRohan',
   connectTagUrl: '/grievance',
   appealHeading: L('चांगल्या महाराष्ट्राच्या उभारणीसाठी आम्हाला साथ द्या', 'Join us in building a better Maharashtra'),
   appealButtonLabel: L('हो! मी तयार आहे!!!', 'YES! I AM IN!!!'),
-  appealButtonUrl: REGISTER,
+  appealButtonUrl: '/contact',
   formNotifyEmails: ['connect@rohandeshmukh.in'],
   formConsentText: L('मी माझी माहिती संपर्कासाठी वापरण्यास संमती देतो/देते.', 'I consent to my details being used to contact me.'),
 })
@@ -63,7 +61,6 @@ export const header = () => ({
         n('फोटो संग्रह', 'Photo Gallery', '/media/photos'),
       ]),
     ]),
-    n('पुणे पदवीधर मतदारसंघ', 'Graduate Constituency', '/pune-graduate-constituency'),
     n('राजकीय कारकीर्द', 'Political Career', '/political-career'),
     n('मीडिया', 'Media', '/media/photos', [
       n('फोटो संग्रह', 'Photo Gallery', '/media/photos'),
@@ -77,7 +74,6 @@ export const header = () => ({
       n('संपर्क', 'Contact', '/contact'),
       n('तक्रार / सूचना', 'Grievance / Suggestion', '/grievance'),
       n('करिअर / स्वयंसेवक', 'Careers / Volunteer', '/careers'),
-      n('मतदार नोंदणी (Form 18)', 'Voter Registration (Form 18)', FORM18, undefined, true),
     ]),
   ],
 })
@@ -86,35 +82,13 @@ const lk = (mr: string, en: string, url: string) => ({ label: L(mr, en), url })
 
 export const footer = () => ({
   columns: [
-    { title: L('महत्त्वाचे दुवे', 'Quick links'), links: [lk('मुख्य पृष्ठ', 'Home', '/'), lk('पुणे पदवीधर मतदारसंघ', 'Pune Graduate Constituency', '/pune-graduate-constituency'), lk('राजकीय कारकीर्द', 'Political Career', '/political-career'), lk('व्हिजन', 'Vision', '/vision'), lk('आवाहन', 'Appeal', '/appeal'), lk('ब्लॉग', 'Blog', '/blog')] },
+    { title: L('महत्त्वाचे दुवे', 'Quick links'), links: [lk('मुख्य पृष्ठ', 'Home', '/'), lk('राजकीय कारकीर्द', 'Political Career', '/political-career'), lk('व्हिजन', 'Vision', '/vision'), lk('आवाहन', 'Appeal', '/appeal'), lk('ब्लॉग', 'Blog', '/blog')] },
     { title: L('परिचय', 'About'), links: [lk('जीवनचरित्र', 'Biography', '/about/biography'), lk('पुरस्कार व सन्मान', 'Awards', '/about/achievements'), lk('विचार', 'Thoughts', '/about/thoughts'), lk('फोटो संग्रह', 'Photo Gallery', '/media/photos'), lk('संपर्क', 'Contact', '/contact'), lk('तक्रार / सूचना', 'Grievance', '/grievance')] },
     { title: L('सामाजिक उपक्रम', 'Social initiatives'), links: [lk('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'), lk('अन्नपूर्णा योजना', 'Annapurna Yojana', '/social-work/annapurna-yojana'), lk('लोटस', 'LOTUS', '/social-work/lotus'), lk('सामुदायिक विवाह', 'Community Weddings', '/social-work/samudayik-vivah'), lk('जलसंधारण', 'Water Conservation', '/social-work/jalsandharan'), lk('सर्व उपक्रम', 'All initiatives', '/social-work')] },
   ],
   legalLinks: [lk('गोपनीयता धोरण', 'Privacy Policy', '/privacy-policy'), lk('अटी व शर्ती', 'Terms & Conditions', '/terms'), lk('अस्वीकरण', 'Disclaimer', '/disclaimer')],
   copyright: L('© २०२६. सर्व हक्क राखीव — रोहन देशमुख', '© 2026. All Rights Reserved by Rohan Deshmukh'),
 })
-
-const ans = (p: Payload, mr: string, en: string) => L(md(p, mr), md(p, en))
-
-export const FAQ: [string, string, string, string][] = [
-  ['पुणे पदवीधर मतदारसंघ म्हणजे काय?', 'हा महाराष्ट्र विधान परिषद (Vidhan Parishad) मधील एक मतदारसंघ आहे, जो फक्त नोंदणीकृत पदवीधर मतदारांसाठी राखीव आहे.', 'What is the Pune Graduate Constituency?', 'It is a Legislative Council (Vidhan Parishad) seat in Maharashtra, reserved exclusively for graduates who are registered voters in this constituency.'],
-  ['पुणे पदवीधर मतदारसंघाच्या निवडणुकीत कोण मतदान करू शकतो?', 'खालील अटी पूर्ण करणारा कोणताही भारतीय नागरिक मतदान करू शकतो:\n\n- तो मतदारसंघातील कायम रहिवासी असावा.\n- त्याच्याकडे मान्यताप्राप्त विद्यापीठाची 3 वर्षे किंवा त्यापेक्षा अधिक कालावधीची पदवी/डिप्लोमा असावा.\n- 2022 पूर्वी पदवी घेतलेली असावी (2026 च्या निवडणुकीसाठी).\n- त्याने पदवीधर मतदार म्हणून नोंदणी केलेली असावी.', 'Who can vote in the Pune Graduate Constituency election?', 'Any Indian citizen who:\n\n- Is a permanent resident of the constituency.\n- Has a degree/diploma (3 years or more) from a recognized university.\n- Graduated before 2022 (for the upcoming 2026 election).\n- Has registered as a Graduate Voter.'],
-  ['पुणे पदवीधर मतदारसंघात कोणते जिल्हे येतात?', 'या मतदारसंघात खालील पाच जिल्हे समाविष्ट आहेत:\n\nपुणे, कोल्हापूर, सोलापूर, सांगली आणि सातारा.', 'Which areas are covered under the Pune Graduate Constituency?', 'It includes five districts:\n\nPune, Kolhapur, Solapur, Sangli, and Satara.'],
-  ['या मतदारसंघाची निवडणूक किती वर्षांनी होते?', 'प्रत्येक 6 वर्षांनी निवडणूक घेतली जाते, किंवा गरज असल्यास पोटनिवडणूक घेतली जाते.', 'How often are elections held for this constituency?', 'Every 6 years, unless a by-election is required.'],
-  ['पदवीधर मतदार म्हणून नोंदणी कशी करावी?', 'Form 18 (Graduate Constituency Voter Registration Form) भरून नोंदणी करता येते.\n\nहा फॉर्म महाराष्ट्र निवडणूक आयोगाच्या (CEO Maharashtra) वेबसाइटवर किंवा निवडणूक कार्यालयात उपलब्ध असतो.', 'How can I register as a voter for the Pune Graduate Constituency?', 'By filling out Form 18 (Graduate Constituency Voter Registration Form).\n\nThe form is available on the CEO Maharashtra website or at the Election Office.'],
-  ['नोंदणीसाठी कोणती कागदपत्रे आवश्यक आहेत?', 'आपल्याला खालील कागदपत्रे द्यावी लागतील:\n\n- पदवी/डिप्लोमा प्रमाणपत्राची छायांकित प्रत\n- राहत्या पत्त्याचा पुरावा (आधार, मतदार ओळखपत्र, वीज बिल इ.)\n- पासपोर्ट आकाराचा फोटो', 'What documents are required to register?', 'You’ll need:\n\n- A copy of your Degree/Diploma certificate\n- Proof of residence (Aadhaar, Voter ID, electricity bill, etc.)\n- Passport-size photograph'],
-  ['पदव्युत्तर (Postgraduate) किंवा डॉक्टरेट (PhD) धारक नोंदणी करू शकतात का?', 'कोणत्याही मान्यताप्राप्त पदवी किंवा त्यापेक्षा उच्च पदवी असलेले नागरिक पात्र आहेत.', 'Can postgraduate or doctorate holders also register?', 'Yes. Anyone with a recognized graduate or higher degree is eligible.'],
-  ['पदवीधर मतदारांना वेगळे मतदार ओळखपत्र मिळते का?', 'नाही. आपले विद्यमान EPIC (Election Photo ID Card) वापरले जाते.\n\nपरंतु, आपले नाव स्वतंत्र Graduate Electoral Roll मध्ये नोंदवले जाते.', 'Do graduate voters get a separate voter ID card?', 'No. You use the same EPIC (Election Photo ID Card).\n\nHowever, your name is separately entered in the Graduate Electoral Roll.'],
-  ['मतदान कुठे केले जाते?', 'मतदान पाचही जिल्ह्यांतील निर्धारित मतदान केंद्रांवर केले जाते.\n\nमतदान केंद्रांची माहिती निवडणूक आयोगाद्वारे आधीच प्रसिद्ध केली जाते.', 'Where will voting take place?', 'At designated polling booths across all five districts.\n\nBooth details will be notified in advance by the Election Commission.'],
-  ['जर माझे नाव सर्वसाधारण मतदार यादीत असेल पण पदवीधर मतदार यादीत नसेल, तर मी मतदान करू शकतो का?', 'नाही. फक्त पदवीधर मतदार यादीत नाव असलेल्या व्यक्तीलाच या निवडणुकीत मतदानाचा अधिकार आहे.', 'Can I vote if I am not on the Graduate Voter List but on the General Voter List?', 'No. Only voters whose names are on the Graduate Electoral Roll can vote in this election.'],
-  ['NOTA (None of the Above) पर्याय उपलब्ध आहे का?', 'होय, इतर निवडणुकांप्रमाणे NOTA पर्याय उपलब्ध आहे.', 'Is there a NOTA (None of the Above) option?', 'Yes, NOTA is available just like in other elections.'],
-  ['ही निवडणूक सामान्य विधानसभेच्या निवडणुकीपेक्षा कशी वेगळी आहे?', '**विधानसभा निवडणूक** — सर्व 18 वर्षांवरील नागरिकांवर आधारित, सामान्य मतदार यादी, प्रत्येक 5 वर्षांनी निवडणूक.\n\n**पदवीधर मतदारसंघ निवडणूक** — फक्त नोंदणीकृत पदवीधरांवर आधारित, पदवीधर मतदार यादी, प्रत्येक 6 वर्षांनी निवडणूक.', 'How is this election different from a normal Vidhan Sabha election?', '**Vidhan Sabha Election** — based on all citizens aged 18+, general voter list, conducted every 5 years.\n\n**Graduate Constituency Election** — based only on registered graduates, Graduate Electoral Roll, conducted every 6 years.'],
-  ['महाराष्ट्रात अशा किती पदवीधर मतदारसंघ आहेत?', 'महाराष्ट्रात एकूण 7 पदवीधर मतदारसंघ आहेत:\n\nपुणे, मुंबई, नाशिक, औरंगाबाद, अमरावती, नागपूर आणि कोकण.', 'How many Graduate Constituencies are there in Maharashtra?', 'There are 7 Graduate Constituencies:\n\nPune, Mumbai, Nashik, Aurangabad, Amravati, Nagpur, and Konkan.'],
-  ['ताज्या सूचना आणि अद्ययावत माहिती कुठे मिळेल?', 'खालील संकेतस्थळांवर भेट द्या:\n\n- मुख्य निवडणूक अधिकारी, महाराष्ट्र (CEO Maharashtra) — [Website](https://ceoelection.maharashtra.gov.in/ceo/)\n- भारत निवडणूक आयोग (Election Commission of India) — [Website](https://www.eci.gov.in/)', 'Where can I find the latest notifications and updates?', 'Visit:\n\n- CEO Maharashtra — [Website](https://ceoelection.maharashtra.gov.in/ceo/)\n- Election Commission of India — [Website](https://www.eci.gov.in/)'],
-]
-
-export const faqItems = (p: Payload, count = FAQ.length) =>
-  FAQ.slice(0, count).map(([qmr, amr, qen, aen]) => ({ question: L(qmr, qen), answer: ans(p, amr, aen) }))
 
 export const FAMILY = [
   {
@@ -147,23 +121,12 @@ export const home = (p: Payload) => {
       {
         blockType: 'heroSlider', autoplaySeconds: 6,
         slides: [
-          { image: image(p, '/images/gallery/prachar-sabha-03.webp', 'रोहन सुभाष देशमुख'), heading: L('मी रोहन सुभाष देशमुख', 'I am Rohan Subhash Deshmukh'), subheading: L('सोलापूरच्या मातीने घडवलेलं व्यक्तिमत्त्व, संस्कारांनी दिलेली दिशा आणि समाजासाठीची बांधिलकी.', 'Shaped by the soil of Solapur, guided by values, committed to society.'), buttons: [{ label: L('मतदार नोंदणी', 'Voter Registration'), url: FORM18 }, { label: L('अधिक वाचा', 'Read more'), url: '/about/biography' }] },
+          { image: image(p, '/images/gallery/prachar-sabha-03.webp', 'रोहन सुभाष देशमुख'), heading: L('मी रोहन सुभाष देशमुख', 'I am Rohan Subhash Deshmukh'), subheading: L('सोलापूरच्या मातीने घडवलेलं व्यक्तिमत्त्व, संस्कारांनी दिलेली दिशा आणि समाजासाठीची बांधिलकी.', 'Shaped by the soil of Solapur, guided by values, committed to society.'), buttons: [{ label: L('अधिक वाचा', 'Read more'), url: '/about/biography' }, { label: L('संपर्क साधा', 'Get in touch'), url: '/contact' }] },
           { image: image(p, '/images/home/hero-01.webp', 'समाजात बदल घडवण्यासाठी केलेला छोटासा प्रयत्नही खूप मोठा असतो'), heading: L('समाजात बदल घडवण्यासाठी केलेला छोटासा प्रयत्नही खूप मोठा असतो', 'Even a small effort to change society is a big one'), subheading: L('लोकमंगल फाऊंडेशनच्या माध्यमातून ग्रामीण समाजाच्या उन्नतीसाठी काम.', 'Working for rural upliftment through Lokmangal Foundation.'), buttons: [{ label: L('सामाजिक कार्य', 'Social work'), url: '/social-work' }] },
           { image: image(p, '/images/home/hero-02.webp', 'संयम, सातत्य आणि परिश्रम'), heading: L('संयम, सातत्य आणि परिश्रम', 'Patience, consistency and hard work'), subheading: L('शिक्षण, आरोग्य, पाणी आणि रोजगार — प्रत्येक घटकापर्यंत पोहोचणारे काम.', 'Education, health, water and jobs — work that reaches everyone.'), buttons: [{ label: L('राजकीय कारकीर्द', 'Political career'), url: '/political-career' }] },
           { image: image(p, '/images/home/hero-03.webp', 'उत्तम शासकाचा जन्म हा तळागाळातल्या जनतेच्या समस्या आणि गरजा जाणून होतो'), heading: L('उत्तम शासकाचा जन्म हा तळागाळातल्या जनतेच्या समस्या आणि गरजा जाणून होतो', 'A good leader is born by understanding the needs of people at the grassroots'), buttons: [{ label: L('व्हिजन', 'Vision'), url: '/vision' }] },
         ],
         badge: [{ value: '३,२२१+', label: L('विवाहित जोडपी', 'Couples married') }],
-      },
-      {
-        blockType: 'quickLinks',
-        items: [
-          { icon: 'vote', label: L('मतदार नोंदणी (Form 18)', 'Voter Registration'), url: FORM18, newTab: true },
-          { icon: 'heart', label: L('सामाजिक उपक्रम', 'Initiatives'), url: '/social-work' },
-          { icon: 'book', label: L('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto'), url: '/vision' },
-          { icon: 'camera', label: L('फोटो संग्रह', 'Photo Gallery'), url: '/media/photos' },
-          { icon: 'pen', label: L('तक्रार / सूचना', 'Grievance'), url: '/grievance' },
-          { icon: 'phone', label: L('संपर्क', 'Contact'), url: '/contact' },
-        ],
       },
       {
         blockType: 'aboutIntro', eyebrow: L('परिचय', 'About'), heading: L('मी रोहन सुभाष देशमुख', 'I am Rohan Subhash Deshmukh'),
@@ -189,7 +152,6 @@ export const home = (p: Payload) => {
           { image: image(p, '/images/home/work-yuva-morcha.webp', 'भारतीय जनता युवा मोर्चा'), title: L('भारतीय जनता युवा मोर्चा', 'Bharatiya Janata Yuva Morcha'), text: L('भारतीय जनता युवा मोर्चाचे सरचिटणीस म्हणून उल्लेखनीय काम. संपूर्ण महाराष्ट्रात प्रवास, विविध सामाजिक समस्यांसाठी राजकीय पातळीवर आंदोलने.', 'Notable work as General Secretary of BJYM — travelling across Maharashtra and leading agitations on social issues.'), url: '/political-career' },
           { image: image(p, '/images/home/work-vivekanand-yatra.webp', 'स्वामी विवेकानंद विचार यात्रा'), title: L('स्वामी विवेकानंद विचार यात्रा', 'Swami Vivekananda Vichar Yatra'), text: L('तुळजापूर - उमरगा - लोहारा - वाशी - भूम - परांडा - बार्शी - उस्मानाबाद', 'Tuljapur – Umarga – Lohara – Washi – Bhoom – Paranda – Barshi – Osmanabad'), url: '/political-career' },
           { image: image(p, '/images/vision/book.webp', 'न्यू इंडिया मॅनिफेस्टो'), title: L('न्यू इंडिया मॅनिफेस्टो', 'The New India Manifesto'), text: L('‘न्यू इंडिया मॅनिफेस्टो’ हे पुस्तक मी लिहिलं आहे.', 'I have written the book ‘The New India Manifesto’.'), url: '/vision' },
-          { image: g('tuljapur-sabha-03'), title: L('पुणे पदवीधर मतदारसंघ', 'Pune Graduate Constituency'), text: L('Graduate Constituency Election 2026 — पुणे, कोल्हापूर, सोलापूर, सांगली आणि सातारा.', 'Graduate Constituency Election 2026 — Pune, Kolhapur, Solapur, Sangli and Satara.'), url: '/pune-graduate-constituency' },
         ],
       },
       {
@@ -215,12 +177,6 @@ export const home = (p: Payload) => {
         blockType: 'homeStats', eyebrow: L('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto'), heading: L('प्रत्यक्ष कामाचे परिणाम', 'Results on the ground'), image: g('cm-chashak-03'),
         items: [{ value: '१,००,०००', label: L('घडवायचे उद्योजक (लक्ष्य) — ग्रामीण भारतातून', 'Entrepreneurs to build (target) — from rural India') }, { value: '३,०००+', label: L('सामुदायिक विवाह आयोजित', 'Community weddings organised') }, { value: '४', label: L('प्रत्यक्ष चालवलेल्या संस्था', 'Institutions led') }],
         buttonLabel: L('व्हिजन', 'Vision'), buttonUrl: '/vision',
-      },
-      {
-        blockType: 'homeFaq', eyebrow: L('सामान्य प्रश्नोत्तर (FAQs)', 'FAQs'), heading: L('पुणे पदवीधर मतदारसंघ', 'Pune Graduate Constituency'),
-        text: L('Graduate Constituency Election 2026 — Form 18 (Graduate Constituency Voter Registration Form) भरून नोंदणी करता येते.', 'Graduate Constituency Election 2026 — register by filling Form 18.'),
-        items: faqItems(p, 6),
-        buttons: [{ label: L('मतदार नोंदणी', 'Voter Registration'), url: FORM18, newTab: true }, { label: L('सर्व प्रश्नोत्तरे', 'All FAQs'), url: '/pune-graduate-constituency' }],
       },
       { blockType: 'latestBlog', eyebrow: L('लेखक: रोहन देशमुख', 'By Rohan Deshmukh'), heading: L('ब्लॉग', 'Blog'), limit: 3 },
       {

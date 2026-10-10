@@ -55,8 +55,8 @@ When you change collections or fields, run `npm run migrate:create` locally and 
 
 | Admin menu | What it controls |
 |---|---|
-| Content → **Homepage** | Every homepage section: slider, quick links, about, video, initiatives, family, photo strip, counters, FAQs, blog, social feeds. Drag to reorder; tick **hidden** to hide one. |
-| Content → **Pages** | Biography, Party & Organisation, Lokmangal Foundation / Parivar / Vishwamangal, Constituency, Political Career, Vision, Appeal and the legal pages. Pages are built from blocks: text, image + text, counters, cards, gallery, FAQ, video, quote, downloads, call to action. |
+| Content → **Homepage** | Every homepage section: slider, about, biography, work, initiatives, video, family, photo strip, counters, blog, social feeds (quick links / FAQ blocks can be added back). Drag to reorder; tick **hidden** to hide one. |
+| Content → **Pages** | Biography, Party & Organisation, Lokmangal Foundation / Parivar / Vishwamangal, Political Career, Vision, Appeal and the legal pages. Pages are built from blocks: text, image + text, counters, cards, gallery, FAQ, video, quote, downloads, call to action. |
 | Social Work | Initiatives (category, counters, gallery, video, related posts) and Events (year-wise galleries). |
 | Blog | Posts (drafts and scheduled publishing), categories, tags. |
 | Media | Photos (automatic WebP and thumbnails, folders, bulk upload), PDFs, photo albums, YouTube videos, official download photos. |
@@ -89,6 +89,7 @@ The following are left out of this build, as marked in the requirements document
 
 - Homepage: citizen-engagement strip, press-note slider, achievements block, political-journey timeline, newsletter.
 - About: Journey timeline, People's Connect wall.
-- Constituency section (district pages, work report, voices, monthly reports) and Political Career sub-pages. The existing overview pages are kept as simple content pages.
+- Pune Graduate Constituency: removed from the whole site (page, menu, footer, FAQs, voter-registration links).
+- Political Career sub-pages (the overview page is kept as a simple content page).
 - Media: News Coverage, Print Media, Press Releases.
 - Volunteer form on Appeal, Daily Programme (Daura), Newsletter.

@@ -179,7 +179,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
       </header>
 
       {/* Mobile drawer */}
-      <div className={cn('fixed inset-0 z-[60] xl:hidden', mobileOpen ? 'pointer-events-auto' : 'pointer-events-none')} aria-hidden={!mobileOpen}>
+      <div className={cn('fixed inset-0 z-[60] overflow-hidden transition-[visibility] xl:hidden', mobileOpen ? 'pointer-events-auto visible delay-0' : 'pointer-events-none invisible delay-300')} aria-hidden={!mobileOpen}>
         <div className={cn('absolute inset-0 bg-maroon-950/60 transition-opacity', mobileOpen ? 'opacity-100' : 'opacity-0')} onClick={() => setMobileOpen(false)} />
         <aside
           className={cn(

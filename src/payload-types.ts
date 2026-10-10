@@ -2490,7 +2490,7 @@ export interface SiteSetting {
     telegram?: string | null;
   };
   /**
-   * Header button, e.g. मतदार नोंदणी
+   * Header button, e.g. साथ द्या
    */
   ctaLabel?: string | null;
   ctaUrl?: string | null;

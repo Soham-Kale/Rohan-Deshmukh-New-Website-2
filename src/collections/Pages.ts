@@ -6,7 +6,7 @@ import { revalidateAfterChange } from '../hooks/revalidate'
 export const SECTIONS = [
   { label: 'About', value: 'about' },
   { label: 'Lokmangal', value: 'lokmangal' },
-  { label: 'Pune Graduate Constituency', value: 'constituency' },
+  { label: 'Campaign (not used)', value: 'constituency' },
   { label: 'Political Career', value: 'political' },
   { label: 'Vision / Appeal', value: 'vision' },
   { label: 'Engagement', value: 'engage' },

@@ -53,7 +53,7 @@ export const SiteSettings: GlobalConfig = {
         {
           label: 'Call to action',
           fields: [
-            { name: 'ctaLabel', type: 'text', localized: true, admin: { description: 'Header button, e.g. मतदार नोंदणी' } },
+            { name: 'ctaLabel', type: 'text', localized: true, admin: { description: 'Header button, e.g. साथ द्या' } },
             { name: 'ctaUrl', type: 'text' },
             { name: 'connectTagLabel', type: 'text', defaultValue: '#ConnectWithRohan' },
             { name: 'connectTagUrl', type: 'text' },
