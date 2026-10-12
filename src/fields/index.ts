@@ -51,3 +51,6 @@ export const publishedDate: Field = {
   admin: { position: 'sidebar', date: { pickerAppearance: 'dayOnly' } },
   defaultValue: () => new Date().toISOString(),
 }
+
+/** Admin list-view cell renderers (see src/components/admin/Cells.tsx) */
+export const cell = (name: 'BooleanCell' | 'StatusCell' | 'ThumbCell') => ({ components: { Cell: `/components/admin/Cells#${name}` } })

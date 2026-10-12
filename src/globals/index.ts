@@ -131,7 +131,7 @@ export const Home: GlobalConfig = {
   access,
   hooks,
   versions: { drafts: true, max: 20 },
-  fields: [{ name: 'sections', type: 'blocks', blocks: homeBlocks }],
+  fields: [{ name: 'sections', type: 'blocks', blocks: homeBlocks, admin: { initCollapsed: true } }],
 }
 
 export const Popup: GlobalConfig = {

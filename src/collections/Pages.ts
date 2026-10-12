@@ -52,7 +52,7 @@ export const Pages: CollectionConfig = {
             { name: 'bannerImage', type: 'upload', relationTo: 'media' },
           ],
         },
-        { label: 'Content', fields: [{ name: 'layout', type: 'blocks', blocks: pageBlocks, localized: false }] },
+        { label: 'Content', fields: [{ name: 'layout', type: 'blocks', blocks: pageBlocks, localized: false, admin: { initCollapsed: true } }] },
       ],
     },
   ],

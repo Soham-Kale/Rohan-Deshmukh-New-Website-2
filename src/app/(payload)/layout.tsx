@@ -5,6 +5,9 @@ import type { ServerFunctionClient } from 'payload'
 import { handleServerFunctions, RootLayout } from '@payloadcms/next/layouts'
 import React from 'react'
 import { importMap } from './admin/importMap.js'
+import '@fontsource/mukta/400.css'
+import '@fontsource/mukta/600.css'
+import '@fontsource/tiro-devanagari-marathi/400.css'
 import './custom.scss'
 
 type Args = { children: React.ReactNode }

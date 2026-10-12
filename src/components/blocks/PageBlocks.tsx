@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { ArrowRight, Download, FileText, Quote } from 'lucide-react'
 import type { Page } from '@/payload-types'
-import { cn, mediaAlt, mediaUrl } from '@/lib/utils'
+import { cn, mediaAlt, mediaSize, mediaUrl } from '@/lib/utils'
 import { RichText } from '../ui/RichText'
 import { CMSLink } from '../ui/CMSLink'
 import { Gallery } from '../ui/Gallery'
@@ -46,8 +46,9 @@ function render(b: Block) {
       return (
         <div className={cn('grid items-start gap-8 md:grid-cols-[0.8fr_1.2fr]', b.imagePosition === 'right' && 'md:grid-cols-[1.2fr_0.8fr]')}>
           {img && (
-            <div className={cn('relative aspect-[4/3] overflow-hidden rounded-3xl bg-cream md:sticky md:top-28 md:aspect-[4/5]', b.imagePosition === 'right' && 'md:order-2')}>
-              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:768px) 100vw, 35vw" className="object-cover" />
+            /* full photo at its natural shape — never crop faces */
+            <div className={cn('overflow-hidden rounded-3xl bg-cream md:sticky md:top-28', b.imagePosition === 'right' && 'md:order-2')}>
+              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} width={mediaSize(b.image).width} height={mediaSize(b.image).height} sizes="(max-width:768px) 100vw, 35vw" className="h-auto w-full" />
             </div>
           )}
           <div>

@@ -1,11 +1,12 @@
 import type { CollectionAfterChangeHook, CollectionConfig, Field } from 'payload'
 import { editors } from '../access'
+import { cell } from '../fields'
 
 const status: Field = {
   name: 'status',
   type: 'select',
   defaultValue: 'new',
-  admin: { position: 'sidebar' },
+  admin: { position: 'sidebar', ...cell('StatusCell') },
   options: [
     { label: 'New', value: 'new' },
     { label: 'In progress', value: 'in-progress' },

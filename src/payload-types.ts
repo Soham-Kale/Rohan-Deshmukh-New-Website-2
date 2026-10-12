@@ -68,6 +68,10 @@ export interface Config {
   blocks: {};
   collections: {
     pages: Page;
+    jobs: Job;
+    'contact-messages': ContactMessage;
+    grievances: Grievance;
+    'job-applications': JobApplication;
     posts: Post;
     categories: Category;
     initiatives: Initiative;
@@ -75,16 +79,12 @@ export interface Config {
     albums: Album;
     videos: Video;
     'download-photos': DownloadPhoto;
+    media: Media;
+    documents: Document;
     quotes: Quote;
     'leader-meetings': LeaderMeeting;
     awards: Award;
-    jobs: Job;
     offices: Office;
-    'contact-messages': ContactMessage;
-    grievances: Grievance;
-    'job-applications': JobApplication;
-    media: Media;
-    documents: Document;
     'form-uploads': FormUpload;
     users: User;
     search: Search;
@@ -104,6 +104,10 @@ export interface Config {
   };
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
+    jobs: JobsSelect<false> | JobsSelect<true>;
+    'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
+    grievances: GrievancesSelect<false> | GrievancesSelect<true>;
+    'job-applications': JobApplicationsSelect<false> | JobApplicationsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     initiatives: InitiativesSelect<false> | InitiativesSelect<true>;
@@ -111,16 +115,12 @@ export interface Config {
     albums: AlbumsSelect<false> | AlbumsSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     'download-photos': DownloadPhotosSelect<false> | DownloadPhotosSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     quotes: QuotesSelect<false> | QuotesSelect<true>;
     'leader-meetings': LeaderMeetingsSelect<false> | LeaderMeetingsSelect<true>;
     awards: AwardsSelect<false> | AwardsSelect<true>;
-    jobs: JobsSelect<false> | JobsSelect<true>;
     offices: OfficesSelect<false> | OfficesSelect<true>;
-    'contact-messages': ContactMessagesSelect<false> | ContactMessagesSelect<true>;
-    grievances: GrievancesSelect<false> | GrievancesSelect<true>;
-    'job-applications': JobApplicationsSelect<false> | JobApplicationsSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'form-uploads': FormUploadsSelect<false> | FormUploadsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
@@ -577,6 +577,117 @@ export interface Document {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs".
+ */
+export interface Job {
+  id: number;
+  title: string;
+  location?: string | null;
+  type?: ('full-time' | 'part-time' | 'internship' | 'volunteer') | null;
+  description?: string | null;
+  lastDate?: string | null;
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages".
+ */
+export interface ContactMessage {
+  id: number;
+  name: string;
+  mobile: string;
+  email: string;
+  subject: string;
+  office?: (number | null) | Office;
+  message?: string | null;
+  attachment?: (number | null) | FormUpload;
+  status?: ('new' | 'in-progress' | 'resolved' | 'spam') | null;
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Office locations (Contact page) and who receives form emails
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offices".
+ */
+export interface Office {
+  id: number;
+  name: string;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  /**
+   * Form submissions for this office are emailed here
+   */
+  notifyEmails?: string[] | null;
+  /**
+   * Google Maps → Share → Embed a map → copy the src URL
+   */
+  mapEmbedUrl?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-uploads".
+ */
+export interface FormUpload {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "grievances".
+ */
+export interface Grievance {
+  id: number;
+  referenceNo?: string | null;
+  type?: ('grievance' | 'suggestion') | null;
+  name: string;
+  mobile: string;
+  email?: string | null;
+  address: string;
+  issue: string;
+  attachment?: (number | null) | FormUpload;
+  status?: ('new' | 'in-progress' | 'resolved' | 'spam') | null;
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-applications".
+ */
+export interface JobApplication {
+  id: number;
+  job?: (number | null) | Job;
+  name: string;
+  mobile: string;
+  email: string;
+  message?: string | null;
+  cv?: (number | null) | FormUpload;
+  status?: ('new' | 'in-progress' | 'resolved' | 'spam') | null;
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
@@ -818,117 +929,6 @@ export interface Award {
   awardingBody?: string | null;
   image?: (number | null) | Media;
   description?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "jobs".
- */
-export interface Job {
-  id: number;
-  title: string;
-  location?: string | null;
-  type?: ('full-time' | 'part-time' | 'internship' | 'volunteer') | null;
-  description?: string | null;
-  lastDate?: string | null;
-  active?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Office locations (Contact page) and who receives form emails
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "offices".
- */
-export interface Office {
-  id: number;
-  name: string;
-  address?: string | null;
-  phone?: string | null;
-  email?: string | null;
-  /**
-   * Form submissions for this office are emailed here
-   */
-  notifyEmails?: string[] | null;
-  /**
-   * Google Maps → Share → Embed a map → copy the src URL
-   */
-  mapEmbedUrl?: string | null;
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-messages".
- */
-export interface ContactMessage {
-  id: number;
-  name: string;
-  mobile: string;
-  email: string;
-  subject: string;
-  office?: (number | null) | Office;
-  message?: string | null;
-  attachment?: (number | null) | FormUpload;
-  status?: ('new' | 'in-progress' | 'resolved' | 'spam') | null;
-  internalNotes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-uploads".
- */
-export interface FormUpload {
-  id: number;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "grievances".
- */
-export interface Grievance {
-  id: number;
-  referenceNo?: string | null;
-  type?: ('grievance' | 'suggestion') | null;
-  name: string;
-  mobile: string;
-  email?: string | null;
-  address: string;
-  issue: string;
-  attachment?: (number | null) | FormUpload;
-  status?: ('new' | 'in-progress' | 'resolved' | 'spam') | null;
-  internalNotes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "job-applications".
- */
-export interface JobApplication {
-  id: number;
-  job?: (number | null) | Job;
-  name: string;
-  mobile: string;
-  email: string;
-  message?: string | null;
-  cv?: (number | null) | FormUpload;
-  status?: ('new' | 'in-progress' | 'resolved' | 'spam') | null;
-  internalNotes?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1184,6 +1184,22 @@ export interface PayloadLockedDocument {
         value: number | Page;
       } | null)
     | ({
+        relationTo: 'jobs';
+        value: number | Job;
+      } | null)
+    | ({
+        relationTo: 'contact-messages';
+        value: number | ContactMessage;
+      } | null)
+    | ({
+        relationTo: 'grievances';
+        value: number | Grievance;
+      } | null)
+    | ({
+        relationTo: 'job-applications';
+        value: number | JobApplication;
+      } | null)
+    | ({
         relationTo: 'posts';
         value: number | Post;
       } | null)
@@ -1212,6 +1228,14 @@ export interface PayloadLockedDocument {
         value: number | DownloadPhoto;
       } | null)
     | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
+      } | null)
+    | ({
         relationTo: 'quotes';
         value: number | Quote;
       } | null)
@@ -1224,32 +1248,8 @@ export interface PayloadLockedDocument {
         value: number | Award;
       } | null)
     | ({
-        relationTo: 'jobs';
-        value: number | Job;
-      } | null)
-    | ({
         relationTo: 'offices';
         value: number | Office;
-      } | null)
-    | ({
-        relationTo: 'contact-messages';
-        value: number | ContactMessage;
-      } | null)
-    | ({
-        relationTo: 'grievances';
-        value: number | Grievance;
-      } | null)
-    | ({
-        relationTo: 'job-applications';
-        value: number | JobApplication;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
-        relationTo: 'documents';
-        value: number | Document;
       } | null)
     | ({
         relationTo: 'form-uploads';
@@ -1489,6 +1489,71 @@ export interface PagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs_select".
+ */
+export interface JobsSelect<T extends boolean = true> {
+  title?: T;
+  location?: T;
+  type?: T;
+  description?: T;
+  lastDate?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-messages_select".
+ */
+export interface ContactMessagesSelect<T extends boolean = true> {
+  name?: T;
+  mobile?: T;
+  email?: T;
+  subject?: T;
+  office?: T;
+  message?: T;
+  attachment?: T;
+  status?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "grievances_select".
+ */
+export interface GrievancesSelect<T extends boolean = true> {
+  referenceNo?: T;
+  type?: T;
+  name?: T;
+  mobile?: T;
+  email?: T;
+  address?: T;
+  issue?: T;
+  attachment?: T;
+  status?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-applications_select".
+ */
+export interface JobApplicationsSelect<T extends boolean = true> {
+  job?: T;
+  name?: T;
+  mobile?: T;
+  email?: T;
+  message?: T;
+  cv?: T;
+  status?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -1621,124 +1686,6 @@ export interface DownloadPhotosSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "quotes_select".
- */
-export interface QuotesSelect<T extends boolean = true> {
-  text?: T;
-  image?: T;
-  category?: T;
-  publishedAt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "leader-meetings_select".
- */
-export interface LeaderMeetingsSelect<T extends boolean = true> {
-  leaderName?: T;
-  image?: T;
-  caption?: T;
-  level?: T;
-  date?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "awards_select".
- */
-export interface AwardsSelect<T extends boolean = true> {
-  title?: T;
-  year?: T;
-  awardingBody?: T;
-  image?: T;
-  description?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "jobs_select".
- */
-export interface JobsSelect<T extends boolean = true> {
-  title?: T;
-  location?: T;
-  type?: T;
-  description?: T;
-  lastDate?: T;
-  active?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "offices_select".
- */
-export interface OfficesSelect<T extends boolean = true> {
-  name?: T;
-  address?: T;
-  phone?: T;
-  email?: T;
-  notifyEmails?: T;
-  mapEmbedUrl?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-messages_select".
- */
-export interface ContactMessagesSelect<T extends boolean = true> {
-  name?: T;
-  mobile?: T;
-  email?: T;
-  subject?: T;
-  office?: T;
-  message?: T;
-  attachment?: T;
-  status?: T;
-  internalNotes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "grievances_select".
- */
-export interface GrievancesSelect<T extends boolean = true> {
-  referenceNo?: T;
-  type?: T;
-  name?: T;
-  mobile?: T;
-  email?: T;
-  address?: T;
-  issue?: T;
-  attachment?: T;
-  status?: T;
-  internalNotes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "job-applications_select".
- */
-export interface JobApplicationsSelect<T extends boolean = true> {
-  job?: T;
-  name?: T;
-  mobile?: T;
-  email?: T;
-  message?: T;
-  cv?: T;
-  status?: T;
-  internalNotes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -1808,6 +1755,59 @@ export interface DocumentsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quotes_select".
+ */
+export interface QuotesSelect<T extends boolean = true> {
+  text?: T;
+  image?: T;
+  category?: T;
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leader-meetings_select".
+ */
+export interface LeaderMeetingsSelect<T extends boolean = true> {
+  leaderName?: T;
+  image?: T;
+  caption?: T;
+  level?: T;
+  date?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "awards_select".
+ */
+export interface AwardsSelect<T extends boolean = true> {
+  title?: T;
+  year?: T;
+  awardingBody?: T;
+  image?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offices_select".
+ */
+export interface OfficesSelect<T extends boolean = true> {
+  name?: T;
+  address?: T;
+  phone?: T;
+  email?: T;
+  notifyEmails?: T;
+  mapEmbedUrl?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2947,6 +2947,10 @@ export interface TaskCreateCollectionExport {
     batchSize?: number | null;
     collectionSlug:
       | 'pages'
+      | 'jobs'
+      | 'contact-messages'
+      | 'grievances'
+      | 'job-applications'
       | 'posts'
       | 'categories'
       | 'initiatives'
@@ -2954,16 +2958,12 @@ export interface TaskCreateCollectionExport {
       | 'albums'
       | 'videos'
       | 'download-photos'
+      | 'media'
+      | 'documents'
       | 'quotes'
       | 'leader-meetings'
       | 'awards'
-      | 'jobs'
       | 'offices'
-      | 'contact-messages'
-      | 'grievances'
-      | 'job-applications'
-      | 'media'
-      | 'documents'
       | 'form-uploads'
       | 'users'
       | 'search'

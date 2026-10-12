@@ -1,5 +1,6 @@
 import type { Block, Field } from 'payload'
 import { counterArray, linkFields } from '../fields'
+import { withAdminLabels } from './page-blocks'
 
 const base: Field[] = [
   { name: 'hidden', type: 'checkbox', defaultValue: false, admin: { description: 'Hide this section on the homepage' } },
@@ -16,6 +17,7 @@ export const HeroSlider: Block = {
     {
       name: 'slides',
       type: 'array',
+      admin: { initCollapsed: true },
       minRows: 1,
       maxRows: 10,
       fields: [
@@ -214,7 +216,7 @@ export const AppealBand: Block = {
   ],
 }
 
-export const homeBlocks: Block[] = [
+export const homeBlocks: Block[] = withAdminLabels([
   HeroSlider,
   QuickLinks,
   AboutIntro,
@@ -229,4 +231,4 @@ export const homeBlocks: Block[] = [
   LatestBlog,
   SocialFeeds,
   AppealBand,
-]
+])

@@ -6,7 +6,7 @@ import {
 import type { Home, Initiative, Post, Video as VideoDoc } from '@/payload-types'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
-import { cn, formatDate, mediaAlt, mediaUrl } from '@/lib/utils'
+import { cn, formatDate, mediaAlt, mediaSize, mediaUrl } from '@/lib/utils'
 import { Link } from '@/i18n/navigation'
 import { CMSLink } from '../ui/CMSLink'
 import { Section } from '../ui/Section'
@@ -102,7 +102,7 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
           <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border-2 border-saffron-300 md:-left-6 md:-top-6" />
           {img && (
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream">
-              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover" />
+              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover object-top" />
             </div>
           )}
           {b.stats?.[0] && (
@@ -148,8 +148,9 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
           {b.intro && <p className="mt-6 font-display text-2xl leading-relaxed text-maroon-800">“{b.intro}”</p>}
           {img && (
-            <div className="relative mt-8 aspect-[16/10] overflow-hidden rounded-3xl">
-              <Image src={img} alt={mediaAlt(b.image)} fill sizes="(max-width:1024px) 100vw, 45vw" className="object-cover" />
+            /* full photo at its natural shape — never crop portraits */
+            <div className="mt-8 overflow-hidden rounded-3xl bg-cream">
+              <Image src={img} alt={mediaAlt(b.image)} width={mediaSize(b.image).width} height={mediaSize(b.image).height} sizes="(max-width:1024px) 100vw, 45vw" className="h-auto w-full" />
             </div>
           )}
         </div>

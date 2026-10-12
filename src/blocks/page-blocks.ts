@@ -123,7 +123,7 @@ export const DownloadsBlock: Block = {
   ],
 }
 
-export const pageBlocks: Block[] = [
+const basePageBlocks: Block[] = [
   ContentBlock,
   MediaTextBlock,
   StatsBlock,
@@ -135,3 +135,16 @@ export const pageBlocks: Block[] = [
   DownloadsBlock,
   CtaBlock,
 ]
+
+/** Readable block headers in the admin (section heading instead of "Untitled") */
+export const withAdminLabels = (blocks: Block[]): Block[] =>
+  blocks.map((b) => ({
+    ...b,
+    admin: {
+      ...b.admin,
+      disableBlockName: true,
+      components: { ...b.admin?.components, Label: { path: '/components/admin/BlockLabel#BlockLabel', clientProps: { label: String(b.labels?.singular ?? b.slug) } } },
+    },
+  }))
+
+export const pageBlocks: Block[] = withAdminLabels(basePageBlocks)

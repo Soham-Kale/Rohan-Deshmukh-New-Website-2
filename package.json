@@ -16,6 +16,8 @@
     "migrate": "payload migrate",
     "migrate:create": "payload migrate:create",
     "ci": "payload migrate && next build",
+    "seed:ci": "node --import tsx src/seed/index.ts",
+    "vercel-build": "payload migrate && npm run seed:ci && next build",
     "dev:next": "next dev",
     "db": "node scripts/dev.mjs --db-only",
     "preview": "node scripts/dev.mjs --prod"

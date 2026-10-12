@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { anyone, editors, mediaTeam, publishedOrLoggedIn } from '../access'
-import { counterArray, publishedDate, slugField } from '../fields'
+import { cell, counterArray, publishedDate, slugField } from '../fields'
 import { revalidateAfterChange } from '../hooks/revalidate'
 
 const hooks = { afterChange: [revalidateAfterChange] }
@@ -18,7 +18,7 @@ export const INITIATIVE_CATEGORIES = [
 
 export const Initiatives: CollectionConfig = {
   slug: 'initiatives',
-  admin: { useAsTitle: 'title', group: 'Social Work', defaultColumns: ['title', 'category', 'featured', '_status'] },
+  admin: { useAsTitle: 'title', group: 'Social Work', defaultColumns: ['title', 'heroImage', 'category', 'featured', '_status'], pagination: { defaultLimit: 25 } },
   versions: { drafts: true },
   access: { read: publishedOrLoggedIn, create: editors, update: editors, delete: editors },
   defaultSort: 'order',
@@ -38,10 +38,10 @@ export const Initiatives: CollectionConfig = {
         { label: 'विश्वमंगल', value: 'vishwamangal' },
       ],
     },
-    { name: 'featured', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar', description: 'Show on homepage' } },
+    { name: 'featured', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar', description: 'Show on homepage', ...cell('BooleanCell') } },
     { name: 'order', type: 'number', defaultValue: 10, admin: { position: 'sidebar' } },
     { name: 'excerpt', type: 'textarea', localized: true },
-    { name: 'heroImage', type: 'upload', relationTo: 'media' },
+    { name: 'heroImage', type: 'upload', relationTo: 'media', admin: { ...cell('ThumbCell') } },
     { name: 'body', type: 'richText', localized: true },
     counterArray('counters', 'Impact counters (beneficiaries, years, locations)'),
     { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true },
@@ -52,14 +52,14 @@ export const Initiatives: CollectionConfig = {
 
 export const Events: CollectionConfig = {
   slug: 'events',
-  admin: { useAsTitle: 'title', group: 'Social Work', description: 'Recurring events with year-wise galleries (e.g. Samudayik Vivah)' },
+  admin: { useAsTitle: 'title', group: 'Social Work', defaultColumns: ['title', 'coverImage', 'initiative'], description: 'Recurring events with year-wise galleries (e.g. Samudayik Vivah)' },
   access: { read: anyone, create: editors, update: editors, delete: editors },
   hooks,
   fields: [
     { name: 'title', type: 'text', localized: true, required: true },
     slugField(),
     { name: 'initiative', type: 'relationship', relationTo: 'initiatives', admin: { position: 'sidebar' } },
-    { name: 'coverImage', type: 'upload', relationTo: 'media' },
+    { name: 'coverImage', type: 'upload', relationTo: 'media', admin: { ...cell('ThumbCell') } },
     { name: 'description', type: 'textarea', localized: true },
     {
       name: 'editions',
@@ -84,7 +84,7 @@ export const Categories: CollectionConfig = {
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
-  admin: { useAsTitle: 'title', group: 'Blog', defaultColumns: ['title', 'publishedAt', '_status'] },
+  admin: { useAsTitle: 'title', group: 'Blog', defaultColumns: ['title', 'coverImage', 'publishedAt', '_status'] },
   versions: { drafts: { schedulePublish: true }, maxPerDoc: 20 },
   access: { read: publishedOrLoggedIn, create: editors, update: editors, delete: editors },
   defaultSort: '-publishedAt',
@@ -97,7 +97,7 @@ export const Posts: CollectionConfig = {
     { name: 'author', type: 'text', localized: true, defaultValue: 'रोहन देशमुख', admin: { position: 'sidebar' } },
     { name: 'categories', type: 'relationship', relationTo: 'categories', hasMany: true, admin: { position: 'sidebar' } },
     { name: 'tags', type: 'text', hasMany: true, admin: { position: 'sidebar' } },
-    { name: 'coverImage', type: 'upload', relationTo: 'media' },
+    { name: 'coverImage', type: 'upload', relationTo: 'media', admin: { ...cell('ThumbCell') } },
     { name: 'excerpt', type: 'textarea', localized: true },
     { name: 'content', type: 'richText', localized: true },
   ],
@@ -112,7 +112,7 @@ export const ALBUM_CATEGORIES = [
 
 export const Albums: CollectionConfig = {
   slug: 'albums',
-  admin: { useAsTitle: 'title', group: 'Media', defaultColumns: ['title', 'category', 'date'], description: 'Photo Gallery albums. Use bulk upload in Media, then pick the photos here.' },
+  admin: { useAsTitle: 'title', group: 'Media', defaultColumns: ['title', 'cover', 'category', 'date'], description: 'Photo Gallery albums. Use bulk upload in Media, then pick the photos here.' },
   access: { read: anyone, create: mediaTeam, update: mediaTeam, delete: editors },
   defaultSort: '-date',
   hooks,
@@ -121,7 +121,7 @@ export const Albums: CollectionConfig = {
     slugField(),
     { name: 'category', type: 'select', options: ALBUM_CATEGORIES, defaultValue: 'events', admin: { position: 'sidebar' } },
     { name: 'date', type: 'date', admin: { position: 'sidebar', date: { pickerAppearance: 'dayOnly' } } },
-    { name: 'cover', type: 'upload', relationTo: 'media' },
+    { name: 'cover', type: 'upload', relationTo: 'media', admin: { ...cell('ThumbCell') } },
     { name: 'description', type: 'textarea', localized: true },
     { name: 'photos', type: 'upload', relationTo: 'media', hasMany: true, required: true },
   ],
@@ -145,12 +145,12 @@ export const Videos: CollectionConfig = {
 export const DownloadPhotos: CollectionConfig = {
   slug: 'download-photos',
   labels: { singular: 'Official photo', plural: 'Official photos (download)' },
-  admin: { useAsTitle: 'title', group: 'Media', description: 'High-resolution official photos for media use' },
+  admin: { useAsTitle: 'title', group: 'Media', description: 'High-resolution official photos for media use', defaultColumns: ['title', 'image', 'credit'] },
   access: { read: anyone, create: mediaTeam, update: mediaTeam, delete: editors },
   hooks,
   fields: [
     { name: 'title', type: 'text', localized: true, required: true },
-    { name: 'image', type: 'upload', relationTo: 'media', required: true },
+    { name: 'image', type: 'upload', relationTo: 'media', required: true, admin: { ...cell('ThumbCell') } },
     { name: 'credit', type: 'text' },
   ],
 }
@@ -158,13 +158,13 @@ export const DownloadPhotos: CollectionConfig = {
 export const Quotes: CollectionConfig = {
   slug: 'quotes',
   labels: { singular: 'Thought / Quote', plural: 'Thoughts / Quotes' },
-  admin: { useAsTitle: 'text', group: 'About', defaultColumns: ['text', 'category', 'publishedAt'] },
+  admin: { useAsTitle: 'text', group: 'About', defaultColumns: ['text', 'image', 'category', 'publishedAt'] },
   access: { read: anyone, create: mediaTeam, update: mediaTeam, delete: editors },
   defaultSort: '-publishedAt',
   hooks,
   fields: [
     { name: 'text', type: 'textarea', localized: true, required: true, admin: { description: 'The quote text (also used when no image is uploaded)' } },
-    { name: 'image', type: 'upload', relationTo: 'media', admin: { description: 'Designed quote graphic (optional)' } },
+    { name: 'image', type: 'upload', relationTo: 'media', admin: { description: 'Designed quote graphic (optional)', ...cell('ThumbCell') } },
     {
       name: 'category',
       type: 'select',
@@ -184,13 +184,13 @@ export const Quotes: CollectionConfig = {
 export const LeaderMeetings: CollectionConfig = {
   slug: 'leader-meetings',
   labels: { singular: 'Meeting with leader', plural: 'Meetings with leaders' },
-  admin: { useAsTitle: 'leaderName', group: 'About' },
+  admin: { useAsTitle: 'leaderName', group: 'About', defaultColumns: ['leaderName', 'image', 'level', 'date'] },
   access: { read: anyone, create: mediaTeam, update: mediaTeam, delete: editors },
   defaultSort: '-date',
   hooks,
   fields: [
     { name: 'leaderName', type: 'text', localized: true, required: true },
-    { name: 'image', type: 'upload', relationTo: 'media', required: true },
+    { name: 'image', type: 'upload', relationTo: 'media', required: true, admin: { ...cell('ThumbCell') } },
     { name: 'caption', type: 'text', localized: true },
     { name: 'level', type: 'select', defaultValue: 'national', options: [{ label: 'National', value: 'national' }, { label: 'State', value: 'state' }, { label: 'Other', value: 'other' }] },
     { name: 'date', type: 'date', admin: { date: { pickerAppearance: 'dayOnly' } } },
@@ -199,7 +199,7 @@ export const LeaderMeetings: CollectionConfig = {
 
 export const Awards: CollectionConfig = {
   slug: 'awards',
-  admin: { useAsTitle: 'title', group: 'About', defaultColumns: ['title', 'year', 'awardingBody'] },
+  admin: { useAsTitle: 'title', group: 'About', defaultColumns: ['title', 'image', 'year', 'awardingBody'] },
   access: { read: anyone, create: editors, update: editors, delete: editors },
   defaultSort: '-year',
   hooks,
@@ -207,14 +207,14 @@ export const Awards: CollectionConfig = {
     { name: 'title', type: 'text', localized: true, required: true },
     { name: 'year', type: 'number' },
     { name: 'awardingBody', type: 'text', localized: true },
-    { name: 'image', type: 'upload', relationTo: 'media' },
+    { name: 'image', type: 'upload', relationTo: 'media', admin: { ...cell('ThumbCell') } },
     { name: 'description', type: 'textarea', localized: true },
   ],
 }
 
 export const Offices: CollectionConfig = {
   slug: 'offices',
-  admin: { useAsTitle: 'name', group: 'Settings', description: 'Office locations (Contact page) and who receives form emails' },
+  admin: { useAsTitle: 'name', group: 'Settings', defaultColumns: ['name', 'phone', 'email', 'order'], description: 'Office locations (Contact page) and who receives form emails' },
   access: { read: anyone, create: editors, update: editors, delete: editors },
   defaultSort: 'order',
   hooks,
@@ -241,6 +241,6 @@ export const Jobs: CollectionConfig = {
     { name: 'type', type: 'select', defaultValue: 'full-time', options: ['full-time', 'part-time', 'internship', 'volunteer'] },
     { name: 'description', type: 'textarea', localized: true },
     { name: 'lastDate', type: 'date', admin: { date: { pickerAppearance: 'dayOnly' } } },
-    { name: 'active', type: 'checkbox', defaultValue: true },
+    { name: 'active', type: 'checkbox', defaultValue: true, admin: { ...cell('BooleanCell') } },
   ],
 }

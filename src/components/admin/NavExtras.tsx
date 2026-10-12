@@ -1,0 +1,34 @@
+import Link from 'next/link'
+import type { ServerProps } from 'payload'
+
+/** Above the menu: inbox shortcut with unread count */
+export async function NavInbox({ payload, user }: ServerProps) {
+  let n = 0
+  try {
+    const counts = await Promise.all(
+      (['grievances', 'contact-messages', 'job-applications'] as const).map((c) =>
+        payload.count({ collection: c, where: { status: { equals: 'new' } }, overrideAccess: false, user }).then((r) => r.totalDocs),
+      ),
+    )
+    n = counts.reduce((a, b) => a + b, 0)
+  } catch {}
+  return (
+    <div className="rd-nav-top">
+      <Link href="/admin" className="rd-nav-top__link">🏠 Dashboard</Link>
+      <Link href="/admin/collections/grievances" className="rd-nav-top__link">
+        📥 Inbox {n > 0 && <span className="rd-badge">{n}</span>}
+      </Link>
+    </div>
+  )
+}
+
+/** Below the menu: open the public website */
+export function NavSite() {
+  const site = process.env.NEXT_PUBLIC_SITE_URL || '/'
+  return (
+    <div className="rd-nav-bottom">
+      <a href={site} target="_blank" rel="noopener noreferrer" className="rd-nav-site">🌐 View website ↗</a>
+      <a href={`${site.replace(/\/$/, '')}/en`} target="_blank" rel="noopener noreferrer" className="rd-nav-site rd-nav-site--muted">English version ↗</a>
+    </div>
+  )
+}

@@ -36,12 +36,18 @@ export default buildConfig({
     user: Users.slug,
     meta: { titleSuffix: ' — Rohan Deshmukh Admin' },
     importMap: { baseDir: path.resolve(dirname) },
-    components: { graphics: { Logo: '/components/admin/Logo#Logo', Icon: '/components/admin/Logo#Icon' } },
+    avatar: 'default',
+    components: {
+      graphics: { Logo: '/components/admin/Logo#Logo', Icon: '/components/admin/Logo#Icon' },
+      beforeLogin: ['/components/admin/LoginIntro#LoginIntro'],
+      beforeDashboard: ['/components/admin/Dashboard#Dashboard'],
+      beforeNavLinks: ['/components/admin/NavExtras#NavInbox'],
+      afterNavLinks: ['/components/admin/NavExtras#NavSite'],
+    },
   },
   collections: [
-    Pages, Posts, Categories, Initiatives, Events, Albums, Videos, DownloadPhotos, Quotes,
-    LeaderMeetings, Awards, Jobs, Offices, ContactMessages, Grievances, JobApplications,
-    Media, Documents, FormUploads, Users,
+    Pages, Jobs, ContactMessages, Grievances, JobApplications, Posts, Categories, Initiatives, Events,
+    Albums, Videos, DownloadPhotos, Media, Documents, Quotes, LeaderMeetings, Awards, Offices, FormUploads, Users,
   ],
   globals: [Home, Header, Footer, SiteSettings, Popup],
   localization: {
@@ -56,7 +62,7 @@ export default buildConfig({
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
-  db: postgresAdapter({ pool: { connectionString: process.env.DATABASE_URI || '' } }),
+  db: postgresAdapter({ pool: { connectionString: process.env.DATABASE_URI || process.env.POSTGRES_URL || process.env.DATABASE_URL || '' } }),
   sharp,
   upload: { limits: { fileSize: 15_000_000 } },
   email: process.env.RESEND_API_KEY
@@ -80,7 +86,7 @@ export default buildConfig({
       localize: true,
       defaultPriorities: { pages: 10, initiatives: 20, posts: 30 },
       searchOverrides: {
-        admin: { group: 'Settings' },
+        admin: { group: 'Settings', hidden: true },
         fields: ({ defaultFields }) => [
           ...defaultFields,
           { name: 'excerpt', type: 'textarea', localized: true },

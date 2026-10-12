@@ -8,6 +8,10 @@ export const mediaUrl = (m: MaybeMedia, size?: 'thumb' | 'card' | 'hero'): strin
   return relativize(sized || m.url || null)
 }
 
+/** Natural pixel size of an uploaded image (falls back to 4:3) */
+export const mediaSize = (m: MaybeMedia): { width: number; height: number } =>
+  m && typeof m !== 'number' && m.width && m.height ? { width: m.width, height: m.height } : { width: 1200, height: 900 }
+
 /** Payload returns absolute URLs for local uploads; make same-origin ones relative so next/image treats them as local */
 export const relativize = (url: string | null | undefined): string | null => {
   if (!url) return null
