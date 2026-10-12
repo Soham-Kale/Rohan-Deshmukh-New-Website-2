@@ -113,6 +113,8 @@ export default buildConfig({
     }),
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      // keep the same database columns with or without Blob (local vs Vercel)
+      alwaysInsertFields: true,
       collections: { media: true, documents: true, 'form-uploads': true },
       token: process.env.BLOB_READ_WRITE_TOKEN || '',
     }),
