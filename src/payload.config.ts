@@ -34,7 +34,14 @@ export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SITE_URL || '',
   admin: {
     user: Users.slug,
-    meta: { titleSuffix: ' — Rohan Deshmukh Admin' },
+    meta: {
+      titleSuffix: ' — Rohan Deshmukh Admin',
+      // same "रो" icon as the website (src/app/favicon.ico, icon.png, apple-icon.png)
+      icons: [
+        { rel: 'icon', type: 'image/x-icon', url: '/favicon.ico' },
+        { rel: 'apple-touch-icon', url: '/apple-icon.png' },
+      ],
+    },
     importMap: { baseDir: path.resolve(dirname) },
     avatar: 'default',
     components: {
