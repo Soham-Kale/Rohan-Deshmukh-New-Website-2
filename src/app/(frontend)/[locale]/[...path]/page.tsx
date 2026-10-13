@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { isRemovedPath } from '@/lib/removed'
 import { draftMode } from 'next/headers'
 import { setRequestLocale } from 'next-intl/server'
 import { cache } from 'react'
@@ -25,7 +26,7 @@ export async function generateStaticParams() {
   try {
     const p = await payload()
     const res = await p.find({ collection: 'pages', limit: 200, depth: 0, select: { path: true } })
-    return res.docs.flatMap((d) => ['mr', 'en'].map((locale) => ({ locale, path: d.path.split('/').filter(Boolean) })))
+    return res.docs.filter((d) => !isRemovedPath(d.path)).flatMap((d) => ['mr', 'en'].map((locale) => ({ locale, path: d.path.split('/').filter(Boolean) })))
   } catch {
     return []
   }
@@ -47,7 +48,7 @@ export default async function CmsPage({ params }: Params) {
   const { locale, path } = await params
   setRequestLocale(locale)
   const full = '/' + path.join('/')
-  const page = await getPage(full, locale)
+  const page = isRemovedPath(full) ? null : await getPage(full, locale)
   if (!page) notFound()
   return (
     <InnerPage path={full} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} sideMenu={page.showSideMenu ?? true}>

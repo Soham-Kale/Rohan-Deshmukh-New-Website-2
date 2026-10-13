@@ -3,9 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Link, usePathname } from '@/i18n/navigation'
-import { ChevronDown, Menu, Search, X, Languages, ArrowUpRight } from 'lucide-react'
+import { ChevronDown, Menu, X, Languages, ArrowUpRight } from 'lucide-react'
 import { cn, isExternal } from '@/lib/utils'
-import { SearchOverlay } from './SearchOverlay'
 
 export type NavNode = { id?: string | null; label: string; url?: string | null; newTab?: boolean | null; children?: NavNode[] | null }
 
@@ -14,8 +13,7 @@ type Props = {
   locale: 'mr' | 'en'
   siteName: string
   logoUrl?: string | null
-  cta?: { label?: string | null; url?: string | null }
-  t: { menu: string; close: string; search: string; language: string; searchPlaceholder: string; searchHint: string; noResults: string }
+  t: { menu: string; close: string; language: string }
 }
 
 const NavLink = ({ node, className, onClick, children }: { node: NavNode; className?: string; onClick?: () => void; children: React.ReactNode }) => {
@@ -33,13 +31,12 @@ const NavLink = ({ node, className, onClick, children }: { node: NavNode; classN
   )
 }
 
-export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) {
+export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState<number | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileExpanded, setMobileExpanded] = useState<Record<string, boolean>>({})
-  const [searchOpen, setSearchOpen] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -165,9 +162,6 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5 xl:ml-2">
-            <button type="button" onClick={() => setSearchOpen(true)} className="grid size-10 place-items-center rounded-full hover:bg-white/10" aria-label={t.search}>
-              <Search className="size-5" />
-            </button>
             <Link
               href={pathname}
               locale={locale === 'mr' ? 'en' : 'mr'}
@@ -177,11 +171,6 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
               <Languages className="hidden size-4 sm:block" />
               <span>{t.language}</span>
             </Link>
-            {cta?.url && (
-              <a href={cta.url} target={isExternal(cta.url) ? '_blank' : undefined} rel="noopener" className="btn btn-primary hidden !py-2 sm:inline-flex">
-                {cta.label}
-              </a>
-            )}
             <button type="button" onClick={() => setMobileOpen(true)} className="grid size-10 place-items-center rounded-full bg-white/10 xl:hidden" aria-label={t.menu} aria-expanded={mobileOpen}>
               <Menu className="size-5" />
             </button>
@@ -207,17 +196,9 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
           <nav className="flex-1 overflow-y-auto px-3 pb-6" aria-label="Mobile">
             <MobileList nodes={nav} depth={0} expanded={mobileExpanded} setExpanded={setMobileExpanded} onNavigate={() => setMobileOpen(false)} />
           </nav>
-          {cta?.url && (
-            <div className="border-t border-white/10 p-4">
-              <a href={cta.url} target="_blank" rel="noopener" className="btn btn-primary w-full">
-                {cta.label}
-              </a>
-            </div>
-          )}
         </aside>
       </div>
 
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} locale={locale} t={{ placeholder: t.searchPlaceholder, hint: t.searchHint, noResults: t.noResults, close: t.close }} />
     </>
   )
 }

@@ -145,7 +145,7 @@ export const Videos: CollectionConfig = {
 export const DownloadPhotos: CollectionConfig = {
   slug: 'download-photos',
   labels: { singular: 'Official photo', plural: 'Official photos (download)' },
-  admin: { useAsTitle: 'title', group: 'Media', description: 'High-resolution official photos for media use', defaultColumns: ['title', 'image', 'credit'] },
+  admin: { hidden: true, /* removed from the website (Oct 2026); data kept */ useAsTitle: 'title', group: 'Media', description: 'High-resolution official photos for media use', defaultColumns: ['title', 'image', 'credit'] },
   access: { read: anyone, create: mediaTeam, update: mediaTeam, delete: editors },
   hooks,
   fields: [
@@ -184,7 +184,7 @@ export const Quotes: CollectionConfig = {
 export const LeaderMeetings: CollectionConfig = {
   slug: 'leader-meetings',
   labels: { singular: 'Meeting with leader', plural: 'Meetings with leaders' },
-  admin: { useAsTitle: 'leaderName', group: 'About', defaultColumns: ['leaderName', 'image', 'level', 'date'] },
+  admin: { hidden: true, /* removed from the website (Oct 2026); data kept */ useAsTitle: 'leaderName', group: 'About', defaultColumns: ['leaderName', 'image', 'level', 'date'] },
   access: { read: anyone, create: mediaTeam, update: mediaTeam, delete: editors },
   defaultSort: '-date',
   hooks,
@@ -199,7 +199,7 @@ export const LeaderMeetings: CollectionConfig = {
 
 export const Awards: CollectionConfig = {
   slug: 'awards',
-  admin: { useAsTitle: 'title', group: 'About', defaultColumns: ['title', 'image', 'year', 'awardingBody'] },
+  admin: { hidden: true, /* removed from the website (Oct 2026); data kept */ useAsTitle: 'title', group: 'About', defaultColumns: ['title', 'image', 'year', 'awardingBody'] },
   access: { read: anyone, create: editors, update: editors, delete: editors },
   defaultSort: '-year',
   hooks,
@@ -232,7 +232,7 @@ export const Offices: CollectionConfig = {
 export const Jobs: CollectionConfig = {
   slug: 'jobs',
   labels: { singular: 'Opening', plural: 'Career openings' },
-  admin: { useAsTitle: 'title', group: 'Content', defaultColumns: ['title', 'location', 'active', 'lastDate'] },
+  admin: { hidden: true, /* removed from the website (Oct 2026); data kept */ useAsTitle: 'title', group: 'Content', defaultColumns: ['title', 'location', 'active', 'lastDate'] },
   access: { read: anyone, create: editors, update: editors, delete: editors },
   hooks,
   fields: [

@@ -5,17 +5,12 @@ import type { ServerProps } from 'payload'
 export async function NavInbox({ payload, user }: ServerProps) {
   let n = 0
   try {
-    const counts = await Promise.all(
-      (['grievances', 'contact-messages', 'job-applications'] as const).map((c) =>
-        payload.count({ collection: c, where: { status: { equals: 'new' } }, overrideAccess: false, user }).then((r) => r.totalDocs),
-      ),
-    )
-    n = counts.reduce((a, b) => a + b, 0)
+    n = (await payload.count({ collection: 'contact-messages', where: { status: { equals: 'new' } }, overrideAccess: false, user })).totalDocs
   } catch {}
   return (
     <div className="rd-nav-top">
       <Link href="/admin" className="rd-nav-top__link">🏠 Dashboard</Link>
-      <Link href="/admin/collections/grievances" className="rd-nav-top__link">
+      <Link href="/admin/collections/contact-messages" className="rd-nav-top__link">
         📥 Inbox {n > 0 && <span className="rd-badge">{n}</span>}
       </Link>
     </div>

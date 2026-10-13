@@ -5,52 +5,13 @@
  */
 import { getPayload, type CollectionSlug, type Payload } from 'payload'
 import config from '@payload-config'
-import { englishOver, hasEnglish, pick, resolveDeep, L } from './l10n'
+import { L } from './l10n'
+import { createBilingual, updateGlobalBilingual } from './bilingual'
 import { image, isOnline } from './helpers'
 import * as G from './content-globals'
 import * as C from './content-collections'
 import { pages } from './content-pages'
 import { importBlog } from './legacy-blog'
-
-const strip = (doc: Record<string, unknown>) => {
-  const { id: _i, createdAt: _c, updatedAt: _u, ...rest } = doc
-  return rest
-}
-
-async function createBilingual(payload: Payload, collection: CollectionSlug, source: Record<string, unknown>) {
-  const data = await resolveDeep(source)
-  const mr = pick(data, 'mr')
-  const doc = await payload.create({ collection, locale: 'mr', data: mr as never, depth: 0 })
-  if (hasEnglish(data)) {
-    const saved = await payload.findByID({ collection, id: doc.id, locale: 'mr', depth: 0 })
-    for (const copyMissing of [false, true]) {
-      try {
-        await payload.update({ collection, id: doc.id, locale: 'en', depth: 0, data: strip(englishOver(data, saved, copyMissing) as Record<string, unknown>) as never })
-        break
-      } catch (e) {
-        if (copyMissing) payload.logger.warn(`English version skipped for ${collection} ${doc.id}: ${(e as Error).message}`)
-      }
-    }
-  }
-  return doc
-}
-
-async function updateGlobalBilingual(payload: Payload, slug: 'site-settings' | 'header' | 'footer' | 'home' | 'popup', source: Record<string, unknown>) {
-  const data = await resolveDeep(source)
-  const extra = slug === 'home' ? { _status: 'published' } : {}
-  await payload.updateGlobal({ slug, locale: 'mr', data: { ...(pick(data, 'mr') as object), ...extra } as never, depth: 0 })
-  if (hasEnglish(data)) {
-    const saved = await payload.findGlobal({ slug, locale: 'mr', depth: 0 })
-    for (const copyMissing of [false, true]) {
-      try {
-        await payload.updateGlobal({ slug, locale: 'en', depth: 0, data: { ...(strip(englishOver(data, saved, copyMissing) as Record<string, unknown>) as object), ...extra } as never })
-        break
-      } catch (e) {
-        if (copyMissing) payload.logger.warn(`English version skipped for global ${slug}: ${(e as Error).message}`)
-      }
-    }
-  }
-}
 
 const CONTENT: CollectionSlug[] = ['posts', 'categories', 'events', 'initiatives', 'albums', 'videos', 'download-photos', 'quotes', 'leader-meetings', 'awards', 'offices', 'jobs', 'pages', 'media', 'search']
 
@@ -114,10 +75,6 @@ async function run() {
   log('Videos & quotes…')
   for (const v of C.videos()) await createBilingual(payload, 'videos', v)
   for (const q of C.quotes()) await createBilingual(payload, 'quotes', q)
-
-  log('Official download photos…')
-  for (const [src, mr, en] of [['/images/vision/rohan-portrait.webp', 'अधिकृत छायाचित्र', 'Official portrait'], ['/images/appeal/rohan.webp', 'अधिकृत छायाचित्र २', 'Official photo 2'], ['/images/about/portrait-solapur.webp', 'सोलापूर — छायाचित्र', 'Solapur portrait']] as const)
-    await createBilingual(payload, 'download-photos', { title: L(mr, en), image: image(payload, src, mr) })
 
   log('Pages…')
   for (const pg of pages(payload)) await createBilingual(payload, 'pages', { ...pg, _status: 'published' })

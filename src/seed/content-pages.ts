@@ -47,27 +47,6 @@ export const pages = (p: Payload) => [
     ],
   },
   {
-    path: '/about/party-organisation', section: 'about', menuOrder: 5,
-    title: L('पक्ष व संघटन', 'Party & Organisation'),
-    subtitle: L('भारतीय जनता पक्ष व भारतीय जनता युवा मोर्चा', 'Bharatiya Janata Party & Bharatiya Janata Yuva Morcha'),
-    bannerImage: image(p, '/images/political/yuva-morcha.webp', 'भारतीय जनता युवा मोर्चा'),
-    layout: [
-      {
-        blockType: 'mediaText', eyebrow: L('संघटन', 'Organisation'), heading: L('भारतीय जनता युवा मोर्चा — सरचिटणीस', 'Bharatiya Janata Yuva Morcha — General Secretary'),
-        image: image(p, '/images/political/yuva-morcha.webp', 'भारतीय जनता युवा मोर्चा'),
-        body: rt(p, 'भारतीय जनता युवा मोर्चाचे सरचिटणीस म्हणून उल्लेखनीय काम. संपूर्ण महाराष्ट्रात प्रवास, युवकांमध्ये राजकीय जागृती घडविण्याचे काम. विविध सामाजिक समस्यांसाठी राजकीय पातळीवर आंदोलने.\n\n२००९ साली अमेरिकेतून नुकतेच परतल्यानंतर माढा लोकसभा मतदार संघात सुभाष देशमुख यांच्या प्रचार कार्यात सहभाग. उस्मानाबाद लोकसभा मतदार संघ संघटनात्मक दृष्ट्या मजबूत करण्यावर भर.',
-          'Notable work as General Secretary of the Bharatiya Janata Yuva Morcha — travelling across Maharashtra, building political awareness among youth and leading agitations on social issues.\n\nAfter returning from the USA in 2009, campaigned for Subhash Deshmukh in the Madha Lok Sabha constituency and focused on strengthening the organisation in the Osmanabad Lok Sabha constituency.'),
-      },
-      {
-        blockType: 'cards', heading: L('पदे व जबाबदाऱ्या', 'Positions held'), columns: '3',
-        items: [
-          { title: L('सरचिटणीस', 'General Secretary'), meta: L('भारतीय जनता युवा मोर्चा', 'BJYM') },
-          { title: L('अध्यक्ष', 'Chairman'), meta: L('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation') },
-        ],
-      },
-    ],
-  },
-  {
     path: '/lokmangal/foundation', section: 'lokmangal', menuOrder: 1,
     title: L('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation'),
     subtitle: L('सामाजिक कारकीर्द — ग्रामीण भागाचा विकास आणि नागरिकांचे जीवनमान सुधारणे.', 'Social career — rural development and better lives for citizens.'),
@@ -141,46 +120,6 @@ export const pages = (p: Payload) => [
         ],
       },
       appealCta(p),
-    ],
-  },
-  {
-    path: '/lokmangal/vishwamangal', section: 'lokmangal', menuOrder: 3,
-    title: L('विश्वमंगल', 'Vishwamangal'),
-    subtitle: L('आध्यात्मिक, सांस्कृतिक, संस्कार व गोसेवा उपक्रम', 'Spiritual, cultural, values and cow-care initiatives'),
-    layout: [
-      { blockType: 'content', body: rt(p, 'विश्वमंगल हे लोकमंगल परिवाराच्या आध्यात्मिक, सांस्कृतिक आणि सामाजिक कार्याचे केंद्र आहे. येथे सर्व धर्मांचा आदर, भक्ती, चांगले संस्कार आणि गोसेवा यांना महत्त्व दिले जाते. संत ज्ञानेश्वर माऊलींच्या ७५०व्या जन्मवर्षानिमित्त पसायदानाचा विश्वकल्याणाचा संदेश जगभर पोहोचवणे हे विश्वमंगलचे प्रमुख उद्दिष्ट आहे.', 'Vishwamangal is the centre of the Lokmangal family’s spiritual, cultural and social work — respecting all faiths, devotion, good values and cow care. Its main aim is to carry the Pasaydan’s message of universal welfare across the world on the 750th birth year of Sant Dnyaneshwar.') },
-      { blockType: 'stats', items: [{ value: '९,०००+', label: L('वृक्ष लागवड', 'Trees planted') }, { value: '४२ एकर', label: L('ड्रीम गार्डन प्रकल्प', 'Dream Garden project') }, { value: '१०+', label: L('जागतिक शिखर समिती सदस्य', 'Global apex committee') }, { value: '७५०+', label: L('ज्ञानेश्वरी वर्षे', 'Years of Dnyaneshwari') }] },
-      { blockType: 'quote', text: L('मराठी भाषा व मराठी समाजाच्या उन्नतीसाठी सर्वतोपरी प्रयत्न करणे', 'To strive in every way for the upliftment of the Marathi language and Marathi society'), author: L('विश्वमंगल मराठी फाऊंडेशन — स्थापना: फेब्रुवारी २०२६', 'Vishwamangal Marathi Foundation — est. February 2026') },
-      {
-        blockType: 'cards', eyebrow: L('🎯 उद्दिष्टे', '🎯 Objectives'), heading: L('सहा प्रमुख उद्दिष्टे', 'Six key objectives'), columns: '3',
-        items: [
-          { icon: '01', title: L('अध्यात्म — ज्ञानेश्वरीतील शिकवण', 'Spirituality'), text: L('संत श्री ज्ञानेश्वर माऊलींच्या जन्म वर्षाला ७५० वर्षे पूर्ण झाल्याच्या निमित्ताने पसायदानाद्वारे विश्व कल्याणाचा संदेश जगभर पोहोचवणे.') },
-          { icon: '02', title: L('संस्कृती — मराठी भाषा व परंपरेचा प्रचार', 'Culture'), text: L('मराठी भाषा, संस्कृती आणि परंपरेचा जागतिक स्तरावर प्रचार करणे — मराठी अस्मितेचा जागतिक झेंडा उंचावणे.') },
-          { icon: '03', title: L('शिक्षण — मराठी शाळांचे पुनरुज्जीवन', 'Education'), text: L('महाराष्ट्रातील मराठी शाळांचे पुनरुज्जीवन करणे व त्यांचा उत्कर्ष साधणे. मराठी शाळा दत्तक योजनेद्वारे उद्योजक व संस्थांनी शाळा दत्तक घ्याव्यात असे आवाहन.') },
-          { icon: '04', title: L('संघटन — जागतिक मराठी समाजाचे एकत्रीकरण', 'Organisation'), text: L('जागतिक स्तरावर मराठी भाषिक समाजाचे संघटन करणे — जगभरातील मराठी माणसांना एका धाग्यात गुंफणे.') },
-          { icon: '05', title: L('संवाद — परस्पर ज्ञानविनिमय व सहकार्य', 'Dialogue'), text: L('जगभर विखुरलेल्या मराठी समाजाला एका व्यासपीठावर आणून परस्पर संवाद, सहकार्य व ज्ञानविनिमयाची संधी निर्माण करणे.') },
-          { icon: '06', title: L('उद्योग — मराठी उद्योजकांना जागतिक व्यासपीठ', 'Enterprise'), text: L('जगभरातील मराठी उद्योजकांना महाराष्ट्रात उद्योग उभारण्यास प्रोत्साहन देणे.') },
-        ],
-      },
-      {
-        blockType: 'cards', eyebrow: L('🚀 ४ उपक्रम', '🚀 4 programmes'), heading: L('प्रमुख उपक्रम व प्रकल्प', 'Key programmes'), columns: '2',
-        items: [
-          { title: L('ज्ञानेश्वरी ७५० वर्ष सोहळा — पसायदान विश्व संदेश'), meta: L('१५ मे २०२६ · सोलापूर'), text: L('पसायदानाद्वारे विश्व कल्याणाचा संदेश जगभर पोहोचवण्यासाठी हा भव्य सोहळा आयोजित करण्यात आला.') },
-          { title: L('मराठी उद्योजक परिषद — जागतिक व्यासपीठ'), meta: L('१४ जून २०२६ · पुणे'), text: L('जगभरातील मराठी उद्योजकांना एका व्यासपीठावर आणून महाराष्ट्राच्या औद्योगिक विकासाला चालना देण्यासाठी परिषद.') },
-          { title: L('मराठी शाळा दत्तक योजना'), meta: L('१४ जुलै २०२६ · महाराष्ट्र, सर्व जिल्हे'), text: L('मराठी माध्यमाच्या शाळांना पायाभूत सुविधा, शिक्षण साहित्य, डिजिटल उपकरणे आणि इतर आवश्यक मदत पुरवली जाते.') },
-          { title: L('युवा नेतृत्व कार्यक्रम'), meta: L('नियमित उपक्रम'), text: L('मराठी युवा वर्गाला नेतृत्वाची संधी देण्यासाठी व नेतृत्वगुण विकसित करण्यासाठी कार्यक्रम.') },
-        ],
-      },
-      {
-        blockType: 'cards', columns: '2',
-        items: [
-          { icon: '🛕', title: L('विश्वमंगल धाम'), text: L('भगवान श्रीराम, लक्ष्मण, सीता व हनुमान यांच्या विशाल मूर्तीसह सजलेले विश्वमंगल धाम सोलापुरातील एक आध्यात्मिक ऊर्जाकेंद्र बनले आहे.') },
-          { icon: '🎭', title: L('सांस्कृतिक व संस्कार चळवळ'), text: L('भजनी मंडळांना भेट, जागतिक महिला दिन, किल्ले बांधणी स्पर्धा, आदर्श माता पुरस्कार, गुणवंत विद्यार्थ्यांचा सत्कार, वहीवाटप असे उपक्रम.') },
-          { icon: '🐄', title: L('गोसेवा व संवर्धन'), text: L('विश्वमंगल परिवाराच्या माध्यमातून गोसंरक्षण व गोसेवेचा उपक्रम राबविला जातो.') },
-          { icon: '🌍', title: L('सामुदायिक सेवा उपक्रम'), text: L('पर्यावरण रक्षण, शेतमालावर प्रक्रिया प्रशिक्षण, बचत गटांना बाजारपेठ, महिला सक्षमीकरण आणि ग्रामविकास.') },
-        ],
-      },
-      { blockType: 'content', eyebrow: L('📞 संपर्क', '📞 Contact'), heading: L('संपर्क व माहिती', 'Contact'), body: rt(p, 'विश्वमंगल मराठी फाऊंडेशन सोलापूर येथे नोंदणीकृत आहे. ऑनलाइन सदस्य नोंदणीसाठी [registration.vishwamangalfoundation.org](https://registration.vishwamangalfoundation.org) ला भेट द्या.\n\n**नोंदणी पत्ता:** शॉप नं. २०५, लोकमंगल ऑक्सी पार्क, मुरारजी पेठ, सोलापूर – ४१३००२\n\n**WhatsApp:** 7498506390 | **Instagram:** @vishwamangal_foundation') },
     ],
   },
   {

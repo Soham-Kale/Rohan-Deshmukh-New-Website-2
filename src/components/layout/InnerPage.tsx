@@ -23,7 +23,7 @@ type Props = {
 export async function InnerPage({ path, locale, title, subtitle, image, imagePosition, crumbs, sideMenu = true, wide, children }: Props) {
   const menu = await getSectionMenu(path, locale)
   const t = await getTranslations('common')
-  const autoCrumbs: Crumb[] = crumbs ?? [...(menu.title ? [{ label: menu.title, href: menu.sectionHref }] : []), { label: title }]
+  const autoCrumbs: Crumb[] = crumbs ?? [...(menu.title && menu.title !== title ? [{ label: menu.title, href: menu.sectionHref }] : []), { label: title }]
   const showMenu = sideMenu && menu.items.length > 1
   return (
     <>

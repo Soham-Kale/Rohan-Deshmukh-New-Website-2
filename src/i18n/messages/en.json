@@ -19,7 +19,7 @@
     "invalidMobile": "Please enter a valid 10-digit mobile number", "fileTooBig": "File is larger than 5MB", "fileType": "This file type is not accepted"
   },
   "pages": {
-    "socialWork": "Social Work", "initiatives": "Initiatives", "allInitiatives": "All initiatives", "photoGallery": "Photo Gallery", "videoGallery": "Video Gallery",
+    "socialWork": "Social Initiatives", "initiatives": "Initiatives", "allInitiatives": "All initiatives", "photoGallery": "Photo Gallery", "videoGallery": "Video Gallery",
     "downloads": "Download Official Photos", "blog": "Blog", "awards": "Achievements & Awards", "quotes": "Thoughts", "leaders": "Meetings with Leaders",
     "contact": "Contact", "grievance": "Grievance / Suggestion", "careers": "Careers / Volunteer", "media": "Media", "about": "About", "events": "Events",
     "officeLocations": "Offices", "openings": "Current openings", "noOpenings": "No openings right now. You can still send us your CV using the form below.",
@@ -38,5 +38,14 @@
     "keyPoints": "Key points", "fullStory": "Full article", "more": "More articles",
     "seeAll": "See all articles", "place": "Solapur", "results": "Results for “{q}”",
     "daily": "Daily updates • Public relations desk, Solapur"
+  },
+  "events": {
+    "title": "Events", "intro": "Lokmangal Foundation initiatives, ceremonies, campaigns and articles — in one place.", "initiatives": "Lokmangal Foundation initiatives & events",
+    "initiativesIntro": "Initiatives for the upliftment of rural communities — food, education, health, water, women and youth.", "featured": "Key events & campaigns", "blog": "Blog — latest articles",
+    "readMore": "Read more", "prev": "Previous", "next": "Next",
+    "manifestoText": "A manifesto for a self-reliant India — building one lakh new entrepreneurs.", "event": "Event", "campaign": "Campaign"
+  },
+  "family": {
+    "title": "Family", "intro": "The Deshmukh family — a tradition of values, service and hard work.", "parivar": "Lokmangal Parivar"
   }
 }

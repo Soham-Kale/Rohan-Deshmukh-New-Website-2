@@ -14,10 +14,8 @@ export async function Dashboard({ payload, user }: ServerProps) {
   const count = (collection: Parameters<typeof payload.count>[0]['collection'], where?: object) =>
     payload.count({ collection, where: where as never, overrideAccess: false, user }).then((r) => r.totalDocs).catch(() => 0)
 
-  const [newGrievances, newMessages, newApplications, pages, posts, initiatives, albums, photos] = await Promise.all([
-    count('grievances', { status: { equals: 'new' } }),
+  const [newMessages, pages, posts, initiatives, albums, photos] = await Promise.all([
     count('contact-messages', { status: { equals: 'new' } }),
-    count('job-applications', { status: { equals: 'new' } }),
     count('pages'),
     count('posts'),
     count('initiatives'),
@@ -25,7 +23,7 @@ export async function Dashboard({ payload, user }: ServerProps) {
     count('media'),
   ])
 
-  const recent = async (collection: 'grievances' | 'contact-messages' | 'job-applications', label: string) => {
+  const recent = async (collection: 'contact-messages', label: string) => {
     try {
       const r = await payload.find({ collection, limit: 5, sort: '-createdAt', depth: 0, overrideAccess: false, user })
       return r.docs.map((d: Record<string, any>) => ({ id: d.id, collection, label, name: d.name, sub: d.subject || d.issue || d.message || '', status: d.status, ref: d.referenceNo, at: d.createdAt }))
@@ -33,12 +31,9 @@ export async function Dashboard({ payload, user }: ServerProps) {
       return []
     }
   }
-  const inbox = (await Promise.all([recent('grievances', 'Grievance'), recent('contact-messages', 'Contact'), recent('job-applications', 'Application')]))
-    .flat()
-    .sort((a, b) => +new Date(b.at) - +new Date(a.at))
-    .slice(0, 6)
+  const inbox = (await recent('contact-messages', 'Contact')).slice(0, 6)
 
-  const newTotal = newGrievances + newMessages + newApplications
+  const newTotal = newMessages
   const site = process.env.NEXT_PUBLIC_SITE_URL || '/'
 
   const actions = [
@@ -68,15 +63,13 @@ export async function Dashboard({ payload, user }: ServerProps) {
         </div>
         <div className="rd-dash__hero-actions">
           <a className="rd-btn rd-btn--light" href={site} target="_blank" rel="noopener noreferrer">View website ↗</a>
-          <Link className="rd-btn rd-btn--ghost" href="/admin/collections/grievances">Open inbox{newTotal ? ` (${newTotal} new)` : ''}</Link>
+          <Link className="rd-btn rd-btn--ghost" href="/admin/collections/contact-messages">Open inbox{newTotal ? ` (${newTotal} new)` : ''}</Link>
         </div>
       </section>
 
       <section className="rd-dash__inbox-stats">
         {[
-          { label: 'New grievances / suggestions', value: newGrievances, href: '/admin/collections/grievances?where[status][equals]=new' },
           { label: 'New contact messages', value: newMessages, href: '/admin/collections/contact-messages?where[status][equals]=new' },
-          { label: 'New job applications', value: newApplications, href: '/admin/collections/job-applications?where[status][equals]=new' },
         ].map((s) => (
           <Link key={s.label} href={s.href} className={`rd-stat ${s.value ? 'rd-stat--alert' : ''}`}>
             <span className="rd-stat__value">{s.value}</span>
@@ -112,7 +105,7 @@ export async function Dashboard({ payload, user }: ServerProps) {
         <section className="rd-panel">
           <div className="rd-panel__head">
             <h2 className="rd-panel__title">Latest inbox</h2>
-            <Link href="/admin/collections/grievances" className="rd-link">See all →</Link>
+            <Link href="/admin/collections/contact-messages" className="rd-link">See all →</Link>
           </div>
           {inbox.length ? (
             <ul className="rd-inbox">
@@ -130,7 +123,7 @@ export async function Dashboard({ payload, user }: ServerProps) {
               ))}
             </ul>
           ) : (
-            <p className="rd-empty">No messages yet. Contact, grievance and career form submissions will appear here.</p>
+            <p className="rd-empty">No messages yet. Contact form submissions will appear here.</p>
           )}
         </section>
       </div>

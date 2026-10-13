@@ -93,3 +93,11 @@ The following are left out of this build, as marked in the requirements document
 - Political Career sub-pages (the overview page is kept as a simple content page).
 - Media: News Coverage, Print Media, Press Releases.
 - Volunteer form on Appeal, Daily Programme (Daura), Newsletter.
+- Removed in the Oct 2026 restructure (old links redirect to the nearest page): Achievements & Awards, Party & Organisation,
+  Meetings with Leaders, Vishwamangal, Download Official Photos, Grievance / Suggestion, Careers / Volunteer, site search
+  and the "Join us" header button. Their admin sections are hidden; existing data is kept.
+
+**Menu after the restructure:** Home · About (Biography, Family, Thoughts, Social Initiatives, Political Career) ·
+Lokmangal (Foundation, Parivar, Initiatives) · Events (All events, Community Weddings, New India Manifesto, Blog) ·
+Gallery (Photos, Videos) · Connect (Appeal, Contact). To apply it to an existing local database run `npm run menu:update`
+(the live site gets it automatically through a migration on the next deploy).

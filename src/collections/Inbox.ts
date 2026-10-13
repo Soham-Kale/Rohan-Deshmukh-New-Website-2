@@ -77,7 +77,7 @@ export const ContactMessages: CollectionConfig = {
 export const Grievances: CollectionConfig = {
   slug: 'grievances',
   labels: { singular: 'Grievance / Suggestion', plural: 'Grievances / Suggestions' },
-  admin: { useAsTitle: 'name', group: 'Inbox', defaultColumns: ['referenceNo', 'name', 'mobile', 'type', 'status', 'createdAt'] },
+  admin: { hidden: true, /* removed from the website (Oct 2026); data kept */ useAsTitle: 'name', group: 'Inbox', defaultColumns: ['referenceNo', 'name', 'mobile', 'type', 'status', 'createdAt'] },
   access: inboxAccess,
   hooks: {
     beforeChange: [
@@ -107,7 +107,7 @@ export const Grievances: CollectionConfig = {
 export const JobApplications: CollectionConfig = {
   slug: 'job-applications',
   labels: { singular: 'Job application', plural: 'Job applications' },
-  admin: { useAsTitle: 'name', group: 'Inbox', defaultColumns: ['name', 'mobile', 'job', 'status', 'createdAt'] },
+  admin: { hidden: true, /* removed from the website (Oct 2026); data kept */ useAsTitle: 'name', group: 'Inbox', defaultColumns: ['name', 'mobile', 'job', 'status', 'createdAt'] },
   access: inboxAccess,
   hooks: { afterChange: [notify('job application', ['name', 'mobile', 'email', 'message'])] },
   fields: [

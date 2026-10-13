@@ -19,10 +19,8 @@ export const settings = (p: Payload) => ({
     youtube: 'https://youtube.com/@rd.connects',
     linkedin: 'https://www.linkedin.com/in/rohan-deshmukh-politician',
   },
-  ctaLabel: L('साथ द्या', 'Join us'),
-  ctaUrl: '/appeal',
   connectTagLabel: '#ConnectWithRohan',
-  connectTagUrl: '/grievance',
+  connectTagUrl: '/contact',
   appealHeading: L('चांगल्या महाराष्ट्राच्या उभारणीसाठी आम्हाला साथ द्या', 'Join us in building a better Maharashtra'),
   appealButtonLabel: L('हो! मी तयार आहे!!!', 'YES! I AM IN!!!'),
   appealButtonUrl: '/contact',
@@ -31,49 +29,35 @@ export const settings = (p: Payload) => ({
 })
 
 const n = (mr: string, en: string, url?: string, children?: unknown[], newTab = false) => ({ label: L(mr, en), url, newTab, children })
-/** level-3 items are stored as `subItems` */
-const n2 = (mr: string, en: string, url: string | undefined, sub: unknown[]) => ({ label: L(mr, en), url, subItems: sub })
 
 export const header = () => ({
   nav: [
     n('मुख्य पृष्ठ', 'Home', '/'),
     n('परिचय', 'About', '/about/biography', [
       n('जीवनचरित्र', 'Biography', '/about/biography'),
-      n('पुरस्कार व सन्मान', 'Achievements & Awards', '/about/achievements'),
+      n('परिवार', 'Family', '/about/family'),
       n('विचार', 'Thoughts / Quotes', '/about/thoughts'),
-      n('मान्यवरांच्या भेटी', 'Meetings with Leaders', '/about/leaders'),
-      n('पक्ष व संघटन', 'Party & Organisation', '/about/party-organisation'),
+      n('सामाजिक उपक्रम', 'Social Initiatives', '/social-work'),
+      n('राजकीय कारकीर्द', 'Political Career', '/political-career'),
     ]),
-    n('लोकमंगल', 'Lokmangal', '/social-work', [
-      n2('संस्था', 'Organisations', undefined, [
-        n('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'),
-        n('लोकमंगल परिवार', 'Lokmangal Parivar', '/lokmangal/parivar'),
-        n('विश्वमंगल', 'Vishwamangal', '/lokmangal/vishwamangal'),
-      ]),
-      n2('सामाजिक कार्य', 'Social Work', '/social-work', [
-        n('सर्व उपक्रम', 'All initiatives', '/social-work'),
-        n('लोकमंगल अन्नपूर्णा योजना', 'Annapurna Yojana', '/social-work/annapurna-yojana'),
-        n('लोटस', 'LOTUS', '/social-work/lotus'),
-        n('जलसंधारण प्रकल्प', 'Water Conservation', '/social-work/jalsandharan'),
-      ]),
-      n2('कार्यक्रम', 'Events', undefined, [
-        n('सामुदायिक विवाह सोहळा', 'Community Weddings', '/events/samudayik-vivah-sohala'),
-        n('फोटो संग्रह', 'Photo Gallery', '/media/photos'),
-      ]),
+    n('लोकमंगल', 'Lokmangal', '/lokmangal/foundation', [
+      n('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'),
+      n('लोकमंगल परिवार', 'Lokmangal Parivar', '/lokmangal/parivar'),
+      n('उपक्रम', 'Initiatives', '/social-work'),
     ]),
-    n('राजकीय कारकीर्द', 'Political Career', '/political-career'),
-    n('मीडिया', 'Media', '/media/photos', [
-      n('फोटो संग्रह', 'Photo Gallery', '/media/photos'),
-      n('व्हिडिओ संग्रह', 'Video Gallery', '/media/videos'),
-      n('अधिकृत फोटो डाउनलोड', 'Download Photos', '/media/downloads'),
+    n('कार्यक्रम', 'Events', '/events', [
+      n('सर्व कार्यक्रम', 'All events', '/events'),
+      n('सामुदायिक विवाह सोहळा', 'Community Weddings', '/events/samudayik-vivah-sohala'),
+      n('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto', '/vision'),
       n('ब्लॉग', 'Blog', '/blog'),
     ]),
+    n('गॅलरी', 'Gallery', '/media/photos', [
+      n('फोटो संग्रह', 'Photo Gallery', '/media/photos'),
+      n('व्हिडिओ संग्रह', 'Video Gallery', '/media/videos'),
+    ]),
     n('संपर्क', 'Connect', '/contact', [
-      n('व्हिजन', 'Vision', '/vision'),
       n('आवाहन', 'Appeal', '/appeal'),
       n('संपर्क', 'Contact', '/contact'),
-      n('तक्रार / सूचना', 'Grievance / Suggestion', '/grievance'),
-      n('करिअर / स्वयंसेवक', 'Careers / Volunteer', '/careers'),
     ]),
   ],
 })
@@ -82,8 +66,8 @@ const lk = (mr: string, en: string, url: string) => ({ label: L(mr, en), url })
 
 export const footer = () => ({
   columns: [
-    { title: L('महत्त्वाचे दुवे', 'Quick links'), links: [lk('मुख्य पृष्ठ', 'Home', '/'), lk('राजकीय कारकीर्द', 'Political Career', '/political-career'), lk('व्हिजन', 'Vision', '/vision'), lk('आवाहन', 'Appeal', '/appeal'), lk('ब्लॉग', 'Blog', '/blog')] },
-    { title: L('परिचय', 'About'), links: [lk('जीवनचरित्र', 'Biography', '/about/biography'), lk('पुरस्कार व सन्मान', 'Awards', '/about/achievements'), lk('विचार', 'Thoughts', '/about/thoughts'), lk('फोटो संग्रह', 'Photo Gallery', '/media/photos'), lk('संपर्क', 'Contact', '/contact'), lk('तक्रार / सूचना', 'Grievance', '/grievance')] },
+    { title: L('महत्त्वाचे दुवे', 'Quick links'), links: [lk('मुख्य पृष्ठ', 'Home', '/'), lk('कार्यक्रम', 'Events', '/events'), lk('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto', '/vision'), lk('आवाहन', 'Appeal', '/appeal'), lk('ब्लॉग', 'Blog', '/blog')] },
+    { title: L('परिचय', 'About'), links: [lk('जीवनचरित्र', 'Biography', '/about/biography'), lk('परिवार', 'Family', '/about/family'), lk('विचार', 'Thoughts', '/about/thoughts'), lk('राजकीय कारकीर्द', 'Political Career', '/political-career'), lk('फोटो संग्रह', 'Photo Gallery', '/media/photos'), lk('संपर्क', 'Contact', '/contact')] },
     { title: L('सामाजिक उपक्रम', 'Social initiatives'), links: [lk('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'), lk('अन्नपूर्णा योजना', 'Annapurna Yojana', '/social-work/annapurna-yojana'), lk('लोटस', 'LOTUS', '/social-work/lotus'), lk('सामुदायिक विवाह', 'Community Weddings', '/social-work/samudayik-vivah'), lk('जलसंधारण', 'Water Conservation', '/social-work/jalsandharan'), lk('सर्व उपक्रम', 'All initiatives', '/social-work')] },
   ],
   legalLinks: [lk('गोपनीयता धोरण', 'Privacy Policy', '/privacy-policy'), lk('अटी व शर्ती', 'Terms & Conditions', '/terms'), lk('अस्वीकरण', 'Disclaimer', '/disclaimer')],
