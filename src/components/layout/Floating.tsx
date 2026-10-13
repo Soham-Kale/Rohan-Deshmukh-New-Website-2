@@ -11,7 +11,7 @@ export function SocialBar({ social }: { social: Record<string, string | null | u
   if (!items.length) return null
   return (
     <aside aria-label="Social media" className="fixed left-0 top-1/2 z-40 hidden -translate-y-1/2 lg:block">
-      <ul className="flex flex-col overflow-hidden rounded-r-2xl bg-maroon-900/90 shadow-lg backdrop-blur">
+      <ul className="flex flex-col overflow-hidden rounded-r-2xl bg-charcoal-900/90 shadow-lg backdrop-blur">
         {items.map(([k, v]) => (
           <li key={k}>
             <a href={v!} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} className="grid size-11 place-items-center text-white/80 transition hover:bg-saffron-500 hover:text-white">
@@ -51,7 +51,7 @@ export function FloatingButtons({ whatsapp, labels }: { whatsapp?: string | null
         type="button"
         onClick={() => window.scrollTo({ top: 0 })}
         aria-label={labels.top}
-        className={cn('grid size-11 place-items-center rounded-full bg-maroon-900 text-white shadow-lg transition', show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0')}
+        className={cn('grid size-11 place-items-center rounded-full bg-charcoal-900 text-white shadow-lg transition', show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0')}
       >
         <ArrowUp className="size-5" />
       </button>
@@ -86,7 +86,7 @@ export function SitePopup({ data, closeLabel }: { data: PopupData | null; closeL
     } catch {}
   }
   return (
-    <div className="fixed inset-0 z-[80] grid place-items-center bg-maroon-950/70 p-4" role="dialog" aria-modal="true" onClick={close}>
+    <div className="fixed inset-0 z-[80] grid place-items-center bg-charcoal-950/70 p-4" role="dialog" aria-modal="true" onClick={close}>
       <div className="animate-fade-up relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <button type="button" onClick={close} aria-label={closeLabel} className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-white/90 shadow">
           <X className="size-5" />
@@ -98,7 +98,7 @@ export function SitePopup({ data, closeLabel }: { data: PopupData | null; closeL
         )}
         {(data.title || data.text || data.linkUrl) && (
           <div className="p-6">
-            {data.title && <h2 className="font-display text-2xl text-maroon-900">{data.title}</h2>}
+            {data.title && <h2 className="font-display text-2xl text-charcoal-900">{data.title}</h2>}
             {data.text && <p className="mt-2 text-muted">{data.text}</p>}
             {data.linkUrl && (
               <a href={data.linkUrl} onClick={close} className="btn btn-primary mt-5">

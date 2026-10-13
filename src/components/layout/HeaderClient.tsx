@@ -84,8 +84,8 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
           transparent
             ? 'bg-gradient-to-b from-black/55 to-transparent'
             : scrolled
-              ? 'bg-maroon-900/95 shadow-[0_10px_30px_-18px_rgba(0,0,0,.6)] backdrop-blur'
-              : 'bg-maroon-900',
+              ? 'bg-charcoal-900/95 shadow-[0_10px_30px_-18px_rgba(0,0,0,.6)] backdrop-blur'
+              : 'bg-charcoal-900',
         )}
       >
         <div className={cn('container-x flex items-center gap-2 transition-[height] duration-300 sm:gap-4', scrolled ? 'h-16' : 'h-20')}>
@@ -131,13 +131,13 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
                           {item.children!.map((c, j) =>
                             isMega ? (
                               <div key={c.id ?? j}>
-                                <NavLink node={c} className="mb-2 block font-display text-lg text-maroon-900 hover:text-saffron-600">
+                                <NavLink node={c} className="mb-2 block font-display text-lg text-charcoal-900 hover:text-saffron-600">
                                   {c.label}
                                 </NavLink>
                                 <ul className="space-y-0.5">
                                   {c.children?.map((g, k) => (
                                     <li key={g.id ?? k}>
-                                      <NavLink node={g} className="block rounded-lg px-2 py-1.5 text-[0.95rem] text-muted hover:bg-saffron-50 hover:text-maroon-900">
+                                      <NavLink node={g} className="block rounded-lg px-2 py-1.5 text-[0.95rem] text-muted hover:bg-saffron-50 hover:text-charcoal-900">
                                         {g.label}
                                       </NavLink>
                                     </li>
@@ -148,7 +148,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
                               <NavLink
                                 key={c.id ?? j}
                                 node={c}
-                                className={cn('flex items-center justify-between gap-6 rounded-xl px-3 py-2.5 text-[0.98rem] hover:bg-saffron-50 hover:text-maroon-900', isActive(c) && 'bg-saffron-50 text-saffron-700')}
+                                className={cn('flex items-center justify-between gap-6 rounded-xl px-3 py-2.5 text-[0.98rem] hover:bg-saffron-50 hover:text-charcoal-900', isActive(c) && 'bg-saffron-50 text-saffron-700')}
                               >
                                 {c.label}
                                 {(isExternal(c.url) || c.newTab) && <ArrowUpRight className="size-4 opacity-50" />}
@@ -191,10 +191,10 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
 
       {/* Mobile drawer */}
       <div className={cn('fixed inset-0 z-[60] overflow-hidden transition-[visibility] xl:hidden', mobileOpen ? 'pointer-events-auto visible delay-0' : 'pointer-events-none invisible delay-300')} aria-hidden={!mobileOpen}>
-        <div className={cn('absolute inset-0 bg-maroon-950/60 transition-opacity', mobileOpen ? 'opacity-100' : 'opacity-0')} onClick={() => setMobileOpen(false)} />
+        <div className={cn('absolute inset-0 bg-charcoal-950/60 transition-opacity', mobileOpen ? 'opacity-100' : 'opacity-0')} onClick={() => setMobileOpen(false)} />
         <aside
           className={cn(
-            'absolute inset-y-0 right-0 flex w-[min(420px,100%)] flex-col bg-maroon-900 text-white shadow-2xl transition-transform duration-300',
+            'absolute inset-y-0 right-0 flex w-[min(420px,100%)] flex-col bg-charcoal-900 text-white shadow-2xl transition-transform duration-300',
             mobileOpen ? 'translate-x-0' : 'translate-x-full',
           )}
         >

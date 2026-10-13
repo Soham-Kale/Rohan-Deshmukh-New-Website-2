@@ -16,7 +16,7 @@ export function SideMenu({ title, items, current }: { title: string; items: { la
                 aria-current={active ? 'page' : undefined}
                 className={cn(
                   'block rounded-full border px-4 py-2 text-[0.98rem] transition lg:rounded-xl lg:border-0 lg:border-l-4 lg:px-4 lg:py-2.5',
-                  active ? 'border-saffron-500 bg-saffron-50 font-semibold text-maroon-900' : 'border-line text-muted hover:bg-cream hover:text-maroon-900 lg:border-transparent',
+                  active ? 'border-saffron-500 bg-saffron-50 font-semibold text-charcoal-900' : 'border-line text-muted hover:bg-cream hover:text-charcoal-900 lg:border-transparent',
                 )}
               >
                 {it.label}

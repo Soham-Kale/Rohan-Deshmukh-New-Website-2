@@ -22,7 +22,7 @@ export function QuoteGrid({ quotes, shareLabel }: { quotes: Q[]; shareLabel: str
                 <Image src={q.image.thumb} alt={q.text.slice(0, 120)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition hover:scale-105" />
               </button>
             ) : (
-              <div className="grain flex aspect-square flex-col justify-between bg-maroon-900 p-7 text-white">
+              <div className="grain flex aspect-square flex-col justify-between bg-charcoal-900 p-7 text-white">
                 <Quote className="size-9 text-saffron-500" />
                 <p className="font-display text-xl leading-relaxed md:text-2xl">{q.text}</p>
                 <p className="text-sm text-saffron-300">— रोहन सुभाष देशमुख</p>

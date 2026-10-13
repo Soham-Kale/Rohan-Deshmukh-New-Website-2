@@ -31,7 +31,7 @@ export default async function VideosPage({ params, searchParams }: P) {
         {res.docs.map((v) => (
           <div key={v.id}>
             <YouTube url={v.youtubeUrl} />
-            <h2 className="mt-3 text-lg text-maroon-900">{v.title}</h2>
+            <h2 className="mt-3 text-lg text-charcoal-900">{v.title}</h2>
             <p className="text-sm text-muted">{[v.playlist, formatDate(v.publishedAt, locale)].filter(Boolean).join(' · ')}</p>
           </div>
         ))}

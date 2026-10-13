@@ -43,7 +43,7 @@ export default async function SearchPage({ params, searchParams }: P) {
                   <li key={d.id}>
                     <Link href={(d as { url?: string }).url || '/'} className="group block py-5">
                       <span className="text-xs font-semibold uppercase tracking-wide text-saffron-700">{typeLabel[rel]?.[locale]}</span>
-                      <p className="mt-1 text-xl text-maroon-900 group-hover:text-saffron-700">{d.title}</p>
+                      <p className="mt-1 text-xl text-charcoal-900 group-hover:text-saffron-700">{d.title}</p>
                       {(d as { excerpt?: string }).excerpt && <p className="mt-1 line-clamp-2 text-muted">{(d as { excerpt?: string }).excerpt}</p>}
                     </Link>
                   </li>

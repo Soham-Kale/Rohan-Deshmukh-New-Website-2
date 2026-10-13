@@ -35,11 +35,11 @@ export default async function PhotosPage({ params, searchParams }: P) {
             <Link key={a.id} href={`/media/photos/${a.slug}`} className="group">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-cream">
                 {cover && <Image src={cover} alt={mediaAlt(a.cover, a.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(a.cover, 4 / 3, 0.6)} />}
-                <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-maroon-900/85 px-3 py-1 text-sm text-white backdrop-blur">
+                <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-charcoal-900/85 px-3 py-1 text-sm text-white backdrop-blur">
                   <Images className="size-4" /> {a.photos?.length ?? 0}
                 </span>
               </div>
-              <h2 className="mt-3 text-lg text-maroon-900 group-hover:text-saffron-700">{a.title}</h2>
+              <h2 className="mt-3 text-lg text-charcoal-900 group-hover:text-saffron-700">{a.title}</h2>
               {a.date && <p className="text-sm text-muted">{formatDate(a.date, locale)}</p>}
             </Link>
           )

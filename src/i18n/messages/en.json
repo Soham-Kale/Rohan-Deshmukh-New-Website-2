@@ -26,5 +26,17 @@
     "lastDate": "Last date", "photosInAlbum": "photos", "awardsIntro": "Recognition received for work done for society.",
     "thanks": "These honours are not mine alone — they belong to every member of the Lokmangal family and every citizen who placed their trust in us.",
     "contentComing": "Content coming soon."
+  },
+  "blog": {
+    "kicker": "Media room • Official platform", "title": "Articles & Perspectives", "intro": "Articles and ideas by Rohan Subhash Deshmukh on social work, policy, farming, education and development — from Solapur.",
+    "edition": "Solapur edition | Digital media desk", "breaking": "Latest", "topStories": "Top stories & highlights",
+    "topBadge": "TOP STORIES", "lead": "Lead story", "readFull": "Read the full article",
+    "latestUpdates": "Latest articles", "sections": "Sections", "searchPlaceholder": "Search articles or topics…",
+    "allList": "All articles", "showing": "Showing {count} articles", "readMore": "Read more",
+    "topics": "Topics", "recent": "Recent articles", "allTopics": "All articles",
+    "back": "Back to all articles", "fontSize": "Text", "print": "Print",
+    "keyPoints": "Key points", "fullStory": "Full article", "more": "More articles",
+    "seeAll": "See all articles", "place": "Solapur", "results": "Results for “{q}”",
+    "daily": "Daily updates • Public relations desk, Solapur"
   }
 }

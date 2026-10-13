@@ -28,7 +28,7 @@ export function GrievanceForm() {
   return (
     <FormShell state={state} pending={pending} action={formAction}>
       <fieldset className="md:col-span-2">
-        <legend className="mb-2 text-sm font-semibold text-maroon-900">{t('type')}</legend>
+        <legend className="mb-2 text-sm font-semibold text-charcoal-900">{t('type')}</legend>
         <div className="flex gap-3">
           {(['grievance', 'suggestion'] as const).map((v) => (
             <label key={v} className="flex cursor-pointer items-center gap-2 rounded-full border border-line px-4 py-2 has-[:checked]:border-saffron-500 has-[:checked]:bg-saffron-50">

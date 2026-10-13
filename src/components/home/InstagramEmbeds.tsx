@@ -13,7 +13,7 @@ export function InstagramEmbeds({ urls }: { urls: { url: string; title: string }
         {urls.map((u) => (
           <div key={u.url} className="relative w-[300px] shrink-0 snap-start overflow-hidden sm:w-[328px]">
             <blockquote className="instagram-media" data-instgrm-permalink={u.url} data-instgrm-version="14" style={{ margin: 0, minWidth: 0, width: '100%', borderRadius: 16 }}>
-              <a href={u.url} target="_blank" rel="noopener" className="block rounded-2xl border border-line bg-white p-6 text-maroon-900">{u.title || u.url}</a>
+              <a href={u.url} target="_blank" rel="noopener" className="block rounded-2xl border border-line bg-white p-6 text-charcoal-900">{u.title || u.url}</a>
             </blockquote>
           </div>
         ))}

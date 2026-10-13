@@ -13,6 +13,7 @@ import { Section } from '../ui/Section'
 import { RichText } from '../ui/RichText'
 import { YouTube } from '../ui/YouTube'
 import { HeroSlider } from './HeroSlider'
+import { LatestList, LeadStory } from '../blog/BlogParts'
 import { FaqAccordion } from './FaqAccordion'
 import { Marquee } from './Marquee'
 import { InstagramEmbeds } from './InstagramEmbeds'
@@ -73,7 +74,7 @@ function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
   return (
     <section className="relative z-10 -mt-14 md:-mt-16">
       <div className="container-x">
-        <ul className="grid grid-cols-2 overflow-hidden rounded-3xl border border-line bg-white shadow-[0_30px_60px_-35px_rgba(33,17,24,.45)] sm:grid-cols-3 lg:grid-cols-6">
+        <ul className="grid grid-cols-2 overflow-hidden rounded-3xl border border-line bg-white shadow-[0_30px_60px_-35px_rgba(17,17,17,.45)] sm:grid-cols-3 lg:grid-cols-6">
           {b.items.map((it) => {
             const Icon = icons[(it.icon as keyof typeof icons) ?? 'info'] ?? Info
             return (
@@ -82,7 +83,7 @@ function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
                   <span className="grid size-12 place-items-center rounded-2xl bg-saffron-50 text-saffron-600 transition group-hover:bg-saffron-500 group-hover:text-white">
                     <Icon className="size-6" />
                   </span>
-                  <span className="text-[0.98rem] font-semibold leading-snug text-maroon-900">{it.label}</span>
+                  <span className="text-[0.98rem] font-semibold leading-snug text-charcoal-900">{it.label}</span>
                 </CMSLink>
               </li>
             )
@@ -115,7 +116,7 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
             </div>
           )}
           {b.stats?.[0] && (
-            <div className="absolute -bottom-6 right-4 rounded-2xl bg-maroon-900 px-6 py-4 text-white shadow-xl md:right-[-1.5rem]">
+            <div className="absolute -bottom-6 right-4 rounded-2xl bg-charcoal-900 px-6 py-4 text-white shadow-xl md:right-[-1.5rem]">
               <p className="font-display text-3xl text-saffron-300">{b.stats[0].value}</p>
               <p className="text-sm text-white/75">{b.stats[0].label}</p>
             </div>
@@ -128,7 +129,7 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
           {b.pledge && (
             <blockquote className="relative mt-8 rounded-2xl bg-saffron-50 p-6 pl-14">
               <Quote className="absolute left-5 top-6 size-6 text-saffron-500" />
-              <p className="font-display text-xl leading-relaxed text-maroon-900">{b.pledge}</p>
+              <p className="font-display text-xl leading-relaxed text-charcoal-900">{b.pledge}</p>
             </blockquote>
           )}
           {(b.stats?.length ?? 0) > 1 && (
@@ -155,7 +156,7 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.intro && <p className="mt-6 font-display text-2xl leading-relaxed text-maroon-800">“{b.intro}”</p>}
+          {b.intro && <p className="mt-6 font-display text-2xl leading-relaxed text-charcoal-800">“{b.intro}”</p>}
           {img && (
             /* full photo at its natural shape — never crop portraits */
             <div className="mt-8 overflow-hidden rounded-3xl bg-cream">
@@ -169,7 +170,7 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
               <CMSLink url={it.url} className="card card-hover group flex gap-5 p-6 md:p-7">
                 <span className="font-display text-3xl text-saffron-500">{String(i + 1).padStart(2, '0')}</span>
                 <span className="flex-1">
-                  <span className="block font-display text-xl text-maroon-900">{it.title}</span>
+                  <span className="block font-display text-xl text-charcoal-900">{it.title}</span>
                   <span className="mt-2 block text-muted">{it.text}</span>
                 </span>
                 <ArrowUpRight className="size-5 shrink-0 text-saffron-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -219,7 +220,7 @@ function WorkHighlightsSection({ b }: { b: Of<'workHighlights'> }) {
                 </div>
               )}
               <div className="p-6">
-                <h3 className={cn('text-maroon-900', i === 0 ? 'text-2xl md:text-3xl' : 'text-xl')}>{it.title}</h3>
+                <h3 className={cn('text-charcoal-900', i === 0 ? 'text-2xl md:text-3xl' : 'text-xl')}>{it.title}</h3>
                 {it.text && <p className="mt-2 line-clamp-3 text-muted">{it.text}</p>}
               </div>
             </CMSLink>
@@ -251,7 +252,7 @@ async function InitiativesSection({ b, locale }: { b: Of<'initiativesShowcase'>;
                 {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:768px) 100vw, (max-width:1280px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(it.heroImage, 1.6, 0.6)} />}
               </div>
               <div className="flex flex-col p-6">
-                <h3 className="text-xl text-maroon-900">{it.title}</h3>
+                <h3 className="text-xl text-charcoal-900">{it.title}</h3>
                 <p className="mt-2 line-clamp-4 text-[0.98rem] text-muted">{it.excerpt}</p>
                 {it.counters?.[0] && (
                   <p className="mt-4 text-sm">
@@ -284,7 +285,7 @@ function FamilySection({ b }: { b: Of<'family'> }) {
                 <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-saffron-700">{m.relation}</span>
               </div>
               <div className="flex flex-1 flex-col p-6">
-                <h3 className="text-2xl text-maroon-900">{m.name}</h3>
+                <h3 className="text-2xl text-charcoal-900">{m.name}</h3>
                 <p className="mt-3 text-muted">{paras[0]}</p>
                 {paras.length > 1 && (
                   <details className="group mt-3">
@@ -323,11 +324,11 @@ function GallerySection({ b }: { b: Of<'homeGallery'> }) {
 function StatsSection({ b }: { b: Of<'homeStats'> }) {
   const img = mediaUrl(b.image, 'hero')
   return (
-    <section className="on-dark grain relative overflow-hidden bg-maroon-900 py-20 text-white md:py-28">
+    <section className="on-dark grain relative overflow-hidden bg-charcoal-900 py-20 text-white md:py-28">
       {img && (
         <>
           <Image src={img} alt="" fill sizes="100vw" className="object-cover opacity-20" style={{ objectPosition: mediaPosition(b.image) }} />
-          <div className="absolute inset-0 bg-gradient-to-r from-maroon-950 to-maroon-900/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-charcoal-950 to-charcoal-900/70" />
         </>
       )}
       <div className="container-x relative grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-center">
@@ -360,7 +361,7 @@ function FaqSection({ b }: { b: Of<'homeFaq'> }) {
           {b.text && <p className="mt-4 text-lg text-muted">{b.text}</p>}
           <div className="mt-8 flex flex-wrap gap-3">
             {b.buttons?.map((l, i) => (
-              <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-maroon-900')}>{l.label}</CMSLink>
+              <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>{l.label}</CMSLink>
             ))}
           </div>
         </div>
@@ -373,12 +374,16 @@ function FaqSection({ b }: { b: Of<'homeFaq'> }) {
 async function BlogSection({ b, locale }: { b: Of<'latestBlog'>; locale: Locale }) {
   const p = await payload()
   const t = await getTranslations('common')
-  const posts = (await p.find({ collection: 'posts', limit: b.limit ?? 3, sort: '-publishedAt', locale, depth: 1, where: { _status: { equals: 'published' } } })).docs as Post[]
+  const tb = await getTranslations('blog')
+  // newspaper layout: one lead story + a list of the next ones
+  const posts = (await p.find({ collection: 'posts', limit: Math.max(4, (b.limit ?? 3) + 1), sort: '-publishedAt', locale, depth: 1, where: { _status: { equals: 'published' } } })).docs as Post[]
   if (!posts.length) return null
+  const [lead, ...rest] = posts
   return (
-    <Section eyebrow={b.eyebrow} heading={b.heading} action={<Link href="/blog" className="btn btn-dark">{t('viewAll')} <ArrowRight className="size-4" /></Link>}>
-      <div className="grid gap-6 md:grid-cols-3">
-        {posts.map((post) => <PostCard key={post.id} post={post} locale={locale} />)}
+    <Section eyebrow={b.eyebrow} heading={b.heading} className="bg-cream" action={<Link href="/blog" className="btn btn-dark">{t('viewAll')} <ArrowRight className="size-4" /></Link>}>
+      <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+        <LeadStory post={lead} locale={locale} badge={tb('lead')} readFull={tb('readFull')} />
+        {rest.length > 0 && <LatestList posts={rest.slice(0, 4)} locale={locale} title={tb('latestUpdates')} />}
       </div>
     </Section>
   )
@@ -393,7 +398,7 @@ export function PostCard({ post, locale }: { post: Post; locale: string }) {
       </div>
       <div className="flex flex-1 flex-col p-6">
         <p className="text-sm text-muted">{formatDate(post.publishedAt, locale)} · {post.author}</p>
-        <h3 className="mt-2 line-clamp-3 text-xl text-maroon-900 group-hover:text-saffron-700">{post.title}</h3>
+        <h3 className="mt-2 line-clamp-3 text-xl text-charcoal-900 group-hover:text-saffron-700">{post.title}</h3>
         {post.excerpt && <p className="mt-3 line-clamp-3 text-[0.98rem] text-muted">{post.excerpt}</p>}
       </div>
     </Link>
@@ -410,7 +415,7 @@ async function SocialSection({ b, locale }: { b: Of<'socialFeeds'>; locale: Loca
       action={
         <div className="flex flex-wrap gap-3">
           {settings.social?.instagram && <a href={settings.social.instagram} target="_blank" rel="noopener" className="btn btn-dark">Instagram <ArrowUpRight className="size-4" /></a>}
-          {fb && <a href={fb} target="_blank" rel="noopener" className="btn btn-ghost text-maroon-900">Facebook <ArrowUpRight className="size-4" /></a>}
+          {fb && <a href={fb} target="_blank" rel="noopener" className="btn btn-ghost text-charcoal-900">Facebook <ArrowUpRight className="size-4" /></a>}
         </div>
       }>
       {!!b.instagramPosts?.length && <InstagramEmbeds urls={b.instagramPosts.map((x) => ({ url: x.url, title: x.title ?? '' }))} />}
@@ -449,7 +454,7 @@ function AppealSection({ b }: { b: Of<'appealBand'> }) {
           {b.eyebrow && <p className="font-semibold text-white/85">{b.eyebrow}</p>}
           <h2 className="mt-2 text-3xl md:text-5xl">{b.heading}</h2>
         </div>
-        {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn bg-maroon-900 px-7 py-4 text-lg text-white hover:bg-maroon-800">{b.buttonLabel} <ArrowRight className="size-5" /></CMSLink>}
+        {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn bg-charcoal-900 px-7 py-4 text-lg text-white hover:bg-charcoal-800">{b.buttonLabel} <ArrowRight className="size-5" /></CMSLink>}
       </div>
     </section>
   )

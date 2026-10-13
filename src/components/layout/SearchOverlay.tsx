@@ -43,7 +43,7 @@ export function SearchOverlay({ open, onClose, locale, t }: { open: boolean; onC
 
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-[70] bg-maroon-950/80 backdrop-blur-sm" role="dialog" aria-modal="true" onClick={onClose}>
+    <div className="fixed inset-0 z-[70] bg-charcoal-950/80 backdrop-blur-sm" role="dialog" aria-modal="true" onClick={onClose}>
       <div className="container-x pt-[12vh]" onClick={(e) => e.stopPropagation()}>
         <form
           className="mx-auto max-w-2xl"
@@ -71,7 +71,7 @@ export function SearchOverlay({ open, onClose, locale, t }: { open: boolean; onC
                   <li key={h.id}>
                     <Link href={h.url || '/'} onClick={onClose} className="group flex items-start gap-3 px-5 py-3.5 hover:bg-saffron-50">
                       <div className="flex-1">
-                        <p className="font-semibold text-maroon-900">{h.title}</p>
+                        <p className="font-semibold text-charcoal-900">{h.title}</p>
                         {h.excerpt && <p className="line-clamp-1 text-sm text-muted">{h.excerpt}</p>}
                       </div>
                       <ArrowRight className="mt-1 size-4 text-saffron-600 opacity-0 transition group-hover:opacity-100" />

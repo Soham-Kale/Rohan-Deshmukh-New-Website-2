@@ -1,8 +1,29 @@
-import { RichText as LexicalRichText } from '@payloadcms/richtext-lexical/react'
+import { RichText as LexicalRichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { cn } from '@/lib/utils'
 
-export function RichText({ data, className }: { data?: unknown; className?: string }) {
+type Node = { type?: string; tag?: string; children?: Node[] }
+
+/**
+ * Lexical rich text. With `anchors`, top-level h2/h3 get ids `sec-1`, `sec-2`… in order
+ * (same order as `articleHeadings()` in lib/blog.ts, used by the article "key points" box).
+ */
+export function RichText({ data, className, anchors }: { data?: unknown; className?: string; anchors?: boolean }) {
   if (!data || typeof data !== 'object' || !('root' in (data as object))) return null
-  return <LexicalRichText data={data as SerializedEditorState} className={cn('prose-rd', className)} />
+  let converters: JSXConvertersFunction | undefined
+  if (anchors) {
+    const ids = new WeakMap<object, string>()
+    let n = 0
+    for (const node of ((data as { root: Node }).root.children ?? []) as Node[]) {
+      if (node.type === 'heading' && (node.tag === 'h2' || node.tag === 'h3')) ids.set(node, `sec-${++n}`)
+    }
+    converters = ({ defaultConverters }) => ({
+      ...defaultConverters,
+      heading: ({ node, nodesToJSX }) => {
+        const Tag = (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.tag) ? node.tag : 'h2') as 'h2'
+        return <Tag id={ids.get(node)} className="scroll-mt-28">{nodesToJSX({ nodes: node.children })}</Tag>
+      },
+    })
+  }
+  return <LexicalRichText data={data as SerializedEditorState} converters={converters} className={cn('prose-rd', className)} />
 }

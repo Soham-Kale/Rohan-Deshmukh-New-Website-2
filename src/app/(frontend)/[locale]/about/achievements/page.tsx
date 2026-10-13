@@ -40,7 +40,7 @@ export default async function AchievementsPage({ params }: P) {
                   )}
                   <div>
                     {a.year && <p className="font-display text-saffron-600">{locale === 'mr' ? toMarathiDigits(a.year) : a.year}</p>}
-                    <h2 className="text-lg text-maroon-900">{a.title}</h2>
+                    <h2 className="text-lg text-charcoal-900">{a.title}</h2>
                     {a.awardingBody && <p className="text-sm text-muted">{a.awardingBody}</p>}
                     {a.description && <p className="mt-2 text-[0.97rem] text-muted">{a.description}</p>}
                   </div>
@@ -53,7 +53,7 @@ export default async function AchievementsPage({ params }: P) {
       ) : (
         <p className="rounded-2xl bg-cream p-8 text-center text-muted">{t('contentComing')}</p>
       )}
-      <figure className="mt-12 rounded-3xl bg-maroon-900 p-8 text-white md:p-10">
+      <figure className="mt-12 rounded-3xl bg-charcoal-900 p-8 text-white md:p-10">
         <blockquote className="font-display text-2xl leading-relaxed">“{t('thanks')}”</blockquote>
         <figcaption className="mt-6 font-display text-3xl italic text-saffron-300">— रोहन सुभाष देशमुख</figcaption>
       </figure>

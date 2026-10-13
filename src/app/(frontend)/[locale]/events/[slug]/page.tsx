@@ -39,7 +39,7 @@ export default async function EventPage({ params }: P) {
           label: locale === 'mr' ? toMarathiDigits(e.year) : String(e.year),
           content: (
             <div>
-              {e.title && <h2 className="text-2xl text-maroon-900">{e.title}</h2>}
+              {e.title && <h2 className="text-2xl text-charcoal-900">{e.title}</h2>}
               {e.text && <p className="mb-6 mt-2 text-muted">{e.text}</p>}
               <Gallery images={toGallery(e.images as never, `${d.title} ${e.year}`)} />
             </div>

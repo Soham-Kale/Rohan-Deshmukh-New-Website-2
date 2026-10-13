@@ -8,11 +8,11 @@ export type Crumb = { label: string; href?: string }
 export async function PageBanner({ title, subtitle, crumbs = [], image, imagePosition }: { title: string; subtitle?: string | null; crumbs?: Crumb[]; image?: string | null; imagePosition?: string }) {
   const t = await getTranslations('common')
   return (
-    <section className="on-dark grain relative overflow-hidden bg-maroon-900 text-white">
+    <section className="on-dark grain relative overflow-hidden bg-charcoal-900 text-white">
       {image && (
         <>
           <Image src={image} alt="" fill priority sizes="100vw" className="object-cover opacity-35" style={{ objectPosition: imagePosition }} />
-          <div className="absolute inset-0 bg-gradient-to-r from-maroon-950 via-maroon-900/85 to-maroon-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-900/85 to-charcoal-900/40" />
         </>
       )}
       <div aria-hidden className="absolute -right-24 -top-24 size-96 rounded-full border-[40px] border-saffron-500/10" />

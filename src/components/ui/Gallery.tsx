@@ -42,7 +42,7 @@ export function Gallery({ images, layout = 'grid', className }: { images: Galler
         close={() => setIndex(-1)}
         slides={images.map((i) => ({ src: i.src, alt: i.alt, title: i.caption ?? undefined }))}
         plugins={[Captions, Zoom]}
-        styles={{ container: { backgroundColor: 'rgba(23,11,16,.95)' } }}
+        styles={{ container: { backgroundColor: 'rgba(11,11,11,.95)' } }}
       />
     </>
   )

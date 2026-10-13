@@ -4,7 +4,7 @@ import { Link2, Check } from 'lucide-react'
 import { useState } from 'react'
 import { SocialIcon } from './SocialIcon'
 
-export function Share({ url, title, label }: { url: string; title: string; label: string }) {
+export function Share({ url, title, label, compact }: { url: string; title: string; label: string; compact?: boolean }) {
   const [copied, setCopied] = useState(false)
   const u = encodeURIComponent(url)
   const t = encodeURIComponent(title)
@@ -15,9 +15,9 @@ export function Share({ url, title, label }: { url: string; title: string; label
   ]
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="mr-1 text-sm font-semibold text-muted">{label}:</span>
+      {!compact && <span className="mr-1 text-sm font-semibold text-muted">{label}:</span>}
       {links.map((l) => (
-        <a key={l.k} href={l.href} target="_blank" rel="noopener noreferrer" aria-label={`${label} — ${l.k}`} className={`grid size-9 place-items-center rounded-full bg-cream text-maroon-900 transition hover:text-white ${l.bg}`}>
+        <a key={l.k} href={l.href} target="_blank" rel="noopener noreferrer" aria-label={`${label} — ${l.k}`} className={`grid size-9 place-items-center rounded-full bg-cream text-charcoal-900 transition hover:text-white ${l.bg}`}>
           <SocialIcon name={l.k} className="size-4" />
         </a>
       ))}
@@ -25,7 +25,7 @@ export function Share({ url, title, label }: { url: string; title: string; label
         type="button"
         aria-label="Copy link"
         onClick={() => navigator.clipboard?.writeText(url).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500) })}
-        className="grid size-9 place-items-center rounded-full bg-cream text-maroon-900 transition hover:bg-maroon-900 hover:text-white"
+        className="grid size-9 place-items-center rounded-full bg-cream text-charcoal-900 transition hover:bg-charcoal-900 hover:text-white"
       >
         {copied ? <Check className="size-4" /> : <Link2 className="size-4" />}
       </button>

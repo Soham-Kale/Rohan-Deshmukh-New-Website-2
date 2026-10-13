@@ -2,7 +2,7 @@
 export default function Loading() {
   return (
     <div aria-busy="true" aria-live="polite">
-      <section className="on-dark bg-maroon-900">
+      <section className="on-dark bg-charcoal-900">
         <div className="container-x py-14 md:py-20">
           <div className="h-4 w-40 animate-pulse rounded-full bg-white/15" />
           <div className="mt-5 h-12 w-3/4 max-w-xl animate-pulse rounded-2xl bg-white/15 md:h-16" />

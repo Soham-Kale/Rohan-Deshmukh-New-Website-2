@@ -15,7 +15,7 @@ const Heading = ({ eyebrow, heading }: { eyebrow?: string | null; heading?: stri
   eyebrow || heading ? (
     <div className="mb-6">
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      {heading && <h2 className="mt-1 text-2xl text-maroon-900 md:text-3xl">{heading}</h2>}
+      {heading && <h2 className="mt-1 text-2xl text-charcoal-900 md:text-3xl">{heading}</h2>}
     </div>
   ) : null
 
@@ -57,7 +57,7 @@ function render(b: Block) {
             {!!b.buttons?.length && (
               <div className="mt-6 flex flex-wrap gap-3">
                 {b.buttons.map((l, i) => (
-                  <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-maroon-900')}>{l.label}</CMSLink>
+                  <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>{l.label}</CMSLink>
                 ))}
               </div>
             )}
@@ -71,7 +71,7 @@ function render(b: Block) {
           <Heading eyebrow={b.eyebrow} heading={b.heading} />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {b.items?.map((s) => (
-              <div key={s.id} className="rounded-2xl bg-maroon-900 p-5 text-white">
+              <div key={s.id} className="rounded-2xl bg-charcoal-900 p-5 text-white">
                 <p className="font-display text-3xl text-saffron-300 md:text-4xl">{s.value}</p>
                 <p className="mt-1 text-sm text-white/75">{s.label}</p>
               </div>
@@ -96,7 +96,7 @@ function render(b: Block) {
                   )}
                   <div className="flex flex-1 flex-col p-5">
                     {c.icon && <span className="mb-2 text-2xl" aria-hidden>{c.icon}</span>}
-                    <h3 className="text-lg text-maroon-900">{c.title}</h3>
+                    <h3 className="text-lg text-charcoal-900">{c.title}</h3>
                     {c.meta && <p className="mt-1 text-sm font-semibold text-saffron-700">{c.meta}</p>}
                     {c.text && <p className="mt-2 whitespace-pre-line text-[0.97rem] text-muted">{c.text}</p>}
                     {!!c.tags?.length && (
@@ -141,7 +141,7 @@ function render(b: Block) {
       )
     case 'quote':
       return (
-        <figure className="relative rounded-3xl bg-maroon-900 p-8 text-white md:p-12">
+        <figure className="relative rounded-3xl bg-charcoal-900 p-8 text-white md:p-12">
           <Quote className="size-10 text-saffron-500" />
           <blockquote className="mt-4 font-display text-2xl leading-relaxed md:text-3xl">{b.text}</blockquote>
           {b.author && <figcaption className="mt-6 text-saffron-300">— {b.author}</figcaption>}
@@ -158,7 +158,7 @@ function render(b: Block) {
                 <li key={f.id}>
                   <a href={url ?? '#'} download className="card card-hover flex items-center gap-4 p-4">
                     <FileText className="size-8 text-saffron-600" />
-                    <span className="flex-1 font-semibold text-maroon-900">{f.label}</span>
+                    <span className="flex-1 font-semibold text-charcoal-900">{f.label}</span>
                     <Download className="size-5 text-muted" />
                   </a>
                 </li>
@@ -173,11 +173,11 @@ function render(b: Block) {
         <div className="grid overflow-hidden rounded-3xl bg-saffron-50 md:grid-cols-[1.3fr_1fr]">
           <div className="p-8 md:p-10">
             {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-            {b.heading && <h2 className="mt-1 text-2xl text-maroon-900 md:text-3xl">{b.heading}</h2>}
+            {b.heading && <h2 className="mt-1 text-2xl text-charcoal-900 md:text-3xl">{b.heading}</h2>}
             {b.text && <p className="mt-3 whitespace-pre-line text-muted">{b.text}</p>}
             <div className="mt-6 flex flex-wrap gap-3">
               {b.buttons?.map((l, i) => (
-                <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-maroon-900')}>
+                <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>
                   {l.label} <ArrowRight className="size-4" />
                 </CMSLink>
               ))}

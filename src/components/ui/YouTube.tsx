@@ -11,7 +11,7 @@ export function YouTube({ url, title }: { url?: string | null; title?: string | 
   const [play, setPlay] = useState(false)
   if (!id) return null
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-maroon-950">
+    <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-charcoal-950">
       {play ? (
         <iframe src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`} title={title ?? 'YouTube video'} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen className="absolute inset-0 size-full" />
       ) : (

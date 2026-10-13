@@ -32,7 +32,7 @@ export function FormShell({ state, pending, children, action, submitLabel }: { s
     return (
       <div className="rounded-3xl border border-saffron-300 bg-saffron-50 p-8 text-center" role="status">
         <CheckCircle2 className="mx-auto size-12 text-saffron-600" />
-        <p className="mt-4 text-xl font-semibold text-maroon-900">{state.ref ? t('successRef') : t('success')}</p>
+        <p className="mt-4 text-xl font-semibold text-charcoal-900">{state.ref ? t('successRef') : t('success')}</p>
         {state.ref && <p className="mt-2 font-display text-3xl tracking-wide text-saffron-700">{state.ref}</p>}
       </div>
     )
@@ -65,7 +65,7 @@ export function Field({ name, label, required, error, full, type = 'text', as = 
   const cls = cn('w-full rounded-xl border bg-paper px-4 py-3 outline-none transition focus:border-saffron-500 focus:ring-4 focus:ring-saffron-100', error ? 'border-red-400' : 'border-line')
   return (
     <div className={cn(full && 'md:col-span-2')}>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-semibold text-maroon-900">
+      <label htmlFor={id} className="mb-1.5 block text-sm font-semibold text-charcoal-900">
         {label} {required && <span className="text-saffron-600">*</span>}
       </label>
       {as === 'textarea' ? (
@@ -87,10 +87,10 @@ export function FileField({ name, label, accept, error }: { name: string; label:
   const t = useTranslations('forms')
   return (
     <div className="md:col-span-2">
-      <label htmlFor={`f-${name}`} className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-maroon-900"><Paperclip className="size-4" /> {label}</label>
+      <label htmlFor={`f-${name}`} className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-charcoal-900"><Paperclip className="size-4" /> {label}</label>
       <input id={`f-${name}`} name={name} type="file" accept={accept}
         onChange={(e) => { const f = e.target.files?.[0]; if (f && f.size > 5 * 1024 * 1024) { alert(t('fileTooBig')); e.target.value = '' } }}
-        className="block w-full rounded-xl border border-dashed border-line bg-paper px-4 py-3 text-sm file:mr-4 file:rounded-full file:border-0 file:bg-maroon-900 file:px-4 file:py-2 file:text-white" />
+        className="block w-full rounded-xl border border-dashed border-line bg-paper px-4 py-3 text-sm file:mr-4 file:rounded-full file:border-0 file:bg-charcoal-900 file:px-4 file:py-2 file:text-white" />
       {error && <p className="mt-1 text-sm text-red-600">{t(error as never)}</p>}
     </div>
   )

@@ -13,7 +13,7 @@ import { Gallery } from '@/components/ui/Gallery'
 import { toGallery } from '@/components/ui/toGallery'
 import { YouTube } from '@/components/ui/YouTube'
 import { Share } from '@/components/ui/Share'
-import { PostCard } from '@/components/home/HomeSections'
+import { NewsCard } from '@/components/blog/BlogParts'
 import { Link } from '@/i18n/navigation'
 
 export const revalidate = 300
@@ -56,7 +56,7 @@ export default async function InitiativePage({ params }: P) {
       {!!d.counters?.length && (
         <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
           {d.counters.map((c) => (
-            <div key={c.id} className="rounded-2xl bg-maroon-900 p-5 text-white">
+            <div key={c.id} className="rounded-2xl bg-charcoal-900 p-5 text-white">
               <p className="font-display text-3xl text-saffron-300 md:text-4xl">{c.value}</p>
               <p className="mt-1 text-sm text-white/75">{c.label}</p>
             </div>
@@ -67,23 +67,23 @@ export default async function InitiativePage({ params }: P) {
       {d.youtubeUrl && <div className="mt-10"><YouTube url={d.youtubeUrl} title={d.title} /></div>}
       {!!d.gallery?.length && (
         <section className="mt-12">
-          <h2 className="mb-5 text-2xl text-maroon-900">{tc('photos')}</h2>
+          <h2 className="mb-5 text-2xl text-charcoal-900">{tc('photos')}</h2>
           <Gallery images={toGallery(d.gallery as never, d.title)} />
         </section>
       )}
       {events.length > 0 && (
         <section className="mt-12">
-          <h2 className="mb-5 text-2xl text-maroon-900">{t('events')}</h2>
+          <h2 className="mb-5 text-2xl text-charcoal-900">{t('events')}</h2>
           <ul className="flex flex-wrap gap-3">
-            {events.map((e) => <li key={e.id}><Link href={`/events/${e.slug}`} className="btn btn-ghost text-maroon-900">{e.title} →</Link></li>)}
+            {events.map((e) => <li key={e.id}><Link href={`/events/${e.slug}`} className="btn btn-ghost text-charcoal-900">{e.title} →</Link></li>)}
           </ul>
         </section>
       )}
       <div className="mt-12 border-t border-line pt-6"><Share url={url} title={d.title} label={tc('share')} /></div>
       {related.length > 0 && (
         <section className="mt-14">
-          <h2 className="mb-6 text-2xl text-maroon-900">{tc('relatedPosts')}</h2>
-          <div className="grid gap-5 md:grid-cols-2">{related.map((p) => <PostCard key={p.id} post={p} locale={locale} />)}</div>
+          <h2 className="mb-6 text-2xl text-charcoal-900">{tc('relatedPosts')}</h2>
+          <div className="grid gap-5 md:grid-cols-2">{related.map((p) => <NewsCard key={p.id} post={p} locale={locale} />)}</div>
         </section>
       )}
     </InnerPage>

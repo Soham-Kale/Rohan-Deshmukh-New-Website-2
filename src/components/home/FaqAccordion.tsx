@@ -15,7 +15,7 @@ export function FaqAccordion({ items, columns = 1 }: { items: { q: string; a: Re
             <h3 className="font-sans">
               <button type="button" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : i)} className="flex w-full items-start gap-4 p-5 text-left">
                 <span className="font-display text-lg text-saffron-600">{String(i + 1).padStart(2, '0')}</span>
-                <span className="flex-1 text-[1.08rem] font-semibold text-maroon-900">{it.q}</span>
+                <span className="flex-1 text-[1.08rem] font-semibold text-charcoal-900">{it.q}</span>
                 <Plus className={cn('mt-1 size-5 shrink-0 text-saffron-600 transition-transform', isOpen && 'rotate-45')} />
               </button>
             </h3>

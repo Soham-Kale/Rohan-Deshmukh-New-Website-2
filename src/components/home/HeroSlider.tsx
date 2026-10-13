@@ -100,7 +100,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
   return (
     <section
       data-hero-overlay
-      className="relative isolate -mt-20 h-[100svh] min-h-[560px] overflow-hidden bg-maroon-950 text-white md:min-h-[640px]"
+      className="relative isolate -mt-20 h-[100svh] min-h-[560px] overflow-hidden bg-charcoal-950 text-white md:min-h-[640px]"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}

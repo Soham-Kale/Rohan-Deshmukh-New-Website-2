@@ -13,7 +13,7 @@ type Props = {
 
 export function Section({ eyebrow, heading, children, className, dark, action, intro, id }: Props) {
   return (
-    <section id={id} className={cn('py-16 md:py-24', dark && 'on-dark grain bg-maroon-900 text-white', className)}>
+    <section id={id} className={cn('py-16 md:py-24', dark && 'on-dark grain bg-charcoal-900 text-white', className)}>
       <div className="container-x">
         {(eyebrow || heading || action) && (
           <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">

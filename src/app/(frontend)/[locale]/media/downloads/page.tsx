@@ -33,7 +33,7 @@ export default async function DownloadsPage({ params }: P) {
               </div>
               <figcaption className="flex items-center justify-between gap-3 p-4">
                 <span>
-                  <span className="block font-semibold text-maroon-900">{d.title}</span>
+                  <span className="block font-semibold text-charcoal-900">{d.title}</span>
                   <span className="text-xs text-muted">{img.width}×{img.height} · {Math.round((img.filesize ?? 0) / 1024)} KB</span>
                 </span>
                 <a href={relativize(img.url)!} download={img.filename ?? true} className="btn btn-primary !px-4 !py-2 text-sm"><Download className="size-4" /> {tc('download')}</a>
