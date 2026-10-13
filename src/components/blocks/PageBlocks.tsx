@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { ArrowRight, Download, FileText, Quote } from 'lucide-react'
 import type { Page } from '@/payload-types'
-import { cn, mediaAlt, mediaSize, mediaUrl } from '@/lib/utils'
+import { cn, mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit } from '@/lib/utils'
 import { RichText } from '../ui/RichText'
 import { CMSLink } from '../ui/CMSLink'
 import { Gallery } from '../ui/Gallery'
@@ -91,7 +91,7 @@ function render(b: Block) {
                 <>
                   {img && (
                     <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-                      <Image src={img} alt={mediaAlt(c.image, c.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" />
+                      <Image src={img} alt={mediaAlt(c.image, c.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" style={photoFit(c.image, 1.6)} />
                     </div>
                   )}
                   <div className="flex flex-1 flex-col p-5">
@@ -185,7 +185,7 @@ function render(b: Block) {
           </div>
           {img && (
             <div className="relative min-h-56">
-              <Image src={img} alt={mediaAlt(b.image)} fill sizes="40vw" className="object-cover" />
+              <Image src={img} alt={mediaAlt(b.image)} fill sizes="(max-width:768px) 100vw, 40vw" className="object-cover" style={{ objectPosition: mediaPosition(b.image) }} />
             </div>
           )}
         </div>

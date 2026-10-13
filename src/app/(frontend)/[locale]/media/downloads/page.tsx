@@ -5,7 +5,7 @@ import { Download } from 'lucide-react'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
 import { InnerPage } from '@/components/layout/InnerPage'
-import { mediaAlt, mediaUrl, relativize } from '@/lib/utils'
+import { mediaAlt, mediaUrl, photoFit, relativize } from '@/lib/utils'
 
 export const revalidate = 300
 type P = { params: Promise<{ locale: Locale }> }
@@ -29,7 +29,7 @@ export default async function DownloadsPage({ params }: P) {
           return (
             <figure key={d.id} className="card">
               <div className="relative aspect-[4/5] bg-cream">
-                <Image src={mediaUrl(img, 'card')!} alt={mediaAlt(img, d.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" />
+                <Image src={mediaUrl(img, 'card')!} alt={mediaAlt(img, d.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" style={photoFit(img, 0.8)} />
               </div>
               <figcaption className="flex items-center justify-between gap-3 p-4">
                 <span>

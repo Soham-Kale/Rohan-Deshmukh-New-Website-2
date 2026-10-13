@@ -6,7 +6,7 @@ import { cache } from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
-import { formatDate, localizedHref, mediaAlt, mediaUrl, siteUrl } from '@/lib/utils'
+import { formatDate, localizedHref, mediaAlt, mediaUrl, photoFit, siteUrl } from '@/lib/utils'
 import { PageBanner } from '@/components/layout/PageBanner'
 import { RichText } from '@/components/ui/RichText'
 import { Share } from '@/components/ui/Share'
@@ -73,7 +73,7 @@ export default async function PostPage({ params }: P) {
           </div>
           {cover && (
             <div className="relative mb-10 aspect-[16/9] overflow-hidden rounded-3xl bg-cream">
-              <Image src={cover} alt={mediaAlt(post.coverImage, post.title)} fill priority sizes="(max-width:768px) 100vw, 768px" className="object-cover" />
+              <Image src={cover} alt={mediaAlt(post.coverImage, post.title)} fill priority sizes="(max-width:768px) 100vw, 768px" className="object-cover" style={photoFit(post.coverImage, 16 / 9)} />
             </div>
           )}
           <RichText data={post.content} />

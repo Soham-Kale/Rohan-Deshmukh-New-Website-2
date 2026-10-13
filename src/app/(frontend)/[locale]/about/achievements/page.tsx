@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Award as AwardIcon } from 'lucide-react'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
-import { mediaAlt, mediaUrl, toMarathiDigits } from '@/lib/utils'
+import { mediaAlt, mediaUrl, photoFit, toMarathiDigits } from '@/lib/utils'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { Gallery } from '@/components/ui/Gallery'
 import { toGallery } from '@/components/ui/toGallery'
@@ -34,7 +34,7 @@ export default async function AchievementsPage({ params }: P) {
               return (
                 <li key={a.id} className="card flex gap-4 p-5">
                   {img ? (
-                    <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-cream"><Image src={img} alt={mediaAlt(a.image, a.title)} fill sizes="80px" className="object-cover" /></div>
+                    <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-cream"><Image src={img} alt={mediaAlt(a.image, a.title)} fill sizes="80px" className="object-cover" style={photoFit(a.image, 1)} /></div>
                   ) : (
                     <span className="grid size-14 shrink-0 place-items-center rounded-xl bg-saffron-50 text-saffron-600"><AwardIcon className="size-7" /></span>
                   )}

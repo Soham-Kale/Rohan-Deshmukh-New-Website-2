@@ -5,7 +5,7 @@ import { Images } from 'lucide-react'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
 import { ALBUM_CATEGORIES } from '@/collections/Content'
-import { formatDate, mediaAlt, mediaUrl } from '@/lib/utils'
+import { formatDate, mediaAlt, mediaUrl, photoFit } from '@/lib/utils'
 import { Link } from '@/i18n/navigation'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { FilterChips, Pagination } from '@/components/ui/Pagination'
@@ -34,7 +34,7 @@ export default async function PhotosPage({ params, searchParams }: P) {
           return (
             <Link key={a.id} href={`/media/photos/${a.slug}`} className="group">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-cream">
-                {cover && <Image src={cover} alt={mediaAlt(a.cover, a.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" />}
+                {cover && <Image src={cover} alt={mediaAlt(a.cover, a.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(a.cover, 4 / 3, 0.6)} />}
                 <span className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-maroon-900/85 px-3 py-1 text-sm text-white backdrop-blur">
                   <Images className="size-4" /> {a.photos?.length ?? 0}
                 </span>

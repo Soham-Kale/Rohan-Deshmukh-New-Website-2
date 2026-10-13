@@ -5,13 +5,13 @@ import { Link } from '@/i18n/navigation'
 
 export type Crumb = { label: string; href?: string }
 
-export async function PageBanner({ title, subtitle, crumbs = [], image }: { title: string; subtitle?: string | null; crumbs?: Crumb[]; image?: string | null }) {
+export async function PageBanner({ title, subtitle, crumbs = [], image, imagePosition }: { title: string; subtitle?: string | null; crumbs?: Crumb[]; image?: string | null; imagePosition?: string }) {
   const t = await getTranslations('common')
   return (
     <section className="on-dark grain relative overflow-hidden bg-maroon-900 text-white">
       {image && (
         <>
-          <Image src={image} alt="" fill priority sizes="100vw" className="object-cover opacity-35" />
+          <Image src={image} alt="" fill priority sizes="100vw" className="object-cover opacity-35" style={{ objectPosition: imagePosition }} />
           <div className="absolute inset-0 bg-gradient-to-r from-maroon-950 via-maroon-900/85 to-maroon-900/40" />
         </>
       )}

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 export function SideMenu({ title, items, current }: { title: string; items: { label: string; href: string }[]; current: string }) {
   if (items.length < 2) return null
   return (
-    <aside className="lg:sticky lg:top-24 lg:self-start">
+    <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
       <p className="eyebrow mb-3">{title}</p>
       <ul className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:block lg:space-y-1 lg:overflow-visible lg:px-0">
         {items.map((it) => {

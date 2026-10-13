@@ -13,7 +13,7 @@ export const HeroSlider: Block = {
   labels: { singular: 'Hero slider', plural: 'Hero sliders' },
   fields: [
     { name: 'hidden', type: 'checkbox', defaultValue: false },
-    { name: 'autoplaySeconds', type: 'number', defaultValue: 6 },
+    { name: 'autoplaySeconds', type: 'number', defaultValue: 5, min: 3, max: 15 },
     {
       name: 'slides',
       type: 'array',
@@ -21,13 +21,21 @@ export const HeroSlider: Block = {
       minRows: 1,
       maxRows: 10,
       fields: [
-        { name: 'image', type: 'upload', relationTo: 'media', required: true },
+        { name: 'image', type: 'upload', relationTo: 'media', required: true, admin: { description: 'Wide photo, 2400×1350 recommended. Set the focal point (click the face) so phones keep it in view.' } },
+        {
+          name: 'imageMobile',
+          label: 'Mobile image (optional)',
+          type: 'upload',
+          relationTo: 'media',
+          admin: { description: 'Portrait photo for phones (1080×1350). If empty, the wide photo is cropped around its focal point.' },
+        },
+        { name: 'kicker', label: 'Small line above the heading (optional)', type: 'text', localized: true, admin: { description: 'Short orange line, e.g. रोहन सुभाष देशमुख' } },
         { name: 'heading', type: 'text', localized: true },
         { name: 'subheading', type: 'textarea', localized: true },
         { name: 'buttons', type: 'array', maxRows: 2, fields: linkFields },
       ],
     },
-    counterArray('badge', 'Small counter badge (optional)'),
+    counterArray('badge', 'Small counter badge (not shown in the current hero design)'),
   ],
 }
 

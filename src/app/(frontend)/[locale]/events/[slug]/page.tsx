@@ -4,7 +4,7 @@ import { cache } from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
-import { mediaUrl, toMarathiDigits } from '@/lib/utils'
+import { mediaPosition, mediaUrl, toMarathiDigits } from '@/lib/utils'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { Gallery } from '@/components/ui/Gallery'
 import { toGallery } from '@/components/ui/toGallery'
@@ -31,7 +31,7 @@ export default async function EventPage({ params }: P) {
   const editions = [...(d.editions ?? [])].sort((a, b) => b.year - a.year)
   const ini = typeof d.initiative === 'object' && d.initiative ? d.initiative : null
   return (
-    <InnerPage path={`/events/${d.slug}`} locale={locale} title={d.title} subtitle={d.description} image={mediaUrl(d.coverImage, 'hero')}
+    <InnerPage path={`/events/${d.slug}`} locale={locale} title={d.title} subtitle={d.description} image={mediaUrl(d.coverImage, 'hero')} imagePosition={mediaPosition(d.coverImage)}
       crumbs={[{ label: t('socialWork'), href: '/social-work' }, ...(ini ? [{ label: ini.title, href: `/social-work/${ini.slug}` }] : []), { label: d.title }]}>
       <YearTabs
         tabs={editions.map((e) => ({

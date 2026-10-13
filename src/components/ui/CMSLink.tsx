@@ -1,7 +1,7 @@
 import { Link } from '@/i18n/navigation'
 import { isExternal } from '@/lib/utils'
 
-type Props = { url?: string | null; newTab?: boolean | null; className?: string; children: React.ReactNode; 'aria-label'?: string }
+type Props = { url?: string | null; newTab?: boolean | null; className?: string; children: React.ReactNode; 'aria-label'?: string; tabIndex?: number }
 
 export function CMSLink({ url, newTab, className, children, ...rest }: Props) {
   if (!url) return <span className={className}>{children}</span>

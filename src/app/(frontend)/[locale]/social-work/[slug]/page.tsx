@@ -6,7 +6,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@/i18n/routing'
 import type { Post } from '@/payload-types'
 import { payload } from '@/lib/payload'
-import { localizedHref, mediaUrl, siteUrl } from '@/lib/utils'
+import { localizedHref, mediaPosition, mediaUrl, siteUrl } from '@/lib/utils'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { RichText } from '@/components/ui/RichText'
 import { Gallery } from '@/components/ui/Gallery'
@@ -52,7 +52,7 @@ export default async function InitiativePage({ params }: P) {
   const url = `${siteUrl()}${localizedHref(`/social-work/${d.slug}`, locale)}`
 
   return (
-    <InnerPage path={`/social-work/${d.slug}`} locale={locale} title={d.title} subtitle={d.excerpt} image={mediaUrl(d.heroImage, 'hero')} crumbs={[{ label: t('socialWork'), href: '/social-work' }, { label: d.title }]}>
+    <InnerPage path={`/social-work/${d.slug}`} locale={locale} title={d.title} subtitle={d.excerpt} image={mediaUrl(d.heroImage, 'hero')} imagePosition={mediaPosition(d.heroImage)} crumbs={[{ label: t('socialWork'), href: '/social-work' }, { label: d.title }]}>
       {!!d.counters?.length && (
         <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
           {d.counters.map((c) => (

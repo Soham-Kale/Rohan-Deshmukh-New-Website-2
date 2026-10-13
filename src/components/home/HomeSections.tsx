@@ -6,7 +6,7 @@ import {
 import type { Home, Initiative, Post, Video as VideoDoc } from '@/payload-types'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
-import { cn, formatDate, mediaAlt, mediaSize, mediaUrl } from '@/lib/utils'
+import { cn, formatDate, mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit } from '@/lib/utils'
 import { Link } from '@/i18n/navigation'
 import { CMSLink } from '../ui/CMSLink'
 import { Section } from '../ui/Section'
@@ -52,11 +52,20 @@ export async function HomeSections({ sections, locale }: { sections: Block[]; lo
 
 function Hero({ b }: { b: Of<'heroSlider'> }) {
   const slides = (b.slides ?? [])
-    .map((s) => ({ image: mediaUrl(s.image, 'hero') ?? '', alt: mediaAlt(s.image, s.heading ?? ''), heading: s.heading, subheading: s.subheading, buttons: s.buttons ?? [] }))
+    .map((s) => ({
+      image: mediaUrl(s.image, 'hero') ?? '',
+      position: mediaPosition(s.image),
+      mobileImage: mediaUrl(s.imageMobile, 'card'),
+      mobilePosition: mediaPosition(s.imageMobile),
+      alt: mediaAlt(s.image, s.heading ?? ''),
+      kicker: s.kicker,
+      heading: s.heading,
+      subheading: s.subheading,
+      buttons: s.buttons ?? [],
+    }))
     .filter((s) => s.image)
   if (!slides.length) return null
-  const badge = b.badge?.[0] ? { value: b.badge[0].value, label: b.badge[0].label } : null
-  return <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 6} badge={badge} thumbs={slides.slice(1, 4).map((s) => s.image)} />
+  return <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 5} />
 }
 
 function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
@@ -102,7 +111,7 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
           <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border-2 border-saffron-300 md:-left-6 md:-top-6" />
           {img && (
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream">
-              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover object-top" />
+              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover" style={photoFit(b.image, 0.8)} />
             </div>
           )}
           {b.stats?.[0] && (
@@ -206,7 +215,7 @@ function WorkHighlightsSection({ b }: { b: Of<'workHighlights'> }) {
             <CMSLink key={it.id} url={it.url} className={cn('card card-hover group flex flex-col', i === 0 && 'lg:col-span-2 lg:row-span-2')}>
               {img && (
                 <div className={cn('relative overflow-hidden bg-cream', i === 0 ? 'aspect-[16/10] lg:aspect-auto lg:flex-1' : 'aspect-[16/10]')}>
-                  <Image src={img} alt={mediaAlt(it.image, it.title ?? '')} fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover transition duration-500 group-hover:scale-105" />
+                  <Image src={img} alt={mediaAlt(it.image, it.title ?? '')} fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(it.image, 1.6)} />
                 </div>
               )}
               <div className="p-6">
@@ -236,9 +245,10 @@ async function InitiativesSection({ b, locale }: { b: Of<'initiativesShowcase'>;
         {items.map((it) => {
           const img = mediaUrl(it.heroImage, 'card')
           return (
-            <Link key={it.id} href={`/social-work/${it.slug}`} className="card card-hover group grid sm:grid-cols-[0.85fr_1fr]">
-              <div className="relative aspect-[4/3] overflow-hidden bg-cream sm:aspect-auto">
-                {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:768px) 100vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" />}
+            <Link key={it.id} href={`/social-work/${it.slug}`} className="card card-hover group flex flex-col xl:grid xl:grid-cols-[0.85fr_1fr]">
+              {/* image on top until wide screens — side-by-side made very narrow, tall crops on tablets */}
+              <div className="relative aspect-[16/10] overflow-hidden bg-cream xl:aspect-auto">
+                {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:768px) 100vw, (max-width:1280px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(it.heroImage, 1.6, 0.6)} />}
               </div>
               <div className="flex flex-col p-6">
                 <h3 className="text-xl text-maroon-900">{it.title}</h3>
@@ -270,7 +280,7 @@ function FamilySection({ b }: { b: Of<'family'> }) {
           return (
             <article key={m.id} className="card flex flex-col">
               <div className="relative aspect-[4/3] bg-cream">
-                {img && <Image src={img} alt={`${m.relation} — ${m.name}`} fill sizes="(max-width:1024px) 100vw, 33vw" className="object-cover object-top" />}
+                {img && <Image src={img} alt={`${m.relation} — ${m.name}`} fill sizes="(max-width:1024px) 100vw, 33vw" className="object-cover" style={photoFit(m.image, 4 / 3, 0.6)} />}
                 <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-saffron-700">{m.relation}</span>
               </div>
               <div className="flex flex-1 flex-col p-6">
@@ -295,7 +305,7 @@ function FamilySection({ b }: { b: Of<'family'> }) {
 }
 
 function GallerySection({ b }: { b: Of<'homeGallery'> }) {
-  const imgs = (b.images ?? []).map((m) => ({ src: mediaUrl(m, 'card') ?? '', alt: mediaAlt(m, b.heading ?? '') })).filter((i) => i.src)
+  const imgs = (b.images ?? []).map((m) => ({ src: mediaUrl(m, 'card') ?? '', alt: mediaAlt(m, b.heading ?? ''), pos: mediaPosition(m) })).filter((i) => i.src)
   return (
     <section className="overflow-hidden py-16 md:py-24">
       <div className="container-x mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
@@ -316,7 +326,7 @@ function StatsSection({ b }: { b: Of<'homeStats'> }) {
     <section className="on-dark grain relative overflow-hidden bg-maroon-900 py-20 text-white md:py-28">
       {img && (
         <>
-          <Image src={img} alt="" fill sizes="100vw" className="object-cover opacity-20" />
+          <Image src={img} alt="" fill sizes="100vw" className="object-cover opacity-20" style={{ objectPosition: mediaPosition(b.image) }} />
           <div className="absolute inset-0 bg-gradient-to-r from-maroon-950 to-maroon-900/70" />
         </>
       )}
@@ -379,7 +389,7 @@ export function PostCard({ post, locale }: { post: Post; locale: string }) {
   return (
     <Link href={`/blog/${post.slug}`} className="card card-hover group flex flex-col">
       <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-        {img && <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" />}
+        {img && <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(post.coverImage, 1.6)} />}
       </div>
       <div className="flex flex-1 flex-col p-6">
         <p className="text-sm text-muted">{formatDate(post.publishedAt, locale)} · {post.author}</p>
@@ -433,7 +443,7 @@ function AppealSection({ b }: { b: Of<'appealBand'> }) {
   const img = mediaUrl(b.image, 'hero')
   return (
     <section className="relative isolate overflow-hidden bg-saffron-500 text-white">
-      {img && <Image src={img} alt="" fill sizes="100vw" className="-z-10 object-cover opacity-25 mix-blend-multiply" />}
+      {img && <Image src={img} alt="" fill sizes="100vw" className="-z-10 object-cover opacity-25 mix-blend-multiply" style={{ objectPosition: mediaPosition(b.image) }} />}
       <div className="container-x flex flex-col items-start gap-8 py-16 md:flex-row md:items-center md:justify-between md:py-20">
         <div className="max-w-3xl">
           {b.eyebrow && <p className="font-semibold text-white/85">{b.eyebrow}</p>}

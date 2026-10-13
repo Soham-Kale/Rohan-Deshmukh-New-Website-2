@@ -5,7 +5,7 @@ import { setRequestLocale } from 'next-intl/server'
 import { cache } from 'react'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
-import { mediaUrl } from '@/lib/utils'
+import { mediaPosition, mediaUrl } from '@/lib/utils'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
 
@@ -50,7 +50,7 @@ export default async function CmsPage({ params }: Params) {
   const page = await getPage(full, locale)
   if (!page) notFound()
   return (
-    <InnerPage path={full} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} sideMenu={page.showSideMenu ?? true}>
+    <InnerPage path={full} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} sideMenu={page.showSideMenu ?? true}>
       <PageBlocks blocks={page.layout} />
     </InnerPage>
   )

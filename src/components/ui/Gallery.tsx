@@ -26,7 +26,7 @@ export function Gallery({ images, layout = 'grid', className }: { images: Galler
             aria-label={img.alt || `Photo ${i + 1}`}
           >
             {layout === 'grid' ? (
-              <Image src={img.thumb} alt={img.alt} fill sizes="(max-width:768px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" />
+              <Image src={img.thumb} alt={img.alt} fill sizes="(max-width:768px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" style={{ objectPosition: img.width && img.height && img.height > img.width * 1.1 ? '50% 22%' : '50% 50%' }} />
             ) : (
               <Image src={img.thumb} alt={img.alt} width={img.width || 800} height={img.height || 600} sizes="(max-width:768px) 50vw, 25vw" className="h-auto w-full transition duration-500 group-hover:scale-105" />
             )}

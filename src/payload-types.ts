@@ -2033,7 +2033,18 @@ export interface Home {
             autoplaySeconds?: number | null;
             slides?:
               | {
+                  /**
+                   * Wide photo, 2400×1350 recommended. Set the focal point (click the face) so phones keep it in view.
+                   */
                   image: number | Media;
+                  /**
+                   * Portrait photo for phones (1080×1350). If empty, the wide photo is cropped around its focal point.
+                   */
+                  imageMobile?: (number | null) | Media;
+                  /**
+                   * Short orange line, e.g. रोहन सुभाष देशमुख
+                   */
+                  kicker?: string | null;
                   heading?: string | null;
                   subheading?: string | null;
                   buttons?:
@@ -2559,6 +2570,8 @@ export interface HomeSelect<T extends boolean = true> {
                 | T
                 | {
                     image?: T;
+                    imageMobile?: T;
+                    kicker?: T;
                     heading?: T;
                     subheading?: T;
                     buttons?:

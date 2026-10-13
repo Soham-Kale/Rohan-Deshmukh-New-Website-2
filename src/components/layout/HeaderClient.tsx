@@ -54,6 +54,13 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
     setOpen(null)
   }, [pathname])
 
+  // see-through header while it sits over a full-screen hero photo (home page)
+  const [overHero, setOverHero] = useState(pathname === '/')
+  useEffect(() => {
+    setOverHero(Boolean(document.querySelector('[data-hero-overlay]')))
+  }, [pathname])
+  const transparent = overHero && !scrolled
+
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
   }, [mobileOpen])
@@ -74,13 +81,17 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
       <header
         className={cn(
           'sticky top-0 z-50 text-white transition-[background,box-shadow,padding] duration-300',
-          scrolled ? 'bg-maroon-900/95 shadow-[0_10px_30px_-18px_rgba(0,0,0,.6)] backdrop-blur' : 'bg-maroon-900',
+          transparent
+            ? 'bg-gradient-to-b from-black/55 to-transparent'
+            : scrolled
+              ? 'bg-maroon-900/95 shadow-[0_10px_30px_-18px_rgba(0,0,0,.6)] backdrop-blur'
+              : 'bg-maroon-900',
         )}
       >
-        <div className={cn('container-x flex items-center gap-4 transition-[height] duration-300', scrolled ? 'h-16' : 'h-20')}>
-          <Link href="/" className="flex shrink-0 items-center" aria-label={siteName}>
+        <div className={cn('container-x flex items-center gap-2 transition-[height] duration-300 sm:gap-4', scrolled ? 'h-16' : 'h-20')}>
+          <Link href="/" className="flex min-w-0 shrink items-center" aria-label={siteName}>
             {logoUrl ? (
-              <Image src={logoUrl} alt={siteName} width={190} height={48} priority className={cn('w-auto transition-all', scrolled ? 'h-9' : 'h-11')} />
+              <Image src={logoUrl} alt={siteName} width={190} height={48} priority className={cn('w-auto max-w-full object-contain object-left transition-all', scrolled ? 'h-8 sm:h-9' : 'h-9 sm:h-11')} />
             ) : (
               <span className="font-display text-2xl leading-none">{siteName}</span>
             )}
@@ -153,17 +164,17 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, cta, t }: Props) 
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1.5 xl:ml-2">
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5 xl:ml-2">
             <button type="button" onClick={() => setSearchOpen(true)} className="grid size-10 place-items-center rounded-full hover:bg-white/10" aria-label={t.search}>
               <Search className="size-5" />
             </button>
             <Link
               href={pathname}
               locale={locale === 'mr' ? 'en' : 'mr'}
-              className="flex h-10 items-center gap-1.5 rounded-full px-3 text-sm font-semibold hover:bg-white/10"
+              className="flex h-10 items-center gap-1.5 rounded-full px-2 text-sm font-semibold hover:bg-white/10 sm:px-3"
               aria-label={t.language}
             >
-              <Languages className="size-4" />
+              <Languages className="hidden size-4 sm:block" />
               <span>{t.language}</span>
             </Link>
             {cta?.url && (

@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
 import { INITIATIVE_CATEGORIES } from '@/collections/Content'
-import { mediaAlt, mediaUrl } from '@/lib/utils'
+import { mediaAlt, mediaUrl, photoFit } from '@/lib/utils'
 import { Link } from '@/i18n/navigation'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { FilterChips } from '@/components/ui/Pagination'
@@ -50,7 +50,7 @@ export default async function SocialWorkPage({ params, searchParams }: P) {
                 return (
                   <Link key={it.id} href={`/social-work/${it.slug}`} className="card card-hover group flex flex-col">
                     <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-                      {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" />}
+                      {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(it.heroImage, 1.6, 0.6)} />}
                       {it.counters?.[0] && (
                         <span className="absolute bottom-3 left-3 rounded-full bg-maroon-900/90 px-3 py-1 text-sm text-white backdrop-blur">
                           <b className="text-saffron-300">{it.counters[0].value}</b> {it.counters[0].label}
