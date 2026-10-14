@@ -15,6 +15,7 @@ import { YouTube } from '@/components/ui/YouTube'
 import { Share } from '@/components/ui/Share'
 import { NewsCard } from '@/components/blog/BlogParts'
 import { Link } from '@/i18n/navigation'
+import { CountUp } from '@/components/ui/CountUp'
 
 export const revalidate = 300
 type P = { params: Promise<{ locale: Locale; slug: string }> }
@@ -57,7 +58,7 @@ export default async function InitiativePage({ params }: P) {
         <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
           {d.counters.map((c) => (
             <div key={c.id} className="rounded-2xl bg-charcoal-900 p-5 text-white">
-              <p className="font-display text-3xl text-saffron-300 md:text-4xl">{c.value}</p>
+              <p className="font-display text-3xl text-saffron-300 md:text-4xl"><CountUp value={c.value} /></p>
               <p className="mt-1 text-sm text-white/75">{c.label}</p>
             </div>
           ))}

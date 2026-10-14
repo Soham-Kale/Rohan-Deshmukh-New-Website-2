@@ -17,6 +17,7 @@ import { LatestList, LeadStory } from '../blog/BlogParts'
 import { FaqAccordion } from './FaqAccordion'
 import { Marquee } from './Marquee'
 import { InstagramEmbeds } from './InstagramEmbeds'
+import { CountUp } from '@/components/ui/CountUp'
 
 type Block = NonNullable<Home['sections']>[number]
 type Of<T extends Block['blockType']> = Extract<Block, { blockType: T }>
@@ -97,7 +98,7 @@ function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
 function Stat({ value, label, dark }: { value: string; label: string; dark?: boolean }) {
   return (
     <div>
-      <p className={cn('font-display text-4xl md:text-5xl', dark ? 'text-saffron-300' : 'text-saffron-600')}>{value}</p>
+      <p className={cn('font-display text-4xl md:text-5xl', dark ? 'text-saffron-300' : 'text-saffron-600')}><CountUp value={value} /></p>
       <p className={cn('mt-1', dark ? 'text-white/70' : 'text-muted')}>{label}</p>
     </div>
   )
@@ -117,7 +118,7 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
           )}
           {b.stats?.[0] && (
             <div className="absolute -bottom-6 right-4 rounded-2xl bg-charcoal-900 px-6 py-4 text-white shadow-xl md:right-[-1.5rem]">
-              <p className="font-display text-3xl text-saffron-300">{b.stats[0].value}</p>
+              <p className="font-display text-3xl text-saffron-300"><CountUp value={b.stats[0].value} /></p>
               <p className="text-sm text-white/75">{b.stats[0].label}</p>
             </div>
           )}
@@ -256,7 +257,7 @@ async function InitiativesSection({ b, locale }: { b: Of<'initiativesShowcase'>;
                 <p className="mt-2 line-clamp-4 text-[0.98rem] text-muted">{it.excerpt}</p>
                 {it.counters?.[0] && (
                   <p className="mt-4 text-sm">
-                    <span className="font-display text-2xl text-saffron-600">{it.counters[0].value}</span> <span className="text-muted">{it.counters[0].label}</span>
+                    <span className="font-display text-2xl text-saffron-600"><CountUp value={it.counters[0].value} /></span> <span className="text-muted">{it.counters[0].label}</span>
                   </p>
                 )}
                 <span className="mt-auto inline-flex items-center gap-1.5 pt-4 font-semibold text-saffron-700">

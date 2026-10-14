@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
 import { L } from './l10n'
-import { image, md } from './helpers'
+import { image, md, PORTRAITS } from './helpers'
 import { FAMILY } from './content-globals'
 import { OTHER } from './content-collections'
 
@@ -18,7 +18,7 @@ export const pages = (p: Payload) => [
     path: '/about/biography', section: 'about', menuOrder: 1,
     title: L('कौटुंबिक पार्श्वभूमी', 'Family Background'),
     subtitle: L('रोहन सुभाष देशमुख हे एक उमदं व्यक्तिमत्त्व — सोलापूर, महाराष्ट्र.', 'Rohan Subhash Deshmukh — Solapur, Maharashtra.'),
-    bannerImage: image(p, '/images/about/portrait-solapur.webp', 'रोहन सुभाष देशमुख'),
+    bannerImage: image(p, PORTRAITS.familyPage, 'रोहन सुभाष देशमुख'),
     layout: [
       {
         blockType: 'cards', eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family Background'), heading: L('वैयक्तिक माहिती व शिक्षण', 'Personal details & education'), columns: '2',

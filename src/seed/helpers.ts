@@ -1,6 +1,8 @@
 import type { Payload } from 'payload'
 import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
 import sharp from 'sharp'
+import { existsSync, readFileSync } from 'node:fs'
+import path from 'node:path'
 
 export const LEGACY = (process.env.LEGACY_SITE_URL || 'https://rohan-deshmukh-website.vercel.app').replace(/\/$/, '')
 
@@ -41,6 +43,20 @@ async function placeholder(label: string) {
   return sharp(Buffer.from(svg)).webp({ quality: 70 }).toBuffer()
 }
 
+/** Latest portraits (Aug 2026 shoot) — each is used in exactly one place on the site */
+export const PORTRAITS = {
+  about: '/images/portraits/rohan-deshmukh-tiranga.webp', // homepage → परिचय
+  family: '/images/portraits/rohan-deshmukh-kurta.webp', // homepage → कौटुंबिक पार्श्वभूमी section
+  familyPage: '/images/portraits/rohan-deshmukh-office.webp', // कौटुंबिक पार्श्वभूमी page banner
+}
+
+/** Focal points (percent from left / top) so cropped versions keep the face in frame */
+const FOCAL: Record<string, [number, number]> = {
+  '/images/portraits/rohan-deshmukh-tiranga.webp': [62, 22],
+  '/images/portraits/rohan-deshmukh-kurta.webp': [54, 22],
+  '/images/portraits/rohan-deshmukh-office.webp': [80, 25],
+}
+
 /** Import an image from the current live site (falls back to a branded placeholder when offline) */
 let queue: Promise<unknown> = Promise.resolve()
 
@@ -58,8 +74,11 @@ async function importImage(payload: Payload, src: string, alt: string): Promise<
   const existing = await payload.find({ collection: 'media', where: { filename: { equals: src.split('/').pop() } }, limit: 1, depth: 0 })
   if (existing.docs[0]) return existing.docs[0].id as number
   let data: Buffer | null = null
+  // Photos kept in this project (public/images/portraits …) are read from disk, others come from the live site
+  const local = src.startsWith('/') ? path.join(process.cwd(), 'public', src) : null
+  if (local && existsSync(local)) data = readFileSync(local)
   const url = src.startsWith('http') ? src : `${LEGACY}${src}`
-  if (online !== false) {
+  if (!data && online !== false) {
     try {
       const res = await fetch(url, { signal: AbortSignal.timeout(20000) })
       if (res.ok) {
@@ -72,9 +91,10 @@ async function importImage(payload: Payload, src: string, alt: string): Promise<
   }
   if (!data) data = await placeholder(src.split('/').pop()!.replace(/\.\w+$/, ''))
   const name = src.split('/').pop()!.replace(/\.(jpg|jpeg|png)$/i, '.webp')
+  const focal = FOCAL[src]
   const doc = await payload.create({
     collection: 'media',
-    data: { alt: alt || undefined },
+    data: { alt: alt || undefined, ...(focal ? { focalX: focal[0], focalY: focal[1] } : {}) },
     file: { data, mimetype: 'image/webp', name, size: data.length },
   })
   return doc.id as number

@@ -9,6 +9,7 @@ import { mediaAlt, mediaUrl, photoFit } from '@/lib/utils'
 import { Link } from '@/i18n/navigation'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { FilterChips } from '@/components/ui/Pagination'
+import { CountUp } from '@/components/ui/CountUp'
 
 export const revalidate = 300
 type P = { params: Promise<{ locale: Locale }>; searchParams: Promise<{ category?: string }> }
@@ -53,7 +54,7 @@ export default async function SocialWorkPage({ params, searchParams }: P) {
                       {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(it.heroImage, 1.6, 0.6)} />}
                       {it.counters?.[0] && (
                         <span className="absolute bottom-3 left-3 rounded-full bg-charcoal-900/90 px-3 py-1 text-sm text-white backdrop-blur">
-                          <b className="text-saffron-300">{it.counters[0].value}</b> {it.counters[0].label}
+                          <b className="text-saffron-300"><CountUp value={it.counters[0].value} /></b> {it.counters[0].label}
                         </span>
                       )}
                     </div>

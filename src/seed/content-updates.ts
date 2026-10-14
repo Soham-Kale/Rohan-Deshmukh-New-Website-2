@@ -5,8 +5,9 @@
  */
 import type { Payload } from 'payload'
 import { applyMenu } from './menu'
+import { image, PORTRAITS } from './helpers'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-14'
+export const CONTENT_VERSION = '2026-10-14b'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -63,9 +64,37 @@ async function renameHome(payload: Payload) {
   }
 }
 
-/** 14 Oct 2026: Thoughts page removed, Biography → कौटुंबिक पार्श्वभूमी, menu without removed pages */
+type Section = { blockType?: string; image?: unknown }
+
+/** Latest portraits (Aug 2026): homepage परिचय + कौटुंबिक पार्श्वभूमी section, and the कौटुंबिक पार्श्वभूमी page banner */
+export async function applyPortraits(payload: Payload) {
+  const alt = 'रोहन सुभाष देशमुख'
+  const about = await image(payload, PORTRAITS.about, alt)
+  const family = await image(payload, PORTRAITS.family, alt)
+  const banner = await image(payload, PORTRAITS.familyPage, alt)
+  const pick: Record<string, number | null> = { aboutIntro: about, biography: family }
+
+  for (const locale of ['mr', 'en'] as const) {
+    const home = await payload.findGlobal({ slug: 'home', locale, depth: 0, fallbackLocale: false as never })
+    let changed = false
+    const sections = ((home.sections ?? []) as Section[]).map((s) => {
+      const id = s.blockType ? pick[s.blockType] : undefined
+      if (!id || s.image === id) return s
+      changed = true
+      return { ...s, image: id }
+    })
+    if (changed) await payload.updateGlobal({ slug: 'home', locale, depth: 0, data: { sections, _status: 'published' } as never })
+  }
+
+  const page = (await payload.find({ collection: 'pages', where: { path: { equals: '/about/biography' } }, limit: 1, depth: 0 })).docs[0]
+  if (page && banner && page.bannerImage !== banner)
+    await payload.update({ collection: 'pages', id: page.id, depth: 0, data: { bannerImage: banner, _status: 'published' } as never })
+}
+
+/** 14 Oct 2026: Thoughts page removed, Biography → कौटुंबिक पार्श्वभूमी, menu without removed pages, new portraits */
 export async function applyContentUpdates(payload: Payload) {
   await applyMenu(payload)
   await renamePages(payload)
   await renameHome(payload)
+  await applyPortraits(payload)
 }

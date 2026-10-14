@@ -8,6 +8,7 @@ import { Gallery } from '../ui/Gallery'
 import { toGallery } from '../ui/toGallery'
 import { YouTube } from '../ui/YouTube'
 import { FaqAccordion } from '../home/FaqAccordion'
+import { CountUp } from '@/components/ui/CountUp'
 
 type Block = NonNullable<Page['layout']>[number]
 
@@ -72,7 +73,7 @@ function render(b: Block) {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {b.items?.map((s) => (
               <div key={s.id} className="rounded-2xl bg-charcoal-900 p-5 text-white">
-                <p className="font-display text-3xl text-saffron-300 md:text-4xl">{s.value}</p>
+                <p className="font-display text-3xl text-saffron-300 md:text-4xl"><CountUp value={s.value} /></p>
                 <p className="mt-1 text-sm text-white/75">{s.label}</p>
               </div>
             ))}

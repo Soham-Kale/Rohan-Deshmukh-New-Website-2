@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
 import { L } from './l10n'
-import { image, md } from './helpers'
+import { image, md, PORTRAITS } from './helpers'
 
 
 export const settings = (p: Payload) => ({
@@ -41,7 +41,6 @@ export const header = () => ({
     n('लोकमंगल', 'Lokmangal', '/lokmangal/foundation', [
       n('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'),
       n('लोकमंगल परिवार', 'Lokmangal Parivar', '/lokmangal/parivar'),
-      n('उपक्रम', 'Initiatives', '/social-work'),
     ]),
     n('कार्यक्रम', 'Events', '/events', [
       n('सामुदायिक विवाह सोहळा', 'Community Weddings', '/events/samudayik-vivah-sohala'),
@@ -111,7 +110,7 @@ export const home = (p: Payload) => {
       },
       {
         blockType: 'aboutIntro', eyebrow: L('परिचय', 'About'), heading: L('मी रोहन सुभाष देशमुख', 'I am Rohan Subhash Deshmukh'),
-        image: image(p, '/images/about/portrait-solapur.webp', 'रोहन सुभाष देशमुख'),
+        image: image(p, PORTRAITS.about, 'रोहन सुभाष देशमुख'),
         text: L('नव्या विचारांकडे सकारात्मकतेने पाहणारा, नव्या ऊर्जेसह काहीतरी वेगळं करण्याची इच्छा बाळगणारा आणि समाजासाठी आपल्या परीने योगदान देण्याची जिद्द मनात ठेवून पुढे जाणारा एक तरुण.', 'A young man who looks at new ideas positively, wants to do something different with fresh energy, and is determined to contribute to society in his own way.'),
         pledge: L('सुरुवात आपल्या विचारातून, चांगल्या हेतूतून आणि त्या हेतूला कृतीची जोड देण्यापासूनच झाली पाहिजे.', 'Change must begin with our own thinking, good intent — and turning that intent into action.'),
         stats: [{ value: '३,०००+', label: L('सामुदायिक विवाह आयोजित', 'Community weddings organised') }, { value: '४', label: L('प्रत्यक्ष चालवलेल्या संस्था', 'Institutions led') }, { value: '५५०', label: L('रोज जेवणाचे डबे', 'Meals delivered daily') }],
@@ -120,7 +119,7 @@ export const home = (p: Payload) => {
       {
         blockType: 'biography', eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family Background'), heading: L('श्री. रोहन सुभाष देशमुख यांची कौटुंबिक पार्श्वभूमी', 'Family background of Shri. Rohan Subhash Deshmukh'),
         intro: L('उत्तम शासकाचा जन्म हा तळागाळातल्या जनतेच्या समस्या आणि गरजा जाणून होतो.', 'A good leader is born by understanding the problems and needs of people at the grassroots.'),
-        image: image(p, '/images/blog/author-02.webp', 'रोहन सुभाष देशमुख'),
+        image: image(p, PORTRAITS.family, 'रोहन सुभाष देशमुख'),
         items: [
           { title: L('कौटुंबिक पार्श्वभूमी', 'Family background'), text: L('सोलापूर, मराठवाड्यासह संपूर्ण महाराष्ट्राला परिचित असलेल्या परिवारात रोहन यांचा जन्म. या परिवाराला अध्यात्माचा गंध लाभला.', 'Born into a family known across Solapur, Marathwada and Maharashtra, rooted in spirituality.'), url: '/about/biography' },
           { title: L('सामाजिक उपक्रम', 'Social initiatives'), text: L('लोकमंगल मल्टीस्टेटच्या माध्यमातून आतापर्यंत उद्योजकांना पाच कोटी रुपयांचे अर्थसहाय्य.', 'Rs 5 crore in financial support to entrepreneurs through Lokmangal Multistate.'), url: '/social-work' },
