@@ -74,7 +74,7 @@ function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
   return (
     <section className="relative z-10 -mt-14 md:-mt-16">
       <div className="container-x">
-        <ul className="grid grid-cols-2 overflow-hidden rounded-3xl border border-line bg-white shadow-[0_30px_60px_-35px_rgba(17,17,17,.45)] sm:grid-cols-3 lg:grid-cols-6">
+        <ul className="grid grid-cols-2 overflow-hidden rounded-3xl border border-line bg-white shadow-[0_30px_60px_-35px_rgba(20,33,61,.4)] sm:grid-cols-3 lg:grid-cols-6">
           {b.items.map((it) => {
             const Icon = icons[(it.icon as keyof typeof icons) ?? 'info'] ?? Info
             return (
@@ -109,7 +109,7 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
     <section className="py-16 md:py-24">
       <div className="container-x grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border-2 border-saffron-300 md:-left-6 md:-top-6" />
+          <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border-2 border-frame md:-left-6 md:-top-6" />
           {img && (
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream">
               <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover" style={photoFit(b.image, 0.8)} />

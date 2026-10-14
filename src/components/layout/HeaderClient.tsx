@@ -79,9 +79,9 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
         className={cn(
           'sticky top-0 z-50 text-white transition-[background,box-shadow,padding] duration-300',
           transparent
-            ? 'bg-gradient-to-b from-black/55 to-transparent'
+            ? 'bg-gradient-to-b from-charcoal-950/60 to-transparent'
             : scrolled
-              ? 'bg-charcoal-900/95 shadow-[0_10px_30px_-18px_rgba(0,0,0,.6)] backdrop-blur'
+              ? 'bg-charcoal-900/95 shadow-[0_10px_30px_-18px_rgba(14,24,48,.6)] backdrop-blur'
               : 'bg-charcoal-900',
         )}
       >

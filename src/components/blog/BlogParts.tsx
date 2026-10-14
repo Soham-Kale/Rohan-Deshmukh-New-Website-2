@@ -98,7 +98,7 @@ export function LeadStory({ post, locale, badge, readFull }: { post: Post; local
         {img && (
           <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill priority sizes="(max-width:1024px) 100vw, 60vw" className="object-cover transition duration-700 group-hover:scale-[1.03]" style={photoFit(post.coverImage, 1.6, 0.6)} />
         )}
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-charcoal-950/85 via-charcoal-900/30 to-transparent" />
         <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-md bg-saffron-600 px-2.5 py-1 text-xs font-semibold text-white shadow">
           <Sparkles className="size-3.5" /> {badge}
         </span>
@@ -231,7 +231,7 @@ export function RecentList({ posts, locale, title }: { posts: Post[]; locale: st
 export function NewsCard({ post, locale }: { post: Post; locale: string }) {
   const img = mediaUrl(post.coverImage, 'card')
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(0,0,0,.35)]">
+    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(20,33,61,.3)]">
       <div className="relative aspect-[16/10] overflow-hidden bg-cream">
         {img && <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(post.coverImage, 1.6, 0.6)} />}
         <span className="absolute left-3 top-3"><CategoryChip cat={primaryCategory(post)} dark /></span>

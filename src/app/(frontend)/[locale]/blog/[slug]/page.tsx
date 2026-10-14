@@ -103,7 +103,7 @@ export default async function PostPage({ params }: P) {
             <ArticleTools target="article-body" sizeLabel={tb('fontSize')} printLabel={tb('print')} />
           </div>
 
-          <h1 className="mt-4 text-[1.9rem] font-bold leading-[1.3] text-charcoal-950 md:text-[2.6rem]">{post.title}</h1>
+          <h1 className="mt-4 text-[1.9rem] font-bold leading-[1.3] text-charcoal-900 md:text-[2.6rem]">{post.title}</h1>
           {post.subtitle && <p className="mt-3 text-lg text-muted md:text-xl">{post.subtitle}</p>}
 
           {/* byline */}
@@ -141,7 +141,7 @@ export default async function PostPage({ params }: P) {
           {/* key points (from the article's sub-headings) */}
           {headings.length >= 2 && (
             <nav aria-label={tb('keyPoints')} className="mt-6 rounded-2xl border border-line bg-white p-5 md:p-6">
-              <h2 className="flex items-center gap-2.5 border-b border-line pb-3 text-lg text-charcoal-900"><CircleCheckBig className="size-5 text-green-600" /> {tb('keyPoints')}</h2>
+              <h2 className="flex items-center gap-2.5 border-b border-line pb-3 text-lg text-charcoal-900"><CircleCheckBig className="size-5 text-saffron-600" /> {tb('keyPoints')}</h2>
               <ol className="mt-3 space-y-2">
                 {headings.map((h, i) => (
                   <li key={h.id}>

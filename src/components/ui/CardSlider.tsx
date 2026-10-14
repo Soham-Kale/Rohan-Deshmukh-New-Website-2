@@ -54,19 +54,19 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
           <ul className="-ml-4 flex touch-pan-y md:-ml-5">
             {cards.map((c, i) => (
               <li key={c.href + i} className="min-w-0 shrink-0 grow-0 basis-[88%] pl-4 sm:basis-1/2 md:pl-5 lg:basis-1/3">
-                <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white shadow-[0_6px_24px_-18px_rgba(0,0,0,.35)] transition hover:shadow-[0_16px_40px_-22px_rgba(0,0,0,.4)]">
+                <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white shadow-[0_6px_24px_-18px_rgba(20,33,61,.3)] transition hover:shadow-[0_16px_40px_-22px_rgba(20,33,61,.35)]">
                   <div className="relative aspect-[2/1] overflow-hidden bg-cream">
                     {c.image ? (
                       <Image src={c.image} alt="" fill sizes="(max-width:640px) 88vw, (max-width:1024px) 45vw, 360px" className="object-cover transition duration-500 group-hover:scale-105" style={c.imageStyle} />
                     ) : (
                       // no photo yet: branded placeholder with the first letter
-                      <div aria-hidden className="grid h-full place-items-center bg-gradient-to-br from-saffron-50 via-white to-green-50">
+                      <div aria-hidden className="grid h-full place-items-center bg-gradient-to-br from-saffron-50 via-paper to-saffron-100">
                         <span className="grid size-16 place-items-center rounded-full bg-white font-display text-3xl text-saffron-600 shadow-sm ring-1 ring-saffron-100">{c.title.trim().charAt(0)}</span>
                       </div>
                     )}
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    {c.meta && <p className="mb-1 text-xs font-semibold text-green-700">{c.meta}</p>}
+                    {c.meta && <p className="mb-1 text-xs font-semibold text-saffron-700">{c.meta}</p>}
                     <h3 className="text-[1.2rem] leading-snug text-charcoal-900 md:text-[1.3rem]">
                       <Link href={c.href} className="after:absolute after:inset-0">{c.title}</Link>
                     </h3>

@@ -31,7 +31,7 @@ export function Gallery({ images, layout = 'grid', className }: { images: Galler
               <Image src={img.thumb} alt={img.alt} width={img.width || 800} height={img.height || 600} sizes="(max-width:768px) 50vw, 25vw" className="h-auto w-full transition duration-500 group-hover:scale-105" />
             )}
             {img.caption && (
-              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-left text-sm text-white opacity-0 transition group-hover:opacity-100">{img.caption}</span>
+              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal-950/75 to-transparent p-3 text-left text-sm text-white opacity-0 transition group-hover:opacity-100">{img.caption}</span>
             )}
           </button>
         ))}
@@ -42,7 +42,7 @@ export function Gallery({ images, layout = 'grid', className }: { images: Galler
         close={() => setIndex(-1)}
         slides={images.map((i) => ({ src: i.src, alt: i.alt, title: i.caption ?? undefined }))}
         plugins={[Captions, Zoom]}
-        styles={{ container: { backgroundColor: 'rgba(11,11,11,.95)' } }}
+        styles={{ container: { backgroundColor: 'rgba(14,24,48,.96)' } }}
       />
     </>
   )

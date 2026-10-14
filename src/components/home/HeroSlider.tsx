@@ -158,8 +158,8 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
       </div>
 
       {/* tint — flat like the reference, a little deeper at the bottom for the text on phones */}
-      <div aria-hidden className="absolute inset-0 -z-10 bg-black/45" />
-      <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-black/45 to-transparent md:h-1/3" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-overlay" />
+      <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-charcoal-950/40 to-transparent md:h-1/3" />
 
       {/* text */}
       <div className="container-x relative flex h-full items-end pb-28 pt-28 md:items-center md:pb-0 md:pr-36">

@@ -14,12 +14,12 @@ export async function Footer({ locale }: { locale: Locale }) {
   const logo = mediaUrl(settings.logoLight)
 
   return (
-    <footer className="on-dark grain bg-charcoal-950 text-white/80">
-      {/* saffron · white · green strip */}
+    <footer className="on-dark grain bg-charcoal-900 text-white/80">
+      {/* primary · highlight · frame strip */}
       <div aria-hidden className="flex h-1.5">
         <span className="flex-1 bg-saffron-500" />
-        <span className="flex-1 bg-white" />
-        <span className="flex-1 bg-green-500" />
+        <span className="flex-1 bg-highlight" />
+        <span className="flex-1 bg-frame" />
       </div>
       <div className="container-x grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>

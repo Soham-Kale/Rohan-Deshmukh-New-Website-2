@@ -85,7 +85,7 @@ export default async function BlogPage({ params, searchParams }: P) {
       {/* sections + search — stays at the top while scrolling */}
       <div className="sticky top-16 z-30 pb-6">
         <div className="container-x">
-          <div className="flex flex-col gap-3 rounded-2xl border border-line bg-white/95 p-3 shadow-[0_10px_30px_-22px_rgba(0,0,0,.4)] backdrop-blur md:flex-row md:items-center md:p-3.5">
+          <div className="flex flex-col gap-3 rounded-2xl border border-line bg-white/95 p-3 shadow-[0_10px_30px_-22px_rgba(20,33,61,.3)] backdrop-blur md:flex-row md:items-center md:p-3.5">
             <div className="flex min-w-0 flex-1 items-center gap-3">
               <span className="hidden shrink-0 items-center gap-1.5 text-sm text-muted sm:inline-flex"><SlidersHorizontal className="size-4" /> {t('sections')}:</span>
               <div className="no-scrollbar -mx-1 flex min-w-0 gap-2 overflow-x-auto px-1">
