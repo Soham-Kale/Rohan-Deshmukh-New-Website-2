@@ -7,3 +7,4 @@ node_modules
 next-env.d.ts
 .postgres-data
 .next-dev
+.content-version

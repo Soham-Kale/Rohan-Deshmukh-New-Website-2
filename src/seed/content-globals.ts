@@ -34,9 +34,7 @@ export const header = () => ({
   nav: [
     n('मुख्य पृष्ठ', 'Home', '/'),
     n('परिचय', 'About', '/about/biography', [
-      n('जीवनचरित्र', 'Biography', '/about/biography'),
-      n('परिवार', 'Family', '/about/family'),
-      n('विचार', 'Thoughts / Quotes', '/about/thoughts'),
+      n('कौटुंबिक पार्श्वभूमी', 'Family Background', '/about/biography'),
       n('सामाजिक उपक्रम', 'Social Initiatives', '/social-work'),
       n('राजकीय कारकीर्द', 'Political Career', '/political-career'),
     ]),
@@ -46,9 +44,8 @@ export const header = () => ({
       n('उपक्रम', 'Initiatives', '/social-work'),
     ]),
     n('कार्यक्रम', 'Events', '/events', [
-      n('सर्व कार्यक्रम', 'All events', '/events'),
       n('सामुदायिक विवाह सोहळा', 'Community Weddings', '/events/samudayik-vivah-sohala'),
-      n('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto', '/vision'),
+      n('व्हिजन', 'New India Manifesto', '/vision'),
       n('ब्लॉग', 'Blog', '/blog'),
     ]),
     n('गॅलरी', 'Gallery', '/media/photos', [
@@ -67,7 +64,7 @@ const lk = (mr: string, en: string, url: string) => ({ label: L(mr, en), url })
 export const footer = () => ({
   columns: [
     { title: L('महत्त्वाचे दुवे', 'Quick links'), links: [lk('मुख्य पृष्ठ', 'Home', '/'), lk('कार्यक्रम', 'Events', '/events'), lk('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto', '/vision'), lk('आवाहन', 'Appeal', '/appeal'), lk('ब्लॉग', 'Blog', '/blog')] },
-    { title: L('परिचय', 'About'), links: [lk('जीवनचरित्र', 'Biography', '/about/biography'), lk('परिवार', 'Family', '/about/family'), lk('विचार', 'Thoughts', '/about/thoughts'), lk('राजकीय कारकीर्द', 'Political Career', '/political-career'), lk('फोटो संग्रह', 'Photo Gallery', '/media/photos'), lk('संपर्क', 'Contact', '/contact')] },
+    { title: L('परिचय', 'About'), links: [lk('कौटुंबिक पार्श्वभूमी', 'Family Background', '/about/biography'), lk('परिवार', 'Family', '/about/family'), lk('राजकीय कारकीर्द', 'Political Career', '/political-career'), lk('फोटो संग्रह', 'Photo Gallery', '/media/photos'), lk('संपर्क', 'Contact', '/contact')] },
     { title: L('सामाजिक उपक्रम', 'Social initiatives'), links: [lk('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'), lk('अन्नपूर्णा योजना', 'Annapurna Yojana', '/social-work/annapurna-yojana'), lk('लोटस', 'LOTUS', '/social-work/lotus'), lk('सामुदायिक विवाह', 'Community Weddings', '/social-work/samudayik-vivah'), lk('जलसंधारण', 'Water Conservation', '/social-work/jalsandharan'), lk('सर्व उपक्रम', 'All initiatives', '/social-work')] },
   ],
   legalLinks: [lk('गोपनीयता धोरण', 'Privacy Policy', '/privacy-policy'), lk('अटी व शर्ती', 'Terms & Conditions', '/terms'), lk('अस्वीकरण', 'Disclaimer', '/disclaimer')],
@@ -121,7 +118,7 @@ export const home = (p: Payload) => {
         buttonLabel: L('अधिक वाचा', 'Read more'), buttonUrl: '/about/biography',
       },
       {
-        blockType: 'biography', eyebrow: L('जीवनचरित्र', 'Biography'), heading: L('श्री. रोहन सुभाष देशमुख यांचे जीवनचरित्र', 'The life of Shri. Rohan Subhash Deshmukh'),
+        blockType: 'biography', eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family Background'), heading: L('श्री. रोहन सुभाष देशमुख यांची कौटुंबिक पार्श्वभूमी', 'Family background of Shri. Rohan Subhash Deshmukh'),
         intro: L('उत्तम शासकाचा जन्म हा तळागाळातल्या जनतेच्या समस्या आणि गरजा जाणून होतो.', 'A good leader is born by understanding the problems and needs of people at the grassroots.'),
         image: image(p, '/images/blog/author-02.webp', 'रोहन सुभाष देशमुख'),
         items: [

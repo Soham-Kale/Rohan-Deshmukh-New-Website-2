@@ -9,7 +9,7 @@
  */
 import 'dotenv/config'
 import { spawn } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import net from 'node:net'
 import path from 'node:path'
 import EmbeddedPostgres from 'embedded-postgres'
@@ -164,9 +164,22 @@ try {
   if (embedded) await startDb()
   else console.log(`Using external PostgreSQL at ${url.hostname}`)
 
+  // Content changes (menu, renamed/removed pages) are applied once per version — see src/seed/content-updates.ts
+  const contentVersion = readFileSync(path.join(root, 'src/seed/content-updates.ts'), 'utf8').match(/CONTENT_VERSION = '([^']+)'/)?.[1] ?? ''
+  const marker = path.join(root, '.content-version')
+  const stamp = `${contentVersion} ${url.hostname}:${port}/${dbName}`
   if (!(await hasContent())) {
     console.log('🌱 Empty database — loading website content (takes 1–3 minutes)…')
     await run('node', ['--env-file=.env', '--import', 'tsx', 'src/seed/index.ts'])
+    writeFileSync(marker, stamp)
+  } else if (contentVersion && (!existsSync(marker) || readFileSync(marker, 'utf8').trim() !== stamp)) {
+    console.log('🔄 Applying the latest menu and page changes to the database…')
+    try {
+      await run('node', ['--env-file=.env', '--import', 'tsx', 'src/seed/apply-menu.ts'])
+      writeFileSync(marker, stamp)
+    } catch {
+      console.warn('⚠ Could not apply the content changes — run "npm run content:update" later.')
+    }
   }
 
   if (!onlyDb) {

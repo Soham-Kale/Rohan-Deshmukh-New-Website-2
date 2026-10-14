@@ -188,7 +188,7 @@ export interface UserAuthOperations {
   };
 }
 /**
- * Content pages (Biography, Party & Organisation, Lokmangal Parivar, Privacy Policy…)
+ * Content pages (Family Background, Lokmangal Parivar, Privacy Policy…)
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".

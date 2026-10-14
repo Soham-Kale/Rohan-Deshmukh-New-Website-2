@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import { Mail, Phone, MapPin } from 'lucide-react'
 import { getGlobal } from '@/lib/payload'
 import { mediaUrl } from '@/lib/utils'
+import { isLiveLink } from '@/lib/nav'
 import type { Locale } from '@/i18n/routing'
 import { CMSLink } from '../ui/CMSLink'
 import { SocialIcon, socialLabels } from '../ui/SocialIcon'
@@ -54,7 +55,7 @@ export async function Footer({ locale }: { locale: Locale }) {
           <div key={col.id}>
             <p className="eyebrow mb-4">{col.title}</p>
             <ul className="space-y-2">
-              {col.links?.map((l) => (
+              {col.links?.filter((l) => isLiveLink(l.url)).map((l) => (
                 <li key={l.id}>
                   <CMSLink url={l.url} newTab={l.newTab} className="transition hover:text-saffron-300">
                     {l.label}
@@ -78,7 +79,7 @@ export async function Footer({ locale }: { locale: Locale }) {
           </div>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-white/60">
             <span>{footer.copyright}</span>
-            {footer.legalLinks?.map((l) => (
+            {footer.legalLinks?.filter((l) => isLiveLink(l.url)).map((l) => (
               <CMSLink key={l.id} url={l.url} className="hover:text-white">
                 {l.label}
               </CMSLink>

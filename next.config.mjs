@@ -10,6 +10,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 const REMOVED = [
   ['/about/achievements', '/about/biography'],
   ['/about/party-organisation', '/political-career'],
+  ['/about/thoughts', '/blog'],
   ['/about/leaders', '/about/biography'],
   ['/lokmangal/vishwamangal', '/lokmangal/foundation'],
   ['/media/downloads', '/media/photos'],

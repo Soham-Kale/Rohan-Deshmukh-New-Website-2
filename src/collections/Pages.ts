@@ -20,7 +20,7 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     group: 'Content',
     defaultColumns: ['title', 'path', 'section', '_status', 'updatedAt'],
-    description: 'Content pages (Biography, Party & Organisation, Lokmangal Parivar, Privacy Policy…)',
+    description: 'Content pages (Family Background, Lokmangal Parivar, Privacy Policy…)',
     preview: (doc) => `${process.env.NEXT_PUBLIC_SITE_URL}${doc.path}`,
   },
   versions: { drafts: true, maxPerDoc: 20 },

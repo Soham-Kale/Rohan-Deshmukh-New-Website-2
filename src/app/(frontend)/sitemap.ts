@@ -8,7 +8,7 @@ export const revalidate = 3600
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl()
   const p = await payload()
-  const statics = ['/', '/social-work', '/about/family', '/about/thoughts', '/events', '/media/photos', '/media/videos', '/blog', '/contact']
+  const statics = ['/', '/social-work', '/about/family', '/events', '/media/photos', '/media/videos', '/blog', '/contact']
   const [pages, posts, inits, albums, events] = await Promise.all([
     p.find({ collection: 'pages', limit: 500, depth: 0, select: { path: true, updatedAt: true } }),
     p.find({ collection: 'posts', limit: 1000, depth: 0, select: { slug: true, updatedAt: true }, where: { _status: { equals: 'published' } } }),

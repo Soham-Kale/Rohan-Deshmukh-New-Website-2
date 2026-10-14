@@ -3,6 +3,7 @@ import * as migration_20261012_144129_blob_fields from './20261012_144129_blob_f
 import * as migration_20261012_152011_hero_mobile_image from './20261012_152011_hero_mobile_image';
 import * as migration_20261013_051055_hero_kicker from './20261013_051055_hero_kicker';
 import * as migration_20261013_150000_menu_restructure from './20261013_150000_menu_restructure';
+import * as migration_20261014_120000_remove_thoughts_rename_biography from './20261014_120000_remove_thoughts_rename_biography';
 
 export const migrations = [
   {
@@ -29,5 +30,10 @@ export const migrations = [
     up: migration_20261013_150000_menu_restructure.up,
     down: migration_20261013_150000_menu_restructure.down,
     name: '20261013_150000_menu_restructure'
+  },
+  {
+    up: migration_20261014_120000_remove_thoughts_rename_biography.up,
+    down: migration_20261014_120000_remove_thoughts_rename_biography.down,
+    name: '20261014_120000_remove_thoughts_rename_biography'
   },
 ];

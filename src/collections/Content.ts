@@ -158,7 +158,7 @@ export const DownloadPhotos: CollectionConfig = {
 export const Quotes: CollectionConfig = {
   slug: 'quotes',
   labels: { singular: 'Thought / Quote', plural: 'Thoughts / Quotes' },
-  admin: { useAsTitle: 'text', group: 'About', defaultColumns: ['text', 'image', 'category', 'publishedAt'] },
+  admin: { hidden: true, /* removed from the website (Oct 2026); data kept */ useAsTitle: 'text', group: 'About', defaultColumns: ['text', 'image', 'category', 'publishedAt'] },
   access: { read: anyone, create: mediaTeam, update: mediaTeam, delete: editors },
   defaultSort: '-publishedAt',
   hooks,

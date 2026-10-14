@@ -16,12 +16,12 @@ const appealCta = (p: Payload) => ({
 export const pages = (p: Payload) => [
   {
     path: '/about/biography', section: 'about', menuOrder: 1,
-    title: L('जीवनचरित्र', 'Biography'),
+    title: L('कौटुंबिक पार्श्वभूमी', 'Family Background'),
     subtitle: L('रोहन सुभाष देशमुख हे एक उमदं व्यक्तिमत्त्व — सोलापूर, महाराष्ट्र.', 'Rohan Subhash Deshmukh — Solapur, Maharashtra.'),
     bannerImage: image(p, '/images/about/portrait-solapur.webp', 'रोहन सुभाष देशमुख'),
     layout: [
       {
-        blockType: 'cards', eyebrow: L('जीवनचरित्र', 'Biography'), heading: L('वैयक्तिक माहिती व शिक्षण', 'Personal details & education'), columns: '2',
+        blockType: 'cards', eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family Background'), heading: L('वैयक्तिक माहिती व शिक्षण', 'Personal details & education'), columns: '2',
         items: [
           { icon: '०१', title: L('वैयक्तिक माहिती', 'Personal'), text: L('जन्म: १२ डिसेंबर १९८७\nजन्मस्थळ: सोलापूर, देशमुख कुटुंब', 'Born: 12 December 1987\nBirthplace: Solapur, Deshmukh family') },
           { icon: '०२', title: L('शालेय शिक्षण', 'Schooling'), text: L('लिटल फ्लॉवर कॉन्व्हेंट स्कूल, सोलापूर\nराष्ट्रीय छात्र सेना (NCC): इयत्ता नववीपासून सक्रिय सहभाग', 'Little Flower Convent School, Solapur\nNational Cadet Corps (NCC): active from Class 9') },
@@ -224,8 +224,8 @@ const legal = (p: Payload) => [
   {
     path: '/terms', section: 'legal', showSideMenu: true, menuOrder: 2, title: L('अटी व शर्ती', 'Terms & Conditions'),
     layout: [{ blockType: 'content', body: rt(p,
-      'हे संकेतस्थळ वापरून आपण खालील अटी मान्य करता.\n\n- संकेतस्थळावरील मजकूर, छायाचित्रे व चिन्हे यांचे हक्क रोहन सुभाष देशमुख यांच्याकडे राखीव आहेत. "अधिकृत फोटो डाउनलोड" विभागातील छायाचित्रे माध्यमांना श्रेय देऊन वापरता येतील.\n- फॉर्मद्वारे खोटी, आक्षेपार्ह किंवा बेकायदेशीर माहिती पाठवू नये.\n- बाह्य दुव्यांवरील (उदा. सोशल मीडिया, नोंदणी पोर्टल) मजकुरासाठी आम्ही जबाबदार नाही.\n- या अटींमध्ये वेळोवेळी बदल होऊ शकतात.',
-      'By using this website you agree to the following terms.\n\n- All text, photographs and marks on this website are owned by Rohan Subhash Deshmukh. Photos in the "Download Official Photos" section may be used by media with credit.\n- Do not submit false, offensive or unlawful content through the forms.\n- We are not responsible for content on external links (e.g. social media, registration portals).\n- These terms may be updated from time to time.') }],
+      'हे संकेतस्थळ वापरून आपण खालील अटी मान्य करता.\n\n- संकेतस्थळावरील मजकूर, छायाचित्रे व चिन्हे यांचे हक्क रोहन सुभाष देशमुख यांच्याकडे राखीव आहेत.\n- फॉर्मद्वारे खोटी, आक्षेपार्ह किंवा बेकायदेशीर माहिती पाठवू नये.\n- बाह्य दुव्यांवरील (उदा. सोशल मीडिया, नोंदणी पोर्टल) मजकुरासाठी आम्ही जबाबदार नाही.\n- या अटींमध्ये वेळोवेळी बदल होऊ शकतात.',
+      'By using this website you agree to the following terms.\n\n- All text, photographs and marks on this website are owned by Rohan Subhash Deshmukh.\n- Do not submit false, offensive or unlawful content through the forms.\n- We are not responsible for content on external links (e.g. social media, registration portals).\n- These terms may be updated from time to time.') }],
   },
   {
     path: '/disclaimer', section: 'legal', showSideMenu: true, menuOrder: 3, title: L('अस्वीकरण', 'Disclaimer'),

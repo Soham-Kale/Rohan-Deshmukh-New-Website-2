@@ -18,6 +18,7 @@
     "ci": "payload migrate && next build",
     "seed:ci": "node --import tsx src/seed/index.ts",
     "menu:update": "node --env-file=.env --import tsx src/seed/apply-menu.ts",
+    "content:update": "node --env-file=.env --import tsx src/seed/apply-menu.ts",
     "vercel-build": "payload migrate && npm run seed:ci && next build",
     "dev:next": "next dev",
     "db": "node scripts/dev.mjs --db-only",
