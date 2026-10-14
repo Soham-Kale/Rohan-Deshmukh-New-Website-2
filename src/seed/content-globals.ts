@@ -33,26 +33,23 @@ const n = (mr: string, en: string, url?: string, children?: unknown[], newTab = 
 export const header = () => ({
   nav: [
     n('मुख्य पृष्ठ', 'Home', '/'),
-    n('परिचय', 'About', '/about/biography', [
+    n('परिचय', 'About', '/about/introduction', [
+      n('स्वपरिचय', 'Self Introduction', '/about/introduction'),
       n('कौटुंबिक पार्श्वभूमी', 'Family Background', '/about/biography'),
-      n('सामाजिक उपक्रम', 'Social Initiatives', '/social-work'),
+      n('लोकमंगल परिवार', 'Lokmangal Parivar', '/lokmangal/parivar'),
       n('राजकीय कारकीर्द', 'Political Career', '/political-career'),
     ]),
+    // लोकमंगल फाऊंडेशन page has its own tabs: माहिती · कार्यक्रम · प्रकल्प · गॅलरी
     n('लोकमंगल', 'Lokmangal', '/lokmangal/foundation', [
-      n('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'),
       n('लोकमंगल परिवार', 'Lokmangal Parivar', '/lokmangal/parivar'),
+      n('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'),
     ]),
-    n('कार्यक्रम', 'Events', '/events', [
-      n('सामुदायिक विवाह सोहळा', 'Community Weddings', '/events/samudayik-vivah-sohala'),
-      n('व्हिजन', 'New India Manifesto', '/vision'),
-      n('ब्लॉग', 'Blog', '/blog'),
-    ]),
-    n('गॅलरी', 'Gallery', '/media/photos', [
-      n('फोटो संग्रह', 'Photo Gallery', '/media/photos'),
-      n('व्हिडिओ संग्रह', 'Video Gallery', '/media/videos'),
+    n('मीडिया', 'Media', '/media/photos', [
+      n('गॅलरी', 'Gallery', '/media/photos'),
+      n('ब्लॉग', 'Blogs', '/blog'),
+      n('व्हिजन', 'Vision', '/vision'),
     ]),
     n('संपर्क', 'Connect', '/contact', [
-      n('आवाहन', 'Appeal', '/appeal'),
       n('संपर्क', 'Contact', '/contact'),
     ]),
   ],
@@ -111,10 +108,12 @@ export const home = (p: Payload) => {
       {
         blockType: 'aboutIntro', eyebrow: L('परिचय', 'About'), heading: L('मी रोहन सुभाष देशमुख', 'I am Rohan Subhash Deshmukh'),
         image: image(p, PORTRAITS.about, 'रोहन सुभाष देशमुख'),
-        text: L('नव्या विचारांकडे सकारात्मकतेने पाहणारा, नव्या ऊर्जेसह काहीतरी वेगळं करण्याची इच्छा बाळगणारा आणि समाजासाठी आपल्या परीने योगदान देण्याची जिद्द मनात ठेवून पुढे जाणारा एक तरुण.', 'A young man who looks at new ideas positively, wants to do something different with fresh energy, and is determined to contribute to society in his own way.'),
+        text: L(
+          'नव्या विचारांकडे सकारात्मकतेने पाहणारा, नव्या ऊर्जेसह काहीतरी वेगळं करण्याची इच्छा बाळगणारा आणि समाजासाठी आपल्या परीने योगदान देण्याची जिद्द मनात ठेवून पुढे जाणारा एक तरुण.',
+          'Rohan Subhash Deshmukh is an entrepreneur, author and social worker from Solapur. Inspired by the thoughts of Swami Vivekananda, he believes a strong nation is built by confident, self-reliant young people. Youth, enterprise and self-reliance are at the centre of everything he does. For him, social work is not about quick fixes. It is about listening to people, understanding their problems and working on the root cause.'),
         pledge: L('सुरुवात आपल्या विचारातून, चांगल्या हेतूतून आणि त्या हेतूला कृतीची जोड देण्यापासूनच झाली पाहिजे.', 'Change must begin with our own thinking, good intent — and turning that intent into action.'),
         stats: [{ value: '३,०००+', label: L('सामुदायिक विवाह आयोजित', 'Community weddings organised') }, { value: '४', label: L('प्रत्यक्ष चालवलेल्या संस्था', 'Institutions led') }, { value: '५५०', label: L('रोज जेवणाचे डबे', 'Meals delivered daily') }],
-        buttonLabel: L('अधिक वाचा', 'Read more'), buttonUrl: '/about/biography',
+        buttonLabel: L('अधिक वाचा', 'Read more'), buttonUrl: '/about/introduction',
       },
       {
         blockType: 'biography', eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family Background'), heading: L('श्री. रोहन सुभाष देशमुख यांची कौटुंबिक पार्श्वभूमी', 'Family background of Shri. Rohan Subhash Deshmukh'),

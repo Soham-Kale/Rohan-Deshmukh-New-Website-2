@@ -48,6 +48,7 @@ export const PORTRAITS = {
   about: '/images/portraits/rohan-deshmukh-tiranga.webp', // homepage → परिचय
   family: '/images/portraits/rohan-deshmukh-kurta.webp', // homepage → कौटुंबिक पार्श्वभूमी section
   familyPage: '/images/portraits/rohan-deshmukh-office.webp', // कौटुंबिक पार्श्वभूमी page banner
+  introduction: '/images/portraits/rohan-deshmukh-introduction.webp', // स्वपरिचय page
 }
 
 /** Focal points (percent from left / top) so cropped versions keep the face in frame */
@@ -55,6 +56,7 @@ const FOCAL: Record<string, [number, number]> = {
   '/images/portraits/rohan-deshmukh-tiranga.webp': [62, 22],
   '/images/portraits/rohan-deshmukh-kurta.webp': [54, 22],
   '/images/portraits/rohan-deshmukh-office.webp': [80, 25],
+  '/images/portraits/rohan-deshmukh-introduction.webp': [60, 20],
 }
 
 /** Import an image from the current live site (falls back to a branded placeholder when offline) */

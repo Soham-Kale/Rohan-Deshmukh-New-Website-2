@@ -38,8 +38,6 @@ export async function HomeSections({ sections, locale }: { sections: Block[]; lo
           case 'featuredVideo': return <FeaturedVideoSection key={key} b={b} />
           case 'workHighlights': return <WorkHighlightsSection key={key} b={b} />
           case 'initiativesShowcase': return <InitiativesSection key={key} b={b} locale={locale} />
-          // case 'family': return <FamilySection key={key} b={b} />
-          // case 'homeGallery': return <GallerySection key={key} b={b} />
           case 'homeStats': return <StatsSection key={key} b={b} />
           case 'homeFaq': return <FaqSection key={key} b={b} />
           case 'latestBlog': return <BlogSection key={key} b={b} locale={locale} />
@@ -271,56 +269,6 @@ async function InitiativesSection({ b, locale }: { b: Of<'initiativesShowcase'>;
     </Section>
   )
 }
-
-// function FamilySection({ b }: { b: Of<'family'> }) {
-//   return (
-//     <Section eyebrow={b.eyebrow} heading={b.heading}>
-//       <div className="grid gap-6 lg:grid-cols-3">
-//         {b.members?.map((m) => {
-//           const img = mediaUrl(m.image, 'card')
-//           const paras = (m.text ?? '').split(/\n\s*\n/)
-//           return (
-//             <article key={m.id} className="card flex flex-col">
-//               <div className="relative aspect-[4/3] bg-cream">
-//                 {img && <Image src={img} alt={`${m.relation} — ${m.name}`} fill sizes="(max-width:1024px) 100vw, 33vw" className="object-cover" style={photoFit(m.image, 4 / 3, 0.6)} />}
-//                 <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-saffron-700">{m.relation}</span>
-//               </div>
-//               <div className="flex flex-1 flex-col p-6">
-//                 <h3 className="text-2xl text-charcoal-900">{m.name}</h3>
-//                 <p className="mt-3 text-muted">{paras[0]}</p>
-//                 {paras.length > 1 && (
-//                   <details className="group mt-3">
-//                     <summary className="cursor-pointer list-none font-semibold text-saffron-700 marker:hidden">
-//                       <span className="group-open:hidden">अधिक वाचा / Read more +</span>
-//                       <span className="hidden group-open:inline">कमी करा −</span>
-//                     </summary>
-//                     <div className="mt-3 space-y-3 text-muted">{paras.slice(1).map((p, i) => <p key={i}>{p}</p>)}</div>
-//                   </details>
-//                 )}
-//               </div>
-//             </article>
-//           )
-//         })}
-//       </div>
-//     </Section>
-//   )
-// }
-
-// function GallerySection({ b }: { b: Of<'homeGallery'> }) {
-//   const imgs = (b.images ?? []).map((m) => ({ src: mediaUrl(m, 'card') ?? '', alt: mediaAlt(m, b.heading ?? ''), pos: mediaPosition(m) })).filter((i) => i.src)
-//   return (
-//     <section className="overflow-hidden py-16 md:py-24">
-//       <div className="container-x mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-//         <div>
-//           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-//           {b.heading && <h2 className="h-section">{b.heading}</h2>}
-//         </div>
-//         <Link href="/media/photos" className="btn btn-dark self-start">{b.heading} <ArrowRight className="size-4" /></Link>
-//       </div>
-//       <Marquee images={imgs} />
-//     </section>
-//   )
-// }
 
 function StatsSection({ b }: { b: Of<'homeStats'> }) {
   const img = mediaUrl(b.image, 'hero')

@@ -12,6 +12,9 @@ import { PageBlocks } from '@/components/blocks/PageBlocks'
 
 export const revalidate = 300
 
+/** CMS pages that have their own route file (e.g. lokmangal/foundation/page.tsx with tabs) */
+const OWN_ROUTE = ['/lokmangal/foundation']
+
 type Params = { params: Promise<{ locale: Locale; path: string[] }> }
 
 const getPage = cache(async (path: string, locale: Locale) => {
@@ -26,7 +29,7 @@ export async function generateStaticParams() {
   try {
     const p = await payload()
     const res = await p.find({ collection: 'pages', limit: 200, depth: 0, select: { path: true } })
-    return res.docs.filter((d) => !isRemovedPath(d.path)).flatMap((d) => ['mr', 'en'].map((locale) => ({ locale, path: d.path.split('/').filter(Boolean) })))
+    return res.docs.filter((d) => !isRemovedPath(d.path) && !OWN_ROUTE.includes(d.path)).flatMap((d) => ['mr', 'en'].map((locale) => ({ locale, path: d.path.split('/').filter(Boolean) })))
   } catch {
     return []
   }

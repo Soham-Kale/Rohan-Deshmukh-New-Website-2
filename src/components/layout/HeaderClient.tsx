@@ -99,6 +99,8 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
               {nav.map((item, i) => {
                 const hasKids = Boolean(item.children?.length)
                 const isMega = item.children?.some((c) => c.children?.length)
+                // one group (e.g. लोकमंगल → लोकमंगल फाऊंडेशन) = narrow column; several groups = wide mega menu
+                const groups = isMega ? item.children!.length : 0
                 return (
                   <li key={item.id ?? i} className="relative" onMouseEnter={() => hasKids && enter(i)} onMouseLeave={() => hasKids && leave()}>
                     {hasKids ? (
@@ -121,10 +123,10 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
                       <div
                         className={cn(
                           'animate-fade-up absolute top-full pt-3',
-                          isMega ? 'left-1/2 -translate-x-1/2' : 'left-0',
+                          groups > 1 ? 'left-1/2 -translate-x-1/2' : 'left-0',
                         )}
                       >
-                        <div className={cn('rounded-2xl border border-line bg-white p-3 text-ink shadow-2xl', isMega ? 'grid w-[min(760px,90vw)] grid-cols-3 gap-2 p-5' : 'min-w-64')}>
+                        <div className={cn('rounded-2xl border border-line bg-white p-3 text-ink shadow-2xl', isMega ? cn('grid gap-2 p-5', groups === 1 ? 'w-72' : groups === 2 ? 'w-[min(520px,90vw)] grid-cols-2' : 'w-[min(760px,90vw)] grid-cols-3') : 'min-w-64')}>
                           {item.children!.map((c, j) =>
                             isMega ? (
                               <div key={c.id ?? j}>

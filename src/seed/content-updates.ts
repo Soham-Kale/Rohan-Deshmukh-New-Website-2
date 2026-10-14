@@ -6,8 +6,10 @@
 import type { Payload } from 'payload'
 import { applyMenu } from './menu'
 import { image, PORTRAITS } from './helpers'
+import { createBilingual } from './bilingual'
+import { introPage } from './content-pages'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-14b'
+export const CONTENT_VERSION = '2026-10-14d'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -91,10 +93,27 @@ export async function applyPortraits(payload: Payload) {
     await payload.update({ collection: 'pages', id: page.id, depth: 0, data: { bannerImage: banner, _status: 'published' } as never })
 }
 
-/** 14 Oct 2026: Thoughts page removed, Biography → कौटुंबिक पार्श्वभूमी, menu without removed pages, new portraits */
-export async function applyContentUpdates(payload: Payload) {
+/** New परिचय menu: स्वपरिचय page (created once) + homepage परिचय "Read more" button pointing to it */
+export async function applyAboutMenu(payload: Payload) {
+  const { totalDocs } = await payload.count({ collection: 'pages', where: { path: { equals: '/about/introduction' } } })
+  if (!totalDocs) await createBilingual(payload, 'pages', { ...introPage(payload), _status: 'published' } as never)
   await applyMenu(payload)
+  for (const locale of ['mr', 'en'] as const) {
+    const home = await payload.findGlobal({ slug: 'home', locale, depth: 0, fallbackLocale: false as never })
+    let changed = false
+    const sections = ((home.sections ?? []) as (Section & { buttonUrl?: string })[]).map((s) => {
+      if (s.blockType !== 'aboutIntro' || s.buttonUrl !== '/about/biography') return s
+      changed = true
+      return { ...s, buttonUrl: '/about/introduction' }
+    })
+    if (changed) await payload.updateGlobal({ slug: 'home', locale, depth: 0, data: { sections, _status: 'published' } as never })
+  }
+}
+
+/** 14 Oct 2026: Thoughts page removed, Biography → कौटुंबिक पार्श्वभूमी, new portraits, new menu with स्वपरिचय */
+export async function applyContentUpdates(payload: Payload) {
   await renamePages(payload)
   await renameHome(payload)
   await applyPortraits(payload)
+  await applyAboutMenu(payload)
 }
