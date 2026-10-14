@@ -6,10 +6,12 @@
 import type { Payload } from 'payload'
 import { applyMenu } from './menu'
 import { image, PORTRAITS } from './helpers'
-import { createBilingual } from './bilingual'
-import { introPage } from './content-pages'
+import { createBilingual, replaceBilingual } from './bilingual'
+import { familyPage, foundationPage, introPage, parivarPage, politicalPage } from './content-pages'
+import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
+import { docEvents } from './content-collections'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-14d'
+export const CONTENT_VERSION = '2026-10-14f'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -110,10 +112,44 @@ export async function applyAboutMenu(payload: Payload) {
   }
 }
 
-/** 14 Oct 2026: Thoughts page removed, Biography → कौटुंबिक पार्श्वभूमी, new portraits, new menu with स्वपरिचय */
+/**
+ * Client document "New Content RD Web" (Oct 2026): homepage परिचय text, the four About pages,
+ * Lokmangal Foundation text and its four events. Replaces the text of those pages; other pages are untouched.
+ */
+export async function applyDocContent(payload: Payload) {
+  for (const def of [introPage, familyPage, foundationPage, parivarPage, politicalPage]) {
+    const data = def(payload) as unknown as Record<string, unknown> & { path: string }
+    const found = (await payload.find({ collection: 'pages', where: { path: { equals: data.path } }, limit: 1, depth: 0 })).docs[0]
+    if (found) await replaceBilingual(payload, 'pages', found.id, { ...data, _status: 'published' })
+    else await createBilingual(payload, 'pages', { ...data, _status: 'published' })
+  }
+
+  const intro = {
+    mr: { heading: 'रोहन सुभाष देशमुख', text: HOME_INTRO.mr, pledge: HOME_TAGLINE.mr },
+    en: { heading: 'Rohan Subhash Deshmukh', text: HOME_INTRO.en, pledge: HOME_TAGLINE.en },
+  }
+  for (const locale of ['mr', 'en'] as const) {
+    const home = await payload.findGlobal({ slug: 'home', locale, depth: 0, fallbackLocale: false as never })
+    let changed = false
+    const sections = ((home.sections ?? []) as (Section & Record<string, unknown>)[]).map((s) => {
+      if (s.blockType !== 'aboutIntro') return s
+      changed = true
+      return { ...s, ...intro[locale], buttonUrl: '/about/introduction' }
+    })
+    if (changed) await payload.updateGlobal({ slug: 'home', locale, depth: 0, data: { sections, _status: 'published' } as never })
+  }
+
+  for (const e of docEvents()) {
+    const { totalDocs } = await payload.count({ collection: 'events', where: { slug: { equals: e.slug } } })
+    if (!totalDocs) await createBilingual(payload, 'events', e as never)
+  }
+}
+
+/** 14 Oct 2026: Thoughts page removed, Biography → कौटुंबिक पार्श्वभूमी, new portraits, new menu, client document content */
 export async function applyContentUpdates(payload: Payload) {
   await renamePages(payload)
   await renameHome(payload)
   await applyPortraits(payload)
   await applyAboutMenu(payload)
+  await applyDocContent(payload)
 }

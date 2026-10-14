@@ -69,6 +69,8 @@ async function run() {
     ],
   })
 
+  for (const e of C.docEvents()) await createBilingual(payload, 'events', e)
+
   log('Photo albums…')
   for (const a of C.albums(payload)) await createBilingual(payload, 'albums', a)
 

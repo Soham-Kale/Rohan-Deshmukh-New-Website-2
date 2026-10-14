@@ -62,9 +62,26 @@ export const Events: CollectionConfig = {
     { name: 'coverImage', type: 'upload', relationTo: 'media', admin: { ...cell('ThumbCell') } },
     { name: 'description', type: 'textarea', localized: true },
     {
+      name: 'group', type: 'select',
+      options: [{ label: 'Youth & Education / युवा व शिक्षण', value: 'youth' }, { label: 'Sports / क्रीडा', value: 'sports' }],
+      admin: { position: 'sidebar', description: 'Section on the Lokmangal Foundation → कार्यक्रम tab' },
+    },
+    { name: 'tagline', type: 'text', localized: true, admin: { description: 'Short line under the title, e.g. "A stage for thousands of young talents"' } },
+    { name: 'body', label: 'About this event', type: 'textarea', localized: true },
+    {
+      name: 'facts', label: 'Key facts', type: 'array',
+      labels: { singular: 'Fact', plural: 'Facts' },
+      admin: { description: 'e.g. Year → 2011, Solapur · Partner → Solapur University' },
+      fields: [
+        { name: 'label', type: 'text', localized: true, required: true },
+        { name: 'value', type: 'text', localized: true, required: true },
+      ],
+    },
+    {
       name: 'editions',
       type: 'array',
       labels: { singular: 'Year', plural: 'Years' },
+      admin: { description: 'Optional: year-wise photo galleries' },
       fields: [
         { name: 'year', type: 'number', required: true },
         { name: 'title', type: 'text', localized: true },

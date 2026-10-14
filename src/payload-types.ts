@@ -827,6 +827,28 @@ export interface Event {
   initiative?: (number | null) | Initiative;
   coverImage?: (number | null) | Media;
   description?: string | null;
+  /**
+   * Section on the Lokmangal Foundation → कार्यक्रम tab
+   */
+  group?: ('youth' | 'sports') | null;
+  /**
+   * Short line under the title, e.g. "A stage for thousands of young talents"
+   */
+  tagline?: string | null;
+  body?: string | null;
+  /**
+   * e.g. Year → 2011, Solapur · Partner → Solapur University
+   */
+  facts?:
+    | {
+        label: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional: year-wise photo galleries
+   */
   editions?:
     | {
         year: number;
@@ -1639,6 +1661,16 @@ export interface EventsSelect<T extends boolean = true> {
   initiative?: T;
   coverImage?: T;
   description?: T;
+  group?: T;
+  tagline?: T;
+  body?: T;
+  facts?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
   editions?:
     | T
     | {

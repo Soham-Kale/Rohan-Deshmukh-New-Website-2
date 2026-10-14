@@ -125,3 +125,66 @@ export const quotes = () => [
   { text: L('जेवण पोटाची भूक भागवतं; पण आपलेपणाची भावना माणसाचं आयुष्य समृद्ध करते.', 'A meal satisfies hunger, but a sense of belonging enriches a life.'), category: 'service' },
   { text: L('एक लाख नव्या उद्योजकांना घडवणं — हे स्वावलंबी भारताचं ध्येय आहे.', 'Building one lakh new entrepreneurs — that is the goal of a self-reliant India.'), category: 'entrepreneurship' },
 ]
+
+const fact = (mr: string, en: string, vmr: string, ven: string) => ({ label: L(mr, en), value: L(vmr, ven) })
+
+/** Lokmangal Foundation events from the client document "New Content RD Web" (Oct 2026). Photos can be added in the admin. */
+export const docEvents = () => [
+  {
+    slug: 'solapur-university-youth-festival', group: 'youth',
+    title: L('सोलापूर विद्यापीठ युवा महोत्सव', 'Solapur University Youth Festival'),
+    tagline: L('हजारो तरुण कलागुणांसाठी व्यासपीठ', 'A stage for thousands of young talents'),
+    description: L('लोकमंगल फाऊंडेशन व सोलापूर विद्यापीठ — पहिली आणि दहावी (२०१३) आवृत्ती.', 'Lokmangal Foundation with Solapur University — 1st and 10th (2013) editions.'),
+    body: L(
+      'प्रत्येक विद्यार्थ्यामध्ये योग्य व्यासपीठाची वाट पाहणारी कला दडलेली असते. लोकमंगल फाऊंडेशनने सोलापूर विद्यापीठासोबत विद्यापीठाचा युवा महोत्सव दोनदा आयोजित केला: त्याची पहिलीच आवृत्ती आणि २०१३ मधील दहावी आवृत्ती. २०१३ च्या महोत्सवाचे नेतृत्व रोहन देशमुख यांनी केले आणि या प्रदेशातील सर्वात मोठ्या युवा उपक्रमांपैकी एका उपक्रमात हजारो विद्यार्थी एकत्र आले.',
+      'Every student has a talent waiting for the right stage. Lokmangal Foundation, together with Solapur University, has hosted the university’s Youth Festival twice: its very first edition, and the 10th edition in 2013. The 2013 festival was led by Rohan Deshmukh, bringing thousands of students together for one of the region’s largest youth events.'),
+    facts: [
+      fact('आयोजन', 'Hosted', 'पहिली आणि दहावी आवृत्ती (२०१३)', '1st edition and 10th edition (2013)'),
+      fact('सहयोगी', 'Partner', 'सोलापूर विद्यापीठ', 'Solapur University'),
+      fact('सहभाग', 'Participation', 'हजारो विद्यार्थी', 'Thousands of students'),
+      fact('नेतृत्व', 'Led by', 'रोहन देशमुख (२०१३)', 'Rohan Deshmukh (2013)'),
+    ],
+  },
+  {
+    slug: 'yuva-sahitya-sammelan', group: 'youth',
+    title: L('युवा साहित्य संमेलन', 'Yuva Sahitya Sammelan'),
+    tagline: L('तरुण लेखकांना आवाज', 'Giving young writers a voice'),
+    description: L('२०११, सोलापूर — ७७८ तरुण लेखक व वाचक.', '2011, Solapur — 778 young writers and readers.'),
+    body: L(
+      'महाराष्ट्राला साहित्य संमेलनांची अभिमानास्पद परंपरा आहे, पण तरुण लेखकांना स्वतःचे व्यासपीठ क्वचितच मिळते. ही उणीव भरून काढण्यासाठी लोकमंगल फाऊंडेशनने २०११ मध्ये सोलापूर येथे पहिले युवा साहित्य संमेलन आयोजित केले. या संमेलनाने वाचनाची आवड वाढवली आणि तरुण लेखक व कलाकारांना आपले साहित्य लोकांसमोर मांडण्याचे व्यासपीठ दिले.',
+      'Maharashtra has a proud tradition of literary meets, but young writers rarely get a stage of their own. To fill this gap, Lokmangal Foundation organised the first Yuva Sahitya Sammelan in Solapur in 2011. The meet encouraged a love for reading and gave young writers and artists a platform to share their work with the public.'),
+    facts: [
+      fact('वर्ष', 'Year', '२०११, सोलापूर', '2011, Solapur'),
+      fact('सहभाग', 'Participation', '७७८ तरुण लेखक व वाचक', '778 young writers and readers'),
+      fact('पुढे', 'Next', 'आणखी युवा साहित्य संमेलनांचे नियोजन', 'More youth literary meets are planned'),
+    ],
+  },
+  {
+    slug: 'international-womens-lawn-tennis-tournament', group: 'sports',
+    title: L('आंतरराष्ट्रीय महिला लॉन टेनिस स्पर्धा', 'International Women’s Lawn Tennis Tournament'),
+    tagline: L('सोलापुरात जागतिक दर्जाचे टेनिस', 'Bringing world-class tennis to Solapur'),
+    description: L('२०११, सोलापूर — २७ देशांतील ६० महिला खेळाडू.', '2011, Solapur — 60 women from 27 countries.'),
+    body: L(
+      '२०११ मध्ये लोकमंगल फाऊंडेशन आणि महाराष्ट्र राज्य लॉन टेनिस संघटनेने सोलापुरात आंतरराष्ट्रीय महिला टेनिस स्पर्धा आणली. जगभरातील खेळाडूंनी शहराच्या कोर्टवर आपले कौशल्य दाखवले आणि सोलापूरकरांनी मोठ्या संख्येने उपस्थित राहून त्यांना प्रोत्साहन दिले. या स्पर्धेमुळे शहरातील अनेक मुला-मुलींना टेनिस खेळण्याची प्रेरणा मिळाली.',
+      'In 2011, Lokmangal Foundation and the Maharashtra State Lawn Tennis Association brought an international women’s tennis tournament to Solapur. Players from across the world competed on the city’s courts, and the people of Solapur turned out in large numbers to support them. The event inspired many young boys and girls in the city to take up tennis.'),
+    facts: [
+      fact('वर्ष', 'Year', '२०११, सोलापूर', '2011, Solapur'),
+      fact('खेळाडू', 'Players', '२७ देशांतील ६० महिला', '60 women from 27 countries'),
+      fact('सहयोगी', 'Partner', 'महाराष्ट्र राज्य लॉन टेनिस संघटना', 'Maharashtra State Lawn Tennis Association'),
+    ],
+  },
+  {
+    slug: 'rural-sports-competitions', group: 'sports',
+    title: L('ग्रामीण क्रीडा स्पर्धा', 'Rural Sports Competitions'),
+    tagline: L('पारंपरिक खेळांचे जतन', 'Keeping traditional sports alive'),
+    description: L('कबड्डी, खो-खो आणि इतर पारंपरिक खेळ — ग्रामीण तरुणांसाठी नियमित स्पर्धा.', 'Kabaddi, Kho-Kho and other traditional sports — regular competitions for rural youth.'),
+    body: L(
+      'गावातील तरुणांकडे कौशल्य असते, पण संधी मिळत नाही. त्यामुळे लोकमंगल फाऊंडेशन ग्रामीण भागात नियमितपणे क्रीडा स्पर्धा आयोजित करते. कबड्डी आणि खो-खो यांसारख्या पारंपरिक खेळांवर विशेष भर देत अधिकाधिक तरुणांना खेळण्याची, स्पर्धा करण्याची आणि प्रगती करण्याची संधी दिली जाते.',
+      'Young people in villages often have the talent but not the opportunity. Lokmangal Foundation regularly organises sports competitions in rural areas, with special focus on traditional games like Kabaddi and Kho-Kho, so more young people get the chance to play, compete and grow.'),
+    facts: [
+      fact('खेळ', 'Games', 'कबड्डी, खो-खो आणि इतर पारंपरिक खेळ', 'Kabaddi, Kho-Kho and other traditional sports'),
+      fact('केंद्रबिंदू', 'Focus', 'ग्रामीण तरुण', 'Rural youth'),
+      fact('वारंवारता', 'Frequency', 'नियमित आयोजन', 'Held regularly'),
+    ],
+  },
+]

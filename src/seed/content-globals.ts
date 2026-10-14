@@ -34,14 +34,13 @@ export const header = () => ({
   nav: [
     n('मुख्य पृष्ठ', 'Home', '/'),
     n('परिचय', 'About', '/about/introduction', [
-      n('स्वपरिचय', 'Self Introduction', '/about/introduction'),
+      n('स्वपरिचय', 'Introduction', '/about/introduction'),
       n('कौटुंबिक पार्श्वभूमी', 'Family Background', '/about/biography'),
       n('लोकमंगल परिवार', 'Lokmangal Parivar', '/lokmangal/parivar'),
       n('राजकीय कारकीर्द', 'Political Career', '/political-career'),
     ]),
-    // लोकमंगल फाऊंडेशन page has its own tabs: माहिती · कार्यक्रम · प्रकल्प · गॅलरी
+    // लोकमंगल फाऊंडेशन page has its own tabs: माहिती · कार्यक्रम · प्रकल्प
     n('लोकमंगल', 'Lokmangal', '/lokmangal/foundation', [
-      n('लोकमंगल परिवार', 'Lokmangal Parivar', '/lokmangal/parivar'),
       n('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'),
     ]),
     n('मीडिया', 'Media', '/media/photos', [
@@ -66,6 +65,13 @@ export const footer = () => ({
   legalLinks: [lk('गोपनीयता धोरण', 'Privacy Policy', '/privacy-policy'), lk('अटी व शर्ती', 'Terms & Conditions', '/terms'), lk('अस्वीकरण', 'Disclaimer', '/disclaimer')],
   copyright: L('© २०२६. सर्व हक्क राखीव — रोहन देशमुख', '© 2026. All Rights Reserved by Rohan Deshmukh'),
 })
+
+/** Homepage परिचय text (client document "New Content RD Web", Oct 2026) — also opens the स्वपरिचय page */
+export const HOME_INTRO = {
+  mr: 'रोहन सुभाष देशमुख हे सोलापूरचे उद्योजक, लेखक आणि सामाजिक कार्यकर्ते आहेत. स्वामी विवेकानंदांच्या विचारांनी प्रेरित होऊन, आत्मविश्वासू आणि स्वावलंबी तरुणच सशक्त राष्ट्र घडवतात, असा त्यांचा विश्वास आहे. तरुणाई, उद्योजकता आणि स्वावलंबन हे त्यांच्या प्रत्येक कामाच्या केंद्रस्थानी आहेत. त्यांच्यासाठी सामाजिक काम म्हणजे तात्पुरते उपाय नव्हेत; तर लोकांचे ऐकणे, त्यांच्या समस्या समजून घेणे आणि मूळ कारणावर काम करणे होय.',
+  en: 'Rohan Subhash Deshmukh is an entrepreneur, author and social worker from Solapur. Inspired by the thoughts of Swami Vivekananda, he believes a strong nation is built by confident, self-reliant young people. Youth, enterprise and self-reliance are at the centre of everything he does. For him, social work is not about quick fixes. It is about listening to people, understanding their problems and working on the root cause.',
+}
+export const HOME_TAGLINE = { mr: 'सोलापूरचा नवा आवाज. नव्या भारतासाठी नवा आवाज.', en: 'A new voice from Solapur. A new voice for a new India.' }
 
 export const FAMILY = [
   {
@@ -106,12 +112,10 @@ export const home = (p: Payload) => {
         badge: [{ value: '३,२२१+', label: L('विवाहित जोडपी', 'Couples married') }],
       },
       {
-        blockType: 'aboutIntro', eyebrow: L('परिचय', 'About'), heading: L('मी रोहन सुभाष देशमुख', 'I am Rohan Subhash Deshmukh'),
+        blockType: 'aboutIntro', eyebrow: L('परिचय', 'About'), heading: L('रोहन सुभाष देशमुख', 'Rohan Subhash Deshmukh'),
         image: image(p, PORTRAITS.about, 'रोहन सुभाष देशमुख'),
-        text: L(
-          'नव्या विचारांकडे सकारात्मकतेने पाहणारा, नव्या ऊर्जेसह काहीतरी वेगळं करण्याची इच्छा बाळगणारा आणि समाजासाठी आपल्या परीने योगदान देण्याची जिद्द मनात ठेवून पुढे जाणारा एक तरुण.',
-          'Rohan Subhash Deshmukh is an entrepreneur, author and social worker from Solapur. Inspired by the thoughts of Swami Vivekananda, he believes a strong nation is built by confident, self-reliant young people. Youth, enterprise and self-reliance are at the centre of everything he does. For him, social work is not about quick fixes. It is about listening to people, understanding their problems and working on the root cause.'),
-        pledge: L('सुरुवात आपल्या विचारातून, चांगल्या हेतूतून आणि त्या हेतूला कृतीची जोड देण्यापासूनच झाली पाहिजे.', 'Change must begin with our own thinking, good intent — and turning that intent into action.'),
+        text: L(HOME_INTRO.mr, HOME_INTRO.en),
+        pledge: L(HOME_TAGLINE.mr, HOME_TAGLINE.en),
         stats: [{ value: '३,०००+', label: L('सामुदायिक विवाह आयोजित', 'Community weddings organised') }, { value: '४', label: L('प्रत्यक्ष चालवलेल्या संस्था', 'Institutions led') }, { value: '५५०', label: L('रोज जेवणाचे डबे', 'Meals delivered daily') }],
         buttonLabel: L('अधिक वाचा', 'Read more'), buttonUrl: '/about/introduction',
       },
