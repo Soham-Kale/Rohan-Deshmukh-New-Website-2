@@ -42,6 +42,8 @@ export const header = () => ({
     // लोकमंगल फाऊंडेशन page has its own tabs: माहिती · कार्यक्रम · प्रकल्प
     n('लोकमंगल', 'Lokmangal', '/lokmangal/foundation', [
       n('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'),
+      n('लोकमंगल कार्यक्रम', 'Lokmangal Events', '/lokmangal/foundation#events'),
+      n('लोकमंगल प्रकल्प', 'Lokmangal Projects', '/lokmangal/foundation#projects'),
     ]),
     n('मीडिया', 'Media', '/media/photos', [
       n('गॅलरी', 'Gallery', '/media/photos'),
@@ -116,7 +118,7 @@ export const home = (p: Payload) => {
         image: image(p, PORTRAITS.about, 'रोहन सुभाष देशमुख'),
         text: L(HOME_INTRO.mr, HOME_INTRO.en),
         pledge: L(HOME_TAGLINE.mr, HOME_TAGLINE.en),
-        stats: [{ value: '३,०००+', label: L('सामुदायिक विवाह आयोजित', 'Community weddings organised') }, { value: '४', label: L('प्रत्यक्ष चालवलेल्या संस्था', 'Institutions led') }, { value: '५५०', label: L('रोज जेवणाचे डबे', 'Meals delivered daily') }],
+        stats: [],
         buttonLabel: L('अधिक वाचा', 'Read more'), buttonUrl: '/about/introduction',
       },
       {

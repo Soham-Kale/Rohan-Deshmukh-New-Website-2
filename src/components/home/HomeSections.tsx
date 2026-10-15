@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import {
-  ArrowRight, ArrowUpRight, Award, BookOpen, Camera, Flag, Heart, Info, Leaf, PenLine, Phone, User, Video, Vote, Quote,
+  ArrowRight, ArrowUpRight, Award, BookOpen, Camera, Flag, Heart, Info, Leaf, PenLine, Phone, User, Video, Vote,
 } from 'lucide-react'
 import type { Home, Initiative, Post, Video as VideoDoc } from '@/payload-types'
 import type { Locale } from '@/i18n/routing'
@@ -124,13 +124,9 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
+          {/* tagline right under the name, then the description */}
+          {b.pledge && <p className="mt-3 font-display text-xl leading-snug text-saffron-700 md:text-2xl">{b.pledge}</p>}
           {b.text && <p className="mt-6 text-lg text-muted md:text-xl">{b.text}</p>}
-          {b.pledge && (
-            <blockquote className="relative mt-8 rounded-2xl bg-saffron-50 p-6 pl-14">
-              <Quote className="absolute left-5 top-6 size-6 text-saffron-500" />
-              <p className="font-display text-xl leading-relaxed text-charcoal-900">{b.pledge}</p>
-            </blockquote>
-          )}
           {(b.stats?.length ?? 0) > 1 && (
             <div className="mt-8 grid grid-cols-2 gap-6 border-t border-line pt-8">
               {b.stats!.slice(1).map((s) => <Stat key={s.id} value={s.value} label={s.label} />)}

@@ -11,7 +11,7 @@ import { familyPage, foundationPage, introPage, parivarPage, politicalPage } fro
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-14f'
+export const CONTENT_VERSION = '2026-10-15a'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -125,8 +125,9 @@ export async function applyDocContent(payload: Payload) {
   }
 
   const intro = {
-    mr: { heading: 'रोहन सुभाष देशमुख', text: HOME_INTRO.mr, pledge: HOME_TAGLINE.mr },
-    en: { heading: 'Rohan Subhash Deshmukh', text: HOME_INTRO.en, pledge: HOME_TAGLINE.en },
+    // name → tagline → description, without the counters
+    mr: { heading: 'रोहन सुभाष देशमुख', text: HOME_INTRO.mr, pledge: HOME_TAGLINE.mr, stats: [] },
+    en: { heading: 'Rohan Subhash Deshmukh', text: HOME_INTRO.en, pledge: HOME_TAGLINE.en, stats: [] },
   }
   for (const locale of ['mr', 'en'] as const) {
     const home = await payload.findGlobal({ slug: 'home', locale, depth: 0, fallbackLocale: false as never })

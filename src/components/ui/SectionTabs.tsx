@@ -17,7 +17,21 @@ export function SectionTabs({ tabs, label }: { tabs: { id: string; label: string
       { rootMargin: '-140px 0px -55% 0px' },
     )
     els.forEach((el) => io.observe(el))
-    return () => io.disconnect()
+
+    // arriving from a menu link like /lokmangal/foundation#projects: jump to that section once the page has laid out
+    const jump = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1))
+      if (!tabs.some((t) => t.id === id)) return
+      setActive(id)
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    }
+    const timer = window.setTimeout(jump, 150)
+    window.addEventListener('hashchange', jump)
+    return () => {
+      io.disconnect()
+      window.clearTimeout(timer)
+      window.removeEventListener('hashchange', jump)
+    }
   }, [tabs])
 
   return (
