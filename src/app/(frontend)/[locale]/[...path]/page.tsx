@@ -9,11 +9,15 @@ import { payload } from '@/lib/payload'
 import { mediaPosition, mediaUrl } from '@/lib/utils'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
+import { FamilyBackground } from '@/components/about/FamilyBackground'
 
 export const revalidate = 300
 
 /** CMS pages that have their own route file (e.g. lokmangal/foundation/page.tsx with tabs) */
 const OWN_ROUTE = ['/lokmangal/foundation']
+
+/** कौटुंबिक पार्श्वभूमी: family members shown in the spotlight layout */
+const FAMILY_PATH = '/about/biography'
 
 type Params = { params: Promise<{ locale: Locale; path: string[] }> }
 
@@ -55,7 +59,7 @@ export default async function CmsPage({ params }: Params) {
   if (!page) notFound()
   return (
     <InnerPage path={full} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} sideMenu={page.showSideMenu ?? true}>
-      <PageBlocks blocks={page.layout} />
+      {full === FAMILY_PATH ? <FamilyBackground blocks={page.layout} locale={locale} /> : <PageBlocks blocks={page.layout} />}
     </InnerPage>
   )
 }
