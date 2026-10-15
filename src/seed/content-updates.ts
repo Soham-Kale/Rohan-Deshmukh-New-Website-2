@@ -12,7 +12,7 @@ import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-15e'
+export const CONTENT_VERSION = '2026-10-15f'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -190,6 +190,14 @@ export async function applyDocTextUpdates(payload: Payload, only?: string[]) {
   }
 }
 
+/** स्वपरिचय page in the journey-map layout: education as places (Solapur → New Delhi → Rochester → Solapur), fact tags without numbers */
+export async function applyIntroJourney(payload: Payload) {
+  const data = introPage(payload) as unknown as Record<string, unknown> & { path: string }
+  const found = (await payload.find({ collection: 'pages', where: { path: { equals: data.path } }, limit: 1, depth: 0 })).docs[0]
+  if (found) await replaceBilingual(payload, 'pages', found.id, { ...data, _status: 'published' })
+  else await createBilingual(payload, 'pages', { ...data, _status: 'published' })
+}
+
 /** Blog: the Marathi articles had their English title saved as the subtitle, so English showed under the Marathi title */
 export async function clearEnglishSubtitles(payload: Payload) {
   for (const post of POSTS as { slug: string; en: string }[]) {
@@ -209,4 +217,5 @@ export async function applyContentUpdates(payload: Payload) {
   await applyBlogExcerpts(payload)
   await clearEnglishSubtitles(payload)
   await applyDocTextUpdates(payload)
+  await applyIntroJourney(payload)
 }

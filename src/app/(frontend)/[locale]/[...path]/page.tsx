@@ -10,6 +10,7 @@ import { mediaPosition, mediaUrl } from '@/lib/utils'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
 import { FamilyBackground } from '@/components/about/FamilyBackground'
+import { IntroJourney } from '@/components/about/IntroJourney'
 
 export const revalidate = 300
 
@@ -18,6 +19,8 @@ const OWN_ROUTE = ['/lokmangal/foundation']
 
 /** कौटुंबिक पार्श्वभूमी: family members shown in the spotlight layout */
 const FAMILY_PATH = '/about/biography'
+/** स्वपरिचय: journey-map layout, sibling pages as tabs on the banner */
+const INTRO_PATH = '/about/introduction'
 
 type Params = { params: Promise<{ locale: Locale; path: string[] }> }
 
@@ -58,8 +61,14 @@ export default async function CmsPage({ params }: Params) {
   const page = isRemovedPath(full) ? null : await getPage(full, locale)
   if (!page) notFound()
   return (
-    <InnerPage path={full} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} sideMenu={page.showSideMenu ?? true}>
-      {full === FAMILY_PATH ? <FamilyBackground blocks={page.layout} locale={locale} /> : <PageBlocks blocks={page.layout} />}
+    <InnerPage path={full} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} sideMenu={page.showSideMenu ?? true} menuStyle={full === INTRO_PATH ? 'tabs' : 'side'}>
+      {full === FAMILY_PATH ? (
+        <FamilyBackground blocks={page.layout} locale={locale} />
+      ) : full === INTRO_PATH ? (
+        <IntroJourney blocks={page.layout} locale={locale} />
+      ) : (
+        <PageBlocks blocks={page.layout} />
+      )}
     </InnerPage>
   )
 }

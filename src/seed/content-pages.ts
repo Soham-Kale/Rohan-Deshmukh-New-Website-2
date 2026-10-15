@@ -28,24 +28,24 @@ export const introPage = (p: Payload) => ({
       blockType: 'mediaText', eyebrow: L('स्वपरिचय', 'Biography'), heading: L('रोहन सुभाष देशमुख', 'Rohan Subhash Deshmukh'),
       image: image(p, PORTRAITS.introduction, 'रोहन सुभाष देशमुख'), imagePosition: 'left',
       body: rt(p,
-        '*सोलापूरचा नवा आवाज. नव्या भारतासाठी नवा आवाज.*\n\n' + HOME_INTRO.mr,
-        '*A new voice from Solapur. A new voice for a new India.*\n\n' + HOME_INTRO.en),
+        HOME_INTRO.mr,
+        HOME_INTRO.en),
     },
     {
       blockType: 'cards', eyebrow: L('स्वपरिचय', 'Biography'), heading: L('वैयक्तिक माहिती', 'Personal Details'), columns: '2',
       items: [
-        { icon: '०१', title: L('जन्म', 'Born'), text: L('१२ डिसेंबर १९८७', '12 December 1987') },
-        { icon: '०२', title: L('जन्मस्थळ', 'Birthplace'), text: L('सोलापूर, देशमुख परिवारात', 'Solapur, into the Deshmukh family') },
+        { title: L('जन्म', 'Born'), text: L('१२ डिसेंबर १९८७', '12 December 1987') },
+        { title: L('जन्मस्थळ', 'Birthplace'), text: L('सोलापूर', 'Solapur') },
       ],
     },
     {
-      blockType: 'cards', eyebrow: L('शिक्षण', 'Education'), heading: L('शिक्षण', 'Education'), columns: '3',
+      // journey map: meta = place, then title and text (the last stop is highlighted)
+      blockType: 'cards', eyebrow: L('शिक्षण', 'Education'), heading: L('सोलापूर ते जग, आणि पुन्हा सोलापूर', 'From Solapur to the world, and back'), columns: '4',
       items: [
-        { icon: '०१', title: L('शाळा', 'School'), text: L('लिटल फ्लॉवर कॉन्व्हेंट स्कूल, सोलापूर', 'Little Flower Convent School, Solapur') },
-        { icon: '०२', title: L('राष्ट्रीय छात्र सेना (NCC)', 'NCC'), text: L('इयत्ता नववीपासून सक्रिय कॅडेट; नवी दिल्लीतील NCC संचलनासाठी निवड आणि ‘सर्वोत्कृष्ट कॅडेट’ म्हणून गौरव', 'Active cadet from Class 9; selected for the NCC parade in New Delhi and named Best Cadet') },
-        { icon: '०३', title: L('महाविद्यालय', 'College'), text: L('संगमेश्वर महाविद्यालय, सोलापूर', 'Sangameshwar College, Solapur') },
-        { icon: '०४', title: L('उच्च शिक्षण', 'Higher Studies'), text: L('बारावीनंतर अमेरिकेत जाऊन रोचेस्टर इन्स्टिट्यूट ऑफ टेक्नॉलॉजी (RIT) येथून जैवतंत्रज्ञान व उद्योजकता विकास या विषयात पदवी', 'Moved to the USA after Class 12 and earned a degree in Biotechnology and Entrepreneurship Development from the Rochester Institute of Technology (RIT)') },
-        { icon: '०५', title: L('भारतात पुनरागमन', 'Return to India'), text: L('आपल्या माणसांमध्ये काम करण्यासाठी २००९ मध्ये सोलापूरला परतले', 'Came back to Solapur in 2009 to work among his own people') },
+        { meta: L('सोलापूर', 'Solapur'), title: L('शाळा आणि महाविद्यालय', 'School and college'), text: L('लिटल फ्लॉवर कॉन्व्हेंट स्कूल, त्यानंतर संगमेश्वर महाविद्यालय.', 'Little Flower Convent School, then Sangameshwar College.') },
+        { meta: L('नवी दिल्ली', 'New Delhi'), title: L('NCC सर्वोत्कृष्ट कॅडेट', 'NCC Best Cadet'), text: L('इयत्ता नववीपासून सक्रिय कॅडेट. नवी दिल्लीतील NCC संचलनासाठी निवड.', 'Active cadet from Class 9. Selected for the NCC parade in New Delhi.') },
+        { meta: L('रोचेस्टर, अमेरिका', 'Rochester, USA'), title: L('RIT मध्ये उच्च शिक्षण', 'Higher studies at RIT'), text: L('जैवतंत्रज्ञान आणि उद्योजकता विकास या विषयात पदवी.', 'Degree in Biotechnology and Entrepreneurship Development.') },
+        { meta: L('सोलापूर · २००९', 'Solapur · 2009'), title: L('पुन्हा आपल्या मातीत', 'Back home'), text: L('आपल्या माणसांमध्ये काम करण्यासाठी सोलापूरला परतले.', 'Came back to work among his own people.') },
       ],
     },
     {
