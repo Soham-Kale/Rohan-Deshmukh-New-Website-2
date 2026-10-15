@@ -8,6 +8,7 @@ import * as migration_20261014_120000_remove_thoughts_rename_biography from './2
 import * as migration_20261014_150000_new_portraits from './20261014_150000_new_portraits';
 import * as migration_20261014_170000_about_menu from './20261014_170000_about_menu';
 import * as migration_20261014_180000_doc_content from './20261014_180000_doc_content';
+import * as migration_20261015_120000_blog_excerpts from './20261015_120000_blog_excerpts';
 
 export const migrations = [
   {
@@ -59,5 +60,10 @@ export const migrations = [
     up: migration_20261014_180000_doc_content.up,
     down: migration_20261014_180000_doc_content.down,
     name: '20261014_180000_doc_content'
+  },
+  {
+    up: migration_20261015_120000_blog_excerpts.up,
+    down: migration_20261015_120000_blog_excerpts.down,
+    name: '20261015_120000_blog_excerpts'
   },
 ];

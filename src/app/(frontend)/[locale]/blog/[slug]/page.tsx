@@ -67,6 +67,8 @@ export default async function PostPage({ params }: P) {
   const url = `${siteUrl()}${localizedHref(`/blog/${post.slug}`, locale)}`
   const cover = mediaUrl(post.coverImage, 'hero')
   const cat = primaryCategory(post)
+  // tags are shared by both languages — on the English site, skip tags written in Marathi
+  const tags = (post.tags ?? []).filter((tag) => locale === 'mr' || !/[\u0900-\u097F]/.test(tag))
   const headings = articleHeadings(post.content)
   const author = post.author || (locale === 'mr' ? 'रोहन देशमुख' : 'Rohan Deshmukh')
   const num = (n: number) => (locale === 'mr' ? toMarathiDigits(n) : String(n))
@@ -161,10 +163,10 @@ export default async function PostPage({ params }: P) {
             <RichText data={post.content} anchors />
           </div>
 
-          {(!!post.tags?.length || !!post.categories?.length) && (
+          {(!!tags.length || !!post.categories?.length) && (
             <div className="no-print mt-10 flex flex-wrap gap-2 border-t border-line pt-6">
               {post.categories?.map((c) => typeof c === 'object' && <Link key={c.id} href={`/blog?category=${c.slug}`} className="rounded-full bg-charcoal-900 px-3 py-1 text-sm text-white">{c.title}</Link>)}
-              {post.tags?.map((tag) => <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`} className="rounded-full bg-white px-3 py-1 text-sm text-saffron-700 ring-1 ring-line">#{tag}</Link>)}
+              {tags.map((tag) => <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`} className="rounded-full bg-white px-3 py-1 text-sm text-saffron-700 ring-1 ring-line">#{tag}</Link>)}
             </div>
           )}
           <div className="no-print mt-8 rounded-2xl border border-line bg-white p-4"><Share url={url} title={post.title} label={tc('share')} /></div>

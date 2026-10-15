@@ -10,8 +10,9 @@ import { createBilingual, replaceBilingual } from './bilingual'
 import { familyPage, foundationPage, introPage, parivarPage, politicalPage } from './content-pages'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
+import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-15a'
+export const CONTENT_VERSION = '2026-10-15b'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -146,6 +147,16 @@ export async function applyDocContent(payload: Payload) {
   }
 }
 
+/** Blog: English summaries (the English versions were saved without one, so the Marathi text showed instead) */
+export async function applyBlogExcerpts(payload: Payload) {
+  for (const post of POSTS as { slug: string; excerptEn?: string }[]) {
+    if (!post.excerptEn) continue
+    const doc = (await payload.find({ collection: 'posts', where: { slug: { equals: post.slug } }, limit: 1, depth: 0, locale: 'en', fallbackLocale: false as never })).docs[0]
+    if (!doc || doc.excerpt) continue // keep any English summary written in the admin
+    await payload.update({ collection: 'posts', id: doc.id, locale: 'en', depth: 0, data: { excerpt: post.excerptEn } as never })
+  }
+}
+
 /** 14 Oct 2026: Thoughts page removed, Biography → कौटुंबिक पार्श्वभूमी, new portraits, new menu, client document content */
 export async function applyContentUpdates(payload: Payload) {
   await renamePages(payload)
@@ -153,4 +164,5 @@ export async function applyContentUpdates(payload: Payload) {
   await applyPortraits(payload)
   await applyAboutMenu(payload)
   await applyDocContent(payload)
+  await applyBlogExcerpts(payload)
 }
