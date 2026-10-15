@@ -113,18 +113,8 @@ export async function applyAboutMenu(payload: Payload) {
   }
 }
 
-/**
- * Client document "New Content RD Web" (Oct 2026): homepage परिचय text, the four About pages,
- * Lokmangal Foundation text and its four events. Replaces the text of those pages; other pages are untouched.
- */
-export async function applyDocContent(payload: Payload) {
-  for (const def of [introPage, familyPage, foundationPage, parivarPage, politicalPage]) {
-    const data = def(payload) as unknown as Record<string, unknown> & { path: string }
-    const found = (await payload.find({ collection: 'pages', where: { path: { equals: data.path } }, limit: 1, depth: 0 })).docs[0]
-    if (found) await replaceBilingual(payload, 'pages', found.id, { ...data, _status: 'published' })
-    else await createBilingual(payload, 'pages', { ...data, _status: 'published' })
-  }
-
+/** Homepage परिचय: name → tagline → description, without the counters (15 Oct 2026) */
+export async function applyHomeIntro(payload: Payload) {
   const intro = {
     // name → tagline → description, without the counters
     mr: { heading: 'रोहन सुभाष देशमुख', text: HOME_INTRO.mr, pledge: HOME_TAGLINE.mr, stats: [] },
@@ -140,6 +130,21 @@ export async function applyDocContent(payload: Payload) {
     })
     if (changed) await payload.updateGlobal({ slug: 'home', locale, depth: 0, data: { sections, _status: 'published' } as never })
   }
+}
+
+/**
+ * Client document "New Content RD Web" (Oct 2026): homepage परिचय text, the four About pages,
+ * Lokmangal Foundation text and its four events. Replaces the text of those pages; other pages are untouched.
+ */
+export async function applyDocContent(payload: Payload) {
+  for (const def of [introPage, familyPage, foundationPage, parivarPage, politicalPage]) {
+    const data = def(payload) as unknown as Record<string, unknown> & { path: string }
+    const found = (await payload.find({ collection: 'pages', where: { path: { equals: data.path } }, limit: 1, depth: 0 })).docs[0]
+    if (found) await replaceBilingual(payload, 'pages', found.id, { ...data, _status: 'published' })
+    else await createBilingual(payload, 'pages', { ...data, _status: 'published' })
+  }
+
+  await applyHomeIntro(payload)
 
   for (const e of docEvents()) {
     const { totalDocs } = await payload.count({ collection: 'events', where: { slug: { equals: e.slug } } })
@@ -155,6 +160,12 @@ export async function applyBlogExcerpts(payload: Payload) {
     if (!doc || doc.excerpt) continue // keep any English summary written in the admin
     await payload.update({ collection: 'posts', id: doc.id, locale: 'en', depth: 0, data: { excerpt: post.excerptEn } as never })
   }
+}
+
+/** 15 Oct 2026: लोकमंगल menu (फाऊंडेशन · कार्यक्रम · प्रकल्प) and the homepage परिचय without counters */
+export async function applyLokmangalMenuAndIntro(payload: Payload) {
+  await applyMenu(payload)
+  await applyHomeIntro(payload)
 }
 
 /** Blog: the Marathi articles had their English title saved as the subtitle, so English showed under the Marathi title */

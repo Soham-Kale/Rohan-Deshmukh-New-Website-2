@@ -8,6 +8,7 @@ import * as migration_20261014_120000_remove_thoughts_rename_biography from './2
 import * as migration_20261014_150000_new_portraits from './20261014_150000_new_portraits';
 import * as migration_20261014_170000_about_menu from './20261014_170000_about_menu';
 import * as migration_20261014_180000_doc_content from './20261014_180000_doc_content';
+import * as migration_20261015_110000_lokmangal_menu_intro from './20261015_110000_lokmangal_menu_intro';
 import * as migration_20261015_120000_blog_excerpts from './20261015_120000_blog_excerpts';
 import * as migration_20261015_130000_blog_subtitles from './20261015_130000_blog_subtitles';
 
@@ -61,6 +62,11 @@ export const migrations = [
     up: migration_20261014_180000_doc_content.up,
     down: migration_20261014_180000_doc_content.down,
     name: '20261014_180000_doc_content'
+  },
+  {
+    up: migration_20261015_110000_lokmangal_menu_intro.up,
+    down: migration_20261015_110000_lokmangal_menu_intro.down,
+    name: '20261015_110000_lokmangal_menu_intro'
   },
   {
     up: migration_20261015_120000_blog_excerpts.up,
