@@ -12,6 +12,7 @@ import * as migration_20261015_110000_lokmangal_menu_intro from './20261015_1100
 import * as migration_20261015_120000_blog_excerpts from './20261015_120000_blog_excerpts';
 import * as migration_20261015_130000_blog_subtitles from './20261015_130000_blog_subtitles';
 import * as migration_20261015_150000_doc_text_updates from './20261015_150000_doc_text_updates';
+import * as migration_20261015_160000_political_points from './20261015_160000_political_points';
 
 export const migrations = [
   {
@@ -83,5 +84,10 @@ export const migrations = [
     up: migration_20261015_150000_doc_text_updates.up,
     down: migration_20261015_150000_doc_text_updates.down,
     name: '20261015_150000_doc_text_updates'
+  },
+  {
+    up: migration_20261015_160000_political_points.up,
+    down: migration_20261015_160000_political_points.down,
+    name: '20261015_160000_political_points'
   },
 ];

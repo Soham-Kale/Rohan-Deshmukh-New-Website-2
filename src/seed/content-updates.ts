@@ -12,7 +12,7 @@ import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-15d'
+export const CONTENT_VERSION = '2026-10-15e'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -173,12 +173,13 @@ export async function applyLokmangalMenuAndIntro(payload: Payload) {
  * (family introduction, grandfather, Lokmangal Parivar introduction, three political-career sections).
  * Blocks are found by their English heading; everything else on those pages is untouched.
  */
-export async function applyDocTextUpdates(payload: Payload) {
-  for (const path of [...new Set(DOC_TEXT_TARGETS.map((t) => t.path))]) {
+export async function applyDocTextUpdates(payload: Payload, only?: string[]) {
+  const all = only ? DOC_TEXT_TARGETS.filter((t) => only.includes(t.heading)) : DOC_TEXT_TARGETS
+  for (const path of [...new Set(all.map((t) => t.path))]) {
     const page = (await payload.find({ collection: 'pages', where: { path: { equals: path } }, limit: 1, depth: 0, locale: 'en', fallbackLocale: false as never })).docs[0]
     if (!page) continue
     const headings = ((page.layout ?? []) as { heading?: string | null }[]).map((b) => b.heading ?? '')
-    const targets = DOC_TEXT_TARGETS.filter((t) => t.path === path).map((t) => ({ ...t, idx: headings.indexOf(t.heading) })).filter((t) => t.idx >= 0)
+    const targets = all.filter((t) => t.path === path).map((t) => ({ ...t, idx: headings.indexOf(t.heading) })).filter((t) => t.idx >= 0)
     if (!targets.length) continue
     for (const locale of ['mr', 'en'] as const) {
       const doc = await payload.findByID({ collection: 'pages', id: page.id, locale, depth: 0, fallbackLocale: false as never })
