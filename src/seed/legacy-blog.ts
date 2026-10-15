@@ -81,7 +81,7 @@ export async function importBlog(payload: Payload, categories: Record<string, nu
       collection: 'posts',
       locale: 'mr',
       data: {
-        title: post.title, subtitle: post.en, slug: post.slug, publishedAt: new Date(post.date).toISOString(),
+        title: post.title, slug: post.slug, publishedAt: new Date(post.date).toISOString(),
         author: 'रोहन देशमुख', coverImage: cover ?? undefined, excerpt: post.excerpt,
         categories: [categories[post.cat]].filter(Boolean), tags: post.cat === 'social' ? ['लोकमंगल', 'सामाजिक कार्य'] : ['धोरण', 'विचार'],
         content: (await md(payload, mrMd)) as never, _status: 'published',

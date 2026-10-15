@@ -144,7 +144,8 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
 }
 
 function BiographySection({ b }: { b: Of<'biography'> }) {
-  const img = mediaUrl(b.image, 'card')
+  // full-size original: this photo spans the whole width on tablets (the optimiser still sends phones a small copy)
+  const img = mediaUrl(b.image)
   return (
     <section className="bg-cream py-16 md:py-24">
       <div className="container-x grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">

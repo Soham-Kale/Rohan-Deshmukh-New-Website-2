@@ -12,7 +12,6 @@ import { articleHeadings, primaryCategory, readTimeLabel } from '@/lib/blog'
 import { formatDate, localizedHref, mediaAlt, mediaUrl, photoFit, siteUrl, toMarathiDigits } from '@/lib/utils'
 import { RichText } from '@/components/ui/RichText'
 import { Share } from '@/components/ui/Share'
-import { ArticleTools } from '@/components/blog/ArticleTools'
 import { CategoryChip, NewsCard, SectionTitle } from '@/components/blog/BlogParts'
 import { Link } from '@/i18n/navigation'
 
@@ -68,6 +67,8 @@ export default async function PostPage({ params }: P) {
   const cover = mediaUrl(post.coverImage, 'hero')
   const cat = primaryCategory(post)
   // tags are shared by both languages — on the English site, skip tags written in Marathi
+  // a Marathi page never shows an English-only subtitle
+  const subtitle = post.subtitle && (locale !== 'mr' || /[\u0900-\u097F]/.test(post.subtitle)) ? post.subtitle : null
   const tags = (post.tags ?? []).filter((tag) => locale === 'mr' || !/[\u0900-\u097F]/.test(tag))
   const headings = articleHeadings(post.content)
   const author = post.author || (locale === 'mr' ? 'रोहन देशमुख' : 'Rohan Deshmukh')
@@ -100,13 +101,12 @@ export default async function PostPage({ params }: P) {
             <ArrowLeft className="size-4" /> {tb('back')}
           </Link>
 
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+          <div className="mt-6">
             <CategoryChip cat={cat} />
-            <ArticleTools target="article-body" sizeLabel={tb('fontSize')} printLabel={tb('print')} />
           </div>
 
-          <h1 className="mt-4 text-[1.9rem] font-bold leading-[1.3] text-charcoal-900 md:text-[2.6rem]">{post.title}</h1>
-          {post.subtitle && <p className="mt-3 text-lg text-muted md:text-xl">{post.subtitle}</p>}
+          <h1 className="mt-4 text-[1.65rem] font-bold leading-[1.3] text-charcoal-900 sm:text-[1.9rem] md:text-[2.6rem]">{post.title}</h1>
+          {subtitle && <p className="mt-3 text-lg text-muted md:text-xl">{subtitle}</p>}
 
           {/* byline */}
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-y border-line py-3.5">

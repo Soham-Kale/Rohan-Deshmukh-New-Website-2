@@ -12,7 +12,7 @@ import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-15b'
+export const CONTENT_VERSION = '2026-10-15c'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -157,6 +157,15 @@ export async function applyBlogExcerpts(payload: Payload) {
   }
 }
 
+/** Blog: the Marathi articles had their English title saved as the subtitle, so English showed under the Marathi title */
+export async function clearEnglishSubtitles(payload: Payload) {
+  for (const post of POSTS as { slug: string; en: string }[]) {
+    const doc = (await payload.find({ collection: 'posts', where: { slug: { equals: post.slug } }, limit: 1, depth: 0, locale: 'mr', fallbackLocale: false as never })).docs[0]
+    if (!doc || doc.subtitle !== post.en) continue // keep any subtitle written in the admin
+    await payload.update({ collection: 'posts', id: doc.id, locale: 'mr', depth: 0, data: { subtitle: null } as never })
+  }
+}
+
 /** 14 Oct 2026: Thoughts page removed, Biography → कौटुंबिक पार्श्वभूमी, new portraits, new menu, client document content */
 export async function applyContentUpdates(payload: Payload) {
   await renamePages(payload)
@@ -165,4 +174,5 @@ export async function applyContentUpdates(payload: Payload) {
   await applyAboutMenu(payload)
   await applyDocContent(payload)
   await applyBlogExcerpts(payload)
+  await clearEnglishSubtitles(payload)
 }
