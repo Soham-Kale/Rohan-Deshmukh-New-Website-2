@@ -5,14 +5,14 @@
  */
 import type { Payload } from 'payload'
 import { applyMenu } from './menu'
-import { image, PORTRAITS } from './helpers'
+import { image, md, PORTRAITS } from './helpers'
 import { createBilingual, replaceBilingual } from './bilingual'
-import { familyPage, foundationPage, introPage, parivarPage, politicalPage } from './content-pages'
+import { DOC_TEXT_TARGETS, familyPage, foundationPage, introPage, parivarPage, politicalPage } from './content-pages'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-15c'
+export const CONTENT_VERSION = '2026-10-15d'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -168,6 +168,27 @@ export async function applyLokmangalMenuAndIntro(payload: Payload) {
   await applyHomeIntro(payload)
 }
 
+/**
+ * Client document, orange-highlighted updates (15 Oct 2026): replaces only the text of six blocks
+ * (family introduction, grandfather, Lokmangal Parivar introduction, three political-career sections).
+ * Blocks are found by their English heading; everything else on those pages is untouched.
+ */
+export async function applyDocTextUpdates(payload: Payload) {
+  for (const path of [...new Set(DOC_TEXT_TARGETS.map((t) => t.path))]) {
+    const page = (await payload.find({ collection: 'pages', where: { path: { equals: path } }, limit: 1, depth: 0, locale: 'en', fallbackLocale: false as never })).docs[0]
+    if (!page) continue
+    const headings = ((page.layout ?? []) as { heading?: string | null }[]).map((b) => b.heading ?? '')
+    const targets = DOC_TEXT_TARGETS.filter((t) => t.path === path).map((t) => ({ ...t, idx: headings.indexOf(t.heading) })).filter((t) => t.idx >= 0)
+    if (!targets.length) continue
+    for (const locale of ['mr', 'en'] as const) {
+      const doc = await payload.findByID({ collection: 'pages', id: page.id, locale, depth: 0, fallbackLocale: false as never })
+      const layout = [...((doc.layout ?? []) as Record<string, unknown>[])]
+      for (const t of targets) if (layout[t.idx]) layout[t.idx] = { ...layout[t.idx], body: await md(payload, t.text[locale]) }
+      await payload.update({ collection: 'pages', id: page.id, locale, depth: 0, data: { layout, _status: 'published' } as never })
+    }
+  }
+}
+
 /** Blog: the Marathi articles had their English title saved as the subtitle, so English showed under the Marathi title */
 export async function clearEnglishSubtitles(payload: Payload) {
   for (const post of POSTS as { slug: string; en: string }[]) {
@@ -186,4 +207,5 @@ export async function applyContentUpdates(payload: Payload) {
   await applyDocContent(payload)
   await applyBlogExcerpts(payload)
   await clearEnglishSubtitles(payload)
+  await applyDocTextUpdates(payload)
 }

@@ -73,12 +73,48 @@ export const introPage = (p: Payload) => ({
 })
 
 /** Family Background — after Vision in the About section (document: "Family info after vision") */
+/** Client document "New Content RD Web", orange-highlighted updates (15 Oct 2026). English = document; Marathi = translation. */
+export const DOC_TEXT = {
+  familyIntro: {
+    mr: 'रोहनचा जन्म देशमुख कुटुंबात झाला—हे असे नाव आहे ज्याला सोलापूर, मराठवाडा आणि संपूर्ण महाराष्ट्रात ओळखले जाते आणि आदर दिला जातो. श्रद्धा, समाजाप्रती कर्तव्याची प्रबळ जाणीव आणि उद्योजकता ही या कुटुंबाची मार्गदर्शक तत्त्वे राहिली आहेत. अनेक वर्षांच्या कठोर परिश्रमातून देशमुख कुटुंबाने स्वतःची एक स्वतंत्र ओळख निर्माण केली आहे आणि आजही त्यांना एका आदर्श संयुक्त कुटुंबाच्या रूपात पाहिले जाते.',
+    en: 'Rohan was born into the Deshmukh family, a name known and respected across Solapur, Marathwada and all of Maharashtra. Faith, a strong sense of duty towards society, and a spirit of enterprise have always guided this family. Through years of hard work, the Deshmukhs built a name of their own, and even today, they are seen as a model joint family.',
+  },
+  grandfather: {
+    mr: 'व्यवसायाने शिक्षक आणि अत्यंत श्रद्धाळू असलेल्या आजोबांनी पंढरपूरची वारी, नामस्मरण आणि भजन-कीर्तनातून आपले आयुष्य भक्तीत व्यतीत केले. चांगले संस्कार हाच शिक्षणाचा खरा पाया आहे, असा त्यांचा विश्वास होता. याच विश्वासातून त्यांनी धाराशिव जिल्ह्यातील येडशी येथे गुरुकुल सुरू केले. हे गुरुकुल आजही त्याच भावनेने आणि निष्ठेने तरुण पिढी घडवत आहे.',
+    en: 'A teacher by profession and a man of deep faith, he spent his life in devotion through the Pandharpur Wari, prayer, bhajans and kirtans. He believed good values were the true foundation of education. With this belief, he started a gurukul at Yedshi in Dharashiv district, which still shapes young lives today with the same spirit and dedication.',
+  },
+  parivarIntro: {
+    mr: 'एकत्र प्रगती करायची आणि त्यासोबत समाजालाही पुढे न्यायचे — या एका साध्या विचारावर उभ्या असलेल्या संस्थांच्या परिवारातच रोहन देशमुख लहानाचे मोठे झाले. मा. श्री. सुभाष देशमुख यांनी स्थापन केलेला लोकमंगल समूह गेल्या काही वर्षांत बँकिंग, उद्योग, शिक्षण, आरोग्य आणि समाजसेवा क्षेत्रांत काम करणारा एक मोठा परिवार बनला आहे. आज रोहन लोकमंगल मल्टीस्टेटचे संचालक आणि लोकमंगल फाऊंडेशनचे अध्यक्ष म्हणून हा वारसा पुढे नेत आहेत.\n\n- **सेवेतून घडलेले नेतृत्व:** याच वातावरणात वाढताना रोहन यांनी लोकसेवेचे मूल्य जवळून पाहिले आणि त्यातूनच त्यांची नेतृत्वशैली घडली.\n- **भविष्यावर लक्ष:** तरुणाई, उद्योजकता आणि नव्या कल्पनांवर विशेष भर देत ते फाऊंडेशनच्या सामाजिक उपक्रमांचे नेतृत्व करतात.\n- **लोकमंगल परिवार:** हजारो कर्मचारी, स्वयंसेवक, शेतकरी, विद्यार्थी, सभासद आणि सहकारी मिळून हा वाढता परिवार बनतो आणि रोहन त्यांच्यासोबत खांद्याला खांदा लावून काम करतात.\n- **एकच समान ध्येय:** रोजगार निर्माण करणे, शेतकरी व ग्रामीण कुटुंबांना आधार देणे, दर्जेदार शिक्षण देणे आणि गरजेच्या वेळी लोकांसोबत उभे राहणे, यासाठी सर्व जण एकत्र काम करतात.\n- **मजबूत मूल्यांचा पाया:** रोहन यांच्यासाठी लोकमंगल हा केवळ संस्थांचा समूह नाही. विश्वास, मेहनत आणि समाजसेवेवर उभा असलेला हा एक परिवार आहे.',
+    en: 'Rohan Deshmukh grew up inside a family of institutions built on one simple idea: grow together and help society grow along the way. Founded by Hon. Shri Subhash Deshmukh, the Lokmangal Group has grown over the years into a large family working in banking, industry, education, healthcare and social service. Today, Rohan carries this legacy forward as Director of Lokmangal Multistate and President of Lokmangal Foundation.\n\n- **Shaped by service:** Growing up in this environment, Rohan saw the value of public service up close, and it shaped the way he leads.\n- **A focus on the future:** He leads the Foundation’s social initiatives with a special focus on youth, enterprise and new ideas.\n- **The Lokmangal Parivar:** Rohan works alongside thousands of employees, volunteers, farmers, students, members and partners who make up this growing family.\n- **One shared purpose:** Together, they work to create jobs, support farmers and rural families, provide quality education and stand by people when they need it most.\n- **Built on strong values:** For Rohan, Lokmangal is more than a group of organisations. It is a family built on trust, hard work and service to society.',
+  },
+  yatra: {
+    mr: 'स्वामी विवेकानंद विचार यात्रा ही रोहन देशमुख यांची संकल्पना होती. योग्य प्रेरणा मिळाली तर तरुण मने जग बदलू शकतात, या विश्वासातून तिचा जन्म झाला. ही यात्रा उस्मानाबाद (आताचा धाराशिव) जिल्ह्यात फिरली आणि स्वामी विवेकानंदांचे चिरंतन विचार शहरांतील व गावांतील तरुणांपर्यंत पोहोचवले.',
+    en: 'The Swami Vivekananda Vichar Yatra was Rohan Deshmukh’s idea, born from a belief that young minds can change the world when they are given the right inspiration. The yatra travelled across Osmanabad (now Dharashiv) district, carrying the timeless thoughts of Swami Vivekananda to young people in towns and villages.',
+  },
+  yuvaMorcha: {
+    mr: 'भारतीय जनता युवा मोर्चाचे सरचिटणीस म्हणून रोहन देशमुख यांनी तरुणांशी संवाद साधण्यासाठी आणि त्यांच्यात राजकीय जागृती निर्माण करण्यासाठी संपूर्ण महाराष्ट्रात प्रवास केला. याच प्रवासात सर्वसामान्य नागरिकांवर परिणाम करणाऱ्या सामाजिक प्रश्नांवरही त्यांनी आवाज उठवला.',
+    en: 'As General Secretary of the Bharatiya Janata Yuva Morcha, Rohan Deshmukh travelled across Maharashtra to connect with young people and raise their political awareness. Along the way, he also raised his voice on social issues that affect common citizens.',
+  },
+  lokSabha: {
+    mr: 'रोहन देशमुख यांनी धाराशिव (उस्मानाबाद) लोकसभा निवडणूक अपक्ष उमेदवार म्हणून लढवली. पाठीशी कोणताही पक्ष नसताना त्यांनी सर्वात महत्त्वाच्या एकाच गोष्टीवर विश्वास ठेवला: लोकांशी थेट नाते.',
+    en: 'Rohan Deshmukh contested the Dharashiv (Osmanabad) Lok Sabha election as an Independent candidate. With no party behind him, he relied on the one thing that mattered most: a direct connection with the people.',
+  },
+}
+
+/** Where each text goes: page path + the block's English heading */
+export const DOC_TEXT_TARGETS: { path: string; heading: string; text: { mr: string; en: string } }[] = [
+  { path: '/about/biography', heading: 'Family Background', text: DOC_TEXT.familyIntro },
+  { path: '/about/biography', heading: 'Late Sureshchandra Keshavrao Deshmukh', text: DOC_TEXT.grandfather },
+  { path: '/lokmangal/parivar', heading: 'Lokmangal Parivar', text: DOC_TEXT.parivarIntro },
+  { path: '/political-career', heading: 'Swami Vivekananda Vichar Yatra', text: DOC_TEXT.yatra },
+  { path: '/political-career', heading: 'Bharatiya Janata Yuva Morcha', text: DOC_TEXT.yuvaMorcha },
+  { path: '/political-career', heading: 'Lok Sabha Election, Dharashiv (Osmanabad)', text: DOC_TEXT.lokSabha },
+]
+
 const DOC_FAMILY = [
   {
     img: '/images/about/family-suresh-deshmukh.webp', relation: L('आजोबा', 'Grandfather'), name: L('कै. सुरेश्चंद्र केशवराव देशमुख', 'Late Sureshchandra Keshavrao Deshmukh'),
-    text: L(
-      'व्यवसायाने शिक्षक असलेल्या आजोबांनी निवृत्तीनंतर आपले जीवन अध्यात्माला वाहिले. पंढरपूरची वारी, नामस्मरण आणि भजन-कीर्तन हा त्यांच्या दिनचर्येचा भाग होता. शिक्षक म्हणून मुलांना चांगले संस्कार देण्यावर त्यांचा नेहमी भर होता. त्यांनी धाराशिव जिल्ह्यातील येडशी येथे गुरुकुल सुरू केले, जिथे विद्यार्थ्यांना शिक्षणासोबत जीवनमूल्यांचे धडे मिळाले. हे गुरुकुल आजही त्याच भावनेने आणि प्रामाणिकपणे सुरू आहे.',
-      'A teacher by profession, he gave his life to spirituality after retirement. The Pandharpur Wari, chanting God’s name, and bhajans and kirtans were part of his daily life. As a teacher, he always believed in giving children good values. He started a gurukul at Yedshi in Dharashiv district, where students received education along with values for life. The gurukul still runs today with the same spirit and honesty.'),
+    text: DOC_TEXT.grandfather,
   },
   {
     img: '/images/about/family-subhash-deshmukh.webp', relation: L('वडील', 'Father'), name: L('मा. श्री. सुभाष सुरेश्चंद्र देशमुख, आमदार', 'Hon. Shri Subhash Sureshchandra Deshmukh, MLA'),
@@ -102,11 +138,7 @@ export const familyPage = (p: Payload) => ({
   layout: [
     {
       blockType: 'content', eyebrow: L('परिवार', 'Family'), heading: L('कौटुंबिक पार्श्वभूमी', 'Family Background'),
-      body: rt(p,
-        'सोलापूर, मराठवाडा आणि संपूर्ण महाराष्ट्रात देशमुख परिवार सुपरिचित आहे. याच परिवारात रोहन यांचा जन्म झाला. आध्यात्मिक मूल्ये आणि समाजाप्रती कर्तव्याची खोल भावना — या दोन गोष्टींवर हा परिवार नेहमी जगत आला आहे. गरजूंना मदत करणे आणि समाजासाठी काहीतरी करणे, हा परिवाराच्या जीवनशैलीचा भाग राहिला आहे.\n\n' +
-        'व्यवसायातही परिवाराने नेहमीच मेहनत आणि प्रामाणिकपणावर विश्वास ठेवला. कष्ट करून आणि एकमेकांना साथ देत देशमुख परिवाराने स्वतःची ओळख निर्माण केली. आजही ते एकत्र कुटुंब म्हणून राहतात आणि समाजसेवा, व्यवसाय व घराच्या जबाबदाऱ्या मिळून सांभाळतात. एकत्र कुटुंब कसे असावे, याचे उदाहरण म्हणून अनेक जण त्यांच्याकडे पाहतात.',
-        'The Deshmukh family is well known across Solapur, Marathwada and all of Maharashtra. Rohan was born into this family, which has always lived by two things: spiritual values and a deep sense of duty towards society. Helping people in need and doing something for society has always been part of the family’s way of life.\n\n' +
-        'In business too, the family has always believed in hard work and honesty. By working hard and standing by each other, the Deshmukhs built a name of their own. Even today, they live together as a joint family and share the work of social service, business and home. Many people look at them as an example of what a joint family should be.'),
+      body: rt(p, DOC_TEXT.familyIntro.mr, DOC_TEXT.familyIntro.en),
     },
     ...DOC_FAMILY.map((f, i) => ({ blockType: 'mediaText', heading: f.name, eyebrow: f.relation, image: image(p, f.img, ''), imagePosition: i % 2 ? 'right' : 'left', body: rt(p, f.text.mr, f.text.en) })),
     appealCta(p),
@@ -171,15 +203,7 @@ export const parivarPage = (p: Payload) => ({
   layout: [
     {
       blockType: 'content', eyebrow: L('लोकमंगल', 'Lokmangal'), heading: L('लोकमंगल परिवार', 'Lokmangal Parivar'),
-      body: rt(p,
-        'मा. श्री. सुभाष देशमुख यांनी स्थापन केलेल्या लोकमंगल समूहाची सुरुवात एका साध्या विचारातून झाली: एकत्र प्रगती करायची आणि त्यासोबत समाजालाही पुढे न्यायचे. गेल्या काही वर्षांत बँकिंग, उद्योग, शिक्षण, आरोग्य आणि समाजसेवा क्षेत्रांत काम करणाऱ्या संस्थांचा हा एक मोठा परिवार बनला आहे.\n\n' +
-        'आज कर्मचारी, स्वयंसेवक, शेतकरी, विद्यार्थी, सभासद आणि सहकारी असे हजारो लोक लोकमंगल परिवाराचा भाग आहेत. रोजगार निर्माण करणे, शेतकरी व ग्रामीण कुटुंबांना आधार देणे, दर्जेदार शिक्षण देणे आणि गरजेच्या वेळी लोकांसोबत उभे राहणे — हा सर्वांचा एकच उद्देश आहे.\n\n' +
-        'याच वातावरणात वाढलेल्या रोहन देशमुख यांनी लोकसेवेचे मूल्य जवळून अनुभवले. आज ते लोकमंगल मल्टीस्टेटचे संचालक आणि लोकमंगल फाऊंडेशनचे अध्यक्ष म्हणून हे काम पुढे नेत आहेत; तसेच तरुणाई, उद्योजकता आणि नव्या कल्पनांवर विशेष भर देत फाऊंडेशनचे सामाजिक उपक्रम पुढे नेत आहेत.\n\n' +
-        'लोकमंगल हा केवळ संस्थांचा समूह नाही. विश्वास, मेहनत आणि समाजसेवेवर उभा असलेला हा एक परिवार आहे आणि हीच भावना या नावाखालील प्रत्येक संस्थेला दिशा देते.',
-        'Founded by Hon. Shri Subhash Deshmukh, the Lokmangal Group began with a simple idea: grow together and help society grow along the way. Over the years, it has become a large family of institutions working in banking, industry, education, healthcare and social service.\n\n' +
-        'Today, thousands of people are part of the Lokmangal Parivar, including employees, volunteers, farmers, students, members and partners. Together, they share one purpose: to create jobs, support farmers and rural families, provide quality education and stand with people when they need it most.\n\n' +
-        'Growing up in this environment, Rohan Deshmukh learned the value of public service from close quarters. Today, he carries this work forward as the Director of Lokmangal Multistate and President of the Lokmangal Foundation, while also advancing the Foundation’s social initiatives with a special focus on youth, enterprise, and new ideas.\n\n' +
-        'Lokmangal is more than a group of organisations. It is a family built on trust, hard work and service to society, and this spirit guides every institution under its name.'),
+      body: rt(p, DOC_TEXT.parivarIntro.mr, DOC_TEXT.parivarIntro.en),
     },
     group(['४ संस्था', '4 institutions'], '🏦 वित्तीय संस्था', '🏦 Financial Institutions', 'बचत, कर्ज आणि प्रगतीसाठी साथ', 'Helping people save, borrow and grow', [
       ['लोकमंगल को-ऑपरेटिव्ह बँक', 'Lokmangal Co-operative Bank'],
@@ -227,24 +251,16 @@ export const politicalPage = (p: Payload) => ({
     {
       blockType: 'mediaText', eyebrow: L('राजकीय प्रवास', 'Political Journey'), heading: L('स्वामी विवेकानंद विचार यात्रा', 'Swami Vivekananda Vichar Yatra'),
       image: image(p, '/images/home/work-vivekanand-yatra.webp', 'स्वामी विवेकानंद विचार यात्रा'), imagePosition: 'left',
-      body: rt(p,
-        'विवेकानंद विचार यात्रा ही रोहन देशमुख यांची संकल्पना होती आणि ती उस्मानाबाद (आताचा धाराशिव) जिल्ह्यात आयोजित करण्यात आली. ही यात्रा जिल्ह्यातील गावांगावांतून आणि शहरांतून फिरली आणि स्वामी विवेकानंदांचे विचार तरुणांपर्यंत पोहोचवले. स्वामी विवेकानंदांच्या विचारांतून तरुणांना प्रेरणा देणे आणि त्यांना आपल्या आयुष्यात सकारात्मक बदल घडवण्यासाठी प्रोत्साहित करणे, हा तिचा साधा उद्देश होता. संपूर्ण यात्रा सुरुवातीपासून शेवटपर्यंत काटेकोर नियोजन आणि शिस्तीने पार पडली.',
-        'The Vivekananda Vichar Yatra was Rohan Deshmukh’s idea, organised across Osmanabad (now Dharashiv) district. The yatra travelled through towns and villages across the district, taking the thoughts of Swami Vivekananda to young people. Its aim was simple: to inspire youth through Swami Vivekananda’s ideas and encourage them to bring positive change into their own lives. The entire yatra was carried out with careful planning and discipline from start to finish.'),
+      body: rt(p, DOC_TEXT.yatra.mr, DOC_TEXT.yatra.en),
     },
     {
       blockType: 'mediaText', eyebrow: L('राजकीय प्रवास', 'Political Journey'), heading: L('भारतीय जनता युवा मोर्चा', 'Bharatiya Janata Yuva Morcha'),
       image: image(p, '/images/political/yuva-morcha.webp', 'भारतीय जनता युवा मोर्चा'), imagePosition: 'right',
-      body: rt(p,
-        'भारतीय जनता युवा मोर्चाचे सरचिटणीस म्हणून रोहन देशमुख यांनी तरुणांशी संवाद साधण्यासाठी आणि त्यांच्यात राजकीय जागृती निर्माण करण्यासाठी संपूर्ण महाराष्ट्रात प्रवास केला. सर्वसामान्य नागरिकांवर परिणाम करणाऱ्या सामाजिक प्रश्नांवर त्यांनी आंदोलनांचे नेतृत्वही केले.\n\n' +
-        '२००९ मध्ये मा. श्री. सुभाष देशमुख यांच्या माढा लोकसभा प्रचारात त्यांनी सक्रिय भूमिका बजावली. उस्मानाबाद लोकसभा मतदारसंघात तळागाळापर्यंत पक्षसंघटना मजबूत करण्याचे कामही त्यांनी केले.',
-        'As General Secretary of the Bharatiya Janata Yuva Morcha, Rohan Deshmukh travelled across Maharashtra to connect with young people and build political awareness among them. He also led movements on social issues that affect common citizens.\n\n' +
-        'In 2009, he played an active role in the Madha Lok Sabha campaign of Hon. Shri Subhash Deshmukh. He also worked on strengthening the party organisation in the Osmanabad Lok Sabha constituency at the ground level.'),
+      body: rt(p, DOC_TEXT.yuvaMorcha.mr, DOC_TEXT.yuvaMorcha.en),
     },
     {
       blockType: 'content', eyebrow: L('निवडणूक', 'Election'), heading: L('लोकसभा निवडणूक, धाराशिव (उस्मानाबाद)', 'Lok Sabha Election, Dharashiv (Osmanabad)'),
-      body: rt(p,
-        'रोहन देशमुख यांनी धाराशिव (उस्मानाबाद) लोकसभा निवडणूक अपक्ष उमेदवार म्हणून लढवली. कोणत्याही पक्षाच्या पाठबळाशिवाय त्यांनी आपले विचार थेट लोकांपर्यंत नेले आणि मतदारसंघाच्या कानाकोपऱ्यातील मतदारांपर्यंत ते पोहोचले. या प्रचारामुळे धाराशिवमधील लोकांशी त्यांचे घट्ट, वैयक्तिक नाते निर्माण झाले आणि तेच नाते आजही त्यांच्या कामाला दिशा देते.',
-        'Rohan Deshmukh contested the Dharashiv (Osmanabad) Lok Sabha election as an Independent candidate. Without the backing of any party, he took his ideas directly to the people and reached voters in every corner of the constituency. The campaign helped him build a strong, personal connection with people across Dharashiv, and that bond continues to guide his work today.'),
+      body: rt(p, DOC_TEXT.lokSabha.mr, DOC_TEXT.lokSabha.en),
     },
     { blockType: 'gallery', heading: L('क्षणचित्रे', 'Moments'), images: [...Array.from({ length: 6 }, (_, i) => gi(p, `prachar-sabha-0${i + 1}`)), ...Array.from({ length: 9 }, (_, i) => gi(p, `tuljapur-sabha-0${i + 1}`))] },
     appealCta(p),
@@ -263,13 +279,11 @@ export const pages = (p: Payload) => [
     subtitle: L('स्वावलंबी भारतासाठीचा जाहीरनामा — ग्रामीण भारताच्या सामर्थ्याला बळ देत नवभारत घडवण्याचा ध्यास; प्रामाणिकपणा, उद्यमशीलता आणि एक लाख नव्या उद्योजकांना घडवण्याचे ध्येय.', 'A manifesto for a self-reliant India — building New India by empowering rural India; honesty, enterprise and a goal of one lakh new entrepreneurs.'),
     bannerImage: image(p, '/images/vision/rohan-portrait.webp', 'रोहन सुभाष देशमुख'),
     layout: [
-      {
-        blockType: 'cards', columns: '3', items: [
-          { icon: '०१', title: L('वाचा', 'Read'), text: L('जाहीरनामा समजून घ्या', 'Understand the manifesto') },
-          { icon: '०२', title: L('संकल्प करा', 'Pledge'), text: L('चळवळीत सहभागी व्हा', 'Join the movement') },
-          { icon: '०३', title: L('कृती करा', 'Act'), text: L('बदल घडवण्यास सुरुवात करा', 'Start making change') },
-        ]
-      },
+      { blockType: 'cards', columns: '3', items: [
+        { icon: '०१', title: L('वाचा', 'Read'), text: L('जाहीरनामा समजून घ्या', 'Understand the manifesto') },
+        { icon: '०२', title: L('संकल्प करा', 'Pledge'), text: L('चळवळीत सहभागी व्हा', 'Join the movement') },
+        { icon: '०३', title: L('कृती करा', 'Act'), text: L('बदल घडवण्यास सुरुवात करा', 'Start making change') },
+      ] },
       {
         blockType: 'mediaText', eyebrow: L('पुस्तक', 'Book'), heading: L('द न्यू इंडिया मॅनिफेस्टो', 'The New India Manifesto'), image: image(p, '/images/vision/book.webp', 'The New India Manifesto — Going Beyond Possible, Rohan Deshmukh'),
         body: rt(p, '**गोइंग बियॉन्ड पॉसिबल — रोहन देशमुख**\n\nहे आत्मचरित्र नाही, यशाची कथा नाही — हा एक जाहीरनामा आहे. सोलापूरमधून लिहिलेला हा जाहीरनामा वडील सुभाष देशमुख यांचे स्वप्न घेऊन चालतो — भारताच्या युवकांमधून एक लाख उद्योजक घडवण्याचे ध्येय. आर्थिक स्वावलंबन, उद्यमशीलता आणि सामाजिक बांधिलकी यांचा संगम.',
@@ -339,26 +353,20 @@ export const pages = (p: Payload) => [
 const legal = (p: Payload) => [
   {
     path: '/privacy-policy', section: 'legal', showSideMenu: true, menuOrder: 1, title: L('गोपनीयता धोरण', 'Privacy Policy'),
-    layout: [{
-      blockType: 'content', body: rt(p,
-        'हे संकेतस्थळ (rohandeshmukh.in) वापरताना आपण दिलेली माहिती आम्ही जबाबदारीने हाताळतो.\n\n## आम्ही कोणती माहिती गोळा करतो\n\n- संपर्क, तक्रार/सूचना व करिअर फॉर्ममध्ये आपण स्वतः दिलेली माहिती — नाव, मोबाईल, ईमेल, पत्ता, संदेश व जोडलेल्या फाईल्स.\n- संकेतस्थळाच्या वापराची सामान्य आकडेवारी (Google Analytics), जी वैयक्तिक ओळख पटवत नाही.\n\n## माहितीचा वापर\n\nआपली माहिती फक्त आपल्याशी संपर्क साधण्यासाठी, आपल्या तक्रारीवर/सूचनेवर कार्यवाही करण्यासाठी आणि संकेतस्थळ सुधारण्यासाठी वापरली जाते. आम्ही आपली माहिती विकत नाही किंवा तृतीय पक्षाला देत नाही.\n\n## माहितीची सुरक्षा\n\nसर्व माहिती सुरक्षित (HTTPS) जोडणीद्वारे पाठवली जाते आणि फक्त अधिकृत कार्यालयीन कर्मचाऱ्यांना उपलब्ध असते.\n\n## संपर्क\n\nआपल्या माहितीबाबत कोणताही प्रश्न असल्यास connect@rohandeshmukh.in वर संपर्क साधा.',
-        'We handle the information you share on this website (rohandeshmukh.in) responsibly.\n\n## What we collect\n\n- Information you submit through the contact, grievance/suggestion and careers forms — name, mobile, email, address, message and attached files.\n- Aggregate usage statistics (Google Analytics) that do not identify you personally.\n\n## How we use it\n\nYour information is used only to contact you, act on your grievance or suggestion, and improve the website. We do not sell or share it with third parties.\n\n## Security\n\nAll data is sent over a secure (HTTPS) connection and is accessible only to authorised office staff.\n\n## Contact\n\nFor any question about your data, write to connect@rohandeshmukh.in.')
-    }],
+    layout: [{ blockType: 'content', body: rt(p,
+      'हे संकेतस्थळ (rohandeshmukh.in) वापरताना आपण दिलेली माहिती आम्ही जबाबदारीने हाताळतो.\n\n## आम्ही कोणती माहिती गोळा करतो\n\n- संपर्क, तक्रार/सूचना व करिअर फॉर्ममध्ये आपण स्वतः दिलेली माहिती — नाव, मोबाईल, ईमेल, पत्ता, संदेश व जोडलेल्या फाईल्स.\n- संकेतस्थळाच्या वापराची सामान्य आकडेवारी (Google Analytics), जी वैयक्तिक ओळख पटवत नाही.\n\n## माहितीचा वापर\n\nआपली माहिती फक्त आपल्याशी संपर्क साधण्यासाठी, आपल्या तक्रारीवर/सूचनेवर कार्यवाही करण्यासाठी आणि संकेतस्थळ सुधारण्यासाठी वापरली जाते. आम्ही आपली माहिती विकत नाही किंवा तृतीय पक्षाला देत नाही.\n\n## माहितीची सुरक्षा\n\nसर्व माहिती सुरक्षित (HTTPS) जोडणीद्वारे पाठवली जाते आणि फक्त अधिकृत कार्यालयीन कर्मचाऱ्यांना उपलब्ध असते.\n\n## संपर्क\n\nआपल्या माहितीबाबत कोणताही प्रश्न असल्यास connect@rohandeshmukh.in वर संपर्क साधा.',
+      'We handle the information you share on this website (rohandeshmukh.in) responsibly.\n\n## What we collect\n\n- Information you submit through the contact, grievance/suggestion and careers forms — name, mobile, email, address, message and attached files.\n- Aggregate usage statistics (Google Analytics) that do not identify you personally.\n\n## How we use it\n\nYour information is used only to contact you, act on your grievance or suggestion, and improve the website. We do not sell or share it with third parties.\n\n## Security\n\nAll data is sent over a secure (HTTPS) connection and is accessible only to authorised office staff.\n\n## Contact\n\nFor any question about your data, write to connect@rohandeshmukh.in.') }],
   },
   {
     path: '/terms', section: 'legal', showSideMenu: true, menuOrder: 2, title: L('अटी व शर्ती', 'Terms & Conditions'),
-    layout: [{
-      blockType: 'content', body: rt(p,
-        'हे संकेतस्थळ वापरून आपण खालील अटी मान्य करता.\n\n- संकेतस्थळावरील मजकूर, छायाचित्रे व चिन्हे यांचे हक्क रोहन सुभाष देशमुख यांच्याकडे राखीव आहेत.\n- फॉर्मद्वारे खोटी, आक्षेपार्ह किंवा बेकायदेशीर माहिती पाठवू नये.\n- बाह्य दुव्यांवरील (उदा. सोशल मीडिया, नोंदणी पोर्टल) मजकुरासाठी आम्ही जबाबदार नाही.\n- या अटींमध्ये वेळोवेळी बदल होऊ शकतात.',
-        'By using this website you agree to the following terms.\n\n- All text, photographs and marks on this website are owned by Rohan Subhash Deshmukh.\n- Do not submit false, offensive or unlawful content through the forms.\n- We are not responsible for content on external links (e.g. social media, registration portals).\n- These terms may be updated from time to time.')
-    }],
+    layout: [{ blockType: 'content', body: rt(p,
+      'हे संकेतस्थळ वापरून आपण खालील अटी मान्य करता.\n\n- संकेतस्थळावरील मजकूर, छायाचित्रे व चिन्हे यांचे हक्क रोहन सुभाष देशमुख यांच्याकडे राखीव आहेत.\n- फॉर्मद्वारे खोटी, आक्षेपार्ह किंवा बेकायदेशीर माहिती पाठवू नये.\n- बाह्य दुव्यांवरील (उदा. सोशल मीडिया, नोंदणी पोर्टल) मजकुरासाठी आम्ही जबाबदार नाही.\n- या अटींमध्ये वेळोवेळी बदल होऊ शकतात.',
+      'By using this website you agree to the following terms.\n\n- All text, photographs and marks on this website are owned by Rohan Subhash Deshmukh.\n- Do not submit false, offensive or unlawful content through the forms.\n- We are not responsible for content on external links (e.g. social media, registration portals).\n- These terms may be updated from time to time.') }],
   },
   {
     path: '/disclaimer', section: 'legal', showSideMenu: true, menuOrder: 3, title: L('अस्वीकरण', 'Disclaimer'),
-    layout: [{
-      blockType: 'content', body: rt(p,
-        'या संकेतस्थळावरील माहिती सर्वसामान्य माहितीसाठी आहे. ती अचूक व अद्ययावत ठेवण्याचा आमचा प्रयत्न असतो, तरीही त्यातील कोणत्याही त्रुटीसाठी किंवा बाह्य संकेतस्थळांवरील मजकुरासाठी आम्ही जबाबदार राहणार नाही.',
-        'Information on this website is for general purposes. We try to keep it accurate and up to date, but we are not responsible for any errors or for the content of external websites linked from here.')
-    }],
+    layout: [{ blockType: 'content', body: rt(p,
+      'या संकेतस्थळावरील माहिती सर्वसामान्य माहितीसाठी आहे. ती अचूक व अद्ययावत ठेवण्याचा आमचा प्रयत्न असतो, तरीही त्यातील कोणत्याही त्रुटीसाठी किंवा बाह्य संकेतस्थळांवरील मजकुरासाठी आम्ही जबाबदार राहणार नाही.',
+      'Information on this website is for general purposes. We try to keep it accurate and up to date, but we are not responsible for any errors or for the content of external websites linked from here.') }],
   },
 ]
