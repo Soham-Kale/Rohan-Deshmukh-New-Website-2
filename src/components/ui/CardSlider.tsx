@@ -5,7 +5,6 @@ import Image from 'next/image'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
-import { cn } from '@/lib/utils'
 
 export type SlideCard = {
   href: string
@@ -41,23 +40,20 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
   }, [api, update])
 
   const scrollable = can.prev || can.next
-  const arrow = 'grid size-11 shrink-0 place-items-center rounded-md border border-saffron-500 bg-white text-saffron-600 shadow-sm transition hover:bg-saffron-500 hover:text-white disabled:pointer-events-none disabled:opacity-30'
+  const arrow = 'grid size-11 shrink-0 place-items-center rounded-full border border-charcoal-900/15 bg-white text-charcoal-900 transition hover:border-saffron-500 hover:bg-saffron-500 hover:text-white disabled:pointer-events-none disabled:opacity-30'
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-3 md:gap-4">
-        <button type="button" onClick={() => api?.scrollPrev()} disabled={!can.prev} aria-label={prevLabel} className={cn(arrow, scrollable ? 'hidden sm:grid' : 'hidden')}>
-          <ChevronLeft className="size-5" />
-        </button>
+      <div>
 
         <div className="min-w-0 flex-1 overflow-hidden" ref={ref}>
-          <ul className="-ml-4 flex touch-pan-y md:-ml-5">
+          <ul className="-ml-5 flex touch-pan-y md:-ml-7">
             {cards.map((c, i) => (
-              <li key={c.href + i} className="min-w-0 shrink-0 grow-0 basis-[88%] pl-4 sm:basis-1/2 md:pl-5 lg:basis-1/3">
-                <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white shadow-[0_6px_24px_-18px_rgba(20,33,61,.3)] transition hover:shadow-[0_16px_40px_-22px_rgba(20,33,61,.35)]">
-                  <div className="relative aspect-[2/1] overflow-hidden bg-cream">
+              <li key={c.href + i} className="min-w-0 shrink-0 grow-0 basis-[88%] pl-5 sm:basis-1/2 md:pl-7 lg:basis-1/3">
+                <article className="tile group h-full">
+                  <div className="tile-media aspect-[16/10]">
                     {c.image ? (
-                      <Image src={c.image} alt="" fill sizes="(max-width:640px) 88vw, (max-width:1024px) 45vw, 360px" className="object-cover transition duration-500 group-hover:scale-105" style={c.imageStyle} />
+                      <Image src={c.image} alt="" fill sizes="(max-width:640px) 88vw, (max-width:1024px) 45vw, 380px" className="object-cover" style={c.imageStyle} />
                     ) : (
                       // no photo yet: branded placeholder with the first letter
                       <div aria-hidden className="grid h-full place-items-center bg-gradient-to-br from-saffron-50 via-paper to-saffron-100">
@@ -65,14 +61,14 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-1 flex-col p-5">
-                    {c.meta && <p className="mb-1 text-xs font-semibold text-saffron-700">{c.meta}</p>}
-                    <h3 className="text-[1.2rem] leading-snug text-charcoal-900 md:text-[1.3rem]">
+                  <div className="tile-body">
+                    {c.meta && <p className="tile-kicker mb-1">{c.meta}</p>}
+                    <h3 className="tile-title text-[1.2rem] md:text-[1.3rem]">
                       <Link href={c.href} className="after:absolute after:inset-0">{c.title}</Link>
                     </h3>
-                    {c.text && <p className="mt-2 line-clamp-4 text-[0.95rem] leading-relaxed text-muted">{c.text}</p>}
-                    <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-saffron-700">
-                      {readMore} <ArrowRight className="size-4 transition group-hover:translate-x-1" />
+                    {c.text && <p className="tile-text line-clamp-3">{c.text}</p>}
+                    <span className="more-link mt-auto pt-4 text-sm">
+                      {readMore} <ArrowRight className="size-4" />
                     </span>
                   </div>
                 </article>
@@ -81,17 +77,14 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
           </ul>
         </div>
 
-        <button type="button" onClick={() => api?.scrollNext()} disabled={!can.next} aria-label={nextLabel} className={cn(arrow, scrollable ? 'hidden sm:grid' : 'hidden')}>
-          <ChevronRight className="size-5" />
-        </button>
       </div>
 
-      {/* phones: arrows + position under the cards */}
+      {/* arrows + position under the cards, so the cards line up with the page grid */}
       {snaps > 1 && scrollable && (
-        <div className="mt-5 flex items-center justify-center gap-4 sm:hidden">
+        <div className="mt-8 flex items-center gap-3">
           <button type="button" onClick={() => api?.scrollPrev()} disabled={!can.prev} aria-label={prevLabel} className={arrow}><ChevronLeft className="size-5" /></button>
-          <span className="min-w-14 text-center text-sm tabular-nums text-muted">{index + 1} / {snaps}</span>
           <button type="button" onClick={() => api?.scrollNext()} disabled={!can.next} aria-label={nextLabel} className={arrow}><ChevronRight className="size-5" /></button>
+          <span className="ml-2 text-sm tabular-nums text-muted">{index + 1} / {snaps}</span>
         </div>
       )}
     </div>

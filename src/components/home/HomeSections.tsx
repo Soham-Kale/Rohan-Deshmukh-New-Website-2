@@ -1,3 +1,4 @@
+import type React from 'react'
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import {
@@ -9,7 +10,7 @@ import { payload } from '@/lib/payload'
 import { cn, formatDate, mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit } from '@/lib/utils'
 import { Link } from '@/i18n/navigation'
 import { CMSLink } from '../ui/CMSLink'
-import { Section } from '../ui/Section'
+import { Section, SectionHead } from '../ui/Section'
 import { RichText } from '../ui/RichText'
 import { YouTube } from '../ui/YouTube'
 import { HeroSlider } from './HeroSlider'
@@ -78,18 +79,16 @@ function Hero({ b }: { b: Of<'heroSlider'> }) {
 function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
   if (!b.items?.length) return null
   return (
-    <section className="relative z-10 -mt-14 md:-mt-16">
+    <section className="border-b border-line bg-white">
       <div className="container-x">
-        <ul className="grid grid-cols-2 overflow-hidden rounded-3xl border border-line bg-white shadow-[0_30px_60px_-35px_rgba(20,33,61,.4)] sm:grid-cols-3 lg:grid-cols-6">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 lg:divide-x lg:divide-line">
           {b.items.map((it) => {
             const Icon = icons[(it.icon as keyof typeof icons) ?? 'info'] ?? Info
             return (
-              <li key={it.id} className="border-b border-r border-line last:border-r-0">
-                <CMSLink url={it.url} newTab={it.newTab} className="group flex h-full flex-col items-center gap-3 px-3 py-6 text-center transition hover:bg-saffron-50">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-saffron-50 text-saffron-600 transition group-hover:bg-saffron-500 group-hover:text-white">
-                    <Icon className="size-6" />
-                  </span>
-                  <span className="text-[0.98rem] font-semibold leading-snug text-charcoal-900">{it.label}</span>
+              <li key={it.id}>
+                <CMSLink url={it.url} newTab={it.newTab} className="group flex h-full flex-col items-center gap-3 px-3 py-7 text-center">
+                  <Icon className="size-7 text-saffron-600 transition group-hover:-translate-y-0.5" strokeWidth={1.6} />
+                  <span className="text-[0.98rem] font-semibold leading-snug text-charcoal-900 transition group-hover:text-saffron-700">{it.label}</span>
                 </CMSLink>
               </li>
             )
@@ -100,11 +99,11 @@ function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
   )
 }
 
-function Stat({ value, label, dark }: { value: string; label: string; dark?: boolean }) {
+function Stat({ value, label }: { value: string; label: string; dark?: boolean }) {
   return (
-    <div>
-      <p className={cn('font-display text-4xl md:text-5xl', dark ? 'text-saffron-300' : 'text-saffron-600')}><CountUp value={value} /></p>
-      <p className={cn('mt-1', dark ? 'text-white/70' : 'text-muted')}>{label}</p>
+    <div className="stat-item">
+      <p className="stat-value"><CountUp value={value} /></p>
+      <p className="stat-label">{label}</p>
     </div>
   )
 }
@@ -112,35 +111,35 @@ function Stat({ value, label, dark }: { value: string; label: string; dark?: boo
 function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
   const img = mediaUrl(b.image, 'card')
   return (
-    <section className="py-16 md:py-24">
-      <div className="container-x grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-        <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rounded-[2rem] border-2 border-frame md:-left-6 md:-top-6" />
-          {img && (
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream">
+    <section className="section">
+      <div className="container-x grid items-center gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-24">
+        {img && (
+          /* portrait on a soft saffron block, slightly offset — warmer than an outlined frame */
+          <div className="photo-backdrop mx-auto w-full max-w-md lg:max-w-none">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(20_33_61/0.55)]">
               <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover" style={photoFit(b.image, 0.8)} />
             </div>
-          )}
-        </div>
+          </div>
+        )}
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
           {/* tagline right under the name, then the description */}
           {b.pledge && <p className="mt-3 font-display text-xl leading-snug text-saffron-700 md:text-2xl">{b.pledge}</p>}
-          {b.text && <p className="mt-6 text-lg text-muted md:text-xl">{b.text}</p>}
-          {/* quick facts (Born, Studied, Leads, Author): label = small orange line, value = the fact */}
+          {b.text && <p className="lead mt-6 md:!text-[1.22rem]">{b.text}</p>}
+          {/* quick facts (Born, Studied, Leads, Author) as a plain row, separated by thin rules */}
           {!!b.stats?.length && (
-            <dl className="mt-7 flex flex-wrap gap-2.5">
+            <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line pt-6 sm:grid-cols-4">
               {b.stats.map((f) => (
-                <div key={f.id} className="rounded-xl border border-line bg-white px-3.5 py-2">
-                  <dt className="text-[0.7rem] font-semibold uppercase tracking-wide text-saffron-700">{f.label}</dt>
-                  <dd className="text-[0.95rem] font-semibold leading-snug text-charcoal-900">{f.value}</dd>
+                <div key={f.id}>
+                  <dt className="text-[0.78rem] font-semibold text-saffron-700">{f.label}</dt>
+                  <dd className="mt-0.5 font-semibold leading-snug text-charcoal-900">{f.value}</dd>
                 </div>
               ))}
             </dl>
           )}
           {b.buttonUrl && (
-            <CMSLink url={b.buttonUrl} className="btn btn-dark mt-8">
+            <CMSLink url={b.buttonUrl} className="btn btn-dark mt-9">
               {b.buttonLabel} <ArrowRight className="size-4" />
             </CMSLink>
           )}
@@ -154,8 +153,8 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
   // full-size original: this photo spans the whole width on tablets (the optimiser still sends phones a small copy)
   const img = mediaUrl(b.image)
   return (
-    <section className="bg-cream py-16 md:py-24">
-      <div className="container-x grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+    <section className="section band-cream">
+      <div className="container-x grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
@@ -167,14 +166,14 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
             </div>
           )}
         </div>
-        <ol className="space-y-4 self-center">
+        <ol className="divide-y divide-charcoal-900/10 self-center border-y border-charcoal-900/10">
           {b.items?.map((it, i) => (
             <li key={it.id}>
-              <CMSLink url={it.url} className="card card-hover group flex gap-5 p-6 md:p-7">
-                <span className="font-display text-3xl text-saffron-500">{String(i + 1).padStart(2, '0')}</span>
+              <CMSLink url={it.url} className="tile group flex-row gap-6 py-7">
+                <span className="font-display text-3xl leading-none text-saffron-500">{String(i + 1).padStart(2, '0')}</span>
                 <span className="flex-1">
-                  <span className="block font-display text-xl text-charcoal-900">{it.title}</span>
-                  <span className="mt-2 block text-muted">{it.text}</span>
+                  <span className="tile-title block text-xl">{it.title}</span>
+                  <span className="tile-text block">{it.text}</span>
                 </span>
                 <ArrowUpRight className="size-5 shrink-0 text-saffron-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </CMSLink>
@@ -189,15 +188,15 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
 function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
   return (
     <Section dark eyebrow={b.eyebrow} heading={b.heading} intro={b.text}>
-      <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+      <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-14">
         <YouTube url={b.youtubeUrl} title={b.heading} />
-        <ul className="grid gap-4">
+        <ul className="divide-y divide-white/10 self-center border-y border-white/10">
           {b.links?.map((l) => (
             <li key={l.id}>
-              <CMSLink url={l.url} newTab={l.newTab} className="group flex h-full items-center justify-between gap-4 rounded-2xl border border-white/15 bg-white/5 p-5 transition hover:border-saffron-300 hover:bg-white/10">
+              <CMSLink url={l.url} newTab={l.newTab} className="tile group flex-row items-center justify-between gap-4 py-5">
                 <span>
-                  <span className="block font-display text-xl text-white">{l.label}</span>
-                  {l.description && <span className="mt-1 block text-sm text-white/65">{l.description}</span>}
+                  <span className="tile-title block text-xl">{l.label}</span>
+                  {l.description && <span className="tile-text block !mt-1 text-sm">{l.description}</span>}
                 </span>
                 <ArrowUpRight className="size-5 shrink-0 text-saffron-300 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </CMSLink>
@@ -212,19 +211,19 @@ function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
 function WorkHighlightsSection({ b }: { b: Of<'workHighlights'> }) {
   return (
     <Section eyebrow={b.eyebrow} heading={b.heading}>
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-4">
         {b.items?.map((it, i) => {
           const img = mediaUrl(it.image, 'card')
           return (
-            <CMSLink key={it.id} url={it.url} className={cn('card card-hover group flex flex-col', i === 0 && 'lg:col-span-2 lg:row-span-2')}>
+            <CMSLink key={it.id} url={it.url} className={cn('tile group', i === 0 && 'lg:col-span-2 lg:row-span-2')}>
               {img && (
-                <div className={cn('relative overflow-hidden bg-cream', i === 0 ? 'aspect-[16/10] lg:aspect-auto lg:flex-1' : 'aspect-[16/10]')}>
-                  <Image src={img} alt={mediaAlt(it.image, it.title ?? '')} fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(it.image, 1.6)} />
+                <div className={cn('tile-media', i === 0 ? 'aspect-[16/10] lg:aspect-auto lg:flex-1' : 'aspect-[4/3]')}>
+                  <Image src={img} alt={mediaAlt(it.image, it.title ?? '')} fill sizes="(max-width:768px) 100vw, 50vw" className="object-cover" style={photoFit(it.image, 1.6)} />
                 </div>
               )}
-              <div className="p-6">
-                <h3 className={cn('text-charcoal-900', i === 0 ? 'text-2xl md:text-3xl' : 'text-xl')}>{it.title}</h3>
-                {it.text && <p className="mt-2 line-clamp-3 text-muted">{it.text}</p>}
+              <div className="tile-body">
+                <h3 className={cn('tile-title', i === 0 && 'text-2xl md:text-3xl')}>{it.title}</h3>
+                {it.text && <p className="tile-text line-clamp-3">{it.text}</p>}
               </div>
             </CMSLink>
           )
@@ -242,45 +241,40 @@ async function InitiativesSection({ b, locale }: { b: Of<'initiativesShowcase'>;
     items = (await p.find({ collection: 'initiatives', where: { featured: { equals: true } }, sort: 'order', limit: 4, locale, depth: 1 })).docs
   }
   return (
-    <section className="py-16 md:py-24">
+    <section className="section">
       <div className="container-x">
-        <div className="mx-auto max-w-3xl text-center">
-          {b.eyebrow && <p className="eyebrow justify-center">{b.eyebrow}</p>}
-          {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.intro && <p className="mt-4 text-lg text-muted">{b.intro}</p>}
-        </div>
+        <SectionHead eyebrow={b.eyebrow} heading={b.heading} intro={b.intro} center />
+        {/* the numbers sit on the page, divided by thin saffron rules */}
         {!!b.stats?.length && (
-          <dl className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {b.stats.map((s, i) => (
-              <div key={s.id} className={cn('rounded-2xl border border-frame bg-saffron-50 px-4 py-5 text-center', i === b.stats!.length - 1 && b.stats!.length % 2 === 1 && 'col-span-2 sm:col-span-1')}>
-                <dd className="font-display text-3xl leading-tight text-saffron-600 md:text-[2rem]"><CountUp value={s.value} /></dd>
-                <dt className="mt-1 text-sm font-medium text-charcoal-900">{s.label}</dt>
+          <dl className="stat-row mb-16 grid-cols-2 sm:grid-cols-3 md:mb-20 lg:grid-cols-5">
+            {b.stats.map((s) => (
+              <div key={s.id} className="stat-item">
+                <dd className="stat-value"><CountUp value={s.value} /></dd>
+                <dt className="stat-label">{s.label}</dt>
               </div>
             ))}
           </dl>
         )}
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((it) => {
             const img = mediaUrl(it.heroImage, 'card')
             return (
-              <Link key={it.id} href={`/social-work/${it.slug}`} className="card card-hover group flex flex-col">
-                <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-                  {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(it.heroImage, 1.6, 0.6)} />}
+              <Link key={it.id} href={`/social-work/${it.slug}`} className="tile group">
+                <div className="tile-media aspect-[4/3]">
+                  {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover" style={photoFit(it.heroImage, 4 / 3, 0.6)} />}
                 </div>
-                <div className="flex flex-1 flex-col p-5">
-                  {it.stat && <span className="self-start rounded-full bg-saffron-50 px-2.5 py-0.5 text-xs font-bold text-saffron-700">{it.stat}</span>}
-                  <h3 className="mt-3 line-clamp-2 text-lg leading-snug text-charcoal-900 group-hover:text-saffron-700">{it.title}</h3>
-                  {it.excerpt && <p className="mt-2 line-clamp-2 text-[0.95rem] text-muted">{it.excerpt}</p>}
-                  <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-saffron-700">
-                    {t('moreInfo')} <ArrowRight className="size-4 transition group-hover:translate-x-1" />
-                  </span>
+                <div className="tile-body">
+                  {it.stat && <p className="tile-kicker">{it.stat}</p>}
+                  <h3 className="tile-title mt-1.5 line-clamp-2">{it.title}</h3>
+                  {it.excerpt && <p className="tile-text line-clamp-2">{it.excerpt}</p>}
+                  <span className="more-link mt-auto pt-4 text-[0.95rem]">{t('moreInfo')} <ArrowRight className="size-4" /></span>
                 </div>
               </Link>
             )
           })}
         </div>
         {b.buttonUrl && (
-          <div className="mt-10 text-center">
+          <div className="mt-14 text-center">
             <CMSLink url={b.buttonUrl} className="btn btn-dark">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>
           </div>
         )}
@@ -293,7 +287,7 @@ async function InitiativesSection({ b, locale }: { b: Of<'initiativesShowcase'>;
 function MoreLink({ url, label, dark }: { url?: string | null; label?: string | null; dark?: boolean }) {
   if (!url || !label) return null
   return (
-    <CMSLink url={url} className={cn('inline-flex shrink-0 items-center gap-1.5 font-semibold', dark ? 'text-saffron-300 hover:text-white' : 'text-saffron-700 hover:text-charcoal-900')}>
+    <CMSLink url={url} className={cn('more-link shrink-0', dark && 'text-highlight')}>
       {label} <ArrowRight className="size-4" />
     </CMSLink>
   )
@@ -306,26 +300,25 @@ function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale })
   const items = b.items ?? []
   if (!items.length) return null
   return (
-    <section className="border-y border-line bg-cream py-14 md:py-20">
+    <section className="section band-cream">
       <div className="container-x">
-        <div className="mb-9 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-3xl">
-            {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-            {b.heading && <h2 className="mt-2 text-[1.7rem] leading-tight text-charcoal-900 md:text-[2.1rem]">{b.heading}</h2>}
-          </div>
+        <div className="section-head-row">
+          <SectionHead eyebrow={b.eyebrow} heading={b.heading} />
           <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
         </div>
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+        {/* one route from school to home again: a line through numbered stops (vertical on phones) */}
+        <ol className="relative grid gap-10 md:grid-cols-[repeat(var(--n),minmax(0,1fr))]" style={{ '--n': items.length } as React.CSSProperties}>
+          <span aria-hidden className="absolute bottom-6 left-5 top-6 w-px bg-saffron-300 md:bottom-auto md:left-5 md:right-0 md:top-5 md:h-px md:w-auto" />
           {items.map((it, i) => {
             const last = i === items.length - 1
             return (
-              <li key={it.id} className="relative rounded-2xl border border-line bg-white p-5 md:p-6">
-                <div className="flex items-center gap-3">
-                  <span className={cn('grid size-10 shrink-0 place-items-center rounded-full font-semibold', last ? 'bg-saffron-500 text-white shadow-[0_0_0_5px_rgb(242_107_29/0.18)]' : 'bg-charcoal-900 text-saffron-300')}>{digits(i + 1, locale)}</span>
-                  {it.place && <span className="text-xs font-bold uppercase tracking-wide text-saffron-700">{it.place}</span>}
+              <li key={it.id} className="relative pl-16 md:pl-0">
+                <span className={cn('absolute left-0 top-0 grid size-10 place-items-center rounded-full font-semibold ring-[6px] ring-cream md:relative', last ? 'bg-saffron-500 text-white' : 'bg-charcoal-900 text-saffron-300')}>{digits(i + 1, locale)}</span>
+                <div className="md:mt-6 md:pr-2">
+                  {it.place && <p className="tile-kicker">{it.place}</p>}
+                  {it.title && <h3 className="mt-1.5 text-[1.2rem] leading-snug text-charcoal-900">{it.title}</h3>}
+                  {it.text && <p className="mt-2 text-[0.97rem] leading-relaxed text-muted">{it.text}</p>}
                 </div>
-                {it.title && <h3 className="mt-4 text-lg leading-snug text-charcoal-900">{it.title}</h3>}
-                {it.text && <p className="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{it.text}</p>}
               </li>
             )
           })}
@@ -340,19 +333,18 @@ function FamilySection({ b }: { b: Of<'family'> }) {
   if (!members.length) return null
   return (
     <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.intro} action={<MoreLink url={b.buttonUrl} label={b.buttonLabel} />}>
-      <ul className="grid gap-5 md:grid-cols-3">
+      {/* three generations side by side: portrait, relation, name, a few words — no boxes */}
+      <ul className="grid gap-12 md:grid-cols-3 md:gap-0 md:divide-x md:divide-line">
         {members.map((m) => {
           const img = mediaUrl(m.image, 'thumb')
           return (
-            <li key={m.id} className="flex gap-4 rounded-3xl border border-line bg-white p-5 md:p-6">
-              <div className="relative size-[4.5rem] shrink-0 overflow-hidden rounded-full border-2 border-frame bg-cream">
-                {img && <Image src={img} alt={mediaAlt(m.image, m.name ?? '')} fill sizes="72px" className="object-cover object-top" />}
+            <li key={m.id} className="flex flex-col items-center text-center md:px-8 md:first:pl-0 md:last:pr-0">
+              <div className="relative size-28 shrink-0 overflow-hidden rounded-full bg-cream ring-4 ring-saffron-100">
+                {img && <Image src={img} alt={mediaAlt(m.image, m.name ?? '')} fill sizes="112px" className="object-cover object-top" />}
               </div>
-              <div className="min-w-0">
-                {m.relation && <p className="text-sm font-semibold text-saffron-700">{m.relation}</p>}
-                {m.name && <h3 className="mt-0.5 text-[1.05rem] leading-snug text-charcoal-900">{m.name}</h3>}
-                {m.text && <p className="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{m.text}</p>}
-              </div>
+              {m.relation && <p className="tile-kicker mt-5">{m.relation}</p>}
+              {m.name && <h3 className="mt-1 text-[1.2rem] leading-snug text-charcoal-900">{m.name}</h3>}
+              {m.text && <p className="mt-2 max-w-xs text-[0.97rem] leading-relaxed text-muted">{m.text}</p>}
             </li>
           )
         })}
@@ -363,20 +355,20 @@ function FamilySection({ b }: { b: Of<'family'> }) {
 
 function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
   return (
-    <section className="on-dark grain relative overflow-hidden bg-charcoal-900 py-16 text-white md:py-24">
+    <section className="section on-dark grain relative overflow-hidden bg-charcoal-900 text-white">
       <div aria-hidden className="absolute -right-24 -top-24 size-96 rounded-full border-[40px] border-saffron-500/10" />
-      <div className="container-x relative grid items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
+      <div className="container-x relative grid items-center gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-          {b.text && <p className="mt-4 text-lg text-white/75">{b.text}</p>}
-          {b.buttonUrl && <div className="mt-6"><MoreLink url={b.buttonUrl} label={b.buttonLabel} dark /></div>}
+          {b.text && <p className="mt-5 font-display text-[1.3rem] leading-relaxed text-white md:text-[1.5rem]">{b.text}</p>}
+          {b.buttonUrl && <div className="mt-8"><MoreLink url={b.buttonUrl} label={b.buttonLabel} dark /></div>}
         </div>
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
+        <ul className="stat-row grid-cols-2 gap-y-10 sm:grid-cols-3">
           {b.items?.map((g) => (
-            <li key={g.id} className="rounded-2xl border border-white/12 bg-white/5 p-4 md:p-5">
-              <p className="font-display text-3xl leading-none text-saffron-300 md:text-4xl">{g.value}</p>
-              {g.title && <p className="mt-2.5 font-semibold leading-snug text-white">{g.title}</p>}
-              {g.text && <p className="mt-0.5 text-sm text-white/65">{g.text}</p>}
+            <li key={g.id} className="stat-item">
+              <p className="stat-value">{g.value}</p>
+              {g.title && <p className="mt-2 font-semibold leading-snug text-white">{g.title}</p>}
+              {g.text && <p className="mt-0.5 text-sm leading-snug text-white/65">{g.text}</p>}
             </li>
           ))}
         </ul>
@@ -387,18 +379,20 @@ function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
 
 function HighlightsSection({ b }: { b: Of<'homeHighlights'> }) {
   return (
-    <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.text} className="border-y border-line bg-cream" action={<MoreLink url={b.buttonUrl} label={b.buttonLabel} />}>
-      <ul className="grid gap-5 md:grid-cols-3">
-        {b.items?.map((c) => (
+    <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.text} className="band-cream" action={<MoreLink url={b.buttonUrl} label={b.buttonLabel} />}>
+      {/* chapters of the political journey: numbered columns under one shared rule */}
+      <ol className="grid gap-10 border-t border-charcoal-900/15 md:grid-cols-3 md:gap-12">
+        {b.items?.map((c, i) => (
           <li key={c.id}>
-            <CMSLink url={c.url || b.buttonUrl || '#'} className="group block h-full rounded-3xl border-t-[5px] border-saffron-500 bg-white p-6 shadow-[0_14px_40px_-30px_rgb(20_33_61/0.45)] transition hover:-translate-y-1 md:p-7">
-              {c.tag && <p className="text-xs font-bold uppercase tracking-wide text-saffron-700">{c.tag}</p>}
-              {c.title && <h3 className="mt-2 text-xl leading-snug text-charcoal-900 group-hover:text-saffron-700">{c.title}</h3>}
-              {c.text && <p className="mt-2 text-muted">{c.text}</p>}
+            <CMSLink url={c.url || b.buttonUrl || '#'} className="tile group h-full pt-7">
+              <span aria-hidden className="absolute -top-px left-0 h-[3px] w-14 bg-saffron-500 transition-all duration-300 group-hover:w-24" />
+              <span className="font-display text-sm text-saffron-700">{String(i + 1).padStart(2, '0')}{c.tag && <span className="text-muted"> · {c.tag}</span>}</span>
+              {c.title && <h3 className="tile-title mt-3 text-[1.3rem]">{c.title}</h3>}
+              {c.text && <p className="tile-text">{c.text}</p>}
             </CMSLink>
           </li>
         ))}
-      </ul>
+      </ol>
     </Section>
   )
 }
@@ -414,27 +408,24 @@ async function EventsSection({ b, locale }: { b: Of<'homeEvents'>; locale: Local
   if (!events.length) return null
   return (
     <Section eyebrow={b.eyebrow} heading={b.heading} action={<MoreLink url={b.buttonUrl} label={b.buttonLabel} />}>
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         {events.map((e) => {
           const img = mediaUrl(e.coverImage, 'card')
           const meta = e.group ? GROUP[locale]?.[e.group] : null
           return (
             <li key={e.id}>
-              <Link href={`/events/${e.slug}`} className="card card-hover group flex h-full flex-col">
-                {img ? (
-                  <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-                    <Image src={img} alt={mediaAlt(e.coverImage, e.title)} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(e.coverImage, 1.6, 0.6)} />
-                  </div>
-                ) : (
-                  /* no photo yet: a short tinted band with an icon instead of an empty box */
-                  <div className="grid h-24 place-items-center bg-cream sm:aspect-[16/10] sm:h-auto">
+              <Link href={`/events/${e.slug}`} className="tile group h-full">
+                <div className="tile-media grid aspect-[4/3] place-items-center">
+                  {img ? (
+                    <Image src={img} alt={mediaAlt(e.coverImage, e.title)} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover" style={photoFit(e.coverImage, 4 / 3, 0.6)} />
+                  ) : (
                     <CalendarDays aria-hidden className="size-9 text-saffron-600" strokeWidth={1.5} />
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col p-5">
-                  {meta && <p className="text-xs font-semibold text-saffron-700">{meta}</p>}
-                  <h3 className="mt-1 line-clamp-2 text-lg leading-snug text-charcoal-900 group-hover:text-saffron-700">{e.title}</h3>
-                  {e.tagline && <p className="mt-1.5 line-clamp-2 text-[0.95rem] text-muted">{e.tagline}</p>}
+                  )}
+                </div>
+                <div className="tile-body">
+                  {meta && <p className="tile-kicker">{meta}</p>}
+                  <h3 className="tile-title mt-1 line-clamp-2">{e.title}</h3>
+                  {e.tagline && <p className="tile-text line-clamp-2">{e.tagline}</p>}
                 </div>
               </Link>
             </li>
@@ -448,9 +439,9 @@ async function EventsSection({ b, locale }: { b: Of<'homeEvents'>; locale: Local
 function VisionSection({ b }: { b: Of<'homeVision'> }) {
   const img = mediaUrl(b.image)
   return (
-    <section className="relative overflow-hidden border-y border-line bg-cream py-16 md:py-24">
-      <div aria-hidden className="absolute -left-24 -bottom-28 size-96 rounded-full border-[40px] border-saffron-500/10" />
-      <div className="container-x relative grid items-center gap-10 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-16">
+    <section className="section band-cream relative overflow-hidden">
+      <div aria-hidden className="absolute -bottom-28 -left-24 size-96 rounded-full border-[40px] border-saffron-500/10" />
+      <div className="container-x relative grid items-center gap-14 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-20">
         <div className="flex justify-center">
           {img ? (
             /* the book cover at its own shape, tilted slightly like a book on a shelf */
@@ -464,8 +455,8 @@ function VisionSection({ b }: { b: Of<'homeVision'> }) {
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.text && <p className="mt-4 text-lg text-muted">{b.text}</p>}
-          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn btn-primary mt-8">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
+          {b.text && <p className="lead mt-5">{b.text}</p>}
+          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn btn-primary mt-9">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
         </div>
       </div>
     </section>
@@ -483,7 +474,7 @@ function GallerySection({ b }: { b: Of<'homeGallery'> }) {
           if (!src) return null
           return (
             <li key={(m as { id: number }).id ?? i} className={cn('relative aspect-square overflow-hidden rounded-2xl bg-cream', i === 0 && 'col-span-2 row-span-2 aspect-auto sm:col-span-1 sm:row-span-1 sm:aspect-square lg:col-span-2 lg:row-span-2 lg:aspect-auto')}>
-              <Image src={src} alt={mediaAlt(m as never, b.heading ?? '')} fill sizes="(max-width:640px) 50vw, 25vw" className="object-cover transition duration-500 hover:scale-105" style={photoFit(m as never, 1, 0.5)} />
+              <Image src={src} alt={mediaAlt(m as never, b.heading ?? '')} fill sizes="(max-width:640px) 50vw, 25vw" className="object-cover transition duration-700 hover:scale-105" style={photoFit(m as never, 1, 0.5)} />
             </li>
           )
         })}
@@ -495,7 +486,7 @@ function GallerySection({ b }: { b: Of<'homeGallery'> }) {
 function StatsSection({ b }: { b: Of<'homeStats'> }) {
   const img = mediaUrl(b.image, 'hero')
   return (
-    <section className="on-dark grain relative overflow-hidden bg-charcoal-900 py-20 text-white md:py-28">
+    <section className="section on-dark grain relative overflow-hidden bg-charcoal-900 text-white">
       {img && (
         <>
           <Image src={img} alt="" fill sizes="100vw" className="object-cover opacity-20" style={{ objectPosition: mediaPosition(b.image) }} />
@@ -510,12 +501,8 @@ function StatsSection({ b }: { b: Of<'homeStats'> }) {
             <CMSLink url={b.buttonUrl} className="btn btn-light mt-8">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>
           )}
         </div>
-        <div className="grid gap-8 sm:grid-cols-3">
-          {b.items?.map((s) => (
-            <div key={s.id} className="border-l-2 border-saffron-500 pl-5">
-              <Stat value={s.value} label={s.label} dark />
-            </div>
-          ))}
+        <div className="stat-row sm:grid-cols-3">
+          {b.items?.map((s) => <Stat key={s.id} value={s.value} label={s.label} />)}
         </div>
       </div>
     </section>
@@ -524,12 +511,12 @@ function StatsSection({ b }: { b: Of<'homeStats'> }) {
 
 function FaqSection({ b }: { b: Of<'homeFaq'> }) {
   return (
-    <Section className="bg-cream">
-      <div className="grid gap-10 lg:grid-cols-[0.8fr_1.4fr] lg:gap-16">
+    <Section className="band-cream">
+      <div className="grid gap-12 lg:grid-cols-[0.8fr_1.4fr] lg:gap-20">
         <div className="lg:sticky lg:top-28 lg:self-start">
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.text && <p className="mt-4 text-lg text-muted">{b.text}</p>}
+          {b.text && <p className="lead mt-4">{b.text}</p>}
           <div className="mt-8 flex flex-wrap gap-3">
             {b.buttons?.map((l, i) => (
               <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>{l.label}</CMSLink>
@@ -551,8 +538,8 @@ async function BlogSection({ b, locale }: { b: Of<'latestBlog'>; locale: Locale 
   if (!posts.length) return null
   const [lead, ...rest] = posts
   return (
-    <Section eyebrow={b.eyebrow} heading={b.heading} className="bg-cream" action={<Link href="/blog" className="btn btn-dark">{t('viewAll')} <ArrowRight className="size-4" /></Link>}>
-      <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+    <Section eyebrow={b.eyebrow} heading={b.heading} action={<Link href="/blog" className="more-link">{t('viewAll')} <ArrowRight className="size-4" /></Link>}>
+      <div className="grid gap-12 lg:grid-cols-[1.55fr_1fr] lg:gap-16">
         <LeadStory post={lead} locale={locale} badge={tb('lead')} readFull={tb('readFull')} />
         {rest.length > 0 && <LatestList posts={rest.slice(0, 4)} locale={locale} title={tb('latestUpdates')} />}
       </div>
@@ -563,14 +550,14 @@ async function BlogSection({ b, locale }: { b: Of<'latestBlog'>; locale: Locale 
 export function PostCard({ post, locale }: { post: Post; locale: string }) {
   const img = mediaUrl(post.coverImage, 'card')
   return (
-    <Link href={`/blog/${post.slug}`} className="card card-hover group flex flex-col">
-      <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-        {img && <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(post.coverImage, 1.6)} />}
+    <Link href={`/blog/${post.slug}`} className="tile group">
+      <div className="tile-media aspect-[16/10]">
+        {img && <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" style={photoFit(post.coverImage, 1.6)} />}
       </div>
-      <div className="flex flex-1 flex-col p-6">
+      <div className="tile-body">
         <p className="text-sm text-muted">{formatDate(post.publishedAt, locale)} · {post.author}</p>
-        <h3 className="mt-2 line-clamp-3 text-xl text-charcoal-900 group-hover:text-saffron-700">{post.title}</h3>
-        {post.excerpt && <p className="mt-3 line-clamp-3 text-[0.98rem] text-muted">{post.excerpt}</p>}
+        <h3 className="tile-title mt-2 line-clamp-3 text-xl">{post.title}</h3>
+        {post.excerpt && <p className="tile-text line-clamp-3">{post.excerpt}</p>}
       </div>
     </Link>
   )
@@ -582,7 +569,7 @@ async function SocialSection({ b, locale }: { b: Of<'socialFeeds'>; locale: Loca
   const videos = b.showYoutube ? ((await p.find({ collection: 'videos', limit: 3, sort: '-publishedAt', locale })).docs as VideoDoc[]) : []
   const fb = settings.social?.facebook
   return (
-    <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.text} className="bg-cream"
+    <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.text} className="band-cream"
       action={
         <div className="flex flex-wrap gap-3">
           {settings.social?.instagram && <a href={settings.social.instagram} target="_blank" rel="noopener" className="btn btn-dark">Instagram <ArrowUpRight className="size-4" /></a>}
@@ -590,15 +577,15 @@ async function SocialSection({ b, locale }: { b: Of<'socialFeeds'>; locale: Loca
         </div>
       }>
       {!!b.instagramPosts?.length && <InstagramEmbeds urls={b.instagramPosts.map((x) => ({ url: x.url, title: x.title ?? '' }))} />}
-      <div className={cn('mt-8 grid gap-6', fb && b.showFacebook ? 'lg:grid-cols-[1fr_380px]' : '')}>
+      <div className={cn('mt-8 grid gap-8', fb && b.showFacebook ? 'lg:grid-cols-[1fr_380px]' : '')}>
         {videos.length > 0 && (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
             {videos.slice(0, 2).map((v) => <YouTube key={v.id} url={v.youtubeUrl} title={v.title} />)}
             <Link href="/media/videos" className="btn btn-dark self-start sm:col-span-2 sm:justify-self-start">YouTube <ArrowRight className="size-4" /></Link>
           </div>
         )}
         {fb && b.showFacebook && (
-          <div className="overflow-hidden rounded-2xl border border-line bg-white">
+          <div className="overflow-hidden rounded-2xl bg-white">
             <iframe
               title="Facebook"
               loading="lazy"
@@ -619,21 +606,22 @@ async function AppealSection({ b, locale }: { b: Of<'appealBand'>; locale: Local
   const settings = b.showWhatsapp ? await (await payload()).findGlobal({ slug: 'site-settings', locale, depth: 0 }) : null
   const wa = settings?.whatsappNumber?.replace(/\D/g, '')
   return (
-    <section className="py-12 md:py-16">
-      <div className="container-x">
-        <div className="relative isolate flex flex-col items-start gap-7 overflow-hidden rounded-[2rem] bg-saffron-500 px-6 py-10 text-white sm:px-10 md:flex-row md:items-center md:justify-between md:px-12 md:py-12">
-          <div aria-hidden className="absolute -right-16 -top-20 -z-10 size-72 rounded-full border-[36px] border-white/10" />
-          <div className="max-w-2xl">
-            {b.eyebrow && <p className="font-semibold text-white/85">{b.eyebrow}</p>}
-            {b.heading && <h2 className="mt-1 text-[1.7rem] leading-tight text-white md:text-4xl">{b.heading}</h2>}
-            {b.text && <p className="mt-3 text-white/90">{b.text}</p>}
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn bg-charcoal-900 px-6 py-3 text-white hover:bg-charcoal-800">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
-            {wa && <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" className="btn bg-white px-6 py-3 text-charcoal-900 hover:bg-cream">WhatsApp <ArrowUpRight className="size-4" /></a>}
-          </div>
+    /* full-width saffron band closing the page, like the invitation at the end of a letter */
+    <section className="grain relative isolate overflow-hidden bg-saffron-500 text-white">
+      <div aria-hidden className="absolute -right-20 -top-24 -z-10 size-80 rounded-full border-[40px] border-white/10" />
+      <div aria-hidden className="absolute -bottom-32 left-[8%] -z-10 size-64 rounded-full border-[32px] border-white/[0.07]" />
+      <div className="container-x flex flex-col items-start gap-8 py-16 md:flex-row md:items-center md:justify-between md:py-20">
+        <div className="max-w-2xl">
+          {b.eyebrow && <p className="font-semibold text-white/85">{b.eyebrow}</p>}
+          {b.heading && <h2 className="mt-1 text-[1.8rem] leading-tight text-white md:text-[2.5rem]">{b.heading}</h2>}
+          {b.text && <p className="mt-3 text-lg text-white/90">{b.text}</p>}
+        </div>
+        <div className="flex flex-wrap gap-3">
+          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn bg-charcoal-900 px-6 py-3 text-white hover:bg-charcoal-800">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
+          {wa && <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" className="btn bg-white px-6 py-3 text-charcoal-900 hover:bg-cream">WhatsApp <ArrowUpRight className="size-4" /></a>}
         </div>
       </div>
     </section>
   )
 }
+

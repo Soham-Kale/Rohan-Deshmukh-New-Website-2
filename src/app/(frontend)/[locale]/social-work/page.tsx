@@ -37,31 +37,31 @@ export default async function SocialWorkPage({ params, searchParams }: P) {
   return (
     <InnerPage path="/social-work" locale={locale} title={t('socialWork')} subtitle={locale === 'mr' ? 'लोकमंगल फाऊंडेशनच्या माध्यमातून राबविलेले उपक्रम — विभागानुसार' : 'Initiatives run through Lokmangal Foundation — by category'} wide>
       <FilterChips base="/social-work" active={category} items={[{ label: tc('all'), value: '' }, ...used.map((c) => ({ label: catLabel(c.value, locale), value: c.value }))]} />
-      <div className="space-y-14">
+      <div className="space-y-20">
         {groups.map((g) => (
           <section key={g.value} aria-labelledby={`cat-${g.value}`}>
-            <div className="mb-6 flex items-center gap-4">
-              <h2 id={`cat-${g.value}`} className="text-2xl text-charcoal-900 md:text-3xl">{catLabel(g.value, locale)}</h2>
+            <div className="mb-8 flex items-center gap-4">
+              <h2 id={`cat-${g.value}`} className="text-[1.6rem] leading-tight text-charcoal-900 md:text-[2rem]">{catLabel(g.value, locale)}</h2>
               <span className="h-px flex-1 bg-line" />
               <span className="text-sm text-muted">{g.items.length}</span>
             </div>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {g.items.map((it) => {
                 const img = mediaUrl(it.heroImage, 'card')
                 return (
-                  <Link key={it.id} href={`/social-work/${it.slug}`} className="card card-hover group flex flex-col">
-                    <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-                      {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(it.heroImage, 1.6, 0.6)} />}
+                  <Link key={it.id} href={`/social-work/${it.slug}`} className="tile group">
+                    <div className="tile-media aspect-[16/10]">
+                      {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" style={photoFit(it.heroImage, 1.6, 0.6)} />}
                       {it.counters?.[0] && (
                         <span className="absolute bottom-3 left-3 rounded-full bg-charcoal-900/90 px-3 py-1 text-sm text-white backdrop-blur">
                           <b className="text-saffron-300"><CountUp value={it.counters[0].value} /></b> {it.counters[0].label}
                         </span>
                       )}
                     </div>
-                    <div className="flex flex-1 flex-col p-5">
-                      <h3 className="text-xl text-charcoal-900">{it.title}</h3>
-                      <p className="mt-2 line-clamp-3 text-[0.97rem] text-muted">{it.excerpt}</p>
-                      <span className="mt-auto inline-flex items-center gap-1.5 pt-4 font-semibold text-saffron-700">{tc('moreInfo')} <ArrowRight className="size-4 transition group-hover:translate-x-1" /></span>
+                    <div className="tile-body">
+                      <h3 className="tile-title text-xl">{it.title}</h3>
+                      <p className="tile-text line-clamp-3">{it.excerpt}</p>
+                      <span className="more-link mt-auto pt-4">{tc('moreInfo')} <ArrowRight className="size-4" /></span>
                     </div>
                   </Link>
                 )

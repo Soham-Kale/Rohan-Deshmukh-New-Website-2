@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { draftMode } from 'next/headers'
 import { cache } from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { ArrowLeft, ArrowRight, CalendarDays, ChevronRight, CircleCheckBig, Clock, MapPin } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CalendarDays, CircleCheckBig, Clock, MapPin } from 'lucide-react'
 import type { Locale } from '@/i18n/routing'
 import type { Post } from '@/payload-types'
 import { payload } from '@/lib/payload'
@@ -12,7 +12,8 @@ import { articleHeadings, primaryCategory, readTimeLabel } from '@/lib/blog'
 import { formatDate, localizedHref, mediaAlt, mediaUrl, photoFit, siteUrl, toMarathiDigits } from '@/lib/utils'
 import { RichText } from '@/components/ui/RichText'
 import { Share } from '@/components/ui/Share'
-import { CategoryChip, NewsCard, SectionTitle } from '@/components/blog/BlogParts'
+import { NewsCard, SectionTitle } from '@/components/blog/BlogParts'
+import { PageBanner } from '@/components/layout/PageBanner'
 import { Link } from '@/i18n/navigation'
 
 export const revalidate = 300
@@ -79,109 +80,113 @@ export default async function PostPage({ params }: P) {
   }
 
   return (
-    <div className="bg-cream">
-      {/* breadcrumb strip */}
-      <div className="no-print border-b border-line bg-white">
-        <nav aria-label="Breadcrumb" className="container-x flex items-center gap-1.5 overflow-hidden py-3 text-sm text-muted">
-          <Link href="/" className="shrink-0 hover:text-charcoal-900">{tc('home')}</Link>
-          <ChevronRight className="size-3.5 shrink-0" />
-          <Link href="/blog" className="shrink-0 hover:text-charcoal-900">{t('blog')}</Link>
-          {cat && (
-            <>
-              <ChevronRight className="size-3.5 shrink-0" />
-              <Link href={`/blog?category=${cat.slug}`} className="truncate font-semibold text-charcoal-900">{cat.title}</Link>
-            </>
-          )}
-        </nav>
-      </div>
-
-      <article className="container-x py-8 md:py-12">
-        <div className="mx-auto max-w-4xl">
-          <Link href="/blog" className="no-print inline-flex items-center gap-2 text-sm text-muted hover:text-charcoal-900">
-            <ArrowLeft className="size-4" /> {tb('back')}
-          </Link>
-
-          <div className="mt-6">
-            <CategoryChip cat={cat} />
+    <>
+      <PageBanner
+        compact
+        title={post.title}
+        subtitle={subtitle}
+        crumbs={[{ label: t('blog'), href: '/blog' }, ...(cat ? [{ label: cat.title, href: `/blog?category=${cat.slug}` }] : [])]}
+      >
+        {/* byline */}
+        <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
+            <span className="inline-flex items-center gap-2.5">
+              <span aria-hidden className="grid size-8 place-items-center rounded-full bg-saffron-500 text-sm font-semibold text-white">{author.trim().charAt(0)}</span>
+              <span className="font-semibold text-white">{author}</span>
+              <span className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{tb('place')}</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5"><CalendarDays className="size-4 text-saffron-300" /><time dateTime={post.publishedAt ?? undefined}>{formatDate(post.publishedAt, locale)}</time></span>
+            <span className="inline-flex items-center gap-1.5"><Clock className="size-4" />{readTimeLabel(post, locale)}</span>
           </div>
+          <div className="no-print"><Share url={url} title={post.title} label={tc('share')} compact /></div>
+        </div>
+      </PageBanner>
 
-          <h1 className="mt-4 text-[1.65rem] font-bold leading-[1.3] text-charcoal-900 sm:text-[1.9rem] md:text-[2.6rem]">{post.title}</h1>
-          {subtitle && <p className="mt-3 text-lg text-muted md:text-xl">{subtitle}</p>}
+      <div className="container-x pb-20 pt-12 md:pb-28 md:pt-16">
+        <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:gap-20">
+          <article className="min-w-0 max-w-3xl">
+            <Link href="/blog" className="no-print inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:gap-3 hover:text-charcoal-900">
+              <ArrowLeft className="size-4" /> {tb('back')}
+            </Link>
 
-          {/* byline */}
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-y border-line py-3.5">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted">
-              <span className="inline-flex items-center gap-2.5">
-                <span aria-hidden className="grid size-8 place-items-center rounded-full bg-charcoal-900 text-sm font-semibold text-white">{author.trim().charAt(0)}</span>
-                <span className="font-semibold text-charcoal-900">{author}</span>
-                <span className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{tb('place')}</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5"><CalendarDays className="size-4 text-saffron-600" /><time dateTime={post.publishedAt ?? undefined}>{formatDate(post.publishedAt, locale)}</time></span>
-              <span className="inline-flex items-center gap-1.5"><Clock className="size-4" />{readTimeLabel(post, locale)}</span>
+            {cover && (
+              <figure className="mt-7">
+                <div className="relative aspect-[16/9] overflow-hidden rounded-[1.5rem] bg-cream">
+                  <Image src={cover} alt={mediaAlt(post.coverImage, post.title)} fill priority sizes="(max-width:900px) 100vw, 780px" className="object-cover" style={photoFit(post.coverImage, 16 / 9)} />
+                </div>
+                {typeof post.coverImage === 'object' && post.coverImage?.alt && post.coverImage.alt !== post.title && (
+                  <figcaption className="mt-3 text-sm text-muted">{post.coverImage.alt}</figcaption>
+                )}
+              </figure>
+            )}
+
+            {/* summary */}
+            {post.excerpt && (
+              <p className="mt-10 border-l-4 border-saffron-500 pl-5 font-display text-[1.2rem] leading-relaxed text-charcoal-900 md:pl-7 md:text-[1.35rem]">
+                {post.excerpt}
+              </p>
+            )}
+
+            {/* key points on phones and tablets (desktop: in the side column) */}
+            {headings.length >= 2 && (
+              <nav aria-label={tb('keyPoints')} className="mt-10 lg:hidden">
+                <KeyPoints headings={headings} title={tb('keyPoints')} num={num} />
+              </nav>
+            )}
+
+            {/* full story */}
+            <SectionTitle className="mt-12">{tb('fullStory')}</SectionTitle>
+            <div id="article-body" className="article-body mt-7">
+              <RichText data={post.content} anchors />
             </div>
-            <div className="no-print"><Share url={url} title={post.title} label={tc('share')} compact /></div>
-          </div>
 
-          {cover && (
-            <figure className="mt-7">
-              <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-white">
-                <Image src={cover} alt={mediaAlt(post.coverImage, post.title)} fill priority sizes="(max-width:900px) 100vw, 900px" className="object-cover" style={photoFit(post.coverImage, 16 / 9)} />
+            {(!!tags.length || !!post.categories?.length) && (
+              <div className="no-print mt-12 flex flex-wrap gap-2 border-t border-line pt-7">
+                {post.categories?.map((c) => typeof c === 'object' && <Link key={c.id} href={`/blog?category=${c.slug}`} className="rounded-full bg-charcoal-900 px-3 py-1 text-sm text-white">{c.title}</Link>)}
+                {tags.map((tag) => <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`} className="rounded-full bg-white px-3 py-1 text-sm text-saffron-700 ring-1 ring-line transition hover:ring-saffron-400">#{tag}</Link>)}
               </div>
-              {typeof post.coverImage === 'object' && post.coverImage?.alt && post.coverImage.alt !== post.title && (
-                <figcaption className="mt-2 text-sm text-muted">{post.coverImage.alt}</figcaption>
-              )}
-            </figure>
-          )}
+            )}
+            <div className="no-print mt-8 border-t border-line pt-7"><Share url={url} title={post.title} label={tc('share')} /></div>
+          </article>
 
-          {/* summary */}
-          {post.excerpt && (
-            <p className="mt-8 rounded-r-2xl border-l-4 border-saffron-500 bg-white px-5 py-4 text-[1.1rem] font-medium leading-relaxed text-charcoal-900 md:px-7 md:py-5 md:text-[1.2rem]">
-              {post.excerpt}
-            </p>
-          )}
-
-          {/* key points (from the article's sub-headings) */}
           {headings.length >= 2 && (
-            <nav aria-label={tb('keyPoints')} className="mt-6 rounded-2xl border border-line bg-white p-5 md:p-6">
-              <h2 className="flex items-center gap-2.5 border-b border-line pb-3 text-lg text-charcoal-900"><CircleCheckBig className="size-5 text-saffron-600" /> {tb('keyPoints')}</h2>
-              <ol className="mt-3 space-y-2">
-                {headings.map((h, i) => (
-                  <li key={h.id}>
-                    <a href={`#${h.id}`} className="flex gap-3 rounded-lg px-1 py-1 text-[0.98rem] text-ink hover:bg-cream hover:text-saffron-700">
-                      <span className="grid size-6 shrink-0 place-items-center rounded-full bg-saffron-50 text-xs font-semibold text-saffron-700">{num(i + 1)}</span>
-                      {h.text}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
+            <aside className="no-print hidden lg:sticky lg:top-28 lg:block lg:self-start">
+              <nav aria-label={tb('keyPoints')}>
+                <KeyPoints headings={headings} title={tb('keyPoints')} num={num} />
+              </nav>
+            </aside>
           )}
-
-          {/* full story */}
-          <SectionTitle className="mt-10">{tb('fullStory')}</SectionTitle>
-          <div id="article-body" className="article-body mt-6">
-            <RichText data={post.content} anchors />
-          </div>
-
-          {(!!tags.length || !!post.categories?.length) && (
-            <div className="no-print mt-10 flex flex-wrap gap-2 border-t border-line pt-6">
-              {post.categories?.map((c) => typeof c === 'object' && <Link key={c.id} href={`/blog?category=${c.slug}`} className="rounded-full bg-charcoal-900 px-3 py-1 text-sm text-white">{c.title}</Link>)}
-              {tags.map((tag) => <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`} className="rounded-full bg-white px-3 py-1 text-sm text-saffron-700 ring-1 ring-line">#{tag}</Link>)}
-            </div>
-          )}
-          <div className="no-print mt-8 rounded-2xl border border-line bg-white p-4"><Share url={url} title={post.title} label={tc('share')} /></div>
         </div>
 
         {related.length > 0 && (
-          <section className="no-print mx-auto mt-16 max-w-6xl">
-            <SectionTitle aside={<Link href="/blog" className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-saffron-700 hover:text-saffron-600">{tb('seeAll')} <ArrowRight className="size-4" /></Link>}>
+          <section className="no-print mt-24 md:mt-28">
+            <SectionTitle aside={<Link href="/blog" className="more-link text-sm">{tb('seeAll')} <ArrowRight className="size-4" /></Link>}>
               {tb('more')}
             </SectionTitle>
-            <div className="mt-6 grid gap-6 md:grid-cols-3">{related.map((r) => <NewsCard key={r.id} post={r} locale={locale} />)}</div>
+            <div className="mt-9 grid gap-x-7 gap-y-12 md:grid-cols-3">{related.map((r) => <NewsCard key={r.id} post={r} locale={locale} />)}</div>
           </section>
         )}
-      </article>
+      </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
-    </div>
+    </>
+  )
+}
+
+/** The article's sub-headings as a numbered jump list */
+function KeyPoints({ headings, title, num }: { headings: { id: string; text: string }[]; title: string; num: (n: number) => string }) {
+  return (
+    <>
+      <h2 className="flex items-center gap-2.5 border-b-2 border-charcoal-900 pb-3 text-lg text-charcoal-900"><CircleCheckBig className="size-5 text-saffron-600" /> {title}</h2>
+      <ol className="mt-2 divide-y divide-line">
+        {headings.map((h, i) => (
+          <li key={h.id}>
+            <a href={`#${h.id}`} className="flex gap-3 py-3 text-[0.97rem] leading-snug text-ink transition hover:text-saffron-700">
+              <span className="font-display text-saffron-500">{num(i + 1)}</span>
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </>
   )
 }

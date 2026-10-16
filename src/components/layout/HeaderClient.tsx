@@ -77,7 +77,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
     <>
       <header
         className={cn(
-          'sticky top-0 z-50 text-white transition-[background,box-shadow,padding] duration-300',
+          'sticky top-0 z-50 text-white transition-[background-color,box-shadow] duration-300',
           transparent
             ? 'bg-gradient-to-b from-charcoal-950/60 to-transparent'
             : scrolled
@@ -85,10 +85,10 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
               : 'bg-charcoal-900',
         )}
       >
-        <div className={cn('container-x flex items-center gap-2 transition-[height] duration-300 sm:gap-4', scrolled ? 'h-16' : 'h-20')}>
+        <div className={cn('container-x flex h-[4.5rem] items-center gap-2 sm:gap-4')}>
           <Link href="/" className="flex min-w-0 shrink items-center" aria-label={siteName}>
             {logoUrl ? (
-              <Image src={logoUrl} alt={siteName} width={190} height={48} priority className={cn('w-auto max-w-full object-contain object-left transition-all', scrolled ? 'h-8 sm:h-9' : 'h-9 sm:h-11')} />
+              <Image src={logoUrl} alt={siteName} width={190} height={48} priority className="h-9 w-auto max-w-full object-contain object-left sm:h-10" />
             ) : (
               <span className="font-display text-2xl leading-none">{siteName}</span>
             )}

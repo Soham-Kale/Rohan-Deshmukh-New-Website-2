@@ -21,8 +21,8 @@ export async function Footer({ locale }: { locale: Locale }) {
         <span className="flex-1 bg-highlight" />
         <span className="flex-1 bg-frame" />
       </div>
-      <div className="container-x grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
-        <div>
+      <div className="container-x grid grid-cols-2 gap-x-6 gap-y-12 py-16 md:py-20 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+        <div className="col-span-2 lg:col-span-1">
           {logo ? <Image src={logo} alt={settings.siteName} width={200} height={52} className="h-12 w-auto" /> : <p className="font-display text-2xl text-white">{settings.siteName}</p>}
           {settings.tagline && <p className="mt-4 max-w-sm text-white/65">{settings.tagline}</p>}
           <ul className="mt-6 space-y-3">

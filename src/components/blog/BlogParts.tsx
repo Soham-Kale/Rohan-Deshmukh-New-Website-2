@@ -93,41 +93,37 @@ export function LeadStory({ post, locale, badge, readFull }: { post: Post; local
   const img = mediaUrl(post.coverImage, 'hero') ?? mediaUrl(post.coverImage, 'card')
   const cat = primaryCategory(post)
   return (
-    <article className="group overflow-hidden rounded-2xl border border-line bg-white">
-      <div className="relative aspect-[4/3] overflow-hidden bg-charcoal-900 sm:aspect-[16/10]">
+    <article className="group">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-charcoal-900 sm:aspect-[16/10]">
         {img && (
           <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill priority sizes="(max-width:1024px) 100vw, 60vw" className="object-cover transition duration-700 group-hover:scale-[1.03]" style={photoFit(post.coverImage, 1.6, 0.6)} />
         )}
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-charcoal-950/85 via-charcoal-900/30 to-transparent" />
-        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-md bg-saffron-600 px-2.5 py-1 text-xs font-semibold text-white shadow">
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-charcoal-950/85 via-charcoal-900/25 to-transparent" />
+        <span className="absolute left-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-saffron-600 px-3 py-1 text-xs font-semibold text-white">
           <Sparkles className="size-3.5" /> {badge}
         </span>
-        <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
+        <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
           <CategoryChip cat={cat} dark />
           <h3 className="mt-3 line-clamp-3 text-2xl leading-snug text-white md:text-[2rem]">
             <Link href={`/blog/${post.slug}`} className="after:absolute after:inset-0">{post.title}</Link>
           </h3>
         </div>
       </div>
-      <div className="p-5 md:p-7">
-        {post.excerpt && <p className="line-clamp-3 text-[1.02rem] leading-relaxed text-ink">{post.excerpt}</p>}
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-          <PostMeta post={post} locale={locale} withCategory={false} />
-          <Link href={`/blog/${post.slug}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-saffron-700 hover:text-saffron-600">
-            {readFull} <ArrowRight className="size-4" />
-          </Link>
-        </div>
+      {post.excerpt && <p className="mt-6 line-clamp-3 text-[1.05rem] leading-relaxed text-ink">{post.excerpt}</p>}
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+        <PostMeta post={post} locale={locale} withCategory={false} />
+        <Link href={`/blog/${post.slug}`} className="more-link text-sm">
+          {readFull} <ArrowRight className="size-4" />
+        </Link>
       </div>
     </article>
   )
 }
 
-/* ---------- compact list with thumbnails (sidebar "latest") ---------- */
-
 export function LatestList({ posts, locale, title, footer }: { posts: Post[]; locale: string; title: string; footer?: string }) {
   return (
-    <aside className="flex flex-col rounded-2xl border border-line bg-white p-5 md:p-6">
-      <h3 className="flex items-center gap-2.5 border-b border-line pb-3 text-lg text-charcoal-900">
+    <aside className="flex flex-col">
+      <h3 className="flex items-center gap-2.5 border-b-2 border-charcoal-900 pb-3 text-lg text-charcoal-900">
         <span aria-hidden className="size-2 rounded-full bg-saffron-500" /> {title}
       </h3>
       <ul className="divide-y divide-line">
@@ -135,16 +131,16 @@ export function LatestList({ posts, locale, title, footer }: { posts: Post[]; lo
           const img = mediaUrl(p.coverImage, 'thumb') ?? mediaUrl(p.coverImage, 'card')
           const cat = primaryCategory(p)
           return (
-            <li key={p.id} className="group relative grid grid-cols-[1fr_5.5rem] gap-4 py-4">
+            <li key={p.id} className="group relative grid grid-cols-[1fr_5.5rem] gap-4 py-5">
               <div className="min-w-0">
                 {cat && <p className="text-[0.75rem] font-semibold text-saffron-700">{cat.title}</p>}
-                <h4 className="mt-0.5 line-clamp-2 text-[0.98rem] font-semibold leading-snug text-charcoal-900 group-hover:text-saffron-700">
+                <h4 className="mt-0.5 line-clamp-2 text-[1rem] font-semibold leading-snug text-charcoal-900 transition group-hover:text-saffron-700">
                   <Link href={`/blog/${p.slug}`} className="after:absolute after:inset-0">{p.title}</Link>
                 </h4>
                 <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted"><CalendarDays className="size-3.5" />{formatDate(p.publishedAt, locale)}</p>
               </div>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-cream">
-                {img && <Image src={img} alt="" fill sizes="96px" className="object-cover" style={photoFit(p.coverImage, 4 / 3, 0.6)} />}
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-cream">
+                {img && <Image src={img} alt="" fill sizes="96px" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(p.coverImage, 4 / 3, 0.6)} />}
               </div>
             </li>
           )
@@ -154,8 +150,6 @@ export function LatestList({ posts, locale, title, footer }: { posts: Post[]; lo
     </aside>
   )
 }
-
-/* ---------- article row (main list) ---------- */
 
 export function BlogRow({ post, locale, readMore, share }: { post: Post; locale: string; readMore: string; share?: React.ReactNode }) {
   const img = mediaUrl(post.coverImage, 'card')
@@ -186,14 +180,14 @@ export function BlogRow({ post, locale, readMore, share }: { post: Post; locale:
 export function TopicsCard({ cats, active, title, allLabel }: { cats: Category[]; active?: string; title: string; allLabel: string }) {
   const items = [{ slug: '', title: allLabel }, ...cats.map((c) => ({ slug: c.slug, title: c.title }))]
   return (
-    <section className="rounded-2xl border border-line bg-white p-5 md:p-6">
-      <h3 className="flex items-center gap-2.5 border-b border-line pb-3 text-lg text-charcoal-900"><Tag className="size-5 text-saffron-600" /> {title}</h3>
-      <div className="mt-4 flex flex-wrap gap-2">
+    <section>
+      <h3 className="flex items-center gap-2.5 border-b-2 border-charcoal-900 pb-3 text-lg text-charcoal-900"><Tag className="size-5 text-saffron-600" /> {title}</h3>
+      <div className="mt-5 flex flex-wrap gap-2">
         {items.map((c) => {
           const on = (active ?? '') === c.slug
           return (
             <Link key={c.slug || 'all'} href={c.slug ? `/blog?category=${c.slug}` : '/blog'} aria-current={on ? 'true' : undefined}
-              className={cn('rounded-lg px-3 py-1.5 text-sm font-medium transition', on ? 'bg-charcoal-900 text-white' : 'bg-cream text-charcoal-800 hover:bg-charcoal-900 hover:text-white')}>
+              className={cn('rounded-full px-3.5 py-1.5 text-sm font-medium transition', on ? 'bg-charcoal-900 text-white' : 'bg-white text-charcoal-800 hover:bg-charcoal-900 hover:text-white')}>
               {c.title}
             </Link>
           )
@@ -205,16 +199,16 @@ export function TopicsCard({ cats, active, title, allLabel }: { cats: Category[]
 
 export function RecentList({ posts, locale, title }: { posts: Post[]; locale: string; title: string }) {
   return (
-    <section className="rounded-2xl border border-line bg-white p-5 md:p-6">
-      <h3 className="flex items-center gap-2.5 border-b border-line pb-3 text-lg text-charcoal-900"><TrendingUp className="size-5 text-saffron-600" /> {title}</h3>
+    <section>
+      <h3 className="flex items-center gap-2.5 border-b-2 border-charcoal-900 pb-3 text-lg text-charcoal-900"><TrendingUp className="size-5 text-saffron-600" /> {title}</h3>
       <ol className="divide-y divide-line">
         {posts.map((p, i) => (
-          <li key={p.id} className="group relative flex gap-3 py-3.5">
-            <span className="grid size-7 shrink-0 place-items-center rounded-full bg-saffron-50 text-sm font-semibold text-saffron-700">
+          <li key={p.id} className="group relative flex gap-4 py-4">
+            <span className="font-display text-xl leading-none text-saffron-500">
               {locale === 'mr' ? toMarathiDigits(i + 1) : i + 1}
             </span>
             <div className="min-w-0">
-              <h4 className="line-clamp-2 text-[0.95rem] font-semibold leading-snug text-charcoal-900 group-hover:text-saffron-700">
+              <h4 className="line-clamp-2 text-[0.97rem] font-semibold leading-snug text-charcoal-900 transition group-hover:text-saffron-700">
                 <Link href={`/blog/${p.slug}`} className="after:absolute after:inset-0">{p.title}</Link>
               </h4>
               <p className="mt-1 text-xs text-muted">{primaryCategory(p)?.title ? `${primaryCategory(p)!.title} • ` : ''}{formatDate(p.publishedAt, locale)}</p>
@@ -226,23 +220,22 @@ export function RecentList({ posts, locale, title }: { posts: Post[]; locale: st
   )
 }
 
-/* ---------- card (related articles, home page) ---------- */
-
 export function NewsCard({ post, locale }: { post: Post; locale: string }) {
   const img = mediaUrl(post.coverImage, 'card')
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(20,33,61,.3)]">
-      <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-        {img && <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(post.coverImage, 1.6, 0.6)} />}
-        <span className="absolute left-3 top-3"><CategoryChip cat={primaryCategory(post)} dark /></span>
+    <article className="tile group">
+      <div className="tile-media aspect-[16/10]">
+        {img && <Image src={img} alt={mediaAlt(post.coverImage, post.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" style={photoFit(post.coverImage, 1.6, 0.6)} />}
+        <span className="absolute left-3 top-3 z-10"><CategoryChip cat={primaryCategory(post)} dark /></span>
       </div>
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="line-clamp-2 text-lg leading-snug text-charcoal-900 group-hover:text-saffron-700">
+      <div className="tile-body">
+        <h3 className="tile-title line-clamp-2 text-lg">
           <Link href={`/blog/${post.slug}`} className="after:absolute after:inset-0">{post.title}</Link>
         </h3>
-        {post.excerpt && <p className="mt-2 line-clamp-3 text-[0.93rem] text-muted">{post.excerpt}</p>}
-        <PostMeta post={post} locale={locale} withCategory={false} className="mt-auto justify-between border-t border-line pt-3.5 [&>span[aria-hidden]]:hidden" />
+        {post.excerpt && <p className="tile-text line-clamp-3 text-[0.95rem]">{post.excerpt}</p>}
+        <PostMeta post={post} locale={locale} withCategory={false} className="mt-auto pt-4 [&>span[aria-hidden]]:hidden" />
       </div>
     </article>
   )
 }
+

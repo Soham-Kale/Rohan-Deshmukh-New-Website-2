@@ -26,12 +26,12 @@ export function Pagination({ page, totalPages, base, query = {} }: { page: numbe
 
 export function FilterChips({ items, active, base, param = 'category' }: { items: { label: string; value: string }[]; active?: string; base: string; param?: string }) {
   return (
-    <div className="no-scrollbar -mx-4 mb-8 flex gap-2 overflow-x-auto px-4">
+    <div className="no-scrollbar -mx-4 mb-10 flex gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
       {items.map((it) => {
         const on = (active ?? '') === it.value
         return (
           <Link key={it.value || 'all'} href={it.value ? `${base}?${param}=${encodeURIComponent(it.value)}` : base} aria-current={on ? 'true' : undefined}
-            className={cn('shrink-0 rounded-full border px-4 py-2 text-[0.95rem] font-medium transition', on ? 'border-charcoal-900 bg-charcoal-900 text-white' : 'border-line bg-white text-muted hover:text-charcoal-900')}>
+            className={cn('shrink-0 rounded-full border px-4 py-2 text-[0.95rem] font-medium transition', on ? 'border-charcoal-900 bg-charcoal-900 text-white' : 'border-charcoal-900/10 bg-white text-muted hover:border-charcoal-900/30 hover:text-charcoal-900')}>
             {it.label}
           </Link>
         )

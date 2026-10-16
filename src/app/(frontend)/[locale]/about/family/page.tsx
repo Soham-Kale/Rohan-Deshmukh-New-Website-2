@@ -30,27 +30,27 @@ export default async function FamilyPage({ params }: P) {
 
   return (
     <InnerPage path="/about/family" locale={locale} title={block?.heading || t('title')} subtitle={t('intro')}>
-      <div className="space-y-14 md:space-y-20">
+      <div className="space-y-16 md:space-y-24">
         {members.map((m, i) => {
           const img = mediaUrl(m.image, 'card')
           const paras = (m.text ?? '').split(/\n\s*\n/).filter(Boolean)
           return (
-            <article key={m.id ?? i} className={cn('grid items-start gap-6 md:grid-cols-[0.8fr_1.2fr] md:gap-10', i % 2 === 1 && 'md:grid-cols-[1.2fr_0.8fr]')}>
+            <article key={m.id ?? i} className={cn('grid items-center gap-8 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-16', i % 2 === 1 && 'md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]')}>
               {img && (
-                <div className={cn('overflow-hidden rounded-3xl bg-cream md:sticky md:top-28', i % 2 === 1 && 'md:order-2')}>
+                <div className={cn('overflow-hidden rounded-[1.75rem] bg-cream', i % 2 === 1 && 'md:order-2')}>
                   <Image src={img} alt={mediaAlt(m.image, m.name ?? '')} width={mediaSize(m.image).width} height={mediaSize(m.image).height} sizes="(max-width:768px) 100vw, 40vw" className="h-auto w-full" />
                 </div>
               )}
               <div>
                 {m.relation && <p className="eyebrow">{m.relation}</p>}
-                <h2 className="h-section">{m.name}</h2>
-                <div className="prose-rd mt-5">{paras.map((p, k) => <p key={k}>{p}</p>)}</div>
+                <h2 className="mt-2 text-[1.8rem] leading-tight text-charcoal-900 md:text-[2.3rem]">{m.name}</h2>
+                <div className="prose-rd mt-5 max-w-2xl">{paras.map((p, k) => <p key={k}>{p}</p>)}</div>
               </div>
             </article>
           )
         })}
       </div>
-      <div className="mt-14 flex justify-center">
+      <div className="mt-16 border-t border-line pt-10 md:mt-24">
         <Link href="/lokmangal/parivar" className="btn btn-dark">{t('parivar')} <ArrowRight className="size-4" /></Link>
       </div>
     </InnerPage>

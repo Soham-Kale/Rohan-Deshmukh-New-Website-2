@@ -47,7 +47,7 @@ function Profile({ hero, facts }: { hero: MediaText; facts: Cards | null }) {
   const img = mediaUrl(hero.image, 'card')
   return (
     /* photo in a fixed 5:6 frame (about 380 × 456 px on desktop), text centred beside it */
-    <section className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-[minmax(0,380px)_minmax(0,1fr)] md:gap-12">
+    <section className="grid items-center gap-10 md:grid-cols-[minmax(0,380px)_minmax(0,1fr)] md:gap-16 lg:gap-20">
       {img && (
         <div className="relative mx-auto aspect-[5/6] w-full max-w-[380px] overflow-hidden rounded-3xl bg-cream shadow-[0_24px_60px_-34px_rgb(20_33_61/0.45)]">
           <Image src={img} alt={mediaAlt(hero.image, hero.heading ?? '')} fill sizes="(max-width:768px) 92vw, 380px" priority className="object-cover" style={{ objectPosition: mediaPosition(hero.image) }} />
@@ -56,17 +56,18 @@ function Profile({ hero, facts }: { hero: MediaText; facts: Cards | null }) {
       <div className="min-w-0">
         {hero.eyebrow && <p className="eyebrow">{hero.eyebrow}</p>}
         {hero.heading && <h2 className="mt-2 text-[1.9rem] leading-tight text-charcoal-900 md:text-[2.4rem]">{hero.heading}</h2>}
+        {/* quick facts as a plain row under the name, divided by a thin rule */}
         {!!facts?.items?.length && (
-          <dl className="mt-5 flex flex-wrap gap-2.5">
+          <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-line py-5 sm:grid-cols-4">
             {facts.items.map((f) => (
-              <div key={f.id} className="rounded-xl border border-line bg-white px-3.5 py-2">
-                <dt className="text-[0.7rem] font-semibold uppercase tracking-wide text-saffron-700">{f.title}</dt>
-                <dd className="text-[0.95rem] font-semibold leading-snug text-charcoal-900">{f.text}</dd>
+              <div key={f.id}>
+                <dt className="text-[0.78rem] font-semibold text-saffron-700">{f.title}</dt>
+                <dd className="mt-0.5 font-semibold leading-snug text-charcoal-900">{f.text}</dd>
               </div>
             ))}
           </dl>
         )}
-        <div className="mt-5">
+        <div className="mt-6 max-w-2xl">
           <RichText data={hero.body} />
         </div>
       </div>

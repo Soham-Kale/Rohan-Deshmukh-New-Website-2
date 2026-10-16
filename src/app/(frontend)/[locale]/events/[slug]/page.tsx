@@ -38,14 +38,14 @@ export default async function EventPage({ params }: P) {
           : [{ label: locale === 'mr' ? 'लोकमंगल फाऊंडेशन' : 'Lokmangal Foundation', href: '/lokmangal/foundation' }, { label: locale === 'mr' ? 'कार्यक्रम' : 'Events', href: '/lokmangal/foundation#events' }, { label: d.title }]
       }>
       {(d.body || d.facts?.length) && (
-        <div className="mb-12 grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-12">
-          {d.body && <div className="prose-rd">{d.body.split(/\n\s*\n/).map((para, i) => <p key={i}>{para}</p>)}</div>}
+        <div className="mb-16 grid gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-20">
+          {d.body && <div className="prose-rd max-w-3xl">{d.body.split(/\n\s*\n/).map((para, i) => <p key={i}>{para}</p>)}</div>}
           {!!d.facts?.length && (
-            <dl className="self-start rounded-2xl bg-charcoal-900 p-6 text-white md:p-7">
+            <dl className="self-start border-t-2 border-charcoal-900">
               {d.facts.map((f, i) => (
-                <div key={f.id ?? i} className={i ? 'mt-4 border-t border-white/10 pt-4' : ''}>
-                  <dt className="text-sm font-semibold text-highlight">{f.label}</dt>
-                  <dd className="mt-1 text-[1.02rem] text-white/90">{f.value}</dd>
+                <div key={f.id ?? i} className="border-b border-line py-4">
+                  <dt className="text-sm font-semibold text-saffron-700">{f.label}</dt>
+                  <dd className="mt-1 text-[1.02rem] font-medium text-charcoal-900">{f.value}</dd>
                 </div>
               ))}
             </dl>
@@ -58,8 +58,8 @@ export default async function EventPage({ params }: P) {
           label: locale === 'mr' ? toMarathiDigits(e.year) : String(e.year),
           content: (
             <div>
-              {e.title && <h2 className="text-2xl text-charcoal-900">{e.title}</h2>}
-              {e.text && <p className="mb-6 mt-2 text-muted">{e.text}</p>}
+              {e.title && <h2 className="text-[1.6rem] leading-tight text-charcoal-900 md:text-[2rem]">{e.title}</h2>}
+              {e.text && <p className="lead mb-8 mt-3 max-w-3xl">{e.text}</p>}
               <Gallery images={toGallery(e.images as never, `${d.title} ${e.year}`)} />
             </div>
           ),

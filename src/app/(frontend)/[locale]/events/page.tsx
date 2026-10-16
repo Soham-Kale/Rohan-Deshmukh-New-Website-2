@@ -51,25 +51,25 @@ export default async function EventsPage({ params }: P) {
     <InnerPage path="/events" locale={locale} title={t('title')} subtitle={t('intro')} sideMenu={false} wide>
       <section>
         <SectionTitle>{t('initiatives')}</SectionTitle>
-        <p className="mb-7 mt-3 max-w-3xl text-muted">{t('initiativesIntro')}</p>
+        <p className="lead mb-9 mt-4 max-w-3xl">{t('initiativesIntro')}</p>
         <CardSlider cards={slides} readMore={t('readMore')} prevLabel={t('prev')} nextLabel={t('next')} />
       </section>
 
       {featured.length > 0 && (
-        <section className="mt-16">
+        <section className="mt-20 md:mt-24">
           <SectionTitle>{t('featured')}</SectionTitle>
-          <div className="mt-7">
+          <div className="mt-9">
             <CardSlider cards={featured} readMore={t('readMore')} prevLabel={t('prev')} nextLabel={t('next')} />
           </div>
         </section>
       )}
 
       {posts.length > 0 && (
-        <section className="mt-16">
+        <section className="mt-20 md:mt-24">
           <SectionTitle aside={<Link href="/blog" className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-saffron-700 hover:text-saffron-600">{tc('viewAll')} <ArrowRight className="size-4" /></Link>}>
             {t('blog')}
           </SectionTitle>
-          <div className="mt-7 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map((post) => <NewsCard key={post.id} post={post} locale={locale} />)}</div>
+          <div className="mt-9 grid gap-x-7 gap-y-12 md:grid-cols-2 lg:grid-cols-3">{posts.map((post) => <NewsCard key={post.id} post={post} locale={locale} />)}</div>
         </section>
       )}
     </InnerPage>

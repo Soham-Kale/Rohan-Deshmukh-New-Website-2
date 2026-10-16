@@ -23,15 +23,15 @@ export default async function PhotosPage({ params }: P) {
   const res = await (await payload()).find({ collection: 'albums', limit: 60, locale, depth: 1, sort: '-date' })
   return (
     <InnerPage path="/media/photos" locale={locale} title={t('photoGallery')}>
-      <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
         {res.docs.map((a) => {
           const cover = mediaUrl(a.cover, 'card') || mediaUrl(a.photos?.[0] as never, 'card')
           return (
-            <Link key={a.id} href={`/media/photos/${a.slug}`} className="group block text-center">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-cream shadow-sm ring-1 ring-charcoal-900/5 transition group-hover:shadow-lg">
-                {cover && <Image src={cover} alt={mediaAlt(a.cover, a.title)} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw" className="object-cover transition duration-500 group-hover:scale-105" style={photoFit(a.cover, 4 / 3, 0.7)} />}
+            <Link key={a.id} href={`/media/photos/${a.slug}`} className="tile group text-center">
+              <div className="tile-media aspect-[4/3]">
+                {cover && <Image src={cover} alt={mediaAlt(a.cover, a.title)} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw" className="object-cover" style={photoFit(a.cover, 4 / 3, 0.7)} />}
               </div>
-              <h2 className="mt-4 text-xl font-semibold text-charcoal-900 transition group-hover:text-saffron-700">{a.title}</h2>
+              <h2 className="tile-title mt-5 text-[1.35rem]">{a.title}</h2>
             </Link>
           )
         })}

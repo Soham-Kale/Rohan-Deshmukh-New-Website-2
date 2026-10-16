@@ -68,7 +68,7 @@ export function FamilySpotlight({ members, panels, labels }: { members: Spotligh
         })}
       </div>
 
-      <div className="mt-6 rounded-[1.75rem] border border-line bg-white p-4 shadow-[0_18px_50px_-30px_rgb(20_33_61/0.35)] sm:p-6 md:p-7">
+      <div className="mt-10 border-t border-line pt-10 md:mt-12 md:pt-12">
         {members.map((m, i) => (
           <div
             key={m.key}
@@ -78,11 +78,11 @@ export function FamilySpotlight({ members, panels, labels }: { members: Spotligh
             hidden={i !== active}
             className={cn(i === active && 'animate-fade-up')}
           >
-            <div className="grid items-start gap-6 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-8">
+            <div className="grid items-start gap-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-14">
               {panels[i]?.media}
               <div className="min-w-0 md:py-2">
                 <p className="eyebrow">{m.relation}</p>
-                <h3 className="mt-2 text-2xl leading-snug text-charcoal-900 md:text-[1.9rem]">{m.title}</h3>
+                <h3 className="mt-2 text-[1.7rem] leading-snug text-charcoal-900 md:text-[2.2rem]">{m.title}</h3>
                 <div className="mt-4">{panels[i]?.body}</div>
                 {count > 1 && (
                   <div className="mt-7 flex flex-wrap gap-3">

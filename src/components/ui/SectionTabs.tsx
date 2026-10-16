@@ -35,8 +35,8 @@ export function SectionTabs({ tabs, label }: { tabs: { id: string; label: string
   }, [tabs])
 
   return (
-    <nav aria-label={label} className="sticky top-16 z-30 -mx-4 mb-10 border-b border-line bg-paper/95 px-4 backdrop-blur md:mx-0 md:rounded-2xl md:border md:px-2">
-      <ul className="no-scrollbar flex gap-1 overflow-x-auto py-2">
+    <nav aria-label={label} className="sticky top-[4.5rem] z-30 -mx-4 mb-14 border-b border-line bg-paper/95 px-4 backdrop-blur md:mx-0 md:px-0">
+      <ul className="no-scrollbar flex gap-6 overflow-x-auto md:gap-9">
         {tabs.map((t) => (
           <li key={t.id} className="shrink-0">
             <a
@@ -44,8 +44,8 @@ export function SectionTabs({ tabs, label }: { tabs: { id: string; label: string
               onClick={() => setActive(t.id)}
               aria-current={active === t.id ? 'true' : undefined}
               className={cn(
-                'block rounded-full px-5 py-2.5 text-[0.98rem] font-semibold transition',
-                active === t.id ? 'bg-charcoal-900 text-white' : 'text-muted hover:bg-cream hover:text-charcoal-900',
+                'relative block py-4 text-[1rem] font-semibold transition after:absolute after:inset-x-0 after:-bottom-px after:h-[3px] after:rounded-full after:transition',
+                active === t.id ? 'text-charcoal-900 after:bg-saffron-500' : 'text-muted after:bg-transparent hover:text-charcoal-900',
               )}
             >
               {t.label}

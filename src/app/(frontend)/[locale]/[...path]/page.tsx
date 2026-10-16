@@ -61,7 +61,7 @@ export default async function CmsPage({ params }: Params) {
   const page = isRemovedPath(full) ? null : await getPage(full, locale)
   if (!page) notFound()
   return (
-    <InnerPage path={full} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} sideMenu={page.showSideMenu ?? true} menuStyle={full === INTRO_PATH ? 'tabs' : 'side'}>
+    <InnerPage path={full} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)}>
       {full === FAMILY_PATH ? (
         <FamilyBackground blocks={page.layout} locale={locale} />
       ) : full === INTRO_PATH ? (

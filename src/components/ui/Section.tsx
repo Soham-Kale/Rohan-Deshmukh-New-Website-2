@@ -9,21 +9,35 @@ type Props = {
   action?: React.ReactNode
   intro?: string | null
   id?: string
+  /** centred heading (sections that show a list or grid) */
+  center?: boolean
 }
 
-export function Section({ eyebrow, heading, children, className, dark, action, intro, id }: Props) {
+/** Section heading on its own: eyebrow → title → intro (left or centred) */
+export function SectionHead({ eyebrow, heading, intro, center, className, as: Tag = 'h2' }: { eyebrow?: string | null; heading?: string | null; intro?: string | null; center?: boolean; className?: string; as?: 'h2' | 'h3' }) {
+  if (!eyebrow && !heading && !intro) return null
   return (
-    <section id={id} className={cn('py-16 md:py-24', dark && 'on-dark grain bg-charcoal-900 text-white', className)}>
+    <div className={cn('section-head', center && 'is-center', className)}>
+      {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+      {heading && <Tag className="h-section">{heading}</Tag>}
+      {intro && <p className="lead">{intro}</p>}
+    </div>
+  )
+}
+
+/** A full-width band with the standard vertical rhythm and heading */
+export function Section({ eyebrow, heading, children, className, dark, action, intro, id, center }: Props) {
+  const head = <SectionHead eyebrow={eyebrow} heading={heading} intro={intro} center={center && !action} />
+  return (
+    <section id={id} className={cn('section', dark && 'on-dark grain bg-charcoal-900 text-white', className)}>
       <div className="container-x">
-        {(eyebrow || heading || action) && (
-          <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-3xl">
-              {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-              {heading && <h2 className="h-section">{heading}</h2>}
-              {intro && <p className={cn('mt-4 text-lg', dark ? 'text-white/75' : 'text-muted')}>{intro}</p>}
-            </div>
-            {action}
+        {action ? (
+          <div className="section-head-row">
+            {head}
+            <div className="shrink-0">{action}</div>
           </div>
+        ) : (
+          head
         )}
         {children}
       </div>

@@ -97,21 +97,21 @@ export default async function FoundationPage({ params }: P) {
   const slider = { readMore: te('readMore'), prevLabel: te('prev'), nextLabel: te('next') }
 
   return (
-    <InnerPage path={PATH} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} sideMenu={false} wide>
+    <InnerPage path={PATH} locale={locale} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)}>
       <SectionTabs label={x.tabs} tabs={[{ id: 'about', label: x.about }, { id: 'events', label: x.events }, { id: 'projects', label: x.projects }]} />
 
       <section id="about" className="scroll-mt-36">
         <PageBlocks blocks={about} />
       </section>
 
-      <section id="events" className="mt-16 scroll-mt-36 md:mt-20">
+      <section id="events" className="mt-20 scroll-mt-36 md:mt-28">
         <SectionTitle aside={viewAll('/events', x.allEvents)}>{x.events}</SectionTitle>
-        <p className="mb-7 mt-3 max-w-3xl text-muted">{x.eventsIntro}</p>
+        <p className="lead mb-9 mt-4 max-w-3xl">{x.eventsIntro}</p>
         {eventGroups.length ? (
-          <div className="space-y-10">
+          <div className="space-y-14">
             {eventGroups.map((g) => (
               <div key={g.label}>
-                {eventGroups.length > 1 && <h3 className="mb-4 text-lg font-semibold text-charcoal-900 md:text-xl">{g.label}</h3>}
+                {eventGroups.length > 1 && <h3 className="mb-6 text-[1.25rem] font-semibold text-charcoal-900 md:text-[1.4rem]">{g.label}</h3>}
                 <CardSlider cards={g.cards} {...slider} />
               </div>
             ))}
@@ -121,14 +121,14 @@ export default async function FoundationPage({ params }: P) {
         )}
       </section>
 
-      <section id="projects" className="mt-16 scroll-mt-36 md:mt-20">
+      <section id="projects" className="mt-20 scroll-mt-36 md:mt-28">
         {/* same layout as lokmangalfoundation.com/projects → "Explore all 23 social initiatives" */}
-        <div className="relative left-1/2 w-screen -translate-x-1/2 border-y border-line bg-gradient-to-b from-paper via-white to-cream/60 py-14 md:py-20">
+        <div className="section band-cream relative left-1/2 w-screen -translate-x-1/2">
           <div className="container-x">
-            <div className="mx-auto mb-8 max-w-3xl text-center md:mb-10">
+            <div className="section-head is-center">
               <p className="eyebrow justify-center">{x.projectsEyebrow}</p>
               <h2 className="h-section">{x.projectsHeading(total)}</h2>
-              <p className="mt-3 text-muted">{x.projectsIntro}</p>
+              <p className="lead">{x.projectsIntro}</p>
             </div>
             {projectCards.length ? (
               <ProjectsExplorer items={projectCards} categories={projectCategories} labels={x.explorer} locale={locale} />
@@ -141,7 +141,7 @@ export default async function FoundationPage({ params }: P) {
 
 
       {closing.length > 0 && (
-        <div className="mt-16 md:mt-20">
+        <div className="mt-20 md:mt-28">
           <PageBlocks blocks={closing} />
         </div>
       )}

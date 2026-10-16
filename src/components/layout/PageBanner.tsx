@@ -7,37 +7,53 @@ import { cn } from '@/lib/utils'
 export type Crumb = { label: string; href?: string }
 export type BannerTab = { label: string; href: string; active?: boolean }
 
-export async function PageBanner({ title, subtitle, crumbs = [], image, imagePosition, tabs, tabsLabel }: { title: string; subtitle?: string | null; crumbs?: Crumb[]; image?: string | null; imagePosition?: string; tabs?: BannerTab[]; tabsLabel?: string }) {
+/**
+ * The top of every inner page: breadcrumb, title and one line of introduction on the navy band,
+ * optional photo behind it, and the section's sibling pages as tabs on its bottom edge.
+ * Same height, spacing and type on every page, so moving between pages never shifts the layout.
+ */
+export async function PageBanner({
+  title, subtitle, crumbs = [], image, imagePosition, tabs, tabsLabel, compact, eyebrow, children,
+}: {
+  title: string; eyebrow?: string | null; subtitle?: string | null; crumbs?: Crumb[]; image?: string | null; imagePosition?: string
+  tabs?: BannerTab[]; tabsLabel?: string
+  /** article pages: long headline in a smaller size */
+  compact?: boolean
+  /** extra line under the title (e.g. article byline) */
+  children?: React.ReactNode
+}) {
   const t = await getTranslations('common')
   return (
     <section className="on-dark grain relative overflow-hidden bg-charcoal-900 text-white">
       {image && (
         <>
-          <Image src={image} alt="" fill priority sizes="100vw" className="object-cover opacity-35" style={{ objectPosition: imagePosition }} />
-          <div className="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-900/85 to-charcoal-900/40" />
+          <Image src={image} alt="" fill priority sizes="100vw" className="object-cover opacity-30" style={{ objectPosition: imagePosition }} />
+          <div className="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-900/85 to-charcoal-900/30" />
         </>
       )}
       <div aria-hidden className="absolute -right-24 -top-24 size-96 rounded-full border-[40px] border-saffron-500/10" />
-      <div className={cn('container-x relative py-14 md:py-20', !!tabs?.length && 'pb-10 md:pb-12')}>
+      <div className={cn('container-x relative pt-12 md:pt-16', tabs?.length ? 'pb-10 md:pb-12' : 'pb-14 md:pb-20')}>
         <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-white/65">
+          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-white/60">
             <li>
-              <Link href="/" className="hover:text-saffron-300">{t('home')}</Link>
+              <Link href="/" className="transition hover:text-saffron-300">{t('home')}</Link>
             </li>
             {crumbs.map((c, i) => (
-              <li key={i} className="flex items-center gap-1.5">
-                <ChevronRight className="size-3.5" />
+              <li key={i} className="flex min-w-0 items-center gap-1.5">
+                <ChevronRight aria-hidden className="size-3.5 shrink-0" />
                 {c.href && i < crumbs.length - 1 ? (
-                  <Link href={c.href} className="hover:text-saffron-300">{c.label}</Link>
+                  <Link href={c.href} className="transition hover:text-saffron-300">{c.label}</Link>
                 ) : (
-                  <span aria-current={i === crumbs.length - 1 ? 'page' : undefined} className={i === crumbs.length - 1 ? 'text-white' : ''}>{c.label}</span>
+                  <span aria-current={i === crumbs.length - 1 ? 'page' : undefined} className={cn(i === crumbs.length - 1 && 'line-clamp-1 text-white/90')}>{c.label}</span>
                 )}
               </li>
             ))}
           </ol>
         </nav>
-        <h1 className="animate-fade-up mt-4 max-w-4xl text-4xl md:text-6xl">{title}</h1>
-        {subtitle && <p className="mt-4 max-w-2xl text-lg text-white/75">{subtitle}</p>}
+        {eyebrow && <p className="eyebrow mt-6">{eyebrow}</p>}
+        <h1 className={cn('animate-fade-up max-w-4xl text-white', eyebrow ? 'mt-2' : 'mt-5', compact ? 'text-[1.85rem] leading-[1.3] md:text-[2.6rem]' : 'text-[2.4rem] leading-[1.15] md:text-[3.4rem]')}>{title}</h1>
+        {subtitle && <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/75">{subtitle}</p>}
+        {children}
       </div>
       {/* sibling pages as tabs sitting on the bottom edge of the banner; the active one opens into the page */}
       {!!tabs?.length && (

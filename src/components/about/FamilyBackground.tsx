@@ -56,15 +56,15 @@ export function FamilyBackground({ blocks, locale }: { blocks?: Block[] | null; 
   })
 
   return (
-    <div className="space-y-14 md:space-y-16">
+    <div className="space-y-16 md:space-y-24">
       {before.length > 0 && <PageBlocks blocks={before} />}
 
       <section>
         {intro && (
-          <div className="mb-9 grid gap-4 md:mb-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-10">
+          <div className="mb-10 grid gap-5 md:mb-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
             <div>
               {intro.eyebrow && <p className="eyebrow">{intro.eyebrow}</p>}
-              {intro.heading && <h2 className="mt-1 text-2xl text-charcoal-900 md:text-3xl">{intro.heading}</h2>}
+              {intro.heading && <h2 className="mt-2 text-[1.7rem] leading-tight text-charcoal-900 md:text-[2.2rem]">{intro.heading}</h2>}
             </div>
             <RichText data={intro.body} />
           </div>
