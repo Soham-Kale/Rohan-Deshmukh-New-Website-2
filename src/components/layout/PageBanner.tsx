@@ -85,7 +85,7 @@ export async function PageBanner({
           <h1
             className={cn(
               'animate-fade-up max-w-4xl',
-              onPhoto ? 'text-white [text-shadow:0_2px_24px_rgb(18_21_25/0.35)]' : 'text-charcoal-900',
+              onPhoto ? 'text-white [text-shadow:0_2px_24px_rgb(14_24_48/0.35)]' : 'text-charcoal-900',
               eyebrow ? 'mt-2' : 'mt-4',
               compact ? 'text-[1.9rem] leading-[1.3] md:text-[2.7rem]' : 'text-[2.2rem] leading-[1.18] md:text-[3.2rem]',
             )}

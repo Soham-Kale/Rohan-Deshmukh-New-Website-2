@@ -142,7 +142,7 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="overflow-hidden rounded-[1.6rem] bg-surface shadow-[0_24px_60px_-34px_rgb(28_32_38/0.35)] ring-1 ring-charcoal-900/[0.06]">
+      <div className="overflow-hidden rounded-[1.6rem] bg-surface shadow-[0_24px_60px_-34px_rgb(20_33_61/0.35)] ring-1 ring-charcoal-900/[0.06]">
         <div key={p.id} aria-roledescription="slide" aria-label={`${n(i + 1)} / ${n(count)}`} className="grid animate-fade-up md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
           <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[340px]">
             <Photo p={p} sizes="(max-width:768px) 100vw, 640px" />

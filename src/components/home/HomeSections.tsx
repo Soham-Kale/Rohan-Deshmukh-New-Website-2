@@ -118,7 +118,7 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
         {img && (
           /* portrait on a soft saffron block, slightly offset — warmer than an outlined frame */
           <div className="photo-backdrop mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(28_32_38/0.55)]">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(20_33_61/0.55)]">
               <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover" style={photoFit(b.image, 0.8)} />
             </div>
           </div>
@@ -255,7 +255,7 @@ async function InitiativesSection({ b, locale }: { b: Of<'initiativesShowcase'>;
           {img && (
             /* the Foundation at work, on a soft saffron block */
             <div className="photo-backdrop mx-auto w-full max-w-xl lg:max-w-none">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(28_32_38/0.55)]">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(20_33_61/0.55)]">
                 <Image src={img} alt={mediaAlt(intro.image, intro.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 46vw" className="object-cover" style={photoFit(intro.image, 4 / 3)} />
               </div>
             </div>
@@ -360,8 +360,8 @@ function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
           {b.items?.map((g) => (
             <li key={g.id} className="stat-card">
               <p className="stat-value">{g.value}</p>
-              {g.title && <p className="mt-2 leading-snug text-charcoal-900">{g.title}</p>}
-              {g.text && <p className="mt-0.5 text-sm leading-snug text-muted">{g.text}</p>}
+              {g.title && <p className="mt-2 leading-snug text-white">{g.title}</p>}
+              {g.text && <p className="mt-0.5 text-sm leading-snug text-white/70">{g.text}</p>}
             </li>
           ))}
         </ul>
@@ -439,7 +439,7 @@ function VisionSection({ b }: { b: Of<'homeVision'> }) {
           {img ? (
             /* the book cover at its own shape, tilted slightly like a book on a shelf */
             <div className="relative w-52 -rotate-2 transition duration-500 hover:rotate-0 sm:w-60 md:w-64 lg:w-72">
-              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} width={mediaSize(b.image).width} height={mediaSize(b.image).height} sizes="(max-width:768px) 240px, 288px" className="h-auto w-full rounded-md shadow-[18px_26px_50px_-18px_rgb(28_32_38/0.55)] ring-1 ring-charcoal-900/10" />
+              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} width={mediaSize(b.image).width} height={mediaSize(b.image).height} sizes="(max-width:768px) 240px, 288px" className="h-auto w-full rounded-md shadow-[18px_26px_50px_-18px_rgb(20_33_61/0.55)] ring-1 ring-charcoal-900/10" />
             </div>
           ) : (
             <BookOpen className="size-24 text-saffron-600" />

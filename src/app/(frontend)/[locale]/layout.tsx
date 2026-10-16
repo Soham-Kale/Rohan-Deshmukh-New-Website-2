@@ -15,7 +15,7 @@ import { ConnectTag, FloatingButtons, SitePopup } from '@/components/layout/Floa
 import '../globals.css'
 
 
-export const viewport: Viewport = { themeColor: "#ffffff", width: 'device-width', initialScale: 1 }
+export const viewport: Viewport = { themeColor: "#fffcf7", width: 'device-width', initialScale: 1 }
 
 export function generateStaticParams() {
   // Pre-render only in production builds: in dev, concurrent page compiles race on
@@ -74,7 +74,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={locale}>
       <body className="min-h-dvh antialiased">
-        <NextTopLoader color="#ef7a23" height={3} showSpinner={false} shadow="0 0 10px #ef7a23,0 0 5px #ef7a23" />
+        <NextTopLoader color="#f26b1d" height={3} showSpinner={false} shadow="0 0 10px #f26b1d,0 0 5px #f26b1d" />
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-saffron-500 focus:px-5 focus:py-2 focus:text-white">
           {tn('skip')}
         </a>

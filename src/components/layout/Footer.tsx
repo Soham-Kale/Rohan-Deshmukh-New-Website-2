@@ -15,11 +15,11 @@ export async function Footer({ locale }: { locale: Locale }) {
 
   return (
     <footer className="on-dark bg-charcoal-900 text-white/80">
-      {/* a slim tricolour line where the page ends — the only place the green appears at full strength */}
-      <div aria-hidden className="flex h-1">
+      {/* primary · highlight · frame strip where the page ends */}
+      <div aria-hidden className="flex h-1.5">
         <span className="flex-1 bg-saffron-500" />
-        <span className="flex-1 bg-white" />
-        <span className="flex-1 bg-leaf-600" />
+        <span className="flex-1 bg-highlight" />
+        <span className="flex-1 bg-frame" />
       </div>
       <div className="container-x grid grid-cols-2 gap-x-6 gap-y-12 py-16 md:py-20 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div className="col-span-2 lg:col-span-1">

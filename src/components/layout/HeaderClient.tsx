@@ -91,8 +91,8 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
         className={cn(
           'group/h sticky top-0 z-50 transition-[background-color,box-shadow,color] duration-300',
           heroTop
-            ? 'text-charcoal-900 max-lg:bg-transparent max-lg:text-white lg:bg-white/95 lg:shadow-[inset_0_-1px_0_var(--color-line)] lg:backdrop-blur'
-            : cn('bg-white/95 text-charcoal-900 backdrop-blur', scrolled ? 'shadow-[0_10px_30px_-20px_rgba(28,32,38,.3)]' : 'shadow-[inset_0_-1px_0_var(--color-line)]'),
+            ? 'text-charcoal-900 max-lg:bg-transparent max-lg:text-white lg:bg-paper/95 lg:shadow-[inset_0_-1px_0_var(--color-line)] lg:backdrop-blur'
+            : cn('bg-paper/95 text-charcoal-900 backdrop-blur', scrolled ? 'shadow-[0_10px_30px_-20px_rgba(20,33,61,.3)]' : 'shadow-[inset_0_-1px_0_var(--color-line)]'),
         )}
       >
         <div className={cn('container-x flex h-[4.5rem] items-center gap-2 sm:gap-4')}>
@@ -148,7 +148,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
                           groups > 1 ? 'left-1/2 -translate-x-1/2' : 'left-0',
                         )}
                       >
-                        <div className={cn('rounded-2xl bg-white p-3 text-ink shadow-[0_24px_60px_-24px_rgba(28,32,38,.35)] ring-1 ring-charcoal-900/[0.06]', isMega ? cn('grid gap-2 p-5', groups === 1 ? 'w-72' : groups === 2 ? 'w-[min(520px,90vw)] grid-cols-2' : 'w-[min(760px,90vw)] grid-cols-3') : 'min-w-64')}>
+                        <div className={cn('rounded-2xl bg-white p-3 text-ink shadow-[0_24px_60px_-24px_rgba(20,33,61,.35)] ring-1 ring-charcoal-900/[0.06]', isMega ? cn('grid gap-2 p-5', groups === 1 ? 'w-72' : groups === 2 ? 'w-[min(520px,90vw)] grid-cols-2' : 'w-[min(760px,90vw)] grid-cols-3') : 'min-w-64')}>
                           {item.children!.map((c, j) =>
                             isMega ? (
                               <div key={c.id ?? j}>
