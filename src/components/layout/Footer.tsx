@@ -14,12 +14,12 @@ export async function Footer({ locale }: { locale: Locale }) {
   const logo = mediaUrl(settings.logoLight)
 
   return (
-    <footer className="on-dark grain bg-charcoal-900 text-white/80">
-      {/* primary · highlight · frame strip */}
-      <div aria-hidden className="flex h-1.5">
+    <footer className="on-dark bg-charcoal-900 text-white/80">
+      {/* a slim tricolour line where the page ends — the only place the green appears at full strength */}
+      <div aria-hidden className="flex h-1">
         <span className="flex-1 bg-saffron-500" />
-        <span className="flex-1 bg-highlight" />
-        <span className="flex-1 bg-frame" />
+        <span className="flex-1 bg-white" />
+        <span className="flex-1 bg-leaf-600" />
       </div>
       <div className="container-x grid grid-cols-2 gap-x-6 gap-y-12 py-16 md:py-20 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div className="col-span-2 lg:col-span-1">
@@ -46,7 +46,7 @@ export async function Footer({ locale }: { locale: Locale }) {
               </li>
             )}
           </ul>
-          <CMSLink url="/contact" className="mt-3 inline-block text-sm font-semibold text-saffron-300 hover:underline">
+          <CMSLink url="/contact" className="mt-3 inline-block text-[0.95rem] text-saffron-300 underline-offset-4 hover:underline">
             {locale === 'mr' ? 'सर्व कार्यालये →' : 'More locations →'}
           </CMSLink>
         </div>
@@ -72,7 +72,7 @@ export async function Footer({ locale }: { locale: Locale }) {
           <div className="flex items-center gap-2">
             <span className="mr-1 text-white/60">{t('followUs')}:</span>
             {social.map(([k, v]) => (
-              <a key={k} href={v as string} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} className="grid size-9 place-items-center rounded-full bg-white/10 transition hover:bg-saffron-500 hover:text-white">
+              <a key={k} href={v as string} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} className="grid size-10 place-items-center rounded-full bg-white/10 transition hover:bg-saffron-600 hover:text-white">
                 <SocialIcon name={k === 'whatsappChannel' ? 'whatsapp' : k} className="size-4" />
               </a>
             ))}

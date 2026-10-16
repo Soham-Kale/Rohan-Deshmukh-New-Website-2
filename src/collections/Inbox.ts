@@ -29,7 +29,12 @@ const notify =
       const settings = await req.payload.findGlobal({ slug: 'site-settings', req, depth: 0 })
       let to: string[] = []
       if (doc.office) {
-        const office = await req.payload.findByID({ collection: 'offices', id: doc.office, req, depth: 0 })
+        // the saved doc may hold the office already populated (an object) or just its id — never pass the object as an id:
+        // a failed query here aborts the database transaction and the visitor's message would be lost
+        const office =
+          typeof doc.office === 'object'
+            ? doc.office
+            : await req.payload.findByID({ collection: 'offices', id: doc.office, req, depth: 0 }).catch(() => null)
         to = (office?.notifyEmails as unknown as string[]) || []
       }
       if (!to.length && settings?.formNotifyEmails) to = settings.formNotifyEmails as unknown as string[]

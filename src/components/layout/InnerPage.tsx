@@ -30,7 +30,7 @@ export async function InnerPage({ path, locale, title, subtitle, image, imagePos
   const tabs = sideMenu && menu.items.length > 1 ? menu.items.map((it) => ({ ...it, active: it.href === path })) : undefined
   return (
     <>
-      <PageBanner title={title} subtitle={subtitle} crumbs={autoCrumbs} image={image} imagePosition={imagePosition} tabs={tabs} tabsLabel={menu.title ?? undefined} />
+      <PageBanner title={title} subtitle={subtitle} crumbs={autoCrumbs} image={image} imagePosition={imagePosition} tabs={tabs} tabsLabel={menu.title ?? undefined} path={path} />
       <div className="container-x pb-20 pt-12 md:pb-28 md:pt-16">
         <div className="min-w-0">{children}</div>
       </div>

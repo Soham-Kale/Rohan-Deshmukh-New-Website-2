@@ -49,7 +49,7 @@ function Profile({ hero, facts }: { hero: MediaText; facts: Cards | null }) {
     /* photo in a fixed 5:6 frame (about 380 × 456 px on desktop), text centred beside it */
     <section className="grid items-center gap-10 md:grid-cols-[minmax(0,380px)_minmax(0,1fr)] md:gap-16 lg:gap-20">
       {img && (
-        <div className="relative mx-auto aspect-[5/6] w-full max-w-[380px] overflow-hidden rounded-3xl bg-cream shadow-[0_24px_60px_-34px_rgb(20_33_61/0.45)]">
+        <div className="relative mx-auto aspect-[5/6] w-full max-w-[380px] overflow-hidden rounded-3xl bg-cream shadow-[0_24px_60px_-34px_rgb(28_32_38/0.45)]">
           <Image src={img} alt={mediaAlt(hero.image, hero.heading ?? '')} fill sizes="(max-width:768px) 92vw, 380px" priority className="object-cover" style={{ objectPosition: mediaPosition(hero.image) }} />
         </div>
       )}
@@ -79,13 +79,13 @@ function Journey({ block, locale }: { block: Cards; locale: 'mr' | 'en' }) {
   const stops = block.items ?? []
   const last = stops.length - 1
   return (
-    /* full-width navy band breaking out of the page container */
-    <section className="on-dark grain relative left-1/2 mt-16 w-screen -translate-x-1/2 overflow-hidden bg-charcoal-900 text-white md:mt-20">
-      <div aria-hidden className="absolute -bottom-32 -left-24 size-96 rounded-full border-[40px] border-saffron-500/10" />
+    /* full-width warm band breaking out of the page container */
+    <section className="band-cream relative left-1/2 mt-16 w-screen -translate-x-1/2 overflow-hidden md:mt-20">
+      <div aria-hidden className="absolute -bottom-32 -left-24 size-96 rounded-full border-[40px] border-saffron-500/[0.07]" />
       <div className="container-x relative py-14 md:py-20">
         {block.eyebrow && <p className="eyebrow">{block.eyebrow}</p>}
-        {block.heading && <h2 className="mt-2 text-[1.75rem] leading-tight text-white md:text-[2.25rem]">{block.heading}</h2>}
-        {block.intro && <p className="mt-3 max-w-2xl text-white/70">{block.intro}</p>}
+        {block.heading && <h2 className="h-section">{block.heading}</h2>}
+        {block.intro && <p className="lead mt-3 max-w-2xl">{block.intro}</p>}
 
         <ol className="mt-10 grid md:mt-12 md:grid-cols-[repeat(var(--stops),minmax(0,1fr))] md:gap-6" style={{ '--stops': stops.length } as React.CSSProperties}>
           {stops.map((s, i) => {
@@ -93,19 +93,19 @@ function Journey({ block, locale }: { block: Cards; locale: 'mr' | 'en' }) {
             return (
               <li key={s.id} className="relative flex gap-5 pb-9 last:pb-0 md:block md:pb-0">
                 {/* route: vertical on phones, horizontal from tablet up (dashed line to the next stop) */}
-                {!end && <span aria-hidden className="absolute bottom-0 left-[1.2rem] top-11 border-l-2 border-dashed border-saffron-400/45 md:left-12 md:right-[-1.5rem] md:top-[1.2rem] md:bottom-auto md:border-l-0 md:border-t-2" />}
+                {!end && <span aria-hidden className="absolute bottom-0 left-[1.2rem] top-11 border-l-2 border-dashed border-saffron-500/40 md:left-12 md:right-[-1.5rem] md:top-[1.2rem] md:bottom-auto md:border-l-0 md:border-t-2" />}
                 <span
                   className={cn(
                     'relative z-10 grid size-10 shrink-0 place-items-center rounded-full border-2 text-[0.95rem] font-semibold',
-                    end ? 'border-saffron-500 bg-saffron-500 text-white shadow-[0_0_0_6px_rgb(242_107_29/0.25)]' : 'border-saffron-400 bg-charcoal-900 text-saffron-300',
+                    end ? 'border-saffron-600 bg-saffron-600 text-white shadow-[0_0_0_6px_rgb(232_115_28/0.18)]' : 'border-saffron-500 bg-paper text-saffron-700',
                   )}
                 >
                   {num(i + 1, locale)}
                 </span>
                 <div className="min-w-0 md:mt-5 md:pr-4">
-                  {s.meta && <p className="text-[0.78rem] font-semibold uppercase tracking-wide text-saffron-300">{s.meta}</p>}
-                  <h3 className="mt-1.5 text-lg leading-snug text-white md:text-[1.15rem]">{s.title}</h3>
-                  {s.text && <p className="mt-2 text-[0.95rem] leading-relaxed text-white/70">{s.text}</p>}
+                  {s.meta && <p className="text-[0.85rem] text-saffron-700">{s.meta}</p>}
+                  <h3 className="mt-1 text-lg leading-snug text-charcoal-900 md:text-[1.2rem]">{s.title}</h3>
+                  {s.text && <p className="mt-2 text-[0.98rem] leading-relaxed text-muted">{s.text}</p>}
                 </div>
               </li>
             )

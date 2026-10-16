@@ -22,6 +22,7 @@ import * as migration_20261016_080000_home_layout from './20261016_080000_home_l
 import * as migration_20261016_110000_home_tweaks from './20261016_110000_home_tweaks';
 import * as migration_20261016_130000_photo_gallery from './20261016_130000_photo_gallery';
 import * as migration_20261016_160000_photo_gallery_rohan from './20261016_160000_photo_gallery_rohan';
+import * as migration_20261016_200000_page_cleanup from './20261016_200000_page_cleanup';
 
 export const migrations = [
   {
@@ -143,5 +144,10 @@ export const migrations = [
     up: migration_20261016_160000_photo_gallery_rohan.up,
     down: migration_20261016_160000_photo_gallery_rohan.down,
     name: '20261016_160000_photo_gallery_rohan',
+  },
+  {
+    up: migration_20261016_200000_page_cleanup.up,
+    down: migration_20261016_200000_page_cleanup.down,
+    name: '20261016_200000_page_cleanup',
   },
 ];

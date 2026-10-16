@@ -9,13 +9,14 @@ import { image, md, PORTRAITS, remoteImage } from './helpers'
 import { LOKMANGAL_MEDIA, LOKMANGAL_PROJECTS, S3 } from './lokmangal-projects'
 import { applyHomeLayout } from './home-layout'
 import { applyPhotoGallery } from './photo-gallery'
+import { stripEmojiEverywhere } from './strip-emoji'
 import { createBilingual, replaceBilingual } from './bilingual'
 import { DOC_TEXT_TARGETS, familyPage, foundationPage, introPage, parivarPage, politicalPage } from './content-pages'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-16h'
+export const CONTENT_VERSION = '2026-10-16j'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -309,4 +310,58 @@ export async function applyContentUpdates(payload: Payload) {
   await applyHomeLayout(payload)
   await removeKeyAreaIcons(payload)
   await applyPhotoGallery(payload)
+  await removeAppealCta(payload)
+  await removeParivarEmoji(payload)
+  await stripEmojiEverywhere(payload)
+  await removeFoundationImpact(payload)
+}
+
+/** 16 Oct 2026: the closing "आम्हाला साथ द्या / Join us in building a better Maharashtra" band is removed from every page */
+const APPEAL_HEADINGS = ['चांगल्या महाराष्ट्राच्या उभारणीसाठी आम्हाला साथ द्या', 'Join us in building a better Maharashtra']
+
+export async function removeAppealCta(payload: Payload) {
+  const pages = await payload.find({ collection: 'pages', limit: 500, depth: 0, locale: 'mr', pagination: false })
+  for (const page of pages.docs) {
+    const layout = (page.layout ?? []) as { id?: string | null; blockType?: string; heading?: string | null }[]
+    if (!layout.some((b) => b.blockType === 'cta')) continue
+    // match on either language, in case one of the headings was edited in the admin
+    const en = (await payload.findByID({ collection: 'pages', id: page.id, locale: 'en', depth: 0, fallbackLocale: false as never })).layout ?? []
+    const enMatch = new Set(en.filter((b) => b.blockType === 'cta' && APPEAL_HEADINGS.includes(String((b as { heading?: string }).heading ?? '').trim())).map((b) => b.id))
+    const keep = layout.filter((b) => !(b.blockType === 'cta' && ((b.heading && APPEAL_HEADINGS.includes(b.heading.trim())) || enMatch.has(b.id))))
+    if (keep.length === layout.length) continue
+    await payload.update({ collection: 'pages', id: page.id, locale: 'mr', depth: 0, data: { layout: keep, _status: 'published' } as never })
+    payload.logger.info(`removed appeal band from ${page.path}`)
+  }
+}
+
+/** 16 Oct 2026: no emoji in front of the Lokmangal Parivar group headings ("🏦 वित्तीय संस्था" → "वित्तीय संस्था"), both languages */
+const LEADING_EMOJI = /^[\p{Extended_Pictographic}\u{FE0F}\u{200D}]+\s*/u
+
+export async function removeParivarEmoji(payload: Payload) {
+  const page = (await payload.find({ collection: 'pages', where: { path: { equals: '/lokmangal/parivar' } }, limit: 1, depth: 0, locale: 'mr' })).docs[0]
+  if (!page) return
+  for (const locale of ['mr', 'en'] as const) {
+    const doc = await payload.findByID({ collection: 'pages', id: page.id, locale, depth: 0, fallbackLocale: false as never })
+    let changed = false
+    const layout = (doc.layout ?? []).map((b) => {
+      const h = (b as { heading?: string | null }).heading
+      if (typeof h !== 'string' || !LEADING_EMOJI.test(h)) return b
+      changed = true
+      return { ...b, heading: h.replace(LEADING_EMOJI, '') }
+    })
+    if (changed) await payload.update({ collection: 'pages', id: page.id, locale, depth: 0, data: { layout, _status: 'published' } as never })
+  }
+}
+
+/** 16 Oct 2026: "आतापर्यंतचा प्रभाव / Impact So Far" numbers and "पुढचे ध्येय / The road ahead" removed from the Lokmangal Foundation page */
+const FOUNDATION_CUT = ['आतापर्यंतचा प्रभाव', 'Impact So Far', 'पुढचे ध्येय', 'The road ahead']
+
+export async function removeFoundationImpact(payload: Payload) {
+  const page = (await payload.find({ collection: 'pages', where: { path: { equals: '/lokmangal/foundation' } }, limit: 1, depth: 0, locale: 'mr' })).docs[0]
+  if (!page) return
+  const layout = (page.layout ?? []) as { blockType?: string; heading?: string | null }[]
+  const keep = layout.filter((b) => !((b.blockType === 'stats' || b.blockType === 'content') && b.heading && FOUNDATION_CUT.includes(b.heading.trim())))
+  if (keep.length === layout.length) return
+  await payload.update({ collection: 'pages', id: page.id, locale: 'mr', depth: 0, data: { layout: keep, _status: 'published' } as never })
+  payload.logger.info('removed Impact So Far and The road ahead from /lokmangal/foundation')
 }

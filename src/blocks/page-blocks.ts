@@ -52,7 +52,7 @@ export const CardsBlock: Block = {
       name: 'items',
       type: 'array',
       fields: [
-        { name: 'icon', type: 'text', admin: { description: 'Optional emoji or short label' } },
+        { name: 'icon', type: 'text', admin: { description: 'Not shown on the website (emoji are not used)' } },
         { name: 'image', type: 'upload', relationTo: 'media' },
         { name: 'title', type: 'text', localized: true, required: true },
         { name: 'meta', type: 'text', localized: true, admin: { description: 'e.g. "स्थापना: २००२"' } },

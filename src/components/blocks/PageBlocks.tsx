@@ -100,7 +100,6 @@ function render(b: Block) {
                   )}
                   {!withImages && <span aria-hidden className="absolute -top-px left-0 h-[3px] w-12 bg-saffron-500 transition-all duration-300 group-hover:w-20" />}
                   <div className={cn('tile-body', !withImages && 'pt-6')}>
-                    {c.icon && <span className="mb-2 text-2xl" aria-hidden>{c.icon}</span>}
                     <h3 className="tile-title">{c.title}{c.url && <ArrowUpRight aria-hidden className="ml-1.5 inline size-4 -translate-y-px text-saffron-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />}</h3>
                     {c.meta && <p className="tile-kicker mt-1">{c.meta}</p>}
                     {c.text && <p className="tile-text whitespace-pre-line">{c.text}</p>}

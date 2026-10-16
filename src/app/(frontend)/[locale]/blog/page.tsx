@@ -54,7 +54,7 @@ export default async function BlogPage({ params, searchParams }: P) {
 
   return (
     <>
-      <PageBanner title={t('title')} eyebrow={t('kicker')} subtitle={t('intro')} crumbs={[{ label: t('title') }]} />
+      <PageBanner title={t('title')} eyebrow={t('kicker')} subtitle={t('intro')} crumbs={[{ label: t('title') }]} path="/blog" />
       <BlogMasthead posts={latest} locale={locale} edition={t('edition')} breaking={t('breaking')} />
 
       <div className="container-x pb-20 pt-12 md:pb-28 md:pt-16">

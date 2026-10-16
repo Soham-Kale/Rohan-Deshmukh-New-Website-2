@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import {
   ArrowRight, ArrowUpRight, Award, BookOpen, CalendarDays, Camera, Flag, Heart, Info, Leaf, PenLine, Phone, User, Video, Vote,
 } from 'lucide-react'
-import type { Home, Initiative, Post, Video as VideoDoc } from '@/payload-types'
+import type { Home, Post, Video as VideoDoc } from '@/payload-types'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
 import { cn, formatDate, mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit } from '@/lib/utils'
@@ -65,6 +65,8 @@ function Hero({ b }: { b: Of<'heroSlider'> }) {
       position: mediaPosition(s.image),
       mobileImage: mediaUrl(s.imageMobile, 'card'),
       mobilePosition: mediaPosition(s.imageMobile),
+      ratio: mediaSize(s.image).width / mediaSize(s.image).height,
+      mobileRatio: mediaUrl(s.imageMobile, 'card') ? mediaSize(s.imageMobile).width / mediaSize(s.imageMobile).height : undefined,
       alt: mediaAlt(s.image, s.heading ?? ''),
       kicker: s.kicker,
       heading: s.heading,
@@ -116,7 +118,7 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
         {img && (
           /* portrait on a soft saffron block, slightly offset — warmer than an outlined frame */
           <div className="photo-backdrop mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(20_33_61/0.55)]">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(28_32_38/0.55)]">
               <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover" style={photoFit(b.image, 0.8)} />
             </div>
           </div>
@@ -190,7 +192,7 @@ function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
     <Section dark eyebrow={b.eyebrow} heading={b.heading} intro={b.text}>
       <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-14">
         <YouTube url={b.youtubeUrl} title={b.heading} />
-        <ul className="divide-y divide-white/10 self-center border-y border-white/10">
+        <ul className="divide-y divide-line self-center border-y border-line">
           {b.links?.map((l) => (
             <li key={l.id}>
               <CMSLink url={l.url} newTab={l.newTab} className="tile group flex-row items-center justify-between gap-4 py-5">
@@ -198,7 +200,7 @@ function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
                   <span className="tile-title block text-xl">{l.label}</span>
                   {l.description && <span className="tile-text block !mt-1 text-sm">{l.description}</span>}
                 </span>
-                <ArrowUpRight className="size-5 shrink-0 text-saffron-300 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <ArrowUpRight className="size-5 shrink-0 text-saffron-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </CMSLink>
             </li>
           ))}
@@ -233,51 +235,38 @@ function WorkHighlightsSection({ b }: { b: Of<'workHighlights'> }) {
   )
 }
 
+/**
+ * Home → Lokmangal Foundation: the Foundation's own introduction ("आजची सेवा, उद्याची समृद्धी") and a Read more button
+ * (the key areas of work stay on the Foundation page). The text is read from the Lokmangal Foundation page, so editing it there updates both places.
+ */
 async function InitiativesSection({ b, locale }: { b: Of<'initiativesShowcase'>; locale: Locale }) {
   const t = await getTranslations('common')
-  let items = (b.initiatives ?? []).filter((x): x is Initiative => typeof x === 'object')
-  if (!items.length) {
-    const p = await payload()
-    items = (await p.find({ collection: 'initiatives', where: { featured: { equals: true } }, sort: 'order', limit: 4, locale, depth: 1 })).docs
-  }
+  const p = await payload()
+  const page = (await p.find({ collection: 'pages', where: { path: { equals: '/lokmangal/foundation' } }, limit: 1, depth: 1, locale })).docs[0]
+  const blocks = page?.layout ?? []
+  const intro = blocks.find((x) => x.blockType === 'mediaText') as Extract<NonNullable<typeof blocks>[number], { blockType: 'mediaText' }> | undefined
+  if (!intro) return null
+  const img = mediaUrl(intro.image, 'card')
+  const more = b.buttonUrl || '/lokmangal/foundation'
   return (
     <section className="section">
       <div className="container-x">
-        <SectionHead eyebrow={b.eyebrow} heading={b.heading} intro={b.intro} center />
-        {/* the numbers sit on the page, divided by thin saffron rules */}
-        {!!b.stats?.length && (
-          <dl className="stat-row mb-16 grid-cols-2 sm:grid-cols-3 md:mb-20 lg:grid-cols-5">
-            {b.stats.map((s) => (
-              <div key={s.id} className="stat-item">
-                <dd className="stat-value"><CountUp value={s.value} /></dd>
-                <dt className="stat-label">{s.label}</dt>
+        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-20">
+          {img && (
+            /* the Foundation at work, on a soft saffron block */
+            <div className="photo-backdrop mx-auto w-full max-w-xl lg:max-w-none">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(28_32_38/0.55)]">
+                <Image src={img} alt={mediaAlt(intro.image, intro.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 46vw" className="object-cover" style={photoFit(intro.image, 4 / 3)} />
               </div>
-            ))}
-          </dl>
-        )}
-        <div className="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((it) => {
-            const img = mediaUrl(it.heroImage, 'card')
-            return (
-              <Link key={it.id} href={`/social-work/${it.slug}`} className="tile group">
-                <div className="tile-media aspect-[4/3]">
-                  {img && <Image src={img} alt={mediaAlt(it.heroImage, it.title)} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover" style={photoFit(it.heroImage, 4 / 3, 0.6)} />}
-                </div>
-                <div className="tile-body">
-                  {it.stat && <p className="tile-kicker">{it.stat}</p>}
-                  <h3 className="tile-title mt-1.5 line-clamp-2">{it.title}</h3>
-                  {it.excerpt && <p className="tile-text line-clamp-2">{it.excerpt}</p>}
-                  <span className="more-link mt-auto pt-4 text-[0.95rem]">{t('moreInfo')} <ArrowRight className="size-4" /></span>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-        {b.buttonUrl && (
-          <div className="mt-14 text-center">
-            <CMSLink url={b.buttonUrl} className="btn btn-dark">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>
+            </div>
+          )}
+          <div>
+            {(b.eyebrow || intro.eyebrow) && <p className="eyebrow">{b.eyebrow || intro.eyebrow}</p>}
+            {intro.heading && <h2 className="h-section">{intro.heading}</h2>}
+            <RichText data={intro.body} className="mt-6 text-muted" />
+            <CMSLink url={more} className="btn btn-primary mt-8">{t('readMore')} <ArrowRight className="size-4" /></CMSLink>
           </div>
-        )}
+        </div>
       </div>
     </section>
   )
@@ -333,18 +322,21 @@ function FamilySection({ b }: { b: Of<'family'> }) {
   if (!members.length) return null
   return (
     <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.intro} action={<MoreLink url={b.buttonUrl} label={b.buttonLabel} />}>
-      {/* three generations side by side: portrait, relation, name, a few words — no boxes */}
-      <ul className="grid gap-12 md:grid-cols-3 md:gap-0 md:divide-x md:divide-line">
+      {/* three generations side by side: a proper portrait each, then relation, name and a few words */}
+      <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
         {members.map((m) => {
-          const img = mediaUrl(m.image, 'thumb')
+          const img = mediaUrl(m.image, 'card')
           return (
-            <li key={m.id} className="flex flex-col items-center text-center md:px-8 md:first:pl-0 md:last:pr-0">
-              <div className="relative size-28 shrink-0 overflow-hidden rounded-full bg-cream ring-4 ring-saffron-100">
-                {img && <Image src={img} alt={mediaAlt(m.image, m.name ?? '')} fill sizes="112px" className="object-cover object-top" />}
+            <li key={m.id} className="tile group max-sm:grid max-sm:grid-cols-[7.5rem_minmax(0,1fr)] max-sm:items-start max-sm:gap-5">
+              <div className="tile-media aspect-[4/5] bg-cream">
+                {img && <Image src={img} alt={mediaAlt(m.image, m.name ?? '')} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw" className="object-cover" style={photoFit(m.image, 0.8, 0.55)} />}
+                {m.relation && <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[0.85rem] text-saffron-700 shadow-sm max-sm:hidden">{m.relation}</span>}
               </div>
-              {m.relation && <p className="tile-kicker mt-5">{m.relation}</p>}
-              {m.name && <h3 className="mt-1 text-[1.2rem] leading-snug text-charcoal-900">{m.name}</h3>}
-              {m.text && <p className="mt-2 max-w-xs text-[0.97rem] leading-relaxed text-muted">{m.text}</p>}
+              <div className="tile-body max-sm:!pt-1">
+                {m.relation && <p className="tile-kicker mb-1 sm:hidden">{m.relation}</p>}
+                {m.name && <h3 className="tile-title">{m.name}</h3>}
+                {m.text && <p className="tile-text">{m.text}</p>}
+              </div>
             </li>
           )
         })}
@@ -355,20 +347,21 @@ function FamilySection({ b }: { b: Of<'family'> }) {
 
 function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
   return (
-    <section className="section on-dark grain relative overflow-hidden bg-charcoal-900 text-white">
-      <div aria-hidden className="absolute -right-24 -top-24 size-96 rounded-full border-[40px] border-saffron-500/10" />
-      <div className="container-x relative grid items-center gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
+    <section className="section relative overflow-hidden">
+      <div aria-hidden className="absolute -right-24 -top-24 size-96 rounded-full border-[40px] border-saffron-500/[0.06]" />
+      <div className="container-x relative grid items-center gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-          {b.text && <p className="mt-5 font-display text-[1.3rem] leading-relaxed text-white md:text-[1.5rem]">{b.text}</p>}
-          {b.buttonUrl && <div className="mt-8"><MoreLink url={b.buttonUrl} label={b.buttonLabel} dark /></div>}
+          {b.text && <p className="mt-5 font-display text-[1.35rem] leading-[1.6] text-charcoal-900 md:text-[1.6rem]">{b.text}</p>}
+          {b.buttonUrl && <div className="mt-8"><MoreLink url={b.buttonUrl} label={b.buttonLabel} /></div>}
         </div>
-        <ul className="stat-row grid-cols-2 gap-y-10 sm:grid-cols-3">
+        {/* the one place the numbers earn a soft raised card */}
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           {b.items?.map((g) => (
-            <li key={g.id} className="stat-item">
+            <li key={g.id} className="stat-card">
               <p className="stat-value">{g.value}</p>
-              {g.title && <p className="mt-2 font-semibold leading-snug text-white">{g.title}</p>}
-              {g.text && <p className="mt-0.5 text-sm leading-snug text-white/65">{g.text}</p>}
+              {g.title && <p className="mt-2 leading-snug text-charcoal-900">{g.title}</p>}
+              {g.text && <p className="mt-0.5 text-sm leading-snug text-muted">{g.text}</p>}
             </li>
           ))}
         </ul>
@@ -446,7 +439,7 @@ function VisionSection({ b }: { b: Of<'homeVision'> }) {
           {img ? (
             /* the book cover at its own shape, tilted slightly like a book on a shelf */
             <div className="relative w-52 -rotate-2 transition duration-500 hover:rotate-0 sm:w-60 md:w-64 lg:w-72">
-              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} width={mediaSize(b.image).width} height={mediaSize(b.image).height} sizes="(max-width:768px) 240px, 288px" className="h-auto w-full rounded-md shadow-[18px_26px_50px_-18px_rgb(20_33_61/0.55)] ring-1 ring-charcoal-900/10" />
+              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} width={mediaSize(b.image).width} height={mediaSize(b.image).height} sizes="(max-width:768px) 240px, 288px" className="h-auto w-full rounded-md shadow-[18px_26px_50px_-18px_rgb(28_32_38/0.55)] ring-1 ring-charcoal-900/10" />
             </div>
           ) : (
             <BookOpen className="size-24 text-saffron-600" />
@@ -486,11 +479,12 @@ function GallerySection({ b }: { b: Of<'homeGallery'> }) {
 function StatsSection({ b }: { b: Of<'homeStats'> }) {
   const img = mediaUrl(b.image, 'hero')
   return (
-    <section className="section on-dark grain relative overflow-hidden bg-charcoal-900 text-white">
+    <section className="section band-cream relative overflow-hidden">
+      {/* the photo stays, faded right back into the warm band so the numbers read cleanly */}
       {img && (
         <>
-          <Image src={img} alt="" fill sizes="100vw" className="object-cover opacity-20" style={{ objectPosition: mediaPosition(b.image) }} />
-          <div className="absolute inset-0 bg-gradient-to-r from-charcoal-950 to-charcoal-900/70" />
+          <Image src={img} alt="" fill sizes="100vw" className="object-cover opacity-[0.12] grayscale" style={{ objectPosition: mediaPosition(b.image) }} />
+          <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/90 to-cream/60" />
         </>
       )}
       <div className="container-x relative grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-center">
@@ -498,11 +492,11 @@ function StatsSection({ b }: { b: Of<'homeStats'> }) {
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
           {b.buttonUrl && (
-            <CMSLink url={b.buttonUrl} className="btn btn-light mt-8">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>
+            <CMSLink url={b.buttonUrl} className="btn btn-primary mt-8">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>
           )}
         </div>
-        <div className="stat-row sm:grid-cols-3">
-          {b.items?.map((s) => <Stat key={s.id} value={s.value} label={s.label} />)}
+        <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
+          {b.items?.map((s) => <div key={s.id} className="stat-card"><p className="stat-value"><CountUp value={s.value} /></p><p className="stat-label">{s.label}</p></div>)}
         </div>
       </div>
     </section>
@@ -606,19 +600,18 @@ async function AppealSection({ b, locale }: { b: Of<'appealBand'>; locale: Local
   const settings = b.showWhatsapp ? await (await payload()).findGlobal({ slug: 'site-settings', locale, depth: 0 }) : null
   const wa = settings?.whatsappNumber?.replace(/\D/g, '')
   return (
-    /* full-width saffron band closing the page, like the invitation at the end of a letter */
-    <section className="grain relative isolate overflow-hidden bg-saffron-500 text-white">
+    /* the page closes with one clear call to action on saffron */
+    <section className="relative isolate overflow-hidden bg-saffron-600 text-white">
       <div aria-hidden className="absolute -right-20 -top-24 -z-10 size-80 rounded-full border-[40px] border-white/10" />
-      <div aria-hidden className="absolute -bottom-32 left-[8%] -z-10 size-64 rounded-full border-[32px] border-white/[0.07]" />
-      <div className="container-x flex flex-col items-start gap-8 py-16 md:flex-row md:items-center md:justify-between md:py-20">
+      <div className="container-x flex flex-col items-start gap-8 py-14 md:flex-row md:items-center md:justify-between md:py-16">
         <div className="max-w-2xl">
-          {b.eyebrow && <p className="font-semibold text-white/85">{b.eyebrow}</p>}
-          {b.heading && <h2 className="mt-1 text-[1.8rem] leading-tight text-white md:text-[2.5rem]">{b.heading}</h2>}
+          {b.eyebrow && <p className="text-white/85">{b.eyebrow}</p>}
+          {b.heading && <h2 className="mt-1 text-[1.8rem] leading-tight text-white md:text-[2.4rem]">{b.heading}</h2>}
           {b.text && <p className="mt-3 text-lg text-white/90">{b.text}</p>}
         </div>
         <div className="flex flex-wrap gap-3">
-          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn bg-charcoal-900 px-6 py-3 text-white hover:bg-charcoal-800">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
-          {wa && <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" className="btn bg-white px-6 py-3 text-charcoal-900 hover:bg-cream">WhatsApp <ArrowUpRight className="size-4" /></a>}
+          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn bg-white px-6 py-3 text-charcoal-900 hover:bg-saffron-50">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
+          {wa && <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" className="btn btn-ghost px-6 py-3 text-white">WhatsApp <ArrowUpRight className="size-4" /></a>}
         </div>
       </div>
     </section>

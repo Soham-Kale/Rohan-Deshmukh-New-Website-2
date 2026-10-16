@@ -320,7 +320,7 @@ export interface Page {
             items?:
               | {
                   /**
-                   * Optional emoji or short label
+                   * Not shown on the website (emoji are not used)
                    */
                   icon?: string | null;
                   image?: (number | null) | Media;
@@ -2696,19 +2696,6 @@ export interface SiteSetting {
     telegram?: string | null;
   };
   /**
-   * Header button, e.g. साथ द्या
-   */
-  ctaLabel?: string | null;
-  ctaUrl?: string | null;
-  connectTagLabel?: string | null;
-  connectTagUrl?: string | null;
-  /**
-   * Footer appeal band
-   */
-  appealHeading?: string | null;
-  appealButtonLabel?: string | null;
-  appealButtonUrl?: string | null;
-  /**
    * Default recipients for all form submissions
    */
   formNotifyEmails?: string[] | null;
@@ -3204,13 +3191,6 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         whatsappChannel?: T;
         telegram?: T;
       };
-  ctaLabel?: T;
-  ctaUrl?: T;
-  connectTagLabel?: T;
-  connectTagUrl?: T;
-  appealHeading?: T;
-  appealButtonLabel?: T;
-  appealButtonUrl?: T;
   formNotifyEmails?: T;
   formConsentText?: T;
   updatedAt?: T;

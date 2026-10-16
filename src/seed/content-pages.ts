@@ -6,11 +6,6 @@ import { HOME_INTRO } from './content-globals'
 const gi = (p: Payload, n: string, alt = '') => image(p, `/images/gallery/${n}.webp`, alt)
 const rt = (p: Payload, mr: string, en?: string) => L(md(p, mr), en ? md(p, en) : undefined)
 const btn = (mr: string, en: string, url: string, newTab = false) => ({ label: L(mr, en), url, newTab })
-const appealCta = (p: Payload) => ({
-  blockType: 'cta', heading: L('चांगल्या महाराष्ट्राच्या उभारणीसाठी आम्हाला साथ द्या', 'Join us in building a better Maharashtra'),
-  image: gi(p, 'tuljapur-sabha-02', 'जनतेशी संवाद साधताना रोहन देशमुख'),
-  buttons: [btn('संपर्क साधा', 'Get in touch', '/contact'), btn('आवाहन', 'Appeal', '/appeal')],
-})
 
 /** स्वपरिचय — first page of the परिचय menu (facts taken from the biography, homepage and political-career content) */
 /*
@@ -141,7 +136,6 @@ export const familyPage = (p: Payload) => ({
       body: rt(p, DOC_TEXT.familyIntro.mr, DOC_TEXT.familyIntro.en),
     },
     ...DOC_FAMILY.map((f, i) => ({ blockType: 'mediaText', heading: f.name, eyebrow: f.relation, image: image(p, f.img, ''), imagePosition: i % 2 ? 'right' : 'left', body: rt(p, f.text.mr, f.text.en) })),
-    appealCta(p),
   ],
 })
 
@@ -171,22 +165,6 @@ export const foundationPage = (p: Payload) => ({
         { title: L('आरोग्य व समाजकल्याण', 'Healthcare & Social Welfare'), text: L('गरजूंच्या आरोग्य व कल्याणासाठी मदत', 'Supporting the health and well-being of people in need'), url: '/social-work/maha-arogya-shibir' },
       ],
     },
-    {
-      blockType: 'stats', eyebrow: L('प्रभाव', 'Impact'), heading: L('आतापर्यंतचा प्रभाव', 'Impact So Far'),
-      items: [
-        { value: L('२३', '23'), label: L('उपक्रम', 'initiatives') },
-        { value: L('हजारो', 'Thousands'), label: L('कुटुंबांपर्यंत पोहोच', 'of families reached') },
-        { value: L('२', '2'), label: L('ग्रामीण जिल्ह्यांत कार्यरत — सोलापूर व धाराशिव', 'rural districts — Solapur and Dharashiv') },
-        { value: L('२००५', '2005'), label: L('स्थापना', 'Founded') },
-      ],
-    },
-    {
-      blockType: 'content', heading: L('पुढचे ध्येय', 'The road ahead'),
-      body: rt(p,
-        'आता हे काम महाराष्ट्रातील आणि देशभरातील गावांपर्यंत पोहोचवण्याचे ध्येय आहे. लोकांच्या खऱ्या गरजांमध्ये रुजलेली सेवा आणि समृद्ध ग्रामीण जीवनाचे स्वप्न फाऊंडेशनच्या प्रवासातील प्रत्येक पावलाला दिशा देत राहील.',
-        'The goal now is to take this work further, to villages across Maharashtra and the rest of India. Service rooted in people’s real needs and a vision of a prosperous rural life continue to guide every step of the Foundation’s journey.'),
-    },
-    appealCta(p),
   ],
 })
 
@@ -205,19 +183,19 @@ export const parivarPage = (p: Payload) => ({
       blockType: 'content', eyebrow: L('लोकमंगल', 'Lokmangal'), heading: L('लोकमंगल परिवार', 'Lokmangal Parivar'),
       body: rt(p, DOC_TEXT.parivarIntro.mr, DOC_TEXT.parivarIntro.en),
     },
-    group(['४ संस्था', '4 institutions'], '🏦 वित्तीय संस्था', '🏦 Financial Institutions', 'बचत, कर्ज आणि प्रगतीसाठी साथ', 'Helping people save, borrow and grow', [
+    group(['४ संस्था', '4 institutions'], 'वित्तीय संस्था', 'Financial Institutions', 'बचत, कर्ज आणि प्रगतीसाठी साथ', 'Helping people save, borrow and grow', [
       ['लोकमंगल को-ऑपरेटिव्ह बँक', 'Lokmangal Co-operative Bank'],
       ['लोकमंगल नागरी सहकारी पतसंस्था', 'Lokmangal Nagari Co-operative Credit Society'],
       ['लोकमंगल कर्मचारी सहकारी पतसंस्था', 'Lokmangal Karmachari Sahakari Patsanstha'],
       ['लोकमंगल मल्टीस्टेट', 'Lokmangal Multistate'],
     ]),
-    group(['४ संस्था', '4 institutions'], '🏭 उद्योग', '🏭 Industries', 'रोजगारनिर्मिती आणि शेतमालाचे मूल्यवर्धन', 'Creating jobs and adding value to farm produce', [
+    group(['४ संस्था', '4 institutions'], 'उद्योग', 'Industries', 'रोजगारनिर्मिती आणि शेतमालाचे मूल्यवर्धन', 'Creating jobs and adding value to farm produce', [
       ['लोकमंगल शुगर इथेनॉल अँड को-जनरेशन इंडस्ट्रीज लि. (LSECIL)', 'Lokmangal Sugar Ethanol & Co-generation Industries Ltd (LSECIL)'],
       ['लोकमंगल माऊली इंडस्ट्रीज लि.', 'Lokmangal Mauli Industries Ltd'],
       ['लोकमंगल ॲग्रो इंडस्ट्रीज लि.', 'Lokmangal Agro Industries Ltd'],
       ['लोकमंगल बायो-टेक प्रा. लि.', 'Lokmangal Bio-Tech Pvt Ltd'],
     ]),
-    group(['१० संस्था', '10 institutions'], '🎓 शिक्षण', '🎓 Education', 'शाळेपासून व्यावसायिक महाविद्यालयांपर्यंत', 'From school to professional colleges', [
+    group(['१० संस्था', '10 institutions'], 'शिक्षण', 'Education', 'शाळेपासून व्यावसायिक महाविद्यालयांपर्यंत', 'From school to professional colleges', [
       ['लोकमंगल इंग्लिश मीडियम स्कूल अँड ज्युनियर कॉलेज', 'Lokmangal English Medium School & Junior College'],
       ['लोकमंगल आयटीआय', 'Lokmangal ITI'],
       ['लोकमंगल कृषी तंत्रनिकेतन', 'Lokmangal Agricultural Polytechnic'],
@@ -229,17 +207,16 @@ export const parivarPage = (p: Payload) => ({
       ['लोकमंगल फार्मसी महाविद्यालय (B.Pharm), वडाळा', 'Lokmangal College of Pharmacy (B.Pharm), Wadala'],
       ['लोकमंगल पशुवैद्यकीय महाविद्यालय', 'Lokmangal Veterinary College'],
     ], '3'),
-    group(['५ संस्था', '5 institutions'], '🤝 फाऊंडेशन, संशोधन व समाजकार्य', '🤝 Foundations, Research & Social Work', 'आरोग्य, ग्रामीण विकास आणि गरजूंसाठी कार्य', 'Working for health, rural development and people in need', [
+    group(['५ संस्था', '5 institutions'], 'फाऊंडेशन, संशोधन व समाजकार्य', 'Foundations, Research & Social Work', 'आरोग्य, ग्रामीण विकास आणि गरजूंसाठी कार्य', 'Working for health, rural development and people in need', [
       ['लोकमंगल फाऊंडेशन', 'Lokmangal Foundation'],
       ['लोकमंगल डेव्हलपमेंट फाऊंडेशन (LDF)', 'Lokmangal Development Foundation (LDF)'],
       ['लोकमंगल मेडिकल फाऊंडेशन अँड रिसर्च सेंटर', 'Lokmangal Medical Foundation & Research Centre'],
       ['श्रीराम ग्रामीण संशोधन व विकास प्रतिष्ठान, वडाळा', 'Shriram Gramin Sanshodhan va Vikas Pratishthan, Wadala'],
       ['सोलापूर सोशल फाऊंडेशन / स्वामींचे घर', 'Solapur Social Foundation / Swaminche Ghar'],
     ], '3'),
-    group(['१ संस्था', '1 institution'], '📰 माध्यमे', '📰 Media', 'प्रदेशातील बातम्या आणि गोष्टी लोकांपर्यंत', 'Sharing news and stories from across the region', [
+    group(['१ संस्था', '1 institution'], 'माध्यमे', 'Media', 'प्रदेशातील बातम्या आणि गोष्टी लोकांपर्यंत', 'Sharing news and stories from across the region', [
       ['लोकमंगल वृत्तांत', 'Lokmangal Vruttant'],
     ]),
-    appealCta(p),
   ],
 })
 
@@ -263,7 +240,6 @@ export const politicalPage = (p: Payload) => ({
       body: rt(p, DOC_TEXT.lokSabha.mr, DOC_TEXT.lokSabha.en),
     },
     { blockType: 'gallery', heading: L('क्षणचित्रे', 'Moments'), images: [...Array.from({ length: 6 }, (_, i) => gi(p, `prachar-sabha-0${i + 1}`)), ...Array.from({ length: 9 }, (_, i) => gi(p, `tuljapur-sabha-0${i + 1}`))] },
-    appealCta(p),
   ],
 })
 
@@ -293,7 +269,7 @@ export const pages = (p: Payload) => [
       { blockType: 'stats', eyebrow: L('परिणाम', 'Impact'), heading: L('प्रत्यक्ष कामाचे परिणाम', 'Results on the ground'), items: [{ value: '३,०००+', label: L('सामुदायिक विवाह आयोजित', 'Community weddings') }, { value: '१,००,०००', label: L('घडवायचे उद्योजक (लक्ष्य)', 'Entrepreneurs (target)') }, { value: '४', label: L('प्रत्यक्ष चालवलेल्या संस्था', 'Institutions led') }] },
       {
         blockType: 'cta', eyebrow: L('आमंत्रण', 'Invitation'), heading: L('तुमच्या गावात किंवा शहरात काहीतरी नवीन सुरू करत आहात का?', 'Starting something new in your village or city?'),
-        text: L('तुमची कल्पना फक्त एका मिनिटात शेअर करा. आम्ही उद्योजकांना मार्गदर्शक आणि गुंतवणूकदारांशी जोडतो — पारदर्शक, निकषाधारित आणि परिणामकारक पद्धतीने.\n\n✓ शेती, दुग्धव्यवसाय, हस्तकला, दुकान किंवा तंत्रज्ञानाशी संबंधित व्यवसायाची कल्पना आहे.\n✓ तुमच्या परिसरातील एखादी खरी समस्या सोडवण्याची इच्छा आहे.\n✓ व्यवसाय सुरू करण्याची तयारी आहे आणि मार्गदर्शन व आर्थिक मदतीची गरज आहे.', 'Share your idea in a minute. We connect entrepreneurs with mentors and investors — transparently and effectively.'),
+        text: L('तुमची कल्पना फक्त एका मिनिटात शेअर करा. आम्ही उद्योजकांना मार्गदर्शक आणि गुंतवणूकदारांशी जोडतो — पारदर्शक, निकषाधारित आणि परिणामकारक पद्धतीने.\n\nशेती, दुग्धव्यवसाय, हस्तकला, दुकान किंवा तंत्रज्ञानाशी संबंधित व्यवसायाची कल्पना आहे.\nतुमच्या परिसरातील एखादी खरी समस्या सोडवण्याची इच्छा आहे.\nव्यवसाय सुरू करण्याची तयारी आहे आणि मार्गदर्शन व आर्थिक मदतीची गरज आहे.', 'Share your idea in a minute. We connect entrepreneurs with mentors and investors — transparently and effectively.'),
         image: gi(p, 'cm-chashak-03'), buttons: [btn('अर्ज करा — आत्ताच', 'Apply now', 'https://newindiamanifesto.com/apply/founder', true)],
       },
       { blockType: 'quote', text: L('नवभारत हा केवळ हॅशटॅग नाही. तो केवळ नारा नाही. तो उद्याच्या भारताचा पाया आहे — नव्या विचारांचा, नव्या दृष्टिकोनाचा आणि ग्रामीण भारतातून घडणाऱ्या नव्या बदलाचा.', 'New India is not a hashtag. It is not a slogan. It is the foundation of tomorrow’s India — of new ideas, new outlook, and new change rising from rural India.'), author: L('रोहन सुभाष देशमुख', 'Rohan Subhash Deshmukh') },

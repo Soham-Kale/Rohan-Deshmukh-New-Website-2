@@ -142,23 +142,23 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="overflow-hidden rounded-[1.6rem] bg-charcoal-900 shadow-[0_24px_60px_-30px_rgb(20_33_61/0.55)]">
+      <div className="overflow-hidden rounded-[1.6rem] bg-surface shadow-[0_24px_60px_-34px_rgb(28_32_38/0.35)] ring-1 ring-charcoal-900/[0.06]">
         <div key={p.id} aria-roledescription="slide" aria-label={`${n(i + 1)} / ${n(count)}`} className="grid animate-fade-up md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
           <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[340px]">
             <Photo p={p} sizes="(max-width:768px) 100vw, 640px" />
-            <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-saffron-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
+            <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-saffron-600 px-3 py-1 text-xs text-white shadow-lg">
               <Sparkles aria-hidden className="size-3.5" /> {labels.featured}
             </span>
           </div>
 
-          <div className="on-dark relative flex flex-col p-6 text-white sm:p-8 lg:p-10">
-            <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full border-[28px] border-white/5" />
+          <div className="relative flex flex-col p-6 sm:p-8 lg:p-10">
+            <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full border-[28px] border-saffron-500/[0.06]" />
             <div className="flex flex-wrap items-center gap-2 text-sm">
-              {p.stat && <span className="inline-flex items-center gap-1.5 font-semibold text-saffron-300"><TrendingUp aria-hidden className="size-4" /> {p.stat}</span>}
-              <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-semibold text-white/85">{p.categoryLabel}</span>
+              {p.stat && <span className="inline-flex items-center gap-1.5 text-saffron-700"><TrendingUp aria-hidden className="size-4" /> {p.stat}</span>}
+              <span className="rounded-full bg-cream px-2.5 py-0.5 text-xs text-charcoal-800">{p.categoryLabel}</span>
             </div>
-            <h3 className="mt-3 text-[1.45rem] leading-snug text-white md:text-[1.75rem]">{p.title}</h3>
-            {p.text && <p className="mt-3 line-clamp-3 text-[0.95rem] leading-relaxed text-white/70 md:line-clamp-4">{p.text}</p>}
+            <h3 className="mt-3 text-[1.45rem] leading-snug text-charcoal-900 md:text-[1.75rem]">{p.title}</h3>
+            {p.text && <p className="mt-3 line-clamp-3 text-[0.95rem] leading-relaxed text-muted md:line-clamp-4">{p.text}</p>}
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-4 md:mt-auto md:pt-6">
               <Link href={p.href} className="btn btn-primary px-5 py-2.5">
@@ -166,10 +166,10 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
               </Link>
               {count > 1 && (
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => go(i - 1)} aria-label={labels.prev} className="grid size-10 place-items-center rounded-full border border-white/25 text-white transition hover:border-white hover:bg-white/10">
+                  <button type="button" onClick={() => go(i - 1)} aria-label={labels.prev} className="grid size-10 place-items-center rounded-full border border-line text-charcoal-900 transition hover:border-charcoal-900 hover:bg-cream">
                     <ChevronLeft aria-hidden className="size-5" />
                   </button>
-                  <button type="button" onClick={() => go(i + 1)} aria-label={labels.next} className="grid size-10 place-items-center rounded-full border border-white/25 text-white transition hover:border-white hover:bg-white/10">
+                  <button type="button" onClick={() => go(i + 1)} aria-label={labels.next} className="grid size-10 place-items-center rounded-full border border-line text-charcoal-900 transition hover:border-charcoal-900 hover:bg-cream">
                     <ChevronRight aria-hidden className="size-5" />
                   </button>
                 </div>

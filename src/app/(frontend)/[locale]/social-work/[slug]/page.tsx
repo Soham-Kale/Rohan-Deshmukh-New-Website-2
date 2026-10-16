@@ -80,11 +80,12 @@ export default async function InitiativePage({ params }: P) {
       <PageBanner
         eyebrow={x.tag}
         title={d.title}
+        path="/social-work"
         crumbs={[{ label: locale === 'mr' ? 'लोकमंगल फाऊंडेशन' : 'Lokmangal Foundation', href: '/lokmangal/foundation' }, { label: locale === 'mr' ? 'प्रकल्प' : 'Projects', href: '/lokmangal/foundation#projects' }, { label: d.title }]}
       >
         {d.stat && (
           <p className="mt-6 inline-flex flex-wrap items-baseline gap-x-3 gap-y-1 border-l-2 border-saffron-500 pl-4">
-            <span className="text-sm font-semibold text-highlight">{x.impact}</span>
+            <span className="text-[0.95rem] text-highlight">{x.impact}</span>
             <span className="font-display text-xl text-white">{d.stat}</span>
           </p>
         )}

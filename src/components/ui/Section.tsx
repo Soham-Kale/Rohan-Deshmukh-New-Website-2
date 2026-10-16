@@ -5,6 +5,7 @@ type Props = {
   heading?: string | null
   children?: React.ReactNode
   className?: string
+  /** kept for older callers: now a soft warm band (the site has no dark sections) */
   dark?: boolean
   action?: React.ReactNode
   intro?: string | null
@@ -29,7 +30,7 @@ export function SectionHead({ eyebrow, heading, intro, center, className, as: Ta
 export function Section({ eyebrow, heading, children, className, dark, action, intro, id, center }: Props) {
   const head = <SectionHead eyebrow={eyebrow} heading={heading} intro={intro} center={center && !action} />
   return (
-    <section id={id} className={cn('section', dark && 'on-dark grain bg-charcoal-900 text-white', className)}>
+    <section id={id} className={cn('section', dark && 'band-cream', className)}>
       <div className="container-x">
         {action ? (
           <div className="section-head-row">

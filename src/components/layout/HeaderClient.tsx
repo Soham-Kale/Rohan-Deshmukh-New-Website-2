@@ -12,9 +12,18 @@ type Props = {
   nav: NavNode[]
   locale: 'mr' | 'en'
   siteName: string
+  /** white logo (over the home photo) */
   logoUrl?: string | null
+  /** logo for the light header; if none is uploaded, the white logo is shown in deep green through a mask */
+  logoDarkUrl?: string | null
+  /** call-to-action button at the end of the bar */
+  cta?: { label: string; href: string }
   t: { menu: string; close: string; language: string }
 }
+
+/* top-level menu item: plain text, with a short saffron underline under the active section */
+const navItem =
+  "relative flex items-center gap-1 whitespace-nowrap px-2.5 py-2 text-[1.02rem] transition-colors after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-transparent after:content-['']"
 
 const NavLink = ({ node, className, onClick, children }: { node: NavNode; className?: string; onClick?: () => void; children: React.ReactNode }) => {
   if (!node.url) return <span className={className}>{children}</span>
@@ -31,7 +40,7 @@ const NavLink = ({ node, className, onClick, children }: { node: NavNode; classN
   )
 }
 
-export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
+export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta, t }: Props) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState<number | null>(null)
@@ -51,12 +60,8 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
     setOpen(null)
   }, [pathname])
 
-  // see-through header while it sits over a full-screen hero photo (home page)
-  const [overHero, setOverHero] = useState(pathname === '/')
-  useEffect(() => {
-    setOverHero(Boolean(document.querySelector('[data-hero-overlay]')))
-  }, [pathname])
-  const transparent = overHero && !scrolled
+  // one solid header on every page (no see-through variant), so nothing changes between pages
+  const transparent = false
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
@@ -76,19 +81,26 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
   return (
     <>
       <header
+        data-transparent={transparent || undefined}
         className={cn(
-          'sticky top-0 z-50 text-white transition-[background-color,box-shadow] duration-300',
+          'group/h sticky top-0 z-50 transition-[background-color,box-shadow,color] duration-300',
           transparent
-            ? 'bg-gradient-to-b from-charcoal-950/60 to-transparent'
-            : scrolled
-              ? 'bg-charcoal-900/95 shadow-[0_10px_30px_-18px_rgba(14,24,48,.6)] backdrop-blur'
-              : 'bg-charcoal-900',
+            ? 'bg-gradient-to-b from-charcoal-950/55 to-transparent text-white'
+            : cn('bg-white/95 text-charcoal-900 backdrop-blur', scrolled ? 'shadow-[0_10px_30px_-20px_rgba(28,32,38,.3)]' : 'shadow-[inset_0_-1px_0_var(--color-line)]'),
         )}
       >
         <div className={cn('container-x flex h-[4.5rem] items-center gap-2 sm:gap-4')}>
           <Link href="/" className="flex min-w-0 shrink items-center" aria-label={siteName}>
-            {logoUrl ? (
-              <Image src={logoUrl} alt={siteName} width={190} height={48} priority className="h-9 w-auto max-w-full object-contain object-left sm:h-10" />
+            {logoDarkUrl ? (
+              <Image src={logoDarkUrl} alt={siteName} width={190} height={48} priority className="h-9 w-auto max-w-full object-contain object-left sm:h-10" />
+            ) : logoUrl ? (
+              /* the white logo drawn in ink through a mask (upload a "logo for light backgrounds" to replace it) */
+              <span
+                role="img"
+                aria-label={siteName}
+                className="block h-9 w-[133px] bg-charcoal-900 sm:h-10 sm:w-[148px]"
+                style={{ maskImage: `url(${logoUrl})`, WebkitMaskImage: `url(${logoUrl})`, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'left center', WebkitMaskPosition: 'left center' }}
+              />
             ) : (
               <span className="font-display text-2xl leading-none">{siteName}</span>
             )}
@@ -108,13 +120,13 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
                         type="button"
                         aria-expanded={open === i}
                         onClick={() => setOpen(open === i ? null : i)}
-                        className={cn('flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-2 text-[0.97rem] font-medium transition-colors hover:bg-white/10', isActive(item) && 'text-saffron-300')}
+                        className={cn(navItem, transparent ? 'hover:text-saffron-300' : 'hover:text-saffron-700', isActive(item) && (transparent ? 'text-saffron-300 after:bg-saffron-300' : 'text-saffron-700 after:bg-saffron-500'))}
                       >
                         {item.label}
                         <ChevronDown className={cn('size-4 transition-transform', open === i && 'rotate-180')} />
                       </button>
                     ) : (
-                      <NavLink node={item} className={cn('block whitespace-nowrap rounded-full px-2.5 py-2 text-[0.97rem] font-medium transition-colors hover:bg-white/10', isActive(item) && 'text-saffron-300')}>
+                      <NavLink node={item} className={cn(navItem, transparent ? 'hover:text-saffron-300' : 'hover:text-saffron-700', isActive(item) && (transparent ? 'text-saffron-300 after:bg-saffron-300' : 'text-saffron-700 after:bg-saffron-500'))}>
                         {item.label}
                       </NavLink>
                     )}
@@ -126,11 +138,11 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
                           groups > 1 ? 'left-1/2 -translate-x-1/2' : 'left-0',
                         )}
                       >
-                        <div className={cn('rounded-2xl border border-line bg-white p-3 text-ink shadow-2xl', isMega ? cn('grid gap-2 p-5', groups === 1 ? 'w-72' : groups === 2 ? 'w-[min(520px,90vw)] grid-cols-2' : 'w-[min(760px,90vw)] grid-cols-3') : 'min-w-64')}>
+                        <div className={cn('rounded-2xl bg-white p-3 text-ink shadow-[0_24px_60px_-24px_rgba(28,32,38,.35)] ring-1 ring-charcoal-900/[0.06]', isMega ? cn('grid gap-2 p-5', groups === 1 ? 'w-72' : groups === 2 ? 'w-[min(520px,90vw)] grid-cols-2' : 'w-[min(760px,90vw)] grid-cols-3') : 'min-w-64')}>
                           {item.children!.map((c, j) =>
                             isMega ? (
                               <div key={c.id ?? j}>
-                                <NavLink node={c} className="mb-2 block font-display text-lg text-charcoal-900 hover:text-saffron-600">
+                                <NavLink node={c} className="mb-2 block font-display text-lg text-charcoal-900 hover:text-saffron-700">
                                   {c.label}
                                 </NavLink>
                                 <ul className="space-y-0.5">
@@ -167,13 +179,18 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
             <Link
               href={pathname}
               locale={locale === 'mr' ? 'en' : 'mr'}
-              className="flex h-10 items-center gap-1.5 rounded-full px-2 text-sm font-semibold hover:bg-white/10 sm:px-3"
+              className={cn('flex h-10 items-center gap-1.5 rounded-full px-3 text-[0.95rem] ring-1 transition', transparent ? 'ring-white/30 hover:bg-white/10' : 'ring-line hover:bg-cream')}
               aria-label={t.language}
             >
               <Languages className="hidden size-4 sm:block" />
               <span>{t.language}</span>
             </Link>
-            <button type="button" onClick={() => setMobileOpen(true)} className="grid size-10 place-items-center rounded-full bg-white/10 xl:hidden" aria-label={t.menu} aria-expanded={mobileOpen}>
+            {cta && (
+              <Link href={cta.href} className="btn btn-primary ml-1 hidden !min-h-0 px-5 py-2.5 text-[0.95rem] lg:inline-flex">
+                {cta.label}
+              </Link>
+            )}
+            <button type="button" onClick={() => setMobileOpen(true)} className={cn('grid size-11 place-items-center rounded-full xl:hidden', transparent ? 'bg-white/15' : 'bg-cream text-charcoal-900')} aria-label={t.menu} aria-expanded={mobileOpen}>
               <Menu className="size-5" />
             </button>
           </div>
@@ -185,19 +202,28 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, t }: Props) {
         <div className={cn('absolute inset-0 bg-charcoal-950/60 transition-opacity', mobileOpen ? 'opacity-100' : 'opacity-0')} onClick={() => setMobileOpen(false)} />
         <aside
           className={cn(
-            'absolute inset-y-0 right-0 flex w-[min(420px,100%)] flex-col bg-charcoal-900 text-white shadow-2xl transition-transform duration-300',
+            'absolute inset-y-0 right-0 flex w-[min(420px,100%)] flex-col bg-paper text-charcoal-900 shadow-2xl transition-transform duration-300',
             mobileOpen ? 'translate-x-0' : 'translate-x-full',
           )}
         >
-          <div className="flex h-16 items-center justify-between px-4">
-            <span className="font-display text-xl">{siteName}</span>
-            <button type="button" onClick={() => setMobileOpen(false)} className="grid size-10 place-items-center rounded-full bg-white/10" aria-label={t.close}>
+          <div className="flex h-[4.5rem] items-center justify-between border-b border-line px-5">
+            {logoUrl && !logoDarkUrl ? (
+              <span role="img" aria-label={siteName} className="block h-9 w-[133px] bg-charcoal-900" style={{ maskImage: `url(${logoUrl})`, WebkitMaskImage: `url(${logoUrl})`, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'left center', WebkitMaskPosition: 'left center' }} />
+            ) : (
+              <span className="font-display text-xl text-charcoal-900">{siteName}</span>
+            )}
+            <button type="button" onClick={() => setMobileOpen(false)} className="grid size-11 place-items-center rounded-full bg-cream" aria-label={t.close}>
               <X className="size-5" />
             </button>
           </div>
-          <nav className="flex-1 overflow-y-auto px-3 pb-6" aria-label="Mobile">
+          <nav className="flex-1 overflow-y-auto px-3 pb-6 pt-2" aria-label="Mobile">
             <MobileList nodes={nav} depth={0} expanded={mobileExpanded} setExpanded={setMobileExpanded} onNavigate={() => setMobileOpen(false)} />
           </nav>
+          {cta && (
+            <div className="border-t border-line p-4">
+              <Link href={cta.href} onClick={() => setMobileOpen(false)} className="btn btn-primary w-full">{cta.label}</Link>
+            </div>
+          )}
         </aside>
       </div>
 
@@ -212,18 +238,18 @@ function MobileList({
   setExpanded: React.Dispatch<React.SetStateAction<Record<string, boolean>>>; onNavigate: () => void; prefix?: string
 }) {
   return (
-    <ul className={cn(depth > 0 && 'ml-3 border-l border-white/10 pl-2')}>
+    <ul className={cn(depth > 0 ? 'mb-2 ml-3 border-l-2 border-saffron-200 pl-2' : 'divide-y divide-line')}>
       {nodes.map((n, i) => {
         const key = `${prefix}${i}`
         const kids = n.children?.length
         return (
           <li key={key}>
             <div className="flex items-center">
-              <NavLink node={n} onClick={onNavigate} className={cn('flex-1 rounded-lg px-3 py-3', depth === 0 ? 'text-lg font-medium' : 'text-[0.98rem] text-white/85', !n.url && !!kids && 'cursor-pointer')}>
+              <NavLink node={n} onClick={onNavigate} className={cn('flex-1 rounded-lg px-3 py-3', depth === 0 ? 'text-[1.15rem] text-charcoal-900' : 'py-2.5 text-[1.02rem] text-muted hover:text-saffron-700', !n.url && !!kids && 'cursor-pointer')}>
                 <span onClick={() => !n.url && kids && setExpanded((e) => ({ ...e, [key]: !e[key] }))}>{n.label}</span>
               </NavLink>
               {kids ? (
-                <button type="button" aria-label="Expand" aria-expanded={!!expanded[key]} onClick={() => setExpanded((e) => ({ ...e, [key]: !e[key] }))} className="grid size-11 place-items-center rounded-lg hover:bg-white/10">
+                <button type="button" aria-label="Expand" aria-expanded={!!expanded[key]} onClick={() => setExpanded((e) => ({ ...e, [key]: !e[key] }))} className="grid size-11 place-items-center rounded-lg text-muted hover:bg-cream">
                   <ChevronDown className={cn('size-5 transition-transform', expanded[key] && 'rotate-180')} />
                 </button>
               ) : null}

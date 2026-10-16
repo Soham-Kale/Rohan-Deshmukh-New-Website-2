@@ -50,18 +50,18 @@ export const SiteSettings: GlobalConfig = {
             },
           ],
         },
-        {
-          label: 'Call to action',
-          fields: [
-            { name: 'ctaLabel', type: 'text', localized: true, admin: { description: 'Header button, e.g. साथ द्या' } },
-            { name: 'ctaUrl', type: 'text' },
-            { name: 'connectTagLabel', type: 'text', defaultValue: '#ConnectWithRohan' },
-            { name: 'connectTagUrl', type: 'text' },
-            { name: 'appealHeading', type: 'text', localized: true, admin: { description: 'Footer appeal band' } },
-            { name: 'appealButtonLabel', type: 'text', localized: true },
-            { name: 'appealButtonUrl', type: 'text' },
-          ],
-        },
+        // {
+        //   label: 'Call to action',
+        //   fields: [
+        //     { name: 'ctaLabel', type: 'text', localized: true, admin: { description: 'Header button, e.g. साथ द्या' } },
+        //     { name: 'ctaUrl', type: 'text' },
+        //     { name: 'connectTagLabel', type: 'text', defaultValue: '#ConnectWithRohan' },
+        //     { name: 'connectTagUrl', type: 'text' },
+        //     { name: 'appealHeading', type: 'text', localized: true, admin: { description: 'Footer appeal band' } },
+        //     { name: 'appealButtonLabel', type: 'text', localized: true },
+        //     { name: 'appealButtonUrl', type: 'text' },
+        //   ],
+        // },
         {
           label: 'Forms',
           fields: [

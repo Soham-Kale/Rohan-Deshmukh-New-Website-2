@@ -83,19 +83,20 @@ export default async function PostPage({ params }: P) {
     <>
       <PageBanner
         compact
+        light
         title={post.title}
         subtitle={subtitle}
         crumbs={[{ label: t('blog'), href: '/blog' }, ...(cat ? [{ label: cat.title, href: `/blog?category=${cat.slug}` }] : [])]}
       >
         {/* byline */}
-        <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
+        <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-charcoal-900/10 pt-5">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.95rem] text-muted">
             <span className="inline-flex items-center gap-2.5">
-              <span aria-hidden className="grid size-8 place-items-center rounded-full bg-saffron-500 text-sm font-semibold text-white">{author.trim().charAt(0)}</span>
-              <span className="font-semibold text-white">{author}</span>
+              <span aria-hidden className="grid size-8 place-items-center rounded-full bg-saffron-600 text-sm text-white">{author.trim().charAt(0)}</span>
+              <span className="text-charcoal-900">{author}</span>
               <span className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{tb('place')}</span>
             </span>
-            <span className="inline-flex items-center gap-1.5"><CalendarDays className="size-4 text-saffron-300" /><time dateTime={post.publishedAt ?? undefined}>{formatDate(post.publishedAt, locale)}</time></span>
+            <span className="inline-flex items-center gap-1.5"><CalendarDays className="size-4 text-saffron-600" /><time dateTime={post.publishedAt ?? undefined}>{formatDate(post.publishedAt, locale)}</time></span>
             <span className="inline-flex items-center gap-1.5"><Clock className="size-4" />{readTimeLabel(post, locale)}</span>
           </div>
           <div className="no-print"><Share url={url} title={post.title} label={tc('share')} compact /></div>

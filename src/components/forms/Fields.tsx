@@ -37,7 +37,7 @@ export function FormShell({ state, pending, children, action, submitLabel }: { s
       </div>
     )
   return (
-    <form ref={ref} action={action} className="grid gap-5 rounded-[1.75rem] bg-white p-6 shadow-[0_30px_70px_-45px_rgb(20_33_61/0.4)] ring-1 ring-charcoal-900/[0.04] md:grid-cols-2 md:p-10" noValidate>
+    <form ref={ref} action={action} className="grid gap-5 rounded-[1.75rem] bg-white p-6 shadow-[0_30px_70px_-45px_rgb(28_32_38/0.4)] ring-1 ring-charcoal-900/[0.04] md:grid-cols-2 md:p-10" noValidate>
       {SITE_KEY && <Script src={`https://www.google.com/recaptcha/api.js?render=${SITE_KEY}`} strategy="lazyOnload" />}
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
       {children}

@@ -11,7 +11,7 @@ export function SectionTitle({ children, aside, className }: { children: React.R
   return (
     <div className={cn('flex items-center justify-between gap-4 border-b border-line pb-3', className)}>
       <h2 className="flex items-center gap-2.5 text-xl text-charcoal-900 md:text-2xl">
-        <span aria-hidden className="size-2.5 shrink-0 rounded-full bg-saffron-500" />
+        <span aria-hidden className="h-0.5 w-6 shrink-0 rounded-full bg-saffron-500" />
         {children}
       </h2>
       {aside}
@@ -25,8 +25,8 @@ export function CategoryChip({ cat, dark }: { cat: Category | null; dark?: boole
     <Link
       href={`/blog?category=${cat.slug}`}
       className={cn(
-        'relative z-10 inline-flex rounded-md px-2 py-0.5 text-xs font-semibold transition',
-        dark ? 'bg-white/90 text-charcoal-900 hover:bg-white' : 'border border-line bg-cream text-charcoal-800 hover:border-charcoal-900',
+        'relative z-10 inline-flex transition',
+        dark ? 'rounded-full bg-white/90 px-2.5 py-0.5 text-xs text-charcoal-900 hover:bg-white' : 'text-[0.85rem] text-saffron-700 hover:text-charcoal-900',
       )}
     >
       {cat.title}
@@ -124,7 +124,7 @@ export function LatestList({ posts, locale, title, footer }: { posts: Post[]; lo
   return (
     <aside className="flex flex-col">
       <h3 className="flex items-center gap-2.5 border-b-2 border-charcoal-900 pb-3 text-lg text-charcoal-900">
-        <span aria-hidden className="size-2 rounded-full bg-saffron-500" /> {title}
+        <span aria-hidden className="h-0.5 w-6 shrink-0 rounded-full bg-saffron-500" /> {title}
       </h3>
       <ul className="divide-y divide-line">
         {posts.map((p) => {

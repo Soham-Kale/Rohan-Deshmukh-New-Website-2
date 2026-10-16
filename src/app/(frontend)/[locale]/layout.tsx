@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from 'next'
-// Poppins (self-hosted) — includes both Latin and Devanagari (Marathi) glyphs
-import '@fontsource/poppins/400.css'
-import '@fontsource/poppins/500.css'
-import '@fontsource/poppins/600.css'
-import '@fontsource/poppins/700.css'
+// Tiro Devanagari Marathi is self-hosted from /public/fonts/tiro (declared in globals.css); preload the two files every page uses
+import { preload } from 'react-dom'
 import { notFound } from 'next/navigation'
 import { NextIntlClientProvider, hasLocale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -14,11 +11,11 @@ import { getGlobal } from '@/lib/payload'
 import { mediaUrl, siteUrl } from '@/lib/utils'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { ConnectTag, FloatingButtons, SitePopup, SocialBar } from '@/components/layout/Floating'
+import { ConnectTag, FloatingButtons, SitePopup } from '@/components/layout/Floating'
 import '../globals.css'
 
 
-export const viewport: Viewport = { themeColor: '#14213d', width: 'device-width', initialScale: 1 }
+export const viewport: Viewport = { themeColor: "#ffffff", width: 'device-width', initialScale: 1 }
 
 export function generateStaticParams() {
   // Pre-render only in production builds: in dev, concurrent page compiles race on
@@ -45,6 +42,8 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
+  preload('/fonts/tiro/tiro-devanagari-marathi-devanagari-400-normal.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' })
+  preload('/fonts/tiro/tiro-devanagari-marathi-latin-400-normal.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' })
   const [settings, popup, t, tn] = await Promise.all([
     getGlobal('site-settings', locale),
     getGlobal('popup', locale),
@@ -75,7 +74,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   return (
     <html lang={locale}>
       <body className="min-h-dvh antialiased">
-        <NextTopLoader color="#f26b1d" height={3} showSpinner={false} shadow="0 0 10px #f26b1d,0 0 5px #f26b1d" />
+        <NextTopLoader color="#ef7a23" height={3} showSpinner={false} shadow="0 0 10px #ef7a23,0 0 5px #ef7a23" />
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-saffron-500 focus:px-5 focus:py-2 focus:text-white">
           {tn('skip')}
         </a>
@@ -83,7 +82,6 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <Header locale={locale} />
           <main id="main">{children}</main>
           <Footer locale={locale} />
-          <SocialBar social={social} />
           <ConnectTag label={settings.connectTagLabel} url={settings.connectTagUrl} />
           <FloatingButtons whatsapp={settings.whatsappNumber} labels={{ top: t('backToTop'), chat: t('chatWhatsapp') }} />
           <SitePopup

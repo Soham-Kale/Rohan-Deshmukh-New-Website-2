@@ -1,34 +1,47 @@
 @import 'tailwindcss';
 
-@theme {
-  /* "Fresh saffron" palette — warm off-white pages, saffron for buttons & numbers, deep navy for headings & dark areas
-     bg #FFFCF7 · alt section #FFF3E6 · surface #FFFFFF · heading/dark #14213D · text #4A5568 · primary #F26B1D
-     highlight #FFB070 · photo frame #FFC9A3 · border #F1E4D6 · photo overlay rgba(20,33,61,.55) */
-  --color-charcoal-950: #0e1830;
-  --color-charcoal-900: #14213d; /* headings, dark buttons, header, footer, stat cards */
-  --color-charcoal-800: #1d2e52;
-  --color-charcoal-700: #2a3f69;
-  --color-charcoal-600: #3a5080;
-  --color-saffron-50: #fff3e6;  /* alternate section */
-  --color-saffron-100: #ffe6cf;
-  --color-saffron-200: #ffc9a3; /* photo frame */
-  --color-saffron-300: #ffb070; /* highlight */
-  --color-saffron-400: #f7883f;
-  --color-saffron-500: #f26b1d; /* primary */
-  --color-saffron-600: #f26b1d; /* buttons with white text, big numbers, icons */
-  --color-saffron-700: #c2530f; /* small orange text on light backgrounds (4.7:1) and button hover */
-  --color-cream: #fff3e6;       /* alternate section */
-  --color-paper: #fffcf7;       /* page background */
-  --color-surface: #ffffff;     /* cards */
-  --color-ink: #4a5568;         /* body text */
-  --color-muted: #5c6779;       /* secondary text */
-  --color-line: #f1e4d6;        /* borders */
-  --color-frame: #ffc9a3;
-  --color-highlight: #ffb070;
-  --color-overlay: rgb(20 33 61 / .55); /* over photos */
+/* Tiro Devanagari Marathi (self-hosted, one weight): Marathi + English on every page */
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-devanagari-400-normal.woff2') format('woff2'); unicode-range: U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-devanagari-400-italic.woff2') format('woff2'); unicode-range: U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-ext-400-normal.woff2') format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-ext-400-italic.woff2') format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-400-normal.woff2') format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-400-italic.woff2') format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 
-  --font-display: 'Poppins', system-ui, sans-serif;
-  --font-sans: 'Poppins', system-ui, sans-serif;
+@theme {
+  /* "Saffron & Ink" — a political leader's site, not a foundation's:
+     clean white pages, near-black ink for headings and text, ONE confident saffron for every action,
+     a soft warm grey for alternate sections, and the tricolour green only as a small accent.
+     page #FFFFFF · alt section #F6F4F0 · heading #1C2026 · text #3A3F47 · secondary #5C626B
+     accent #EF7A23 · button #C24E0E (white text 4.7:1) · small saffron text #A6410A · dividers #E6E2DC · green #1F7A3A
+     (token names kept from the first palette so every component follows: "charcoal" = ink) */
+  --color-charcoal-950: #121519;
+  --color-charcoal-900: #1c2026;  /* headings, footer, active chips */
+  --color-charcoal-800: #2a2f37;
+  --color-charcoal-700: #3a3f47;
+  --color-charcoal-600: #535963;
+  --color-saffron-50: #fff6ee;
+  --color-saffron-100: #ffead8;   /* soft tint behind photos, hover */
+  --color-saffron-200: #fdd2aa;
+  --color-saffron-300: #f9b072;   /* saffron on the dark footer */
+  --color-saffron-400: #f59345;
+  --color-saffron-500: #ef7a23;   /* accent: rules, dots, big numbers, icons */
+  --color-saffron-600: #c24e0e;   /* buttons with white text */
+  --color-saffron-700: #a6410a;   /* small saffron text on white, button hover */
+  --color-leaf-50: #ebf5ee;
+  --color-leaf-600: #1f7a3a;      /* tricolour accent only */
+  --color-cream: #f6f4f0;         /* alternate section (warm light grey) */
+  --color-paper: #ffffff;         /* page background */
+  --color-surface: #ffffff;       /* raised cards */
+  --color-ink: #3a3f47;           /* body text (10.6:1) */
+  --color-muted: #5c626b;         /* secondary text (6.2:1) */
+  --color-line: #e6e2dc;          /* hairline dividers */
+  --color-frame: #fdd2aa;
+  --color-highlight: #f9b072;
+  --color-overlay: rgb(18 21 25 / .42); /* over photos */
+
+  --font-display: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
+  --font-sans: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
 
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   @keyframes fade-up {
@@ -41,11 +54,11 @@
   /* never allow sideways scrolling (clip keeps sticky header working, unlike hidden) */
   html, body { overflow-x: clip; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  /* phones: everything one step smaller (all sizes are in rem, so this scales text, spacing and buttons together) */
-  @media (max-width: 639px) { html { font-size: 15px; } }
-  body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); line-height: 1.7; }
-  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; text-wrap: balance; }
-  :lang(mr) h1, :lang(mr) h2, :lang(mr) h3, :lang(mr) h4 { letter-spacing: 0; }
+  /* Tiro has a smaller eye than a sans, so the base is 17px (16px on phones) for comfortable Marathi reading */
+  body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.75; font-kerning: normal; }
+  @media (max-width: 639px) { body { font-size: 1rem; } }
+  /* Tiro comes in one weight; its regular is already sturdy at heading sizes, so headings use it as drawn (no fake bold) */
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.3; letter-spacing: 0; text-wrap: balance; }
   p, li { text-wrap: pretty; }
   ::selection { background: var(--color-highlight); color: var(--color-charcoal-900); }
   :focus-visible { outline: 3px solid var(--color-saffron-500); outline-offset: 2px; border-radius: 4px; }
@@ -55,7 +68,7 @@
 }
 
 @layer components {
-  .font-display { font-weight: 600; }
+  .font-display { font-weight: 400; }
   .container-x { width: 100%; max-width: 1240px; margin-inline: auto; padding-inline: 16px; }
   /* hero slideshow text: slides in from the right, leaves to the left (distance per line via --hero-x) */
   /* wide letter-spacing suits Latin capitals but breaks Devanagari conjuncts apart */
@@ -67,19 +80,24 @@
   .hero-line[data-state='idle'], .hero-line[data-state='pre'] { transform: translate3d(var(--hero-x), 0, 0); opacity: 0; transition: none; }
   @media (min-width: 768px) { .container-x { padding-inline: 32px; } }
 
-  .eyebrow { display: inline-flex; align-items: center; gap: .55rem; font-size: .95rem; font-weight: 600; color: var(--color-saffron-700); letter-spacing: .01em; }
-  .eyebrow::before { content: ''; width: 8px; height: 8px; border-radius: 99px; background: var(--color-saffron-500); box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-highlight) 45%, transparent); }
+  /* small label above a heading: a short saffron rule, then the words (like a newspaper section mark) */
+  .eyebrow { display: inline-flex; align-items: center; gap: .7rem; font-size: 1rem; color: var(--color-saffron-700); letter-spacing: .01em; }
+  .eyebrow::before { content: ''; width: 1.75rem; height: 2px; border-radius: 2px; background: var(--color-saffron-500); }
   .on-dark .eyebrow { color: var(--color-highlight); }
 
-  .h-section { font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem); color: var(--color-charcoal-900); margin-top: .5rem; }
+  .h-section { font-size: clamp(1.85rem, 1.3rem + 2.2vw, 2.9rem); line-height: 1.22; color: var(--color-charcoal-900); margin-top: .6rem; }
   .on-dark .h-section { color: #fff; }
 
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; border-radius: 999px; padding: .7rem 1.35rem; font-weight: 600; font-size: 1rem; transition: background .2s, color .2s, transform .2s, box-shadow .2s; white-space: nowrap; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.875rem; border-radius: 999px; padding: .65rem 1.4rem; font-weight: 600; font-size: 1rem; line-height: 1.3; transition: background .2s, color .2s, transform .2s, box-shadow .2s, border-color .2s; white-space: nowrap; }
   .btn:active { transform: translateY(1px); }
-  .btn-primary { background: var(--color-saffron-500); color: #fff; box-shadow: 0 8px 22px -10px var(--color-saffron-500); }
-  .btn-primary:hover { background: var(--color-saffron-700); }
+  .btn-primary { background: var(--color-saffron-600); color: #fff; box-shadow: 0 10px 24px -14px var(--color-saffron-600); }
+  .btn-primary:hover { background: var(--color-saffron-700); box-shadow: 0 14px 28px -14px var(--color-saffron-700); }
+  .btn-primary:hover, .btn-dark:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(1px); }
+  .btn svg { transition: transform .2s; }
+  .btn:hover svg.lucide-arrow-right { transform: translateX(3px); }
   .btn-dark { background: var(--color-charcoal-900); color: #fff; }
-  .btn-dark:hover { background: var(--color-charcoal-700); }
+  .btn-dark:hover { background: var(--color-charcoal-800); }
   .btn-light { background: #fff; color: var(--color-charcoal-900); }
   .btn-light:hover { background: var(--color-cream); }
   .btn-ghost { border: 1.5px solid currentColor; }
@@ -87,7 +105,7 @@
 
   .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 20px; overflow: hidden; }
   .card-hover { transition: transform .25s, box-shadow .25s; }
-  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -22px rgb(20 33 61 / .35); }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -22px rgb(28 32 38 / .22); }
 
   /* ---------- page rhythm: every section breathes the same amount ---------- */
   .section { padding-block: 4.5rem; }
@@ -96,6 +114,9 @@
   .band-cream { background: var(--color-cream); }
   .band-white { background: var(--color-surface); }
   .band-navy { background: var(--color-charcoal-900); color: #fff; }
+  /* two neighbouring sections on the same background: a hairline marks where one story ends */
+  .section:not([class*='band-']) + .section:not([class*='band-']),
+  .section.band-cream + .section.band-cream { border-top: 1px solid var(--color-line); }
 
   /* section heading: eyebrow → title → short intro; centred variant for list/grid sections */
   .section-head { max-width: 46rem; margin-bottom: 2.75rem; }
@@ -116,10 +137,10 @@
   .tile-media img { transition: transform .7s cubic-bezier(0.2, 0.7, 0.2, 1); }
   .tile:hover .tile-media img { transform: scale(1.045); }
   .tile-body { display: flex; flex: 1; flex-direction: column; padding-top: 1.15rem; }
-  .tile-kicker { font-size: .8rem; font-weight: 600; color: var(--color-saffron-700); letter-spacing: .01em; }
-  .tile-title { color: var(--color-charcoal-900); font-size: 1.2rem; line-height: 1.4; transition: color .2s; }
+  .tile-kicker { font-size: .88rem; color: var(--color-saffron-700); letter-spacing: .01em; }
+  .tile-title { color: var(--color-charcoal-900); font-size: 1.3rem; line-height: 1.4; transition: color .2s; }
   .tile:hover .tile-title { color: var(--color-saffron-700); }
-  .tile-text { margin-top: .5rem; color: var(--color-muted); font-size: .98rem; line-height: 1.65; }
+  .tile-text { margin-top: .5rem; color: var(--color-muted); font-size: 1rem; line-height: 1.7; }
   .on-dark .tile-title { color: #fff; }
   .on-dark .tile:hover .tile-title { color: var(--color-highlight); }
   .on-dark .tile-text { color: rgb(255 255 255 / .7); }
@@ -133,8 +154,12 @@
   /* big numbers sitting on the page (no tiles), separated by thin rules */
   .stat-row { display: grid; gap: 2rem 1.5rem; }
   .stat-item { border-left: 2px solid var(--color-saffron-500); padding-left: 1.1rem; }
-  .stat-value { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 1.6rem + 1.4vw, 2.75rem); line-height: 1.1; color: var(--color-saffron-600); }
-  .stat-label { margin-top: .35rem; color: var(--color-muted); font-size: .95rem; line-height: 1.45; }
+  .stat-value { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.1rem, 1.7rem + 1.4vw, 2.9rem); line-height: 1.1; color: var(--color-saffron-600); font-variant-numeric: lining-nums; }
+  /* a soft, slightly raised card — used only for key numbers */
+  .stat-card { border-radius: 1.25rem; background: var(--color-surface); padding: 1.35rem 1.25rem 1.25rem; box-shadow: 0 1px 2px rgb(28 32 38 / .05), 0 18px 40px -30px rgb(28 32 38 / .35); transition: transform .3s, box-shadow .3s; }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: 0 1px 2px rgb(28 32 38 / .05), 0 24px 46px -28px rgb(28 32 38 / .4); }
+  @media (min-width: 768px) { .stat-card { padding: 1.6rem 1.5rem 1.4rem; } }
+  .stat-label { margin-top: .4rem; color: var(--color-muted); font-size: 1rem; line-height: 1.5; }
   .on-dark .stat-value { color: var(--color-highlight); }
   .on-dark .stat-label { color: rgb(255 255 255 / .72); }
 
@@ -143,16 +168,16 @@
   .photo-backdrop::before { content: ''; position: absolute; z-index: -1; inset: 1.5rem -1.25rem -1.25rem 1.5rem; border-radius: 2rem; background: var(--color-saffron-100); }
   @media (min-width: 768px) { .photo-backdrop::before { inset: 2rem -1.75rem -1.75rem 2rem; } }
 
-  .prose-rd { font-size: 1.075rem; color: var(--color-ink); }
+  .prose-rd { font-size: 1.1rem; line-height: 1.85; color: var(--color-ink); }
   .prose-rd > * + * { margin-top: 1.05em; }
-  .prose-rd h2 { font-size: 1.6rem; color: var(--color-charcoal-900); margin-top: 1.8em; }
-  .prose-rd h3 { font-size: 1.3rem; color: var(--color-charcoal-900); margin-top: 1.5em; }
+  .prose-rd h2 { font-size: 1.75rem; line-height: 1.3; color: var(--color-charcoal-900); margin-top: 1.7em; }
+  .prose-rd h3 { font-size: 1.4rem; line-height: 1.35; color: var(--color-charcoal-900); margin-top: 1.5em; }
   .prose-rd a { color: var(--color-saffron-700); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .2s, text-decoration-color .2s; }
   .prose-rd a:hover { color: var(--color-charcoal-900); text-decoration-color: var(--color-saffron-500); }
   .prose-rd ul { list-style: disc; padding-left: 1.4em; }
   .prose-rd ol { list-style: decimal; padding-left: 1.4em; }
   .prose-rd li + li { margin-top: .35em; }
-  .prose-rd blockquote { border-left: 4px solid var(--color-saffron-500); padding: .4em 0 .4em 1.1em; font-family: var(--font-display); font-size: 1.25rem; color: var(--color-charcoal-900); background: var(--color-cream); border-radius: 0 12px 12px 0; }
+  .prose-rd blockquote { border-left: 3px solid var(--color-saffron-500); padding: .2em 0 .2em 1.2em; font-family: var(--font-display); font-style: italic; font-size: 1.35rem; line-height: 1.6; color: var(--color-charcoal-900); }
   .prose-rd img { border-radius: 16px; }
   /* article page (newspaper style): saffron bar on sub-headings */
   .article-body .prose-rd { font-size: 1.1rem; line-height: 1.85; }
@@ -165,7 +190,7 @@
     body { background: #fff !important; }
     .article-body .prose-rd { font-size: 12pt; }
   }
-  .prose-rd strong { color: var(--color-charcoal-900); }
+  .prose-rd strong { color: var(--color-charcoal-900); font-weight: 600; }
 
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { scrollbar-width: none; }
