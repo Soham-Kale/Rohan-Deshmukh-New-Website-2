@@ -24,12 +24,12 @@ const TEXT = {
   mr: {
     tabs: 'लोकमंगल फाऊंडेशन विभाग', about: 'माहिती', events: 'कार्यक्रम', projects: 'प्रकल्प', allEvents: 'सर्व कार्यक्रम', eventsIntro: 'लोकमंगल फाऊंडेशनतर्फे आयोजित प्रमुख कार्यक्रम व सोहळे.', soon: 'माहिती लवकरच उपलब्ध होईल.', youth: 'युवा व शिक्षण', sports: 'क्रीडा', other: 'इतर कार्यक्रम',
     projectsEyebrow: 'सर्व प्रकल्प', projectsHeading: (n: string) => `सर्व ${n} सामाजिक उपक्रम`, projectsIntro: 'विषयानुसार निवडा किंवा थेट शोधून प्रत्येक उपक्रमाची सविस्तर माहिती जाणून घ्या.',
-    explorer: { all: 'सर्व उपक्रम', search: 'उपक्रम शोधा...', readMore: 'अधिक वाचा', details: 'सविस्तर माहिती', empty: 'या शोधाशी जुळणारा उपक्रम आढळला नाही.', clear: 'सर्व उपक्रम दाखवा', filters: 'विषयानुसार उपक्रम' },
+    explorer: { all: 'सर्व उपक्रम', search: 'उपक्रम शोधा...', readMore: 'अधिक वाचा', details: 'सविस्तर माहिती', empty: 'या शोधाशी जुळणारा उपक्रम आढळला नाही.', clear: 'सर्व उपक्रम दाखवा', filters: 'विषयानुसार उपक्रम', featured: 'मुख्य उपक्रम', prev: 'मागील', next: 'पुढील', slide: 'उपक्रम' },
   },
   en: {
     tabs: 'Lokmangal Foundation sections', about: 'About', events: 'Events', projects: 'Projects', allEvents: 'All events', eventsIntro: 'Major events and ceremonies organised by Lokmangal Foundation.', soon: 'Details coming soon.', youth: 'Youth & Education', sports: 'Sports', other: 'Other events',
     projectsEyebrow: 'All Projects', projectsHeading: (n: string) => `Explore All ${n} Social Initiatives`, projectsIntro: 'Lokmangal Foundation works to improve the quality of life of people in rural areas. Pick a theme or search to read about each initiative in detail.',
-    explorer: { all: 'All Projects', search: 'Search initiatives...', readMore: 'Read More', details: 'View details', empty: 'No initiative matches your search.', clear: 'Show all initiatives', filters: 'Initiatives by theme' },
+    explorer: { all: 'All Projects', search: 'Search initiatives...', readMore: 'Read More', details: 'View details', empty: 'No initiative matches your search.', clear: 'Show all initiatives', filters: 'Initiatives by theme', featured: 'Main initiatives', prev: 'Previous', next: 'Next', slide: 'Initiative' },
   },
 }
 
@@ -89,7 +89,7 @@ export default async function FoundationPage({ params }: P) {
     { label: x.other, cards: events.filter((e) => !e.group).map(toCard) },
   ].filter((g) => g.cards.length)
   const projectCards: ProjectCard[] = initiatives.map((it) => ({
-    id: it.id, href: `/social-work/${it.slug}`, title: it.title, category: it.category, categoryLabel: catLabel(it.category, locale),
+    id: it.id, href: `/social-work/${it.slug}`, title: it.title, category: it.category, categoryLabel: catLabel(it.category, locale), featured: it.featured,
     stat: it.stat, text: it.excerpt, image: mediaUrl(it.heroImage, 'card'), imageAlt: mediaAlt(it.heroImage, it.title), imageStyle: photoFit(it.heroImage, 1.6, 0.6),
   }))
   const projectCategories = INITIATIVE_CATEGORIES.map((c) => ({ value: c.value, label: catLabel(c.value, locale) }))
