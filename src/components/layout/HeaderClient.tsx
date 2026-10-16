@@ -60,8 +60,14 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
     setOpen(null)
   }, [pathname])
 
-  // one solid header on every page (no see-through variant), so nothing changes between pages
+  // solid white header on every page; only on the home page on phones/tablets it is see-through while it sits over
+  // the full-screen photo (until the visitor scrolls). Done with max-lg: classes, so there is no flash on load.
   const transparent = false
+  const [overHero, setOverHero] = useState(pathname === '/')
+  useEffect(() => {
+    setOverHero(Boolean(document.querySelector('[data-hero-overlay]')))
+  }, [pathname])
+  const heroTop = overHero && !scrolled
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
@@ -84,21 +90,25 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
         data-transparent={transparent || undefined}
         className={cn(
           'group/h sticky top-0 z-50 transition-[background-color,box-shadow,color] duration-300',
-          transparent
-            ? 'bg-gradient-to-b from-charcoal-950/55 to-transparent text-white'
+          heroTop
+            ? 'text-charcoal-900 max-lg:bg-transparent max-lg:text-white lg:bg-white/95 lg:shadow-[inset_0_-1px_0_var(--color-line)] lg:backdrop-blur'
             : cn('bg-white/95 text-charcoal-900 backdrop-blur', scrolled ? 'shadow-[0_10px_30px_-20px_rgba(28,32,38,.3)]' : 'shadow-[inset_0_-1px_0_var(--color-line)]'),
         )}
       >
         <div className={cn('container-x flex h-[4.5rem] items-center gap-2 sm:gap-4')}>
           <Link href="/" className="flex min-w-0 shrink items-center" aria-label={siteName}>
+            {heroTop && logoUrl && (
+              /* white logo over the photo (phones/tablets) */
+              <Image src={logoUrl} alt={siteName} width={190} height={48} priority className="h-9 w-auto max-w-full object-contain object-left sm:h-10 lg:hidden" />
+            )}
             {logoDarkUrl ? (
-              <Image src={logoDarkUrl} alt={siteName} width={190} height={48} priority className="h-9 w-auto max-w-full object-contain object-left sm:h-10" />
+              <Image src={logoDarkUrl} alt={siteName} width={190} height={48} priority className={cn('h-9 w-auto max-w-full object-contain object-left sm:h-10', heroTop && logoUrl && 'max-lg:hidden')} />
             ) : logoUrl ? (
               /* the white logo drawn in ink through a mask (upload a "logo for light backgrounds" to replace it) */
               <span
                 role="img"
                 aria-label={siteName}
-                className="block h-9 w-[133px] bg-charcoal-900 sm:h-10 sm:w-[148px]"
+                className={cn('block h-9 w-[133px] bg-charcoal-900 sm:h-10 sm:w-[148px]', heroTop && 'max-lg:hidden')}
                 style={{ maskImage: `url(${logoUrl})`, WebkitMaskImage: `url(${logoUrl})`, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'left center', WebkitMaskPosition: 'left center' }}
               />
             ) : (
@@ -179,7 +189,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
             <Link
               href={pathname}
               locale={locale === 'mr' ? 'en' : 'mr'}
-              className={cn('flex h-10 items-center gap-1.5 rounded-full px-3 text-[0.95rem] ring-1 transition', transparent ? 'ring-white/30 hover:bg-white/10' : 'ring-line hover:bg-cream')}
+              className={cn('flex h-10 items-center gap-1.5 rounded-full px-3 text-[0.95rem] ring-1 transition', heroTop ? 'ring-line hover:bg-cream max-lg:ring-white/40 max-lg:hover:bg-white/10' : 'ring-line hover:bg-cream')}
               aria-label={t.language}
             >
               <Languages className="hidden size-4 sm:block" />
@@ -190,7 +200,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
                 {cta.label}
               </Link>
             )}
-            <button type="button" onClick={() => setMobileOpen(true)} className={cn('grid size-11 place-items-center rounded-full xl:hidden', transparent ? 'bg-white/15' : 'bg-cream text-charcoal-900')} aria-label={t.menu} aria-expanded={mobileOpen}>
+            <button type="button" onClick={() => setMobileOpen(true)} className={cn('grid size-11 place-items-center rounded-full xl:hidden', heroTop ? 'bg-cream text-charcoal-900 max-lg:bg-white/15 max-lg:text-white' : 'bg-cream text-charcoal-900')} aria-label={t.menu} aria-expanded={mobileOpen}>
               <Menu className="size-5" />
             </button>
           </div>

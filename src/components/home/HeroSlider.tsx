@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { CMSLink } from '../ui/CMSLink'
@@ -11,7 +11,7 @@ export type Slide = {
   position?: string
   mobileImage?: string | null
   mobilePosition?: string
-  /** width ÷ height of the photo (and of the phone photo) — phones and tablets show the photo at its own shape */
+  /** width ÷ height of the photos (kept for callers; the layout no longer depends on it) */
   ratio?: number
   mobileRatio?: number
   alt: string
@@ -24,35 +24,56 @@ export type Slide = {
 const pad = (n: number) => String(n).padStart(2, '0')
 
 /**
- * Hero slideshow.
- * Desktop: full-screen photos cross-fade under a dark tint, the photo stays put while the page scrolls,
- * and the kicker / heading / buttons slide in over it; numbered pager on the right.
- * Phones and tablets: the photo is shown full width at its own shape (nothing cropped — the banners carry
- * their own lettering), with the heading, buttons and pager underneath on white.
+ * Full-screen hero slideshow.
+ * Photos cross-fade, the kicker / heading / buttons slide in one after another, numbered pager on the right.
+ * Desktop: the slide photos under a dark tint, text centred on the left.
+ * Phones & tablets: full-screen portrait photos ("mobile image" of each slide) under the see-through header,
+ * text at the bottom over a dark fade. Only slides that have a mobile image are shown there (all of them if none has one).
  * Autoplay pauses on hover, on focus and when the tab is hidden.
  */
 export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay?: number }) {
+  const count = slides.length
+  const mobileList = useMemo(() => slides.map((s, i) => (s.mobileImage ? i : -1)).filter((i) => i >= 0), [slides])
+  const hasMobile = mobileList.length > 0
+
   const [index, setIndex] = useState(0)
   const [prev, setPrev] = useState<number | null>(null)
   const [paused, setPaused] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const bgRef = useRef<HTMLDivElement>(null)
   const touch = useRef<number | null>(null)
-  const count = slides.length
-
   const [ready, setReady] = useState(false)
   const indexRef = useRef(0)
 
-  const go = useCallback(
-    (to: number) => {
-      const cur = indexRef.current
-      const next = (to + count) % count
-      if (next === cur) return
-      indexRef.current = next
-      setPrev(cur)
-      setIndex(next)
+  // which slides take part right now (phones: only those with a mobile photo)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)')
+    const on = () => setIsMobile(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  const order = useMemo(() => (isMobile && hasMobile ? mobileList : slides.map((_, i) => i)), [isMobile, hasMobile, mobileList, slides])
+
+  const show = useCallback((next: number) => {
+    const cur = indexRef.current
+    if (next === cur) return
+    indexRef.current = next
+    setPrev(cur)
+    setIndex(next)
+  }, [])
+  /** step through the slides that take part (dir +1 / -1) */
+  const step = useCallback(
+    (dir: number) => {
+      const pos = Math.max(0, order.indexOf(indexRef.current))
+      show(order[(pos + dir + order.length) % order.length])
     },
-    [count],
+    [order, show],
   )
+  // a slide without a phone photo is never left on screen after switching to the phone layout
+  useEffect(() => {
+    if (!order.includes(indexRef.current)) show(order[0])
+  }, [order, show])
 
   // first slide animates in after hydration (text is still in the HTML for search engines)
   useEffect(() => {
@@ -62,10 +83,10 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
 
   // autoplay
   useEffect(() => {
-    if (count < 2 || paused) return
-    const id = window.setTimeout(() => go(index + 1), autoplay * 1000)
+    if (order.length < 2 || paused) return
+    const id = window.setTimeout(() => step(1), autoplay * 1000)
     return () => window.clearTimeout(id)
-  }, [index, paused, autoplay, count, go])
+  }, [index, paused, autoplay, order, step])
 
   // pause while the tab is hidden
   useEffect(() => {
@@ -77,7 +98,6 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
   // photo stays (almost) fixed while the page scrolls over it — transform-based, so it also works on iOS
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    if (!window.matchMedia('(min-width: 1024px)').matches) return // phones/tablets: photo sits above the text, no parallax
     let raf = 0
     const onScroll = () => {
       cancelAnimationFrame(raf)
@@ -106,8 +126,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
   return (
     <section
       data-hero-overlay
-      className="relative isolate overflow-hidden bg-white text-charcoal-900 lg:h-[calc(100svh-6.75rem)] lg:min-h-[600px] lg:bg-charcoal-950 lg:text-white"
-      style={{ ['--hero-ratio' as string]: String(slides[0]?.mobileRatio ?? slides[0]?.ratio ?? 2.4) }}
+      className="relative isolate h-[100svh] min-h-[560px] overflow-hidden bg-charcoal-950 text-white max-lg:-mt-[4.5rem] lg:h-[calc(100svh-6.75rem)] lg:min-h-[600px]"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -117,12 +136,12 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
       onTouchEnd={(e) => {
         if (touch.current === null) return
         const dx = e.changedTouches[0].clientX - touch.current
-        if (Math.abs(dx) > 50) go(index + (dx < 0 ? 1 : -1))
+        if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1)
         touch.current = null
       }}
     >
       {/* photos */}
-      <div ref={bgRef} className="relative aspect-[var(--hero-ratio)] w-full overflow-hidden bg-cream lg:absolute lg:inset-0 lg:-z-20 lg:aspect-auto lg:bg-transparent lg:will-change-transform">
+      <div ref={bgRef} className="absolute inset-0 -z-20 will-change-transform">
         {slides.map((s, i) => {
           const active = i === index
           const leaving = i === prev
@@ -130,10 +149,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
             <div
               key={i}
               aria-hidden={!active}
-              className={cn(
-                'absolute inset-0 transition-opacity duration-[1200ms] ease-out',
-                active ? 'z-10 opacity-100' : leaving ? 'z-0 opacity-0' : 'z-0 opacity-0',
-              )}
+              className={cn('absolute inset-0 transition-opacity duration-[1200ms] ease-out', active ? 'z-10 opacity-100' : leaving ? 'z-0 opacity-0' : 'z-0 opacity-0')}
             >
               <Image
                 src={s.image}
@@ -142,11 +158,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
                 priority={i === 0}
                 sizes="100vw"
                 style={{ objectPosition: s.position }}
-                className={cn(
-                  'object-cover transition-transform duration-[7000ms] ease-out',
-                  s.mobileImage && 'max-lg:hidden',
-                  active ? 'lg:scale-110' : 'lg:scale-100',
-                )}
+                className={cn('object-cover transition-transform duration-[7000ms] ease-out', s.mobileImage && 'max-lg:hidden', active ? 'scale-110' : 'scale-100')}
               />
               {s.mobileImage && (
                 <Image
@@ -156,7 +168,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
                   priority={i === 0}
                   sizes="100vw"
                   style={{ objectPosition: s.mobilePosition }}
-                  className="object-cover lg:hidden"
+                  className={cn('object-cover transition-transform duration-[7000ms] ease-out lg:hidden', active ? 'scale-105' : 'scale-100')}
                 />
               )}
             </div>
@@ -164,13 +176,15 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
         })}
       </div>
 
-      {/* tint — flat like the reference, a little deeper at the bottom for the text on phones */}
+      {/* tint — desktop: flat; phones: clear in the middle, darker at the top (header) and deep at the bottom (text) */}
       <div aria-hidden className="absolute inset-0 -z-10 hidden bg-overlay lg:block" />
       <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 hidden h-1/3 bg-gradient-to-t from-charcoal-950/40 to-transparent lg:block" />
+      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-charcoal-950/60 to-transparent lg:hidden" />
+      <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-[70%] bg-gradient-to-t from-charcoal-950/95 via-charcoal-950/60 to-transparent lg:hidden" />
 
       {/* text */}
-      <div className="container-x relative pb-4 pt-7 lg:flex lg:h-full lg:items-center lg:py-0 lg:pr-36">
-        {/* all slides share one grid cell, so the block keeps the height of the tallest text and nothing below it jumps */}
+      <div className="container-x relative flex h-full items-end pb-12 pr-16 pt-28 sm:pb-16 lg:items-center lg:pb-0 lg:pr-36">
+        {/* all slides share one grid cell, so the block keeps one height and nothing jumps */}
         <div className="relative grid w-full max-w-4xl">
           {slides.map((s, i) => {
             const state = i === index ? (ready ? 'in' : 'pre') : i === prev ? 'out' : 'idle'
@@ -178,31 +192,36 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
               <div
                 key={i}
                 aria-hidden={state === 'out' || state === 'idle'}
-                className={cn('[grid-area:1/1]', (state === 'out' || state === 'idle') && 'pointer-events-none', state === 'idle' && 'invisible')}
+                className={cn(
+                  '[grid-area:1/1] max-lg:self-end lg:self-center',
+                  (state === 'out' || state === 'idle') && 'pointer-events-none',
+                  state === 'idle' && 'invisible',
+                  hasMobile && !s.mobileImage && 'max-lg:hidden',
+                )}
               >
                 {s.kicker && (
-                  <p className="hero-line hero-kicker mb-3 text-base font-light uppercase text-saffron-700 sm:text-xl lg:mb-4 lg:text-2xl lg:text-saffron-300" data-state={state} style={{ ['--hero-x' as string]: '100px', transitionDelay: state === 'in' ? '150ms' : '0ms' }}>
+                  <p className="hero-line hero-kicker mb-3 text-[0.95rem] font-light uppercase text-saffron-300 sm:text-xl lg:mb-4 lg:text-2xl" data-state={state} style={{ ['--hero-x' as string]: '100px', transitionDelay: state === 'in' ? '150ms' : '0ms' }}>
                     {s.kicker}
                   </p>
                 )}
                 {i === 0 ? (
-                  <h1 className="hero-line text-[2.1rem] font-semibold leading-[1.15] sm:text-5xl md:text-6xl lg:text-7xl" data-state={state} style={{ ['--hero-x' as string]: '200px', transitionDelay: state === 'in' ? '250ms' : '0ms' }}>
+                  <h1 className="hero-line text-[2.3rem] font-semibold leading-[1.12] sm:text-5xl md:text-6xl lg:text-7xl" data-state={state} style={{ ['--hero-x' as string]: '200px', transitionDelay: state === 'in' ? '250ms' : '0ms' }}>
                     {s.heading}
                   </h1>
                 ) : (
-                  <p className="hero-line font-display text-[2.1rem] font-semibold leading-[1.15] sm:text-5xl md:text-6xl lg:text-7xl" data-state={state} style={{ ['--hero-x' as string]: '200px', transitionDelay: state === 'in' ? '250ms' : '0ms' }}>
+                  <p className="hero-line font-display text-[2.3rem] font-semibold leading-[1.12] sm:text-5xl md:text-6xl lg:text-7xl" data-state={state} style={{ ['--hero-x' as string]: '200px', transitionDelay: state === 'in' ? '250ms' : '0ms' }}>
                     {s.heading}
                   </p>
                 )}
                 {s.subheading && (
-                  <p className="hero-line mt-4 max-w-2xl text-base text-muted sm:text-lg lg:mt-5 lg:text-xl lg:text-white/85" data-state={state} style={{ ['--hero-x' as string]: '300px', transitionDelay: state === 'in' ? '350ms' : '0ms' }}>
+                  <p className="hero-line mt-4 max-w-2xl text-base text-white/85 sm:text-lg lg:mt-5 lg:text-xl" data-state={state} style={{ ['--hero-x' as string]: '300px', transitionDelay: state === 'in' ? '350ms' : '0ms' }}>
                     {s.subheading}
                   </p>
                 )}
                 {s.buttons.length > 0 && (
                   <div className="hero-line mt-6 flex flex-wrap gap-3 lg:mt-9" data-state={state} style={{ ['--hero-x' as string]: '400px', transitionDelay: state === 'in' ? '450ms' : '0ms' }}>
                     {s.buttons.map((b, j) => (
-                      <CMSLink key={j} url={b.url} tabIndex={state === 'in' ? undefined : -1} className={cn('btn text-base', j === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900 lg:text-white')}>
+                      <CMSLink key={j} url={b.url} tabIndex={state === 'in' ? undefined : -1} className={cn('btn text-base max-lg:!min-h-11 max-lg:px-5 max-lg:text-[0.95rem]', j === 0 ? 'btn-primary' : 'btn-ghost text-white')}>
                         {b.label} <ArrowRight className="size-4" />
                       </CMSLink>
                     ))}
@@ -214,24 +233,34 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
         </div>
       </div>
 
-      {/* numbered pager: vertical on the right (desktop/tablet), horizontal at the bottom (phones) */}
-      {count > 1 && (
-        <nav aria-label="Slides" className="container-x relative z-10 pb-8 lg:absolute lg:right-20 lg:top-1/2 lg:w-auto lg:max-w-none lg:-translate-y-1/2 lg:p-0">
-          <ol className="flex gap-5 lg:flex-col lg:items-end lg:gap-6">
-            {slides.map((_, i) => (
-              <li key={i}>
-                <button
-                  type="button"
-                  onClick={() => go(i)}
-                  aria-label={`Slide ${i + 1}`}
-                  aria-current={i === index ? 'true' : undefined}
-                  className={cn('group flex min-h-10 items-center gap-3 py-1 text-base tabular-nums transition-colors lg:text-lg', i === index ? 'text-charcoal-900 lg:text-white' : 'text-muted hover:text-charcoal-900 lg:text-white/55 lg:hover:text-white')}
-                >
-                  <span aria-hidden className={cn('h-0.5 bg-saffron-500 transition-all duration-500 lg:h-px lg:bg-white', i === index ? 'w-8 lg:w-12' : 'w-0 group-hover:w-4')} />
-                  {pad(i + 1)}
-                </button>
-              </li>
-            ))}
+      {/* numbered pager on the right — phones: lower right beside the text; desktop: centred */}
+      {order.length > 1 && (
+        <nav aria-label="Slides" className="absolute right-4 top-[44%] z-10 sm:right-8 md:right-16 lg:right-20 lg:top-1/2 lg:-translate-y-1/2">
+          <ol className="flex flex-col items-end gap-3 lg:gap-6">
+            {slides.map((s, i) => {
+              const mobilePos = mobileList.indexOf(i)
+              return (
+                <li key={i} className={cn(hasMobile && !s.mobileImage && 'max-lg:hidden')}>
+                  <button
+                    type="button"
+                    onClick={() => show(i)}
+                    aria-label={`Slide ${i + 1}`}
+                    aria-current={i === index ? 'true' : undefined}
+                    className={cn('group flex min-h-9 items-center gap-3 py-1 text-base tabular-nums transition-colors lg:text-lg', i === index ? 'text-white' : 'text-white/55 hover:text-white')}
+                  >
+                    <span aria-hidden className={cn('h-px bg-white transition-all duration-500', i === index ? 'w-8 lg:w-12' : 'w-0 group-hover:w-4')} />
+                    {hasMobile ? (
+                      <>
+                        <span className="lg:hidden">{pad(mobilePos + 1)}</span>
+                        <span className="max-lg:hidden">{pad(i + 1)}</span>
+                      </>
+                    ) : (
+                      pad(i + 1)
+                    )}
+                  </button>
+                </li>
+              )
+            })}
           </ol>
         </nav>
       )}

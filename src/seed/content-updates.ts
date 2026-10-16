@@ -16,7 +16,7 @@ import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-16j'
+export const CONTENT_VERSION = '2026-10-16k'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -314,6 +314,7 @@ export async function applyContentUpdates(payload: Payload) {
   await removeParivarEmoji(payload)
   await stripEmojiEverywhere(payload)
   await removeFoundationImpact(payload)
+  await applyHeroMobilePhotos(payload)
 }
 
 /** 16 Oct 2026: the closing "आम्हाला साथ द्या / Join us in building a better Maharashtra" band is removed from every page */
@@ -364,4 +365,33 @@ export async function removeFoundationImpact(payload: Payload) {
   if (keep.length === layout.length) return
   await payload.update({ collection: 'pages', id: page.id, locale: 'mr', depth: 0, data: { layout: keep, _status: 'published' } as never })
   payload.logger.info('removed Impact So Far and The road ahead from /lokmangal/foundation')
+}
+
+/**
+ * 16 Oct 2026: phones show the home slider as full-screen portrait photos with the text over them.
+ * Slides 1 and 2 get a "mobile image" (a portrait of Rohan, and Rohan with the saffron scarf); a slide that already
+ * has a mobile image keeps it, so photos chosen later in the admin are never overwritten.
+ */
+const HERO_MOBILE: { src: string; alt: string }[] = [
+  { src: '/images/portraits/rohan-deshmukh-kurta.webp', alt: 'रोहन सुभाष देशमुख' },
+  { src: '/images/gallery/political/rd-political-07.webp', alt: 'रोहन सुभाष देशमुख' },
+]
+
+export async function applyHeroMobilePhotos(payload: Payload) {
+  const home = await payload.findGlobal({ slug: 'home', locale: 'mr', depth: 0, fallbackLocale: false as never })
+  const sections = (home.sections ?? []) as { blockType?: string; slides?: { imageMobile?: unknown }[] }[]
+  const hero = sections.find((b) => b.blockType === 'heroSlider')
+  if (!hero?.slides?.length) return
+  let changed = false
+  for (const [i, pick] of HERO_MOBILE.entries()) {
+    const slide = hero.slides[i]
+    if (!slide || slide.imageMobile) continue
+    const name = pick.src.split('/').pop()
+    const found = (await payload.find({ collection: 'media', where: { filename: { equals: name } }, limit: 1, depth: 0 })).docs[0]
+    slide.imageMobile = found ? found.id : await image(payload, pick.src, pick.alt)
+    if (slide.imageMobile) changed = true
+  }
+  if (!changed) return
+  await payload.updateGlobal({ slug: 'home', locale: 'mr', depth: 0, data: { sections, _status: 'published' } as never })
+  payload.logger.info('home slider: mobile photos set for slides 1 and 2')
 }
