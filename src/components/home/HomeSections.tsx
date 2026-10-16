@@ -368,7 +368,6 @@ function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
       <div className="container-x relative grid items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-          {b.heading && <h2 className="h-section text-white">{b.heading}</h2>}
           {b.text && <p className="mt-4 text-lg text-white/75">{b.text}</p>}
           {b.buttonUrl && <div className="mt-6"><MoreLink url={b.buttonUrl} label={b.buttonLabel} dark /></div>}
         </div>
@@ -447,23 +446,25 @@ async function EventsSection({ b, locale }: { b: Of<'homeEvents'>; locale: Local
 }
 
 function VisionSection({ b }: { b: Of<'homeVision'> }) {
-  const img = mediaUrl(b.image, 'card')
+  const img = mediaUrl(b.image)
   return (
-    <section className="on-dark grain relative overflow-hidden bg-charcoal-900 py-16 text-white md:py-24">
+    <section className="relative overflow-hidden border-y border-line bg-cream py-16 md:py-24">
+      <div aria-hidden className="absolute -left-24 -bottom-28 size-96 rounded-full border-[40px] border-saffron-500/10" />
       <div className="container-x relative grid items-center gap-10 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-16">
         <div className="flex justify-center">
           {img ? (
-            <div className="relative w-56 md:w-64">
-              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} width={mediaSize(b.image).width} height={mediaSize(b.image).height} sizes="256px" className="h-auto w-full rounded-lg shadow-[18px_24px_50px_-20px_rgba(0,0,0,.7)]" />
+            /* the book cover at its own shape, tilted slightly like a book on a shelf */
+            <div className="relative w-52 -rotate-2 transition duration-500 hover:rotate-0 sm:w-60 md:w-64 lg:w-72">
+              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} width={mediaSize(b.image).width} height={mediaSize(b.image).height} sizes="(max-width:768px) 240px, 288px" className="h-auto w-full rounded-md shadow-[18px_26px_50px_-18px_rgb(20_33_61/0.55)] ring-1 ring-charcoal-900/10" />
             </div>
           ) : (
-            <BookOpen className="size-24 text-saffron-300" />
+            <BookOpen className="size-24 text-saffron-600" />
           )}
         </div>
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-          {b.heading && <h2 className="h-section text-white">{b.heading}</h2>}
-          {b.text && <p className="mt-4 text-lg text-white/75">{b.text}</p>}
+          {b.heading && <h2 className="h-section">{b.heading}</h2>}
+          {b.text && <p className="mt-4 text-lg text-muted">{b.text}</p>}
           {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn btn-primary mt-8">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
         </div>
       </div>

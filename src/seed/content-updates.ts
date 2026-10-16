@@ -14,7 +14,7 @@ import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-16c'
+export const CONTENT_VERSION = '2026-10-16d'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 

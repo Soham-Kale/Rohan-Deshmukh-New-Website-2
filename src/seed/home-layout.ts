@@ -1,8 +1,8 @@
 /**
  * Homepage layout (Oct 2026, client document "New Content RD Web"): every section after the hero slider.
  * The hero slider itself is never touched — its slides stay exactly as they are on the website.
- * Order: About → Journey → Family → Lokmangal Parivar → Foundation (23 initiatives) → Political journey →
- * Events → Vision → Blog → Photos → Connect.
+ * Order: About → Journey → Family → Vision (New India Manifesto) → Lokmangal Parivar → Foundation (23 initiatives) →
+ * Political journey → Blog → Connect.
  */
 import type { Payload } from 'payload'
 import { L } from './l10n'
@@ -11,9 +11,7 @@ import { updateGlobalBilingual } from './bilingual'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { DOC_FAMILY } from './content-pages'
 
-const GALLERY = ['tuljapur-sabha-01', 'samudayik-vivah-13', 'prachar-sabha-02', 'annapurna-03', 'cm-chashak-04', 'lotus-05', 'shikshanratna-puraskar-02', 'jalsandharan-02', 'samudayik-vivah-16']
-
-export const homeSectionsAfterHero = (p: Payload, keep: { galleryImages?: number[] } = {}) => [
+export const homeSectionsAfterHero = (p: Payload) => [
   {
     blockType: 'aboutIntro', eyebrow: L('परिचय', 'About'), heading: L('रोहन सुभाष देशमुख', 'Rohan Subhash Deshmukh'),
     image: image(p, PORTRAITS.about, 'रोहन सुभाष देशमुख'),
@@ -49,6 +47,16 @@ export const homeSectionsAfterHero = (p: Payload, keep: { galleryImages?: number
       { image: image(p, DOC_FAMILY[2].img, ''), relation: DOC_FAMILY[2].relation, name: DOC_FAMILY[2].name, text: L('लोकमंगल पतसंस्थेचे अध्यक्ष आणि लोकमंगल फाऊंडेशनचे उपाध्यक्ष.', 'President, Lokmangal Patsanstha; Vice President, Lokmangal Foundation.') },
     ],
     buttonLabel: L('संपूर्ण माहिती', 'Full family story'), buttonUrl: '/about/biography',
+  },
+  {
+    blockType: 'homeVision', eyebrow: L('व्हिजन', 'Vision'),
+    heading: L('पुढच्या पिढीला स्वतःचे काहीतरी उभे करण्याचा आत्मविश्वास', 'Giving the next generation the confidence to build their own'),
+    image: image(p, '/images/vision/new-india-manifesto-cover.webp', 'The New India Manifesto — Rohan Deshmukh'),
+    text: L(
+      'रोहन यांच्या ‘न्यू इंडिया मॅनिफेस्टो’ या पुस्तकात नव्या भारताविषयीचे विचार मांडले आहेत. त्यातून प्रेरणा घेऊन ते संपूर्ण महाराष्ट्रात सक्षम स्टार्टअप परिसंस्था उभारत आहेत — मोठ्या शहरातील असो वा छोट्या गावातील, प्रत्येक तरुणाला मार्गदर्शन, पाठबळ आणि संधी मिळावी.',
+      'Rohan’s book New India Manifesto sets out his ideas for a new India. Inspired by it, he is building a strong startup ecosystem across Maharashtra — so young people from big cities and small towns get guidance, support and opportunity.',
+    ),
+    buttonLabel: L('व्हिजन वाचा', 'Read the vision'), buttonUrl: '/vision',
   },
   {
     blockType: 'homeParivar', eyebrow: L('लोकमंगल परिवार', 'Lokmangal Parivar'),
@@ -88,26 +96,7 @@ export const homeSectionsAfterHero = (p: Payload, keep: { galleryImages?: number
     ],
     buttonLabel: L('राजकीय कारकीर्द', 'Political career'), buttonUrl: '/political-career',
   },
-  {
-    blockType: 'homeEvents', eyebrow: L('कार्यक्रम', 'Events'), heading: L('तरुणाई, क्रीडा आणि कलागुणांसाठी व्यासपीठ', 'A stage for youth, sport and talent'),
-    limit: 4, buttonLabel: L('सर्व कार्यक्रम', 'All events'), buttonUrl: '/lokmangal/foundation#events',
-  },
-  {
-    blockType: 'homeVision', eyebrow: L('व्हिजन', 'Vision'),
-    heading: L('पुढच्या पिढीला स्वतःचे काहीतरी उभे करण्याचा आत्मविश्वास', 'Giving the next generation the confidence to build their own'),
-    image: image(p, '/images/vision/book.webp', 'न्यू इंडिया मॅनिफेस्टो'),
-    text: L(
-      'रोहन यांच्या ‘न्यू इंडिया मॅनिफेस्टो’ या पुस्तकात नव्या भारताविषयीचे विचार मांडले आहेत. त्यातून प्रेरणा घेऊन ते संपूर्ण महाराष्ट्रात सक्षम स्टार्टअप परिसंस्था उभारत आहेत — मोठ्या शहरातील असो वा छोट्या गावातील, प्रत्येक तरुणाला मार्गदर्शन, पाठबळ आणि संधी मिळावी.',
-      'Rohan’s book New India Manifesto sets out his ideas for a new India. Inspired by it, he is building a strong startup ecosystem across Maharashtra — so young people from big cities and small towns get guidance, support and opportunity.',
-    ),
-    buttonLabel: L('व्हिजन वाचा', 'Read the vision'), buttonUrl: '/vision',
-  },
   { blockType: 'latestBlog', eyebrow: L('लेखक: रोहन देशमुख', 'By Rohan Deshmukh'), heading: L('ताजे लेख', 'Latest articles'), limit: 3 },
-  {
-    blockType: 'homeGallery', eyebrow: L('क्षणचित्रे', 'Moments'), heading: L('फोटो संग्रह', 'Photo gallery'),
-    images: keep.galleryImages?.length ? keep.galleryImages : GALLERY.map((s) => image(p, `/images/gallery/${s}.webp`)),
-    buttonLabel: L('सर्व फोटो पहा', 'View all photos'), buttonUrl: '/media/photos',
-  },
   {
     blockType: 'appealBand', heading: L('नवी कल्पना, स्वयंसेवा किंवा एकत्र काम करायचे आहे?', 'Have an idea, want to volunteer or work together?'),
     text: L('रोहन यांच्या कार्यालयाला लिहा — प्रत्येक संदेश वाचला जातो.', 'Write to Rohan’s office — every message is read.'),
@@ -136,7 +125,5 @@ export async function applyHomeLayout(payload: Payload) {
   const mrSections = (mr.sections ?? []) as Record<string, unknown>[]
   const enSections = (en.sections ?? []) as Record<string, unknown>[]
   const heroes = mrSections.flatMap((b, i) => (b.blockType === 'heroSlider' ? [mergeLocales(b, enSections[i])] : []))
-  const gallery = mrSections.find((b) => b.blockType === 'homeGallery')?.images as (number | { id: number })[] | undefined
-  const galleryImages = (gallery ?? []).map((m) => (typeof m === 'object' ? m.id : m)).slice(0, 9)
-  await updateGlobalBilingual(payload, 'home', { sections: [...heroes, ...homeSectionsAfterHero(payload, { galleryImages })] })
+  await updateGlobalBilingual(payload, 'home', { sections: [...heroes, ...homeSectionsAfterHero(payload)] })
 }
