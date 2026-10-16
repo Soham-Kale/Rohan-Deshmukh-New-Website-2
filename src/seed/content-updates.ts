@@ -8,13 +8,14 @@ import { applyMenu } from './menu'
 import { image, md, PORTRAITS, remoteImage } from './helpers'
 import { LOKMANGAL_MEDIA, LOKMANGAL_PROJECTS, S3 } from './lokmangal-projects'
 import { applyHomeLayout } from './home-layout'
+import { applyPhotoGallery } from './photo-gallery'
 import { createBilingual, replaceBilingual } from './bilingual'
 import { DOC_TEXT_TARGETS, familyPage, foundationPage, introPage, parivarPage, politicalPage } from './content-pages'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-16d'
+export const CONTENT_VERSION = '2026-10-16h'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -267,6 +268,23 @@ export async function applyLokmangalProjects(payload: Payload) {
   }
 }
 
+/** लोकमंगल फाऊंडेशन → "कार्याची प्रमुख क्षेत्रे" (Key Areas of Work): cards without the emoji icons */
+export async function removeKeyAreaIcons(payload: Payload) {
+  const page = (await payload.find({ collection: 'pages', where: { path: { equals: '/lokmangal/foundation' } }, locale: 'en', limit: 1, depth: 0, draft: true })).docs[0]
+  if (!page) return
+  let changed = false
+  const layout = (page.layout ?? []).map((b) => {
+    if (b.blockType !== 'cards' || b.heading !== 'Key Areas of Work') return b
+    const items = (b.items ?? []).map((it) => {
+      if (!it.icon) return it
+      changed = true
+      return { ...it, icon: null }
+    })
+    return { ...b, items }
+  })
+  if (changed) await payload.update({ collection: 'pages', id: page.id, locale: 'en', depth: 0, data: { layout, _status: 'published' } as never })
+}
+
 /** Blog: the Marathi articles had their English title saved as the subtitle, so English showed under the Marathi title */
 export async function clearEnglishSubtitles(payload: Payload) {
   for (const post of POSTS as { slug: string; en: string }[]) {
@@ -289,4 +307,6 @@ export async function applyContentUpdates(payload: Payload) {
   await applyIntroJourney(payload)
   await applyLokmangalProjects(payload)
   await applyHomeLayout(payload)
+  await removeKeyAreaIcons(payload)
+  await applyPhotoGallery(payload)
 }

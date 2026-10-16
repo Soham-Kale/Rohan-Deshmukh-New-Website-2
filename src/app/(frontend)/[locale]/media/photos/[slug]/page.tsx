@@ -4,7 +4,7 @@ import { cache } from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
-import { formatDate, mediaUrl } from '@/lib/utils'
+import { mediaUrl } from '@/lib/utils'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { Gallery } from '@/components/ui/Gallery'
 import { toGallery } from '@/components/ui/toGallery'
@@ -27,11 +27,10 @@ export default async function AlbumPage({ params }: P) {
   const a = await get(slug, locale)
   if (!a) notFound()
   const t = await getTranslations('pages')
-  const sub = [a.date ? formatDate(a.date, locale) : null, `${a.photos?.length ?? 0} ${t('photosInAlbum')}`].filter(Boolean).join(' · ')
   return (
-    <InnerPage path={`/media/photos/${a.slug}`} locale={locale} title={a.title} subtitle={a.description || sub} wide
+    <InnerPage path={`/media/photos/${a.slug}`} locale={locale} title={a.title} subtitle={a.description || undefined} wide
       crumbs={[{ label: t('media') }, { label: t('photoGallery'), href: '/media/photos' }, { label: a.title }]}>
-      <Gallery images={toGallery(a.photos as never, a.title)} layout="masonry" />
+      <Gallery images={toGallery(a.photos as never, a.title)} layout="masonry" wide />
     </InnerPage>
   )
 }

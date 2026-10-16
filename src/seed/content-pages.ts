@@ -164,11 +164,11 @@ export const foundationPage = (p: Payload) => ({
     {
       blockType: 'cards', eyebrow: L('कार्यक्षेत्र', 'What we do'), heading: L('कार्याची प्रमुख क्षेत्रे', 'Key Areas of Work'), columns: '3',
       items: [
-        { icon: '📚', title: L('शिक्षण', 'Education'), text: L('गरजू विद्यार्थ्यांना शिक्षण सुरू ठेवण्यासाठी मदत', 'Helping students in need continue their studies'), url: '/social-work/lotus' },
-        { icon: '💍', title: L('सामुदायिक विवाह', 'Community Weddings'), text: L('आधाराची गरज असलेल्या कुटुंबांसाठी विवाह सोहळ्यांचे आयोजन', 'Organising weddings for families who need support'), url: '/social-work/samudayik-vivah' },
-        { icon: '💧', title: L('शेती व पाणी', 'Agriculture & Water'), text: L('जलसंधारण प्रकल्पांद्वारे शेतकऱ्यांच्या शेतीला अधिक पाणी', 'Helping farmers get more water for their fields through water conservation projects'), url: '/social-work/jalsandharan' },
-        { icon: '🍲', title: L('अन्नसेवा', 'Food Service'), text: L('काळजी घेणारे कोणी नसलेल्या ज्येष्ठ नागरिकांना रोजचे जेवण', 'Providing daily meals to elderly people who have no one to care for them'), url: '/social-work/annapurna-yojana' },
-        { icon: '🩺', title: L('आरोग्य व समाजकल्याण', 'Healthcare & Social Welfare'), text: L('गरजूंच्या आरोग्य व कल्याणासाठी मदत', 'Supporting the health and well-being of people in need'), url: '/social-work/maha-arogya-shibir' },
+        { title: L('शिक्षण', 'Education'), text: L('गरजू विद्यार्थ्यांना शिक्षण सुरू ठेवण्यासाठी मदत', 'Helping students in need continue their studies'), url: '/social-work/lotus' },
+        { title: L('सामुदायिक विवाह', 'Community Weddings'), text: L('आधाराची गरज असलेल्या कुटुंबांसाठी विवाह सोहळ्यांचे आयोजन', 'Organising weddings for families who need support'), url: '/social-work/samudayik-vivah' },
+        { title: L('शेती व पाणी', 'Agriculture & Water'), text: L('जलसंधारण प्रकल्पांद्वारे शेतकऱ्यांच्या शेतीला अधिक पाणी', 'Helping farmers get more water for their fields through water conservation projects'), url: '/social-work/jalsandharan' },
+        { title: L('अन्नसेवा', 'Food Service'), text: L('काळजी घेणारे कोणी नसलेल्या ज्येष्ठ नागरिकांना रोजचे जेवण', 'Providing daily meals to elderly people who have no one to care for them'), url: '/social-work/annapurna-yojana' },
+        { title: L('आरोग्य व समाजकल्याण', 'Healthcare & Social Welfare'), text: L('गरजूंच्या आरोग्य व कल्याणासाठी मदत', 'Supporting the health and well-being of people in need'), url: '/social-work/maha-arogya-shibir' },
       ],
     },
     {

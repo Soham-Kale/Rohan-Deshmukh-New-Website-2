@@ -13,6 +13,7 @@ import * as C from './content-collections'
 import { pages } from './content-pages'
 import { importBlog } from './legacy-blog'
 import { applyHomeLayout } from './home-layout'
+import { applyPhotoGallery } from './photo-gallery'
 
 const CONTENT: CollectionSlug[] = ['posts', 'categories', 'events', 'initiatives', 'albums', 'videos', 'download-photos', 'quotes', 'leader-meetings', 'awards', 'offices', 'jobs', 'pages', 'media', 'search']
 
@@ -73,7 +74,7 @@ async function run() {
   for (const e of C.docEvents()) await createBilingual(payload, 'events', e)
 
   log('Photo albums…')
-  for (const a of C.albums(payload)) await createBilingual(payload, 'albums', a)
+  await applyPhotoGallery(payload)
 
   log('Videos & quotes…')
   for (const v of C.videos()) await createBilingual(payload, 'videos', v)

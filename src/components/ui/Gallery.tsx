@@ -11,12 +11,12 @@ import { cn } from '@/lib/utils'
 
 export type GalleryImage = { src: string; thumb: string; alt: string; caption?: string | null; width?: number | null; height?: number | null }
 
-export function Gallery({ images, layout = 'grid', className }: { images: GalleryImage[]; layout?: 'grid' | 'masonry'; className?: string }) {
+export function Gallery({ images, layout = 'grid', wide = false, className }: { images: GalleryImage[]; layout?: 'grid' | 'masonry'; wide?: boolean; className?: string }) {
   const [index, setIndex] = useState(-1)
   if (!images.length) return null
   return (
     <>
-      <div className={cn(layout === 'masonry' ? 'columns-2 gap-3 md:columns-3 lg:columns-4 [&>*]:mb-3' : 'grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4', className)}>
+      <div className={cn(layout === 'masonry' ? (wide ? 'columns-2 gap-3 md:columns-3 lg:columns-4 xl:columns-5 [&>*]:mb-3' : 'columns-2 gap-3 md:columns-3 lg:columns-4 [&>*]:mb-3') : 'grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4', className)}>
         {images.map((img, i) => (
           <button
             key={img.src + i}

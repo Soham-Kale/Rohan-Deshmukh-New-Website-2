@@ -19,6 +19,9 @@ import * as migration_20261016_060615_initiative_details from './20261016_060615
 import * as migration_20261016_070000_lokmangal_projects from './20261016_070000_lokmangal_projects';
 import * as migration_20261016_075656_home_sections from './20261016_075656_home_sections';
 import * as migration_20261016_080000_home_layout from './20261016_080000_home_layout';
+import * as migration_20261016_110000_home_tweaks from './20261016_110000_home_tweaks';
+import * as migration_20261016_130000_photo_gallery from './20261016_130000_photo_gallery';
+import * as migration_20261016_160000_photo_gallery_rohan from './20261016_160000_photo_gallery_rohan';
 
 export const migrations = [
   {
@@ -125,5 +128,20 @@ export const migrations = [
     up: migration_20261016_080000_home_layout.up,
     down: migration_20261016_080000_home_layout.down,
     name: '20261016_080000_home_layout',
+  },
+  {
+    up: migration_20261016_110000_home_tweaks.up,
+    down: migration_20261016_110000_home_tweaks.down,
+    name: '20261016_110000_home_tweaks',
+  },
+  {
+    up: migration_20261016_130000_photo_gallery.up,
+    down: migration_20261016_130000_photo_gallery.down,
+    name: '20261016_130000_photo_gallery',
+  },
+  {
+    up: migration_20261016_160000_photo_gallery_rohan.up,
+    down: migration_20261016_160000_photo_gallery_rohan.down,
+    name: '20261016_160000_photo_gallery_rohan',
   },
 ];

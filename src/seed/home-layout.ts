@@ -17,12 +17,6 @@ export const homeSectionsAfterHero = (p: Payload) => [
     image: image(p, PORTRAITS.about, 'रोहन सुभाष देशमुख'),
     pledge: L(HOME_TAGLINE.mr, HOME_TAGLINE.en),
     text: L(HOME_INTRO.mr, HOME_INTRO.en),
-    stats: [
-      { label: L('जन्म', 'Born'), value: L('१२ डिसेंबर १९८७, सोलापूर', '12 Dec 1987, Solapur') },
-      { label: L('शिक्षण', 'Studied'), value: L('RIT, अमेरिका', 'RIT, USA') },
-      { label: L('अध्यक्ष', 'President'), value: L('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation') },
-      { label: L('लेखक', 'Author'), value: L('न्यू इंडिया मॅनिफेस्टो', 'New India Manifesto') },
-    ],
     buttonLabel: L('संपूर्ण परिचय वाचा', 'Read full introduction'), buttonUrl: '/about/introduction',
   },
   {
@@ -36,7 +30,7 @@ export const homeSectionsAfterHero = (p: Payload) => [
     buttonLabel: L('स्वपरिचय', 'Introduction'), buttonUrl: '/about/introduction',
   },
   {
-    blockType: 'family', eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family background'), heading: L('देशमुख परिवार', 'The Deshmukh family'),
+    blockType: 'family', eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family background'),
     intro: L(
       'श्रद्धा, समाजाप्रती कर्तव्याची भावना आणि उद्योजकतेचा वारसा — आजही महाराष्ट्रात एक आदर्श एकत्र कुटुंब म्हणून ओळखला जाणारा परिवार.',
       'Faith, a strong sense of duty towards society and a spirit of enterprise — still seen as a model joint family across Maharashtra.',
