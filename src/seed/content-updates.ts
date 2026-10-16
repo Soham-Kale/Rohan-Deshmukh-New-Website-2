@@ -7,13 +7,14 @@ import type { Payload } from 'payload'
 import { applyMenu } from './menu'
 import { image, md, PORTRAITS, remoteImage } from './helpers'
 import { LOKMANGAL_MEDIA, LOKMANGAL_PROJECTS, S3 } from './lokmangal-projects'
+import { applyHomeLayout } from './home-layout'
 import { createBilingual, replaceBilingual } from './bilingual'
 import { DOC_TEXT_TARGETS, familyPage, foundationPage, introPage, parivarPage, politicalPage } from './content-pages'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-16b'
+export const CONTENT_VERSION = '2026-10-16c'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -287,4 +288,5 @@ export async function applyContentUpdates(payload: Payload) {
   await applyDocTextUpdates(payload)
   await applyIntroJourney(payload)
   await applyLokmangalProjects(payload)
+  await applyHomeLayout(payload)
 }

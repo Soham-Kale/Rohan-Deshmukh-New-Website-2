@@ -2209,6 +2209,27 @@ export interface Home {
             hidden?: boolean | null;
             eyebrow?: string | null;
             heading?: string | null;
+            items?:
+              | {
+                  place?: string | null;
+                  title?: string | null;
+                  text?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'homeJourney';
+          }
+        | {
+            /**
+             * Hide this section on the homepage
+             */
+            hidden?: boolean | null;
+            eyebrow?: string | null;
+            heading?: string | null;
             image?: (number | null) | Media;
             intro?: string | null;
             items?:
@@ -2280,6 +2301,18 @@ export interface Home {
              * Leave empty to show featured initiatives automatically
              */
             initiatives?: (number | Initiative)[] | null;
+            stats?:
+              | {
+                  /**
+                   * e.g. ३,२२१+ (Marathi) / 3,221+ (English)
+                   */
+                  value: string;
+                  label: string;
+                  id?: string | null;
+                }[]
+              | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'initiativesShowcase';
@@ -2300,6 +2333,9 @@ export interface Home {
                   id?: string | null;
                 }[]
               | null;
+            intro?: string | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'family';
@@ -2311,7 +2347,92 @@ export interface Home {
             hidden?: boolean | null;
             eyebrow?: string | null;
             heading?: string | null;
+            text?: string | null;
+            items?:
+              | {
+                  /**
+                   * Big number, e.g. 4
+                   */
+                  value?: string | null;
+                  title?: string | null;
+                  text?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'homeParivar';
+          }
+        | {
+            /**
+             * Hide this section on the homepage
+             */
+            hidden?: boolean | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            text?: string | null;
+            items?:
+              | {
+                  /**
+                   * Small orange line above the title
+                   */
+                  tag?: string | null;
+                  title?: string | null;
+                  text?: string | null;
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'homeHighlights';
+          }
+        | {
+            /**
+             * Hide this section on the homepage
+             */
+            hidden?: boolean | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            limit?: number | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'homeEvents';
+          }
+        | {
+            /**
+             * Hide this section on the homepage
+             */
+            hidden?: boolean | null;
+            eyebrow?: string | null;
+            heading?: string | null;
+            /**
+             * Book cover
+             */
+            image?: (number | null) | Media;
+            text?: string | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'homeVision';
+          }
+        | {
+            /**
+             * Hide this section on the homepage
+             */
+            hidden?: boolean | null;
+            eyebrow?: string | null;
+            heading?: string | null;
             images?: (number | Media)[] | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'homeGallery';
@@ -2430,6 +2551,8 @@ export interface Home {
             hidden?: boolean | null;
             eyebrow?: string | null;
             heading?: string | null;
+            text?: string | null;
+            showWhatsapp?: boolean | null;
             image?: (number | null) | Media;
             buttonLabel?: string | null;
             buttonUrl?: string | null;
@@ -2693,6 +2816,25 @@ export interface HomeSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        homeJourney?:
+          | T
+          | {
+              hidden?: T;
+              eyebrow?: T;
+              heading?: T;
+              items?:
+                | T
+                | {
+                    place?: T;
+                    title?: T;
+                    text?: T;
+                    id?: T;
+                  };
+              buttonLabel?: T;
+              buttonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
         biography?:
           | T
           | {
@@ -2758,6 +2900,15 @@ export interface HomeSelect<T extends boolean = true> {
               heading?: T;
               intro?: T;
               initiatives?: T;
+              stats?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    id?: T;
+                  };
+              buttonLabel?: T;
+              buttonUrl?: T;
               id?: T;
               blockName?: T;
             };
@@ -2776,6 +2927,75 @@ export interface HomeSelect<T extends boolean = true> {
                     text?: T;
                     id?: T;
                   };
+              intro?: T;
+              buttonLabel?: T;
+              buttonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        homeParivar?:
+          | T
+          | {
+              hidden?: T;
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              items?:
+                | T
+                | {
+                    value?: T;
+                    title?: T;
+                    text?: T;
+                    id?: T;
+                  };
+              buttonLabel?: T;
+              buttonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        homeHighlights?:
+          | T
+          | {
+              hidden?: T;
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              items?:
+                | T
+                | {
+                    tag?: T;
+                    title?: T;
+                    text?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              buttonLabel?: T;
+              buttonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        homeEvents?:
+          | T
+          | {
+              hidden?: T;
+              eyebrow?: T;
+              heading?: T;
+              limit?: T;
+              buttonLabel?: T;
+              buttonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        homeVision?:
+          | T
+          | {
+              hidden?: T;
+              eyebrow?: T;
+              heading?: T;
+              image?: T;
+              text?: T;
+              buttonLabel?: T;
+              buttonUrl?: T;
               id?: T;
               blockName?: T;
             };
@@ -2786,6 +3006,8 @@ export interface HomeSelect<T extends boolean = true> {
               eyebrow?: T;
               heading?: T;
               images?: T;
+              buttonLabel?: T;
+              buttonUrl?: T;
               id?: T;
               blockName?: T;
             };
@@ -2868,6 +3090,8 @@ export interface HomeSelect<T extends boolean = true> {
               hidden?: T;
               eyebrow?: T;
               heading?: T;
+              text?: T;
+              showWhatsapp?: T;
               image?: T;
               buttonLabel?: T;
               buttonUrl?: T;

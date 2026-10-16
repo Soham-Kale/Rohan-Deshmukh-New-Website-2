@@ -111,7 +111,7 @@ export const DOC_TEXT_TARGETS: { path: string; heading: string; text: { mr: stri
   { path: '/political-career', heading: 'Lok Sabha Election, Dharashiv (Osmanabad)', text: DOC_TEXT.lokSabha },
 ]
 
-const DOC_FAMILY = [
+export const DOC_FAMILY = [
   {
     img: '/images/about/family-suresh-deshmukh.webp', relation: L('आजोबा', 'Grandfather'), name: L('कै. सुरेश्चंद्र केशवराव देशमुख', 'Late Sureshchandra Keshavrao Deshmukh'),
     text: DOC_TEXT.grandfather,

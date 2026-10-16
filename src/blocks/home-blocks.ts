@@ -130,6 +130,9 @@ export const InitiativesShowcase: Block = {
     ...base,
     { name: 'intro', type: 'textarea', localized: true },
     { name: 'initiatives', type: 'relationship', relationTo: 'initiatives', hasMany: true, admin: { description: 'Leave empty to show featured initiatives automatically' } },
+    counterArray('stats', 'Impact numbers shown above the cards'),
+    { name: 'buttonLabel', type: 'text', localized: true },
+    { name: 'buttonUrl', type: 'text' },
   ],
 }
 
@@ -148,13 +151,19 @@ export const Family: Block = {
         { name: 'text', type: 'textarea', localized: true },
       ],
     },
+    { name: 'intro', type: 'textarea', localized: true },
+    { name: 'buttonLabel', type: 'text', localized: true },
+    { name: 'buttonUrl', type: 'text' },
   ],
 }
 
 export const HomeGallery: Block = {
   slug: 'homeGallery',
   labels: { singular: 'Photo strip', plural: 'Photo strips' },
-  fields: [...base, { name: 'images', type: 'upload', relationTo: 'media', hasMany: true }],
+  fields: [...base, { name: 'images', type: 'upload', relationTo: 'media', hasMany: true },
+    { name: 'buttonLabel', type: 'text', localized: true },
+    { name: 'buttonUrl', type: 'text' },
+  ],
 }
 
 export const HomeStats: Block = {
@@ -218,7 +227,87 @@ export const AppealBand: Block = {
   labels: { singular: 'Appeal band', plural: 'Appeal bands' },
   fields: [
     ...base,
+    { name: 'text', type: 'textarea', localized: true },
+    { name: 'showWhatsapp', label: 'Show WhatsApp button', type: 'checkbox', defaultValue: true },
     { name: 'image', type: 'upload', relationTo: 'media' },
+    { name: 'buttonLabel', type: 'text', localized: true },
+    { name: 'buttonUrl', type: 'text' },
+  ],
+}
+
+export const HomeJourney: Block = {
+  slug: 'homeJourney',
+  labels: { singular: 'Journey strip', plural: 'Journey strips' },
+  fields: [
+    ...base,
+    {
+      name: 'items', type: 'array', maxRows: 6,
+      fields: [
+        { name: 'place', type: 'text', localized: true },
+        { name: 'title', type: 'text', localized: true },
+        { name: 'text', type: 'textarea', localized: true },
+      ],
+    },
+    { name: 'buttonLabel', type: 'text', localized: true },
+    { name: 'buttonUrl', type: 'text' },
+  ],
+}
+
+export const HomeParivar: Block = {
+  slug: 'homeParivar',
+  labels: { singular: 'Lokmangal Parivar groups', plural: 'Lokmangal Parivar groups' },
+  fields: [
+    ...base,
+    { name: 'text', type: 'textarea', localized: true },
+    {
+      name: 'items', type: 'array', maxRows: 8,
+      fields: [
+        { name: 'value', type: 'text', localized: true, admin: { description: 'Big number, e.g. 4' } },
+        { name: 'title', type: 'text', localized: true },
+        { name: 'text', type: 'text', localized: true },
+      ],
+    },
+    { name: 'buttonLabel', type: 'text', localized: true },
+    { name: 'buttonUrl', type: 'text' },
+  ],
+}
+
+export const HomeHighlights: Block = {
+  slug: 'homeHighlights',
+  labels: { singular: 'Highlight cards', plural: 'Highlight cards' },
+  fields: [
+    ...base,
+    { name: 'text', type: 'textarea', localized: true },
+    {
+      name: 'items', type: 'array', maxRows: 6,
+      fields: [
+        { name: 'tag', type: 'text', localized: true, admin: { description: 'Small orange line above the title' } },
+        { name: 'title', type: 'text', localized: true },
+        { name: 'text', type: 'textarea', localized: true },
+        { name: 'url', type: 'text' },
+      ],
+    },
+    { name: 'buttonLabel', type: 'text', localized: true },
+    { name: 'buttonUrl', type: 'text' },
+  ],
+}
+
+export const HomeEvents: Block = {
+  slug: 'homeEvents',
+  labels: { singular: 'Events', plural: 'Events' },
+  fields: [...base, { name: 'limit', type: 'number', defaultValue: 4, min: 2, max: 8 },
+    { name: 'buttonLabel', type: 'text', localized: true },
+    { name: 'buttonUrl', type: 'text' },
+  ],
+}
+
+export const HomeVision: Block = {
+  slug: 'homeVision',
+  labels: { singular: 'Vision band', plural: 'Vision bands' },
+  fields: [
+    ...base,
+    { name: 'image', type: 'upload', relationTo: 'media', admin: { description: 'Book cover' } },
+    { name: 'text', type: 'textarea', localized: true },
     { name: 'buttonLabel', type: 'text', localized: true },
     { name: 'buttonUrl', type: 'text' },
   ],
@@ -228,11 +317,16 @@ export const homeBlocks: Block[] = withAdminLabels([
   HeroSlider,
   QuickLinks,
   AboutIntro,
+  HomeJourney,
   Biography,
   FeaturedVideo,
   WorkHighlights,
   InitiativesShowcase,
   Family,
+  HomeParivar,
+  HomeHighlights,
+  HomeEvents,
+  HomeVision,
   HomeGallery,
   HomeStats,
   HomeFaq,

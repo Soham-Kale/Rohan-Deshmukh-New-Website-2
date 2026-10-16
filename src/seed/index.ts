@@ -12,6 +12,7 @@ import * as G from './content-globals'
 import * as C from './content-collections'
 import { pages } from './content-pages'
 import { importBlog } from './legacy-blog'
+import { applyHomeLayout } from './home-layout'
 
 const CONTENT: CollectionSlug[] = ['posts', 'categories', 'events', 'initiatives', 'albums', 'videos', 'download-photos', 'quotes', 'leader-meetings', 'awards', 'offices', 'jobs', 'pages', 'media', 'search']
 
@@ -90,6 +91,7 @@ async function run() {
 
   log('Homepage…')
   await updateGlobalBilingual(payload, 'home', G.home(payload))
+  await applyHomeLayout(payload) // current homepage layout after the hero slider
   await updateGlobalBilingual(payload, 'popup', { enabled: false })
 
   log('Done ✅  Open /admin to manage content.')

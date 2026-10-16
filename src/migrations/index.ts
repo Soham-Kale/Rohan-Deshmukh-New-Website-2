@@ -17,6 +17,8 @@ import * as migration_20261015_170000_intro_journey from './20261015_170000_intr
 import * as migration_20261016_054043_initiative_stat from './20261016_054043_initiative_stat';
 import * as migration_20261016_060615_initiative_details from './20261016_060615_initiative_details';
 import * as migration_20261016_070000_lokmangal_projects from './20261016_070000_lokmangal_projects';
+import * as migration_20261016_075656_home_sections from './20261016_075656_home_sections';
+import * as migration_20261016_080000_home_layout from './20261016_080000_home_layout';
 
 export const migrations = [
   {
@@ -113,5 +115,15 @@ export const migrations = [
     up: migration_20261016_070000_lokmangal_projects.up,
     down: migration_20261016_070000_lokmangal_projects.down,
     name: '20261016_070000_lokmangal_projects',
+  },
+  {
+    up: migration_20261016_075656_home_sections.up,
+    down: migration_20261016_075656_home_sections.down,
+    name: '20261016_075656_home_sections',
+  },
+  {
+    up: migration_20261016_080000_home_layout.up,
+    down: migration_20261016_080000_home_layout.down,
+    name: '20261016_080000_home_layout',
   },
 ];
