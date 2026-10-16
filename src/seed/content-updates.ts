@@ -5,14 +5,15 @@
  */
 import type { Payload } from 'payload'
 import { applyMenu } from './menu'
-import { image, md, PORTRAITS } from './helpers'
+import { image, md, PORTRAITS, remoteImage } from './helpers'
+import { LOKMANGAL_MEDIA, LOKMANGAL_PROJECTS, S3 } from './lokmangal-projects'
 import { createBilingual, replaceBilingual } from './bilingual'
 import { DOC_TEXT_TARGETS, familyPage, foundationPage, introPage, parivarPage, politicalPage } from './content-pages'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
 import { docEvents } from './content-collections'
 import { POSTS } from './legacy-blog'
 /** Bump when adding a change below — scripts/dev.mjs reads this line */
-export const CONTENT_VERSION = '2026-10-15f'
+export const CONTENT_VERSION = '2026-10-16b'
 
 const FB = { mr: 'कौटुंबिक पार्श्वभूमी', en: 'Family Background' }
 
@@ -198,6 +199,73 @@ export async function applyIntroJourney(payload: Payload) {
   else await createBilingual(payload, 'pages', { ...data, _status: 'published' })
 }
 
+/**
+ * लोकमंगल प्रकल्प: the 23 initiatives exactly as on lokmangalfoundation.com/projects — title, category,
+ * key-impact line, card text, objective, full description, cover photo, photo gallery and videos, in Marathi and English.
+ * Existing initiatives are updated in place (their impact counters stay), missing ones are added.
+ * Photos that can't be downloaded are skipped, so the current ones stay instead of a broken image.
+ */
+const VIDEO_TITLES: Record<string, [string, string][]> = {
+  'bhajan-bharud-spardha': [
+    ['व्हिडिओ १ : मुख्य कार्यक्रम सोहळा', 'Video 1: Main Event Ceremony'],
+    ['व्हिडिओ २ : स्पर्धा क्षणचित्रे (हायलाइट्स)', 'Video 2: Event Highlights'],
+    ['व्हिडिओ ३ : कलाकारांचे भारूड सादरीकरण', 'Video 3: Folk Bharud Performance'],
+  ],
+}
+
+/** "**उद्दिष्ट:** …" / "**Objective:** …" at the top of a description becomes the separate objective box */
+const splitObjective = (body: string) => {
+  const m = body.match(/^\*\*(?:उद्दिष्ट|Objective):\*\*\s*(.+?)\n\n([\s\S]*)$/)
+  return m ? { objective: m[1].trim(), body: m[2] } : { objective: null, body }
+}
+
+/** Download several photos, four at a time, keeping their order */
+async function remoteImages(payload: Payload, paths: string[], alt: string) {
+  const ids: (number | null)[] = new Array(paths.length).fill(null)
+  let next = 0
+  const worker = async () => {
+    while (next < paths.length) {
+      const i = next++
+      ids[i] = await remoteImage(payload, `${S3}/${paths[i]}`, alt)
+    }
+  }
+  await Promise.all([worker(), worker(), worker(), worker()])
+  return ids.filter((id): id is number => id !== null)
+}
+
+export async function applyLokmangalProjects(payload: Payload) {
+  for (const [i, p] of LOKMANGAL_PROJECTS.entries()) {
+    const media = LOKMANGAL_MEDIA[p.slug] ?? { gallery: [], videos: [] }
+    const heroImage = p.image ? await remoteImage(payload, p.image, p.mr.title) : null
+    const gallery = await remoteImages(payload, media.gallery, p.mr.title)
+    const youtube = media.videos.find((v) => v.includes('youtube.com') || v.includes('youtu.be'))
+    const files = media.videos.filter((v) => v !== youtube).map((v) => (v.startsWith('http') ? v : `${S3}/${v}`))
+    const titles = VIDEO_TITLES[p.slug] ?? []
+
+    const text = async (t: typeof p.mr) => {
+      const { objective, body } = splitObjective(t.body)
+      return { title: t.title, stat: t.stat ?? null, objective, excerpt: t.summary, body: await md(payload, body) }
+    }
+    const base = {
+      category: p.category, order: i + 1, organisation: 'foundation', _status: 'published',
+      ...(heroImage ? { heroImage } : {}),
+      // keep the current photos if none of the new ones could be downloaded
+      ...(gallery.length ? { gallery } : media.gallery.length ? {} : { gallery: [] }),
+      youtubeUrl: youtube ?? null,
+    }
+    const found = (await payload.find({ collection: 'initiatives', where: { slug: { equals: p.slug } }, limit: 1, depth: 0, draft: true })).docs[0]
+    const mr = { ...base, ...(await text(p.mr)), videos: files.map((url, k) => ({ url, title: titles[k]?.[0] ?? null })) }
+    const doc = found
+      ? await payload.update({ collection: 'initiatives', id: found.id, locale: 'mr', depth: 0, data: mr as never })
+      : await payload.create({ collection: 'initiatives', locale: 'mr', depth: 0, data: { ...mr, slug: p.slug, featured: false } as never })
+    const saved = (doc as { videos?: { id?: string | null; url: string }[] | null }).videos ?? []
+    await payload.update({
+      collection: 'initiatives', id: doc.id, locale: 'en', depth: 0,
+      data: { _status: 'published', ...(await text(p.en)), videos: saved.map((v, k) => ({ id: v.id, url: v.url, title: titles[k]?.[1] ?? null })) } as never,
+    })
+  }
+}
+
 /** Blog: the Marathi articles had their English title saved as the subtitle, so English showed under the Marathi title */
 export async function clearEnglishSubtitles(payload: Payload) {
   for (const post of POSTS as { slug: string; en: string }[]) {
@@ -218,4 +286,5 @@ export async function applyContentUpdates(payload: Payload) {
   await clearEnglishSubtitles(payload)
   await applyDocTextUpdates(payload)
   await applyIntroJourney(payload)
+  await applyLokmangalProjects(payload)
 }

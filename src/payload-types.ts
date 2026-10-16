@@ -762,14 +762,23 @@ export interface Initiative {
    * URL part, e.g. "annapurna-yojana". Auto-filled from the title if empty.
    */
   slug: string;
-  category: 'health' | 'senior-citizens' | 'education' | 'women' | 'agriculture' | 'youth' | 'culture' | 'community';
+  category:
+    'food' | 'agriculture' | 'education' | 'health' | 'community' | 'women' | 'culture' | 'senior-citizens' | 'youth';
   organisation?: ('foundation' | 'parivar' | 'vishwamangal') | null;
   /**
    * Show on homepage
    */
   featured?: boolean | null;
   order?: number | null;
+  /**
+   * One short line shown on the card, e.g. "500 Beneficiaries" or "48 Ceremonies | 3,221 Couples Married"
+   */
+  stat?: string | null;
   excerpt?: string | null;
+  /**
+   * Shown in a highlighted box below the cover photo
+   */
+  objective?: string | null;
   heroImage?: (number | null) | Media;
   body?: {
     root: {
@@ -798,6 +807,16 @@ export interface Initiative {
     | null;
   gallery?: (number | Media)[] | null;
   youtubeUrl?: string | null;
+  /**
+   * Extra YouTube videos shown under the main video
+   */
+  videos?:
+    | {
+        url: string;
+        title?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   relatedPosts?: (number | Post)[] | null;
   meta?: {
     title?: string | null;
@@ -1627,7 +1646,9 @@ export interface InitiativesSelect<T extends boolean = true> {
   organisation?: T;
   featured?: T;
   order?: T;
+  stat?: T;
   excerpt?: T;
+  objective?: T;
   heroImage?: T;
   body?: T;
   counters?:
@@ -1639,6 +1660,13 @@ export interface InitiativesSelect<T extends boolean = true> {
       };
   gallery?: T;
   youtubeUrl?: T;
+  videos?:
+    | T
+    | {
+        url?: T;
+        title?: T;
+        id?: T;
+      };
   relatedPosts?: T;
   meta?:
     | T

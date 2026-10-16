@@ -5,13 +5,15 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { ArrowRight } from 'lucide-react'
 import type { Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
-import { mediaPosition, mediaUrl, photoFit } from '@/lib/utils'
+import { mediaAlt, mediaPosition, mediaUrl, photoFit } from '@/lib/utils'
+import { INITIATIVE_CATEGORIES } from '@/collections/Content'
 import { Link } from '@/i18n/navigation'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
 import { CardSlider, type SlideCard } from '@/components/ui/CardSlider'
 import { SectionTabs } from '@/components/ui/SectionTabs'
 import { SectionTitle } from '@/components/blog/BlogParts'
+import { ProjectsExplorer, type ProjectCard } from '@/components/social/ProjectsExplorer'
 
 export const revalidate = 300
 type P = { params: Promise<{ locale: Locale }> }
@@ -19,8 +21,22 @@ type P = { params: Promise<{ locale: Locale }> }
 const PATH = '/lokmangal/foundation'
 
 const TEXT = {
-  mr: { tabs: 'लोकमंगल फाऊंडेशन विभाग', about: 'माहिती', events: 'कार्यक्रम', projects: 'प्रकल्प', allEvents: 'सर्व कार्यक्रम', allProjects: 'सर्व प्रकल्प', eventsIntro: 'लोकमंगल फाऊंडेशनतर्फे आयोजित प्रमुख कार्यक्रम व सोहळे.', projectsIntro: 'ग्रामीण समाजाच्या उन्नतीसाठी फाऊंडेशनचे प्रकल्प — शिक्षण, आरोग्य, पाणी, अन्न आणि रोजगार.', soon: 'माहिती लवकरच उपलब्ध होईल.', youth: 'युवा व शिक्षण', sports: 'क्रीडा', other: 'इतर कार्यक्रम' },
-  en: { tabs: 'Lokmangal Foundation sections', about: 'About', events: 'Events', projects: 'Projects', allEvents: 'All events', allProjects: 'All projects', eventsIntro: 'Major events and ceremonies organised by Lokmangal Foundation.', projectsIntro: 'Foundation projects for rural upliftment — education, health, water, food and livelihoods.', soon: 'Details coming soon.', youth: 'Youth & Education', sports: 'Sports', other: 'Other events' },
+  mr: {
+    tabs: 'लोकमंगल फाऊंडेशन विभाग', about: 'माहिती', events: 'कार्यक्रम', projects: 'प्रकल्प', allEvents: 'सर्व कार्यक्रम', eventsIntro: 'लोकमंगल फाऊंडेशनतर्फे आयोजित प्रमुख कार्यक्रम व सोहळे.', soon: 'माहिती लवकरच उपलब्ध होईल.', youth: 'युवा व शिक्षण', sports: 'क्रीडा', other: 'इतर कार्यक्रम',
+    projectsEyebrow: 'सर्व प्रकल्प', projectsHeading: (n: string) => `सर्व ${n} सामाजिक उपक्रम`, projectsIntro: 'विषयानुसार निवडा किंवा थेट शोधून प्रत्येक उपक्रमाची सविस्तर माहिती जाणून घ्या.',
+    explorer: { all: 'सर्व उपक्रम', search: 'उपक्रम शोधा...', readMore: 'अधिक वाचा', details: 'सविस्तर माहिती', empty: 'या शोधाशी जुळणारा उपक्रम आढळला नाही.', clear: 'सर्व उपक्रम दाखवा', filters: 'विषयानुसार उपक्रम' },
+  },
+  en: {
+    tabs: 'Lokmangal Foundation sections', about: 'About', events: 'Events', projects: 'Projects', allEvents: 'All events', eventsIntro: 'Major events and ceremonies organised by Lokmangal Foundation.', soon: 'Details coming soon.', youth: 'Youth & Education', sports: 'Sports', other: 'Other events',
+    projectsEyebrow: 'All Projects', projectsHeading: (n: string) => `Explore All ${n} Social Initiatives`, projectsIntro: 'Lokmangal Foundation works to improve the quality of life of people in rural areas. Pick a theme or search to read about each initiative in detail.',
+    explorer: { all: 'All Projects', search: 'Search initiatives...', readMore: 'Read More', details: 'View details', empty: 'No initiative matches your search.', clear: 'Show all initiatives', filters: 'Initiatives by theme' },
+  },
+}
+
+const DEV = '०१२३४५६७८९'
+const catLabel = (v: string, locale: Locale) => {
+  const [mr, en] = (INITIATIVE_CATEGORIES.find((c) => c.value === v)?.label ?? v).split(' / ')
+  return locale === 'mr' ? mr : (en ?? mr)
 }
 
 const getPage = async (locale: Locale) => {
@@ -72,7 +88,12 @@ export default async function FoundationPage({ params }: P) {
     { label: x.sports, cards: events.filter((e) => e.group === 'sports').map(toCard) },
     { label: x.other, cards: events.filter((e) => !e.group).map(toCard) },
   ].filter((g) => g.cards.length)
-  const projectCards: SlideCard[] = initiatives.map((it) => ({ href: `/social-work/${it.slug}`, title: it.title, text: it.excerpt, image: mediaUrl(it.heroImage, 'card'), imageStyle: photoFit(it.heroImage, 2, 0.6) }))
+  const projectCards: ProjectCard[] = initiatives.map((it) => ({
+    id: it.id, href: `/social-work/${it.slug}`, title: it.title, category: it.category, categoryLabel: catLabel(it.category, locale),
+    stat: it.stat, text: it.excerpt, image: mediaUrl(it.heroImage, 'card'), imageAlt: mediaAlt(it.heroImage, it.title), imageStyle: photoFit(it.heroImage, 1.6, 0.6),
+  }))
+  const projectCategories = INITIATIVE_CATEGORIES.map((c) => ({ value: c.value, label: catLabel(c.value, locale) }))
+  const total = locale === 'mr' ? String(projectCards.length).replace(/\d/g, (d) => DEV[Number(d)]) : String(projectCards.length)
   const slider = { readMore: te('readMore'), prevLabel: te('prev'), nextLabel: te('next') }
 
   return (
@@ -101,9 +122,21 @@ export default async function FoundationPage({ params }: P) {
       </section>
 
       <section id="projects" className="mt-16 scroll-mt-36 md:mt-20">
-        <SectionTitle aside={viewAll('/social-work', x.allProjects)}>{x.projects}</SectionTitle>
-        <p className="mb-7 mt-3 max-w-3xl text-muted">{x.projectsIntro}</p>
-        {projectCards.length ? <CardSlider cards={projectCards} {...slider} /> : <p className="rounded-2xl bg-cream p-8 text-center text-muted">{x.soon}</p>}
+        {/* same layout as lokmangalfoundation.com/projects → "Explore all 23 social initiatives" */}
+        <div className="relative left-1/2 w-screen -translate-x-1/2 border-y border-line bg-gradient-to-b from-paper via-white to-cream/60 py-14 md:py-20">
+          <div className="container-x">
+            <div className="mx-auto mb-8 max-w-3xl text-center md:mb-10">
+              <p className="eyebrow justify-center">{x.projectsEyebrow}</p>
+              <h2 className="h-section">{x.projectsHeading(total)}</h2>
+              <p className="mt-3 text-muted">{x.projectsIntro}</p>
+            </div>
+            {projectCards.length ? (
+              <ProjectsExplorer items={projectCards} categories={projectCategories} labels={x.explorer} locale={locale} />
+            ) : (
+              <p className="rounded-2xl bg-cream p-8 text-center text-muted">{x.soon}</p>
+            )}
+          </div>
+        </div>
       </section>
 
 

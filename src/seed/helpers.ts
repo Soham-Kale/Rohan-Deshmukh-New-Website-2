@@ -104,5 +104,25 @@ async function importImage(payload: Payload, src: string, alt: string): Promise<
 
 export const isOnline = () => online === true
 
+/**
+ * Import a photo from another website (e.g. lokmangalfoundation.com) as a WebP media item.
+ * Returns null when it can't be downloaded, so callers keep the current image instead of a placeholder.
+ */
+export async function remoteImage(payload: Payload, url: string, alt = ''): Promise<number | null> {
+  const name = url.split('/').pop()!.replace(/\.\w+$/, '') + '.webp'
+  const existing = await payload.find({ collection: 'media', where: { filename: { equals: name } }, limit: 1, depth: 0 })
+  if (existing.docs[0]) return existing.docs[0].id as number
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(30000) })
+    if (!res.ok) return null
+    const data = await sharp(Buffer.from(await res.arrayBuffer())).rotate().resize({ width: 1800, withoutEnlargement: true }).webp({ quality: 80 }).toBuffer()
+    const doc = await payload.create({ collection: 'media', data: { alt: alt || undefined }, file: { data, mimetype: 'image/webp', name, size: data.length } })
+    return doc.id as number
+  } catch (e) {
+    payload.logger.warn(`Image not imported (${url}): ${(e as Error).message}`)
+    return null
+  }
+}
+
 /** Rich text from plain paragraphs (blank-line separated) */
 export const paras = (payload: Payload, text: string) => md(payload, text.trim())

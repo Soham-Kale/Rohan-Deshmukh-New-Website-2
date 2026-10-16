@@ -5,15 +5,17 @@ import { revalidateAfterChange } from '../hooks/revalidate'
 
 const hooks = { afterChange: [revalidateAfterChange] }
 
+/** Same 7 groups as lokmangalfoundation.com/projects (Senior Citizens and Youth are kept for older entries) */
 export const INITIATIVE_CATEGORIES = [
-  { label: 'आरोग्य / Health', value: 'health' },
-  { label: 'ज्येष्ठ नागरिक / Senior Citizens', value: 'senior-citizens' },
+  { label: 'अन्न व पोषण / Food & Nutrition', value: 'food' },
+  { label: 'जल व शेती / Water & Agriculture', value: 'agriculture' },
   { label: 'शिक्षण / Education', value: 'education' },
-  { label: 'महिला / Women', value: 'women' },
-  { label: 'शेती व पाणी / Agriculture & Water', value: 'agriculture' },
+  { label: 'आरोग्य / Healthcare', value: 'health' },
+  { label: 'सामाजिक कल्याण / Social Welfare', value: 'community' },
+  { label: 'महिला व रोजगार / Women & Employment', value: 'women' },
+  { label: 'संस्कृती व पर्यावरण / Culture & Environment', value: 'culture' },
+  { label: 'ज्येष्ठ नागरिक / Senior Citizens', value: 'senior-citizens' },
   { label: 'युवा व रोजगार / Youth & Employment', value: 'youth' },
-  { label: 'संस्कृती / Culture', value: 'culture' },
-  { label: 'सामाजिक / Community', value: 'community' },
 ]
 
 export const Initiatives: CollectionConfig = {
@@ -40,12 +42,22 @@ export const Initiatives: CollectionConfig = {
     },
     { name: 'featured', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar', description: 'Show on homepage', ...cell('BooleanCell') } },
     { name: 'order', type: 'number', defaultValue: 10, admin: { position: 'sidebar' } },
+    { name: 'stat', label: 'Key impact', type: 'text', localized: true, admin: { description: 'One short line shown on the card, e.g. "500 Beneficiaries" or "48 Ceremonies | 3,221 Couples Married"' } },
     { name: 'excerpt', type: 'textarea', localized: true },
+    { name: 'objective', label: 'Objective (उद्दिष्ट)', type: 'textarea', localized: true, admin: { description: 'Shown in a highlighted box below the cover photo' } },
     { name: 'heroImage', type: 'upload', relationTo: 'media', admin: { ...cell('ThumbCell') } },
     { name: 'body', type: 'richText', localized: true },
     counterArray('counters', 'Impact counters (beneficiaries, years, locations)'),
     { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true },
     { name: 'youtubeUrl', type: 'text' },
+    {
+      name: 'videos', label: 'More videos', type: 'array',
+      admin: { description: 'Extra YouTube videos shown under the main video' },
+      fields: [
+        { name: 'url', label: 'YouTube link', type: 'text', required: true },
+        { name: 'title', type: 'text', localized: true },
+      ],
+    },
     { name: 'relatedPosts', type: 'relationship', relationTo: 'posts', hasMany: true },
   ],
 }

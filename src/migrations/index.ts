@@ -14,6 +14,9 @@ import * as migration_20261015_130000_blog_subtitles from './20261015_130000_blo
 import * as migration_20261015_150000_doc_text_updates from './20261015_150000_doc_text_updates';
 import * as migration_20261015_160000_political_points from './20261015_160000_political_points';
 import * as migration_20261015_170000_intro_journey from './20261015_170000_intro_journey';
+import * as migration_20261016_054043_initiative_stat from './20261016_054043_initiative_stat';
+import * as migration_20261016_060615_initiative_details from './20261016_060615_initiative_details';
+import * as migration_20261016_070000_lokmangal_projects from './20261016_070000_lokmangal_projects';
 
 export const migrations = [
   {
@@ -59,41 +62,56 @@ export const migrations = [
   {
     up: migration_20261014_170000_about_menu.up,
     down: migration_20261014_170000_about_menu.down,
-    name: '20261014_170000_about_menu'
+    name: '20261014_170000_about_menu',
   },
   {
     up: migration_20261014_180000_doc_content.up,
     down: migration_20261014_180000_doc_content.down,
-    name: '20261014_180000_doc_content'
+    name: '20261014_180000_doc_content',
   },
   {
     up: migration_20261015_110000_lokmangal_menu_intro.up,
     down: migration_20261015_110000_lokmangal_menu_intro.down,
-    name: '20261015_110000_lokmangal_menu_intro'
+    name: '20261015_110000_lokmangal_menu_intro',
   },
   {
     up: migration_20261015_120000_blog_excerpts.up,
     down: migration_20261015_120000_blog_excerpts.down,
-    name: '20261015_120000_blog_excerpts'
+    name: '20261015_120000_blog_excerpts',
   },
   {
     up: migration_20261015_130000_blog_subtitles.up,
     down: migration_20261015_130000_blog_subtitles.down,
-    name: '20261015_130000_blog_subtitles'
+    name: '20261015_130000_blog_subtitles',
   },
   {
     up: migration_20261015_150000_doc_text_updates.up,
     down: migration_20261015_150000_doc_text_updates.down,
-    name: '20261015_150000_doc_text_updates'
+    name: '20261015_150000_doc_text_updates',
   },
   {
     up: migration_20261015_160000_political_points.up,
     down: migration_20261015_160000_political_points.down,
-    name: '20261015_160000_political_points'
+    name: '20261015_160000_political_points',
   },
   {
     up: migration_20261015_170000_intro_journey.up,
     down: migration_20261015_170000_intro_journey.down,
-    name: '20261015_170000_intro_journey'
+    name: '20261015_170000_intro_journey',
+  },
+  {
+    up: migration_20261016_054043_initiative_stat.up,
+    down: migration_20261016_054043_initiative_stat.down,
+    name: '20261016_054043_initiative_stat',
+  },
+  {
+    up: migration_20261016_060615_initiative_details.up,
+    down: migration_20261016_060615_initiative_details.down,
+    name: '20261016_060615_initiative_details',
+  },
+  {
+    up: migration_20261016_070000_lokmangal_projects.up,
+    down: migration_20261016_070000_lokmangal_projects.down,
+    name: '20261016_070000_lokmangal_projects',
   },
 ];
