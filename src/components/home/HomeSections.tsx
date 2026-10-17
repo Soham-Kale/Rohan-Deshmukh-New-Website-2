@@ -187,26 +187,35 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
   )
 }
 
+/**
+ * Home → video: the story on the left (eyebrow, title, short summary, "Watch on YouTube"), the video large on the right.
+ * Phones: title first, then the video, then the summary and button. Plays in place (lite embed).
+ */
 function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
+  const links = b.links ?? []
   return (
-    <Section dark eyebrow={b.eyebrow} heading={b.heading} intro={b.text}>
-      <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-14">
-        <YouTube url={b.youtubeUrl} title={b.heading} />
-        <ul className="divide-y divide-line self-center border-y border-line">
-          {b.links?.map((l) => (
-            <li key={l.id}>
-              <CMSLink url={l.url} newTab={l.newTab} className="tile group flex-row items-center justify-between gap-4 py-5">
-                <span>
-                  <span className="tile-title block text-xl">{l.label}</span>
-                  {l.description && <span className="tile-text block !mt-1 text-sm">{l.description}</span>}
-                </span>
-                <ArrowUpRight className="size-5 shrink-0 text-saffron-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </CMSLink>
-            </li>
-          ))}
-        </ul>
+    <section className="section band-cream">
+      <div className="container-x grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-x-16 lg:gap-y-6">
+        <SectionHead eyebrow={b.eyebrow} heading={b.heading} className="!mb-0 lg:col-start-1 lg:row-start-1 lg:self-end" />
+        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <YouTube url={b.youtubeUrl} title={b.heading} />
+        </div>
+        {(b.text || links.length > 0) && (
+          <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
+            {b.text && <p className="lead !mt-0">{b.text}</p>}
+            {links.length > 0 && (
+              <div className="mt-7 flex flex-wrap gap-3">
+                {links.map((l, i) => (
+                  <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>
+                    {l.label} <ArrowUpRight className="size-4" />
+                  </CMSLink>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
-    </Section>
+    </section>
   )
 }
 
@@ -372,8 +381,8 @@ function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
 
 function HighlightsSection({ b }: { b: Of<'homeHighlights'> }) {
   return (
-    <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.text} className="band-cream" action={<MoreLink url={b.buttonUrl} label={b.buttonLabel} />}>
-      {/* chapters of the political journey: numbered columns under one shared rule */}
+    <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.text} action={<MoreLink url={b.buttonUrl} label={b.buttonLabel} />}>
+      {/* numbered chapters: numbered columns under one shared rule */}
       <ol className="grid gap-10 border-t border-charcoal-900/15 md:grid-cols-3 md:gap-12">
         {b.items?.map((c, i) => (
           <li key={c.id}>

@@ -1,15 +1,13 @@
 /**
  * Homepage layout (Oct 2026, client document "New Content RD Web"): every section after the hero slider.
  * The hero slider itself is never touched — its slides stay exactly as they are on the website.
- * Order: About → Journey → Family → Vision (New India Manifesto) → Lokmangal Parivar → Foundation (23 initiatives) →
- * Political journey → Blog → Connect.
+ * Order (17 Oct 2026): About → Journey → सामाजिक उपक्रम → Vision (New India Manifesto) → Lokmangal Parivar → Video.
  */
 import type { Payload } from 'payload'
 import { L } from './l10n'
 import { image, PORTRAITS } from './helpers'
 import { updateGlobalBilingual } from './bilingual'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
-import { DOC_FAMILY } from './content-pages'
 
 export const homeSectionsAfterHero = (p: Payload) => [
   {
@@ -30,17 +28,13 @@ export const homeSectionsAfterHero = (p: Payload) => [
     buttonLabel: L('स्वपरिचय', 'Introduction'), buttonUrl: '/about/introduction',
   },
   {
-    blockType: 'family', eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family background'),
-    intro: L(
-      'श्रद्धा, समाजाप्रती कर्तव्याची भावना आणि उद्योजकतेचा वारसा — आजही महाराष्ट्रात एक आदर्श एकत्र कुटुंब म्हणून ओळखला जाणारा परिवार.',
-      'Faith, a strong sense of duty towards society and a spirit of enterprise — still seen as a model joint family across Maharashtra.',
-    ),
-    members: [
-      { image: image(p, DOC_FAMILY[0].img, ''), relation: DOC_FAMILY[0].relation, name: DOC_FAMILY[0].name, text: L('शिक्षक आणि श्रद्धावान व्यक्तिमत्त्व; धाराशिव जिल्ह्यातील येडशी येथे गुरुकुलाची स्थापना.', 'Teacher and man of faith; started the gurukul at Yedshi, Dharashiv.') },
-      { image: image(p, DOC_FAMILY[1].img, ''), relation: DOC_FAMILY[1].relation, name: DOC_FAMILY[1].name, text: L('‘बापूसाहेब’ — लोकमंगल समूहाचे संस्थापक अध्यक्ष; विधानसभा आणि लोकसभेत लोकप्रतिनिधी.', 'Bapusaheb — Founder President of the Lokmangal Group; elected to the Assembly and the Lok Sabha.') },
-      { image: image(p, DOC_FAMILY[2].img, ''), relation: DOC_FAMILY[2].relation, name: DOC_FAMILY[2].name, text: L('लोकमंगल पतसंस्थेचे अध्यक्ष आणि लोकमंगल फाऊंडेशनचे उपाध्यक्ष.', 'President, Lokmangal Patsanstha; Vice President, Lokmangal Foundation.') },
+    blockType: 'homeHighlights', eyebrow: L('सामाजिक उपक्रम', 'Social initiatives'), heading: L('लोकांशी थेट नात्यावर उभे नेतृत्व', 'Leadership built on a direct bond with people'),
+    items: [
+      { tag: L('त्यांची संकल्पना', 'His idea'), title: L('स्वामी विवेकानंद विचार यात्रा', 'Swami Vivekananda Vichar Yatra'), text: L('धाराशिव जिल्ह्यातील शहरे आणि गावांमधील तरुणांपर्यंत स्वामी विवेकानंदांचे विचार पोहोचवले.', 'Carried Vivekananda’s ideas to young people in towns and villages across Dharashiv.'), url: '/political-career' },
+      { tag: L('सरचिटणीस', 'General Secretary'), title: L('भारतीय जनता युवा मोर्चा', 'Bharatiya Janata Yuva Morcha'), text: L('संपूर्ण महाराष्ट्रात प्रवास करून तरुणांना राजकारणाशी आणि सामाजिक प्रश्नांशी जोडले.', 'Travelled across Maharashtra, connecting youth with politics and social issues.'), url: '/political-career' },
+      { tag: L('अपक्ष उमेदवार', 'Independent candidate'), title: L('धाराशिव लोकसभा निवडणूक', 'Dharashiv Lok Sabha election'), text: L('पक्ष नाही, फक्त लोक — गावागावात, घराघरात थेट संवाद.', 'No party, only people — village to village, door to door.'), url: '/political-career' },
     ],
-    buttonLabel: L('संपूर्ण माहिती', 'Full family story'), buttonUrl: '/about/biography',
+    buttonLabel: L('राजकीय कारकीर्द', 'Political career'), buttonUrl: '/political-career',
   },
   {
     blockType: 'homeVision', eyebrow: L('व्हिजन', 'Vision'),
@@ -69,32 +63,14 @@ export const homeSectionsAfterHero = (p: Payload) => [
     buttonLabel: L('लोकमंगल परिवार पहा', 'Explore Lokmangal Parivar'), buttonUrl: '/lokmangal/parivar',
   },
   {
-    blockType: 'initiativesShowcase', eyebrow: L('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation'),
-    heading: L('२३ उपक्रम. हजारो कुटुंबांपर्यंत पोहोच.', '23 initiatives. Thousands of families reached.'),
-    intro: L('आजची सेवा, उद्याची समृद्धी — सोलापूर आणि धाराशिव जिल्ह्यांतील ग्रामीण भागात.', 'Serving today, building a prosperous tomorrow — across rural Solapur and Dharashiv.'),
-    stats: [
-      { value: L('२३', '23'), label: L('सामाजिक उपक्रम', 'Social initiatives') },
-      { value: L('३,२२१', '3,221'), label: L('विवाहबद्ध जोडपी', 'Couples married') },
-      { value: L('५००', '500'), label: L('ज्येष्ठांना दररोज जेवण', 'Elders fed daily') },
-      { value: L('२२५', '225'), label: L('विद्यार्थी दत्तक', 'Students adopted') },
-      { value: L('१०० कोटी लि.', '100 Cr L'), label: L('जलसाठा क्षमता', 'Water storage added') },
-    ],
-    buttonLabel: L('सर्व २३ उपक्रम पहा', 'View all 23 initiatives'), buttonUrl: '/lokmangal/foundation#projects',
-  },
-  {
-    blockType: 'homeHighlights', eyebrow: L('राजकीय प्रवास', 'Political journey'), heading: L('लोकांशी थेट नात्यावर उभे नेतृत्व', 'Leadership built on a direct bond with people'),
-    items: [
-      { tag: L('त्यांची संकल्पना', 'His idea'), title: L('स्वामी विवेकानंद विचार यात्रा', 'Swami Vivekananda Vichar Yatra'), text: L('धाराशिव जिल्ह्यातील शहरे आणि गावांमधील तरुणांपर्यंत स्वामी विवेकानंदांचे विचार पोहोचवले.', 'Carried Vivekananda’s ideas to young people in towns and villages across Dharashiv.'), url: '/political-career' },
-      { tag: L('सरचिटणीस', 'General Secretary'), title: L('भारतीय जनता युवा मोर्चा', 'Bharatiya Janata Yuva Morcha'), text: L('संपूर्ण महाराष्ट्रात प्रवास करून तरुणांना राजकारणाशी आणि सामाजिक प्रश्नांशी जोडले.', 'Travelled across Maharashtra, connecting youth with politics and social issues.'), url: '/political-career' },
-      { tag: L('अपक्ष उमेदवार', 'Independent candidate'), title: L('धाराशिव लोकसभा निवडणूक', 'Dharashiv Lok Sabha election'), text: L('पक्ष नाही, फक्त लोक — गावागावात, घराघरात थेट संवाद.', 'No party, only people — village to village, door to door.'), url: '/political-career' },
-    ],
-    buttonLabel: L('राजकीय कारकीर्द', 'Political career'), buttonUrl: '/political-career',
-  },
-  { blockType: 'latestBlog', eyebrow: L('लेखक: रोहन देशमुख', 'By Rohan Deshmukh'), heading: L('ताजे लेख', 'Latest articles'), limit: 3 },
-  {
-    blockType: 'appealBand', heading: L('नवी कल्पना, स्वयंसेवा किंवा एकत्र काम करायचे आहे?', 'Have an idea, want to volunteer or work together?'),
-    text: L('रोहन यांच्या कार्यालयाला लिहा — प्रत्येक संदेश वाचला जातो.', 'Write to Rohan’s office — every message is read.'),
-    buttonLabel: L('संपर्क साधा', 'Contact'), buttonUrl: '/contact', showWhatsapp: true,
+    blockType: 'featuredVideo', eyebrow: L('व्हिडिओ', 'Video'),
+    heading: L('पुण्याच्या दुधात नेमकं काय मिसळतंय?', 'Milk Adulteration in India: Pune Milk Reality Check'),
+    youtubeUrl: 'https://www.youtube.com/watch?v=KN_Pb_Cm8Xs',
+    text: L(
+      'शेतकऱ्यापासून ग्राहकापर्यंत पुण्याच्या दुधाचा प्रवास — संकलन केंद्र, डेअरी कामगार, विक्रेते, ग्राहक आणि आरोग्य तज्ज्ञांशी संवाद, आणि धाराशिव जिल्ह्यातील बनावट दूध रॅकेटचा रिॲलिटी चेक.',
+      'Following Pune’s milk from the farmer to your home — conversations with collection centres, dairy workers, vendors, consumers and health experts, and a reality check on a synthetic-milk racket in Dharashiv district.',
+    ),
+    links: [{ label: L('YouTube वर पहा', 'Watch on YouTube'), url: 'https://youtu.be/KN_Pb_Cm8Xs', newTab: true }],
   },
 ]
 
