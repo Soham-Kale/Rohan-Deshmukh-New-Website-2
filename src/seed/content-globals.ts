@@ -19,11 +19,6 @@ export const settings = (p: Payload) => ({
     youtube: 'https://youtube.com/@rd.connects',
     linkedin: 'https://www.linkedin.com/in/rohan-deshmukh-politician',
   },
-  connectTagLabel: '#ConnectWithRohan',
-  connectTagUrl: '/contact',
-  appealHeading: L('चांगल्या महाराष्ट्राच्या उभारणीसाठी आम्हाला साथ द्या', 'Join us in building a better Maharashtra'),
-  appealButtonLabel: L('हो! मी तयार आहे!!!', 'YES! I AM IN!!!'),
-  appealButtonUrl: '/contact',
   formNotifyEmails: ['connect@rohandeshmukh.in'],
   formConsentText: L('मी माझी माहिती संपर्कासाठी वापरण्यास संमती देतो/देते.', 'I consent to my details being used to contact me.'),
 })

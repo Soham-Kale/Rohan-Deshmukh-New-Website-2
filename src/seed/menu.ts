@@ -10,7 +10,4 @@ import { updateGlobalBilingual } from './bilingual'
 export async function applyMenu(payload: Payload) {
   await updateGlobalBilingual(payload, 'header', header())
   await updateGlobalBilingual(payload, 'footer', footer())
-  for (const locale of ['mr', 'en'] as const) {
-    await payload.updateGlobal({ slug: 'site-settings', locale, depth: 0, data: { connectTagUrl: '/contact' } as never })
-  }
 }

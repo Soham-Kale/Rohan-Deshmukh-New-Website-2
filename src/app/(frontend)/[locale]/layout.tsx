@@ -11,7 +11,7 @@ import { getGlobal } from '@/lib/payload'
 import { mediaUrl, siteUrl } from '@/lib/utils'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { ConnectTag, FloatingButtons, SitePopup } from '@/components/layout/Floating'
+import { FloatingButtons, SitePopup } from '@/components/layout/Floating'
 import '../globals.css'
 
 
@@ -82,7 +82,6 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           <Header locale={locale} />
           <main id="main">{children}</main>
           <Footer locale={locale} />
-          <ConnectTag label={settings.connectTagLabel} url={settings.connectTagUrl} />
           <FloatingButtons whatsapp={settings.whatsappNumber} labels={{ top: t('backToTop'), chat: t('chatWhatsapp') }} />
           <SitePopup
             closeLabel={t('close')}
