@@ -126,7 +126,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
   return (
     <section
       data-hero-overlay
-      className="relative isolate h-[100svh] min-h-[560px] overflow-hidden bg-charcoal-950 text-white max-lg:-mt-[4.5rem] lg:h-[calc(100svh-6.75rem)] lg:min-h-[600px]"
+      className="relative isolate h-[100svh] min-h-[560px] overflow-hidden bg-charcoal-950 text-white max-lg:-mt-[4.5rem] lg:h-[calc(100svh-5rem)] lg:max-h-[780px] lg:min-h-[580px]"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -183,7 +183,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
       <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-[70%] bg-gradient-to-t from-charcoal-950/95 via-charcoal-950/60 to-transparent lg:hidden" />
 
       {/* text */}
-      <div className="container-x relative flex h-full items-end pb-12 pr-16 pt-28 sm:pb-16 lg:items-center lg:pb-0 lg:pr-36">
+      <div className="container-x relative flex h-full items-end pb-12 pr-16 pt-28 sm:pb-16 lg:items-center lg:pb-20 lg:pr-36">
         {/* all slides share one grid cell, so the block keeps one height and nothing jumps */}
         <div className="relative grid w-full max-w-4xl">
           {slides.map((s, i) => {

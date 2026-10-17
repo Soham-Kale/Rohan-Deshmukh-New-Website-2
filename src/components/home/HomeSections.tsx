@@ -2,11 +2,12 @@ import type React from 'react'
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import {
-  ArrowRight, ArrowUpRight, Award, BookOpen, CalendarDays, Camera, Flag, Heart, Info, Leaf, PenLine, Phone, User, Video, Vote,
+  ArrowRight, ArrowUpRight, Award, Quote, BookOpen, CalendarDays, Camera, Flag, Heart, Info, Leaf, PenLine, Phone, User, Video, Vote,
 } from 'lucide-react'
 import type { Home, Post, Video as VideoDoc } from '@/payload-types'
 import type { Locale } from '@/i18n/routing'
-import { payload } from '@/lib/payload'
+import { getGlobal, payload } from '@/lib/payload'
+import { SocialIcon, socialLabels } from '../ui/SocialIcon'
 import { cn, formatDate, mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit } from '@/lib/utils'
 import { Link } from '@/i18n/navigation'
 import { CMSLink } from '../ui/CMSLink'
@@ -17,7 +18,7 @@ import { HeroSlider } from './HeroSlider'
 import { LatestList, LeadStory } from '../blog/BlogParts'
 import { FaqAccordion } from './FaqAccordion'
 import { Marquee } from './Marquee'
-import { InstagramEmbeds } from './InstagramEmbeds'
+import { InstagramReels } from './InstagramReels'
 import { CountUp } from '@/components/ui/CountUp'
 
 type Block = NonNullable<Home['sections']>[number]
@@ -32,7 +33,7 @@ export async function HomeSections({ sections, locale }: { sections: Block[]; lo
       {visible.map((b, i) => {
         const key = b.id ?? i
         switch (b.blockType) {
-          case 'heroSlider': return <Hero key={key} b={b} />
+          case 'heroSlider': return <Hero key={key} b={b} locale={locale} />
           case 'quickLinks': return <QuickLinksSection key={key} b={b} />
           case 'aboutIntro': return <AboutIntroSection key={key} b={b} />
           case 'homeJourney': return <JourneySection key={key} b={b} locale={locale} />
@@ -58,7 +59,11 @@ export async function HomeSections({ sections, locale }: { sections: Block[]; lo
   )
 }
 
-function Hero({ b }: { b: Of<'heroSlider'> }) {
+/**
+ * Hero (official-site layout): the photo slideshow, the follow-us icons standing on its left edge (wide screens),
+ * and a navy message bar that overlaps the bottom of the photos — one line on how Rohan works, his quote, one button.
+ */
+async function Hero({ b, locale }: { b: Of<'heroSlider'>; locale: Locale }) {
   const slides = (b.slides ?? [])
     .map((s) => ({
       image: mediaUrl(s.image, 'hero') ?? '',
@@ -75,7 +80,38 @@ function Hero({ b }: { b: Of<'heroSlider'> }) {
     }))
     .filter((s) => s.image)
   if (!slides.length) return null
-  return <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 5} />
+  const [settings, t] = await Promise.all([getGlobal('site-settings', locale), getTranslations('common')])
+  const social = Object.entries(settings.social ?? {}).filter(([k, v]) => v && k !== 'id') as [string, string][]
+  return (
+    <>
+      <div className="relative">
+        <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 5} />
+        {!!social.length && (
+          <ul aria-label={t('followUs')} className="absolute left-4 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-2.5 xl:flex">
+            {social.map(([k, v]) => (
+              <li key={k}>
+                <a href={v} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} className="grid size-10 place-items-center rounded-full bg-white text-charcoal-900 shadow-md ring-1 ring-black/5 transition hover:bg-saffron-600 hover:text-white">
+                  <SocialIcon name={k === 'whatsappChannel' ? 'whatsapp' : k} className="size-[17px]" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div className="container-x relative z-10 mt-6 lg:-mt-20">
+        <div className="grid gap-5 rounded-lg border-l-4 border-saffron-500 bg-charcoal-900 p-6 text-white shadow-[0_24px_50px_-28px_rgb(20_33_61/0.7)] md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-10 md:p-8">
+          <div>
+            <p className="text-[0.95rem] font-semibold tracking-wide text-highlight">{t('engageEyebrow')}</p>
+            <p className="mt-1.5 text-[1.12rem] leading-relaxed md:text-[1.3rem]">{t('engageText')}</p>
+            <p className="mt-2 text-[1rem] leading-relaxed text-white/75 md:text-[1.05rem]">{t('engageQuote')}</p>
+          </div>
+          <CMSLink url="https://newindiamanifesto.com/apply/founder" newTab className="btn btn-primary justify-self-start md:justify-self-end">
+            {t('engageButton')} <ArrowUpRight className="size-4" />
+          </CMSLink>
+        </div>
+      </div>
+    </>
+  )
 }
 
 function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
@@ -110,25 +146,24 @@ function Stat({ value, label }: { value: string; label: string; dark?: boolean }
   )
 }
 
-function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
+async function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
   const img = mediaUrl(b.image, 'card')
+  const t = await getTranslations('common')
   return (
     <section className="section">
-      <div className="container-x grid items-center gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-24">
-        {img && (
-          /* portrait on a soft saffron block, slightly offset — warmer than an outlined frame */
-          <div className="photo-backdrop mx-auto w-full max-w-md lg:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-cream shadow-[0_30px_60px_-40px_rgb(20_33_61/0.55)]">
-              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 90vw, 40vw" className="object-cover" style={photoFit(b.image, 0.8)} />
-            </div>
-          </div>
-        )}
-        <div>
+      {/* official-site "About" block: words on the left, the portrait on the right on a soft panel */}
+      <div className="container-x grid items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-20">
+        <div data-reveal className="lg:order-1">
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {/* tagline right under the name, then the description */}
-          {b.pledge && <p className="mt-3 font-display text-xl leading-snug text-saffron-700 md:text-2xl">{b.pledge}</p>}
-          {b.text && <p className="lead mt-6 md:!text-[1.22rem]">{b.text}</p>}
+          {b.text && <p className="mt-6 text-[1.08rem] leading-[1.85] text-ink md:text-[1.15rem]">{b.text}</p>}
+          {/* tagline as his own words, with a quote mark */}
+          {b.pledge && (
+            <p className="mt-6 flex gap-3 font-display text-[1.25rem] leading-snug text-charcoal-900 md:text-[1.4rem]">
+              <Quote aria-hidden className="mt-1 size-6 shrink-0 fill-saffron-500 text-saffron-500" />
+              {b.pledge}
+            </p>
+          )}
           {/* quick facts (Born, Studied, Leads, Author) as a plain row, separated by thin rules */}
           {!!b.stats?.length && (
             <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line pt-6 sm:grid-cols-4">
@@ -141,11 +176,29 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
             </dl>
           )}
           {b.buttonUrl && (
-            <CMSLink url={b.buttonUrl} className="btn btn-dark mt-9">
-              {b.buttonLabel} <ArrowRight className="size-4" />
-            </CMSLink>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <CMSLink url={b.buttonUrl} className="btn btn-dark">
+                {b.buttonLabel} <ArrowRight className="size-4" />
+              </CMSLink>
+              <CMSLink url="/contact" className="btn btn-ghost text-charcoal-900">
+                {t('getInTouch')}
+              </CMSLink>
+            </div>
           )}
         </div>
+        {img && (
+          /* the portrait exactly as photographed — whole picture, no crop, no colour block behind, just a soft shadow */
+          <div data-reveal className="mx-auto w-full max-w-md lg:order-2 lg:max-w-[30rem]">
+            <Image
+              src={img}
+              alt={mediaAlt(b.image, b.heading ?? '')}
+              width={mediaSize(b.image).width}
+              height={mediaSize(b.image).height}
+              sizes="(max-width:1024px) 90vw, 480px"
+              className="h-auto w-full rounded-2xl shadow-[0_28px_60px_-28px_rgb(20_33_61/0.45)]"
+            />
+          </div>
+        )}
       </div>
     </section>
   )
@@ -187,31 +240,24 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
   )
 }
 
-/**
- * Home → video: the story on the left (eyebrow, title, short summary, "Watch on YouTube"), the video large on the right.
- * Phones: title first, then the video, then the summary and button. Plays in place (lite embed).
- */
+/** Home → video, centred like the official site's "Stay connected" block: heading, the video large, one line, button */
 function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
   const links = b.links ?? []
   return (
-    <section className="section band-cream">
-      <div className="container-x grid items-center gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-x-16 lg:gap-y-6">
-        <SectionHead eyebrow={b.eyebrow} heading={b.heading} className="!mb-0 lg:col-start-1 lg:row-start-1 lg:self-end" />
-        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+    <section className="section">
+      <div className="container-x">
+        <SectionHead eyebrow={b.eyebrow} heading={b.heading} center />
+        <div data-reveal className="mx-auto max-w-4xl">
           <YouTube url={b.youtubeUrl} title={b.heading} />
         </div>
-        {(b.text || links.length > 0) && (
-          <div className="lg:col-start-1 lg:row-start-2 lg:self-start">
-            {b.text && <p className="lead !mt-0">{b.text}</p>}
-            {links.length > 0 && (
-              <div className="mt-7 flex flex-wrap gap-3">
-                {links.map((l, i) => (
-                  <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>
-                    {l.label} <ArrowUpRight className="size-4" />
-                  </CMSLink>
-                ))}
-              </div>
-            )}
+        {b.text && <p className="mx-auto mt-7 max-w-3xl text-center text-[1.05rem] leading-relaxed text-muted md:text-[1.12rem]">{b.text}</p>}
+        {links.length > 0 && (
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            {links.map((l, i) => (
+              <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-dark' : 'btn-ghost text-charcoal-900')}>
+                {l.label} <ArrowUpRight className="size-4" />
+              </CMSLink>
+            ))}
           </div>
         )}
       </div>
@@ -286,7 +332,10 @@ function MoreLink({ url, label, dark }: { url?: string | null; label?: string | 
   if (!url || !label) return null
   return (
     <CMSLink url={url} className={cn('more-link shrink-0', dark && 'text-highlight')}>
-      {label} <ArrowRight className="size-4" />
+      {label}
+      <span aria-hidden className="grid size-6 place-items-center rounded-full ring-[1.5px] ring-current">
+        <ArrowRight className="size-3.5" />
+      </span>
     </CMSLink>
   )
 }
@@ -294,33 +343,43 @@ function MoreLink({ url, label, dark }: { url?: string | null; label?: string | 
 const DEV = '०१२३४५६७८९'
 const digits = (n: number, locale: Locale) => (locale === 'mr' ? String(n).replace(/\d/g, (d) => DEV[Number(d)]) : String(n))
 
+/**
+ * Journey as an official-site timeline: centred heading, one line across the page with a dot per stop,
+ * the stops alternating above and below the line (a vertical list on phones and tablets).
+ */
 function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale }) {
   const items = b.items ?? []
   if (!items.length) return null
   return (
     <section className="section band-cream">
       <div className="container-x">
-        <div className="section-head-row">
-          <SectionHead eyebrow={b.eyebrow} heading={b.heading} />
-          <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
-        </div>
-        {/* one route from school to home again: a line through numbered stops (vertical on phones) */}
-        <ol className="relative grid gap-10 md:grid-cols-[repeat(var(--n),minmax(0,1fr))]" style={{ '--n': items.length } as React.CSSProperties}>
-          <span aria-hidden className="absolute bottom-6 left-5 top-6 w-px bg-saffron-300 md:bottom-auto md:left-5 md:right-0 md:top-5 md:h-px md:w-auto" />
+        <SectionHead eyebrow={b.eyebrow} heading={b.heading} center />
+        <ol data-reveal-stagger className="relative lg:grid lg:grid-cols-[repeat(var(--n),minmax(0,1fr))] lg:gap-6" style={{ '--n': items.length } as React.CSSProperties}>
+          <span aria-hidden className="absolute bottom-3 left-[11px] top-3 w-0.5 bg-saffron-300 lg:inset-x-0 lg:bottom-auto lg:top-1/2 lg:h-0.5 lg:w-auto lg:-translate-y-1/2" />
           {items.map((it, i) => {
+            const up = i % 2 === 0
             const last = i === items.length - 1
             return (
-              <li key={it.id} className="relative pl-16 md:pl-0">
-                <span className={cn('absolute left-0 top-0 grid size-10 place-items-center rounded-full font-semibold ring-[6px] ring-cream md:relative', last ? 'bg-saffron-500 text-white' : 'bg-charcoal-900 text-saffron-300')}>{digits(i + 1, locale)}</span>
-                <div className="md:mt-6 md:pr-2">
-                  {it.place && <p className="tile-kicker">{it.place}</p>}
-                  {it.title && <h3 className="mt-1.5 text-[1.2rem] leading-snug text-charcoal-900">{it.title}</h3>}
-                  {it.text && <p className="mt-2 text-[0.97rem] leading-relaxed text-muted">{it.text}</p>}
+              <li key={it.id} className="relative pb-8 pl-12 last:pb-0 lg:grid lg:min-h-[25rem] lg:grid-rows-[1fr_auto_1fr] lg:pb-0 lg:pl-0">
+                <span aria-hidden className={cn('absolute left-0 top-5 size-6 rounded-full border-[5px] border-cream ring-2 lg:static lg:row-start-2 lg:mx-auto', last ? 'bg-saffron-500 ring-saffron-500' : 'bg-charcoal-900 ring-charcoal-900')} />
+                <div className={cn('relative', up ? 'lg:row-start-1 lg:self-end lg:pb-7' : 'lg:row-start-3 lg:self-start lg:pt-7')}>
+                  {/* short stem from the card to the line */}
+                  <span aria-hidden className={cn('absolute left-1/2 hidden h-7 w-px bg-saffron-300 lg:block', up ? 'bottom-0' : 'top-0')} />
+                  <div className="rounded-lg border-t-[3px] border-saffron-500 bg-white p-5 shadow-[0_14px_30px_-24px_rgb(20_33_61/0.5)]">
+                    <p className="text-[0.95rem] text-saffron-700">{digits(i + 1, locale)} · {it.place}</p>
+                    {it.title && <h3 className="mt-1 text-[1.2rem] leading-snug text-charcoal-900">{it.title}</h3>}
+                    {it.text && <p className="mt-2 text-[0.97rem] leading-relaxed text-muted">{it.text}</p>}
+                  </div>
                 </div>
               </li>
             )
           })}
         </ol>
+        {b.buttonUrl && (
+          <div className="mt-10 text-center lg:mt-6">
+            <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
+          </div>
+        )}
       </div>
     </section>
   )
@@ -354,23 +413,23 @@ function FamilySection({ b }: { b: Of<'family'> }) {
   )
 }
 
+/** लोकमंगल परिवार: heading row with "View all", the introduction, then one equal card per group of institutions */
 function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
   return (
-    <section className="section relative overflow-hidden">
-      <div aria-hidden className="absolute -right-24 -top-24 size-96 rounded-full border-[40px] border-saffron-500/[0.06]" />
-      <div className="container-x relative grid items-center gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
-        <div>
-          {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-          {b.text && <p className="mt-5 font-display text-[1.35rem] leading-[1.6] text-charcoal-900 md:text-[1.6rem]">{b.text}</p>}
-          {b.buttonUrl && <div className="mt-8"><MoreLink url={b.buttonUrl} label={b.buttonLabel} /></div>}
+    <section className="section band-cream">
+      <div className="container-x">
+        <div className="section-head-row">
+          <SectionHead eyebrow={b.eyebrow} heading={b.heading} intro={b.text} />
+          <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
         </div>
-        {/* the one place the numbers earn a soft raised card */}
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+        <ul data-reveal-stagger className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {b.items?.map((g) => (
-            <li key={g.id} className="stat-card">
-              <p className="stat-value">{g.value}</p>
-              {g.title && <p className="mt-2 leading-snug text-white">{g.title}</p>}
-              {g.text && <p className="mt-0.5 text-sm leading-snug text-white/70">{g.text}</p>}
+            <li key={g.id}>
+              <div className="h-full rounded-lg border-b-[3px] border-saffron-500 bg-white p-5 shadow-[0_14px_30px_-24px_rgb(20_33_61/0.45)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_40px_-24px_rgb(20_33_61/0.5)] md:p-6">
+                <p className="font-display text-[2.6rem] leading-none text-saffron-600">{g.value && <CountUp value={g.value} />}</p>
+                {g.title && <p className="mt-3 leading-snug text-charcoal-900">{g.title}</p>}
+                {g.text && <p className="mt-1 text-[0.92rem] leading-snug text-muted">{g.text}</p>}
+              </div>
             </li>
           ))}
         </ul>
@@ -379,23 +438,36 @@ function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
   )
 }
 
+/** सामाजिक उपक्रम: one card per chapter — photo on top, a soft cream body, a small green label, title and a line of text */
 function HighlightsSection({ b }: { b: Of<'homeHighlights'> }) {
   return (
-    <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.text} action={<MoreLink url={b.buttonUrl} label={b.buttonLabel} />}>
-      {/* numbered chapters: numbered columns under one shared rule */}
-      <ol className="grid gap-10 border-t border-charcoal-900/15 md:grid-cols-3 md:gap-12">
-        {b.items?.map((c, i) => (
-          <li key={c.id}>
-            <CMSLink url={c.url || b.buttonUrl || '#'} className="tile group h-full pt-7">
-              <span aria-hidden className="absolute -top-px left-0 h-[3px] w-14 bg-saffron-500 transition-all duration-300 group-hover:w-24" />
-              <span className="font-display text-sm text-saffron-700">{String(i + 1).padStart(2, '0')}{c.tag && <span className="text-muted"> · {c.tag}</span>}</span>
-              {c.title && <h3 className="tile-title mt-3 text-[1.3rem]">{c.title}</h3>}
-              {c.text && <p className="tile-text">{c.text}</p>}
-            </CMSLink>
-          </li>
-        ))}
-      </ol>
-    </Section>
+    <section className="section">
+      <div className="container-x">
+        <div className="section-head-row">
+          <SectionHead eyebrow={b.eyebrow} heading={b.heading} intro={b.text} />
+          <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
+        </div>
+        <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-reveal-stagger>
+          {b.items?.map((c) => {
+            const img = mediaUrl(c.image, 'card')
+            return (
+              <li key={c.id}>
+                <CMSLink url={c.url || b.buttonUrl || '#'} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-[#fffaf4] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_44px_-26px_rgb(20_33_61/0.45)]">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-cream">
+                    {img && <Image src={img} alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw" className="object-cover transition duration-700 group-hover:scale-[1.06]" style={photoFit(c.image, 1.6)} />}
+                  </div>
+                  <div className="flex flex-1 flex-col p-6 md:p-7">
+                    {c.tag && <span className="self-start rounded-full bg-leaf-50 px-3 py-0.5 text-[0.88rem] font-semibold text-leaf-600">{c.tag}</span>}
+                    {c.title && <h3 className="mt-4 text-[1.35rem] leading-snug text-charcoal-900 transition group-hover:text-saffron-700">{c.title}</h3>}
+                    {c.text && <p className="mt-2 text-[1rem] leading-relaxed text-ink">{c.text}</p>}
+                  </div>
+                </CMSLink>
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+    </section>
   )
 }
 
@@ -441,9 +513,8 @@ async function EventsSection({ b, locale }: { b: Of<'homeEvents'>; locale: Local
 function VisionSection({ b }: { b: Of<'homeVision'> }) {
   const img = mediaUrl(b.image)
   return (
-    <section className="section band-cream relative overflow-hidden">
-      <div aria-hidden className="absolute -bottom-28 -left-24 size-96 rounded-full border-[40px] border-saffron-500/10" />
-      <div className="container-x relative grid items-center gap-14 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-20">
+    <section className="section">
+      <div data-reveal-stagger className="container-x grid items-center gap-12 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-20">
         <div className="flex justify-center">
           {img ? (
             /* the book cover at its own shape, tilted slightly like a book on a shelf */
@@ -457,8 +528,8 @@ function VisionSection({ b }: { b: Of<'homeVision'> }) {
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.text && <p className="lead mt-5">{b.text}</p>}
-          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn btn-primary mt-9">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
+          {b.text && <p className="mt-6 text-[1.08rem] leading-[1.85] text-ink md:text-[1.15rem]">{b.text}</p>}
+          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn btn-dark mt-8">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
         </div>
       </div>
     </section>
@@ -566,42 +637,54 @@ export function PostCard({ post, locale }: { post: Post; locale: string }) {
   )
 }
 
+/**
+ * Reels (like the Lokmangal Foundation site): centred heading, then the chosen Instagram reels side by side
+ * (a swipeable row on phones), each loading only when it scrolls into view. Facebook / YouTube stay optional below.
+ */
 async function SocialSection({ b, locale }: { b: Of<'socialFeeds'>; locale: Locale }) {
   const p = await payload()
   const settings = await p.findGlobal({ slug: 'site-settings', locale })
+  const t = await getTranslations('common')
   const videos = b.showYoutube ? ((await p.find({ collection: 'videos', limit: 3, sort: '-publishedAt', locale })).docs as VideoDoc[]) : []
   const fb = settings.social?.facebook
+  const insta = settings.social?.instagram
   return (
-    <Section eyebrow={b.eyebrow} heading={b.heading} intro={b.text} className="band-cream"
-      action={
-        <div className="flex flex-wrap gap-3">
-          {settings.social?.instagram && <a href={settings.social.instagram} target="_blank" rel="noopener" className="btn btn-dark">Instagram <ArrowUpRight className="size-4" /></a>}
-          {fb && <a href={fb} target="_blank" rel="noopener" className="btn btn-ghost text-charcoal-900">Facebook <ArrowUpRight className="size-4" /></a>}
-        </div>
-      }>
-      {!!b.instagramPosts?.length && <InstagramEmbeds urls={b.instagramPosts.map((x) => ({ url: x.url, title: x.title ?? '' }))} />}
-      <div className={cn('mt-8 grid gap-8', fb && b.showFacebook ? 'lg:grid-cols-[1fr_380px]' : '')}>
-        {videos.length > 0 && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-            {videos.slice(0, 2).map((v) => <YouTube key={v.id} url={v.youtubeUrl} title={v.title} />)}
-            <Link href="/media/videos" className="btn btn-dark self-start sm:col-span-2 sm:justify-self-start">YouTube <ArrowRight className="size-4" /></Link>
-          </div>
+    <section className="section border-t border-line">
+      <div className="container-x">
+        <SectionHead eyebrow={b.eyebrow} heading={b.heading} intro={b.text} center />
+        {!!b.instagramPosts?.length && <InstagramReels reels={b.instagramPosts.map((x) => ({ url: x.url, title: x.title ?? '' }))} />}
+        {insta && (
+          <p className="mt-8 text-center">
+            <a href={`${insta.replace(/\/$/, '')}/reels/`} target="_blank" rel="noopener noreferrer" className="btn btn-dark">
+              {t('moreReels')} <ArrowUpRight className="size-4" />
+            </a>
+          </p>
         )}
-        {fb && b.showFacebook && (
-          <div className="overflow-hidden rounded-2xl bg-white">
-            <iframe
-              title="Facebook"
-              loading="lazy"
-              src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=380&height=520&small_header=true&hide_cover=false&show_facepile=false`}
-              width="100%"
-              height="520"
-              style={{ border: 0 }}
-              allow="encrypted-media"
-            />
+        {(videos.length > 0 || (fb && b.showFacebook)) && (
+          <div className={cn('mt-12 grid gap-8', fb && b.showFacebook ? 'lg:grid-cols-[1fr_380px]' : '')}>
+            {videos.length > 0 && (
+              <div className="grid gap-6 sm:grid-cols-2">
+                {videos.slice(0, 2).map((v) => <YouTube key={v.id} url={v.youtubeUrl} title={v.title} />)}
+                <Link href="/media/videos" className="btn btn-dark self-start sm:col-span-2 sm:justify-self-start">YouTube <ArrowRight className="size-4" /></Link>
+              </div>
+            )}
+            {fb && b.showFacebook && (
+              <div className="overflow-hidden rounded-2xl bg-white">
+                <iframe
+                  title="Facebook"
+                  loading="lazy"
+                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=380&height=520&small_header=true&hide_cover=false&show_facepile=false`}
+                  width="100%"
+                  height="520"
+                  style={{ border: 0 }}
+                  allow="encrypted-media"
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
-    </Section>
+    </section>
   )
 }
 

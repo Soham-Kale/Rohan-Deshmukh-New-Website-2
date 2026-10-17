@@ -152,7 +152,6 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
           </div>
 
           <div className="relative flex flex-col p-6 sm:p-8 lg:p-10">
-            <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full border-[28px] border-saffron-500/[0.06]" />
             <div className="flex flex-wrap items-center gap-2 text-sm">
               {p.stat && <span className="inline-flex items-center gap-1.5 text-saffron-700"><TrendingUp aria-hidden className="size-4" /> {p.stat}</span>}
               <span className="rounded-full bg-cream px-2.5 py-0.5 text-xs text-charcoal-800">{p.categoryLabel}</span>

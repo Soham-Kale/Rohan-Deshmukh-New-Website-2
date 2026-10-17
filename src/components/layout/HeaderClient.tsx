@@ -23,7 +23,7 @@ type Props = {
 
 /* top-level menu item: plain text, with a short saffron underline under the active section */
 const navItem =
-  "relative flex items-center gap-1 whitespace-nowrap px-2.5 py-2 text-[1.02rem] transition-colors after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-transparent after:content-['']"
+  "relative flex items-center gap-1 whitespace-nowrap px-3 py-2 text-[1.02rem] text-charcoal-900 transition-colors after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-transparent after:content-['']"
 
 const NavLink = ({ node, className, onClick, children }: { node: NavNode; className?: string; onClick?: () => void; children: React.ReactNode }) => {
   if (!node.url) return <span className={className}>{children}</span>
@@ -91,11 +91,11 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
         className={cn(
           'group/h sticky top-0 z-50 transition-[background-color,box-shadow,color] duration-300',
           heroTop
-            ? 'text-charcoal-900 max-lg:bg-transparent max-lg:text-white lg:bg-paper/95 lg:shadow-[inset_0_-1px_0_var(--color-line)] lg:backdrop-blur'
-            : cn('bg-paper/95 text-charcoal-900 backdrop-blur', scrolled ? 'shadow-[0_10px_30px_-20px_rgba(20,33,61,.3)]' : 'shadow-[inset_0_-1px_0_var(--color-line)]'),
+            ? 'text-charcoal-900 max-lg:bg-transparent max-lg:text-white lg:bg-white lg:shadow-[0_1px_0_var(--color-line)]'
+            : cn('bg-white text-charcoal-900', scrolled ? 'shadow-[0_8px_24px_-16px_rgba(20,33,61,.28)]' : 'shadow-[0_1px_0_var(--color-line)]'),
         )}
       >
-        <div className={cn('container-x flex h-[4.5rem] items-center gap-2 sm:gap-4')}>
+        <div className={cn('container-x flex h-[4.5rem] items-center gap-2 sm:gap-4 lg:h-20')}>
           <Link href="/" className="flex min-w-0 shrink items-center" aria-label={siteName}>
             {heroTop && logoUrl && (
               /* white logo over the photo (phones/tablets) */
@@ -116,7 +116,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
             )}
           </Link>
 
-          <nav aria-label="Main" className="ml-auto hidden xl:block">
+          <nav aria-label="Main" className="mx-auto hidden xl:block">
             <ul className="flex items-center gap-0.5">
               {nav.map((item, i) => {
                 const hasKids = Boolean(item.children?.length)
@@ -185,7 +185,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
             </ul>
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5 xl:ml-2">
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5 xl:ml-0">
             <Link
               href={pathname}
               locale={locale === 'mr' ? 'en' : 'mr'}
@@ -196,7 +196,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
               <span>{t.language}</span>
             </Link>
             {cta && (
-              <Link href={cta.href} className="btn btn-primary ml-1 hidden !min-h-0 px-5 py-2.5 text-[0.95rem] lg:inline-flex">
+              <Link href={cta.href} className="btn btn-dark ml-1 hidden !min-h-0 px-5 py-2.5 text-[0.95rem] lg:inline-flex">
                 {cta.label}
               </Link>
             )}
@@ -212,7 +212,7 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
         <div className={cn('absolute inset-0 bg-charcoal-950/60 transition-opacity', mobileOpen ? 'opacity-100' : 'opacity-0')} onClick={() => setMobileOpen(false)} />
         <aside
           className={cn(
-            'absolute inset-y-0 right-0 flex w-[min(420px,100%)] flex-col bg-paper text-charcoal-900 shadow-2xl transition-transform duration-300',
+            'absolute inset-y-0 right-0 flex w-[min(420px,100%)] flex-col bg-white text-charcoal-900 shadow-2xl transition-transform duration-300',
             mobileOpen ? 'translate-x-0' : 'translate-x-full',
           )}
         >

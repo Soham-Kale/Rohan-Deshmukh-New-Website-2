@@ -1,13 +1,14 @@
 /**
  * Homepage layout (Oct 2026, client document "New Content RD Web"): every section after the hero slider.
  * The hero slider itself is never touched — its slides stay exactly as they are on the website.
- * Order (17 Oct 2026): About → Journey → सामाजिक उपक्रम → Vision (New India Manifesto) → Lokmangal Parivar → Video.
+ * Order (17 Oct 2026): About → Journey → सामाजिक उपक्रम → Vision (New India Manifesto) → Lokmangal Parivar → Video → Reels.
  */
 import type { Payload } from 'payload'
 import { L } from './l10n'
 import { image, PORTRAITS } from './helpers'
 import { updateGlobalBilingual } from './bilingual'
 import { HOME_INTRO, HOME_TAGLINE } from './content-globals'
+import { DOC_FAMILY } from './content-pages'
 
 export const homeSectionsAfterHero = (p: Payload) => [
   {
@@ -18,21 +19,45 @@ export const homeSectionsAfterHero = (p: Payload) => [
     buttonLabel: L('संपूर्ण परिचय वाचा', 'Read full introduction'), buttonUrl: '/about/introduction',
   },
   {
-    blockType: 'homeJourney', eyebrow: L('प्रवास', 'His journey'), heading: L('सोलापूर ते जग, आणि पुन्हा सोलापूर', 'From Solapur to the world, and back home'),
+    blockType: 'homeJourney', eyebrow: L('सोलापूर ते जग', 'From Solapur to the world'), heading: L('प्रवास', 'His Journey'),
     items: [
-      { place: L('सोलापूर', 'Solapur'), title: L('शाळा आणि NCC', 'School & NCC'), text: L('लिटल फ्लॉवर कॉन्व्हेंट स्कूल; इयत्ता नववीपासून सक्रिय NCC कॅडेट.', 'Little Flower Convent School; active NCC cadet from Class 9.') },
-      { place: L('नवी दिल्ली', 'New Delhi'), title: L('सर्वोत्कृष्ट कॅडेट', 'Best Cadet'), text: L('नवी दिल्लीतील NCC संचलनासाठी निवड आणि सर्वोत्कृष्ट कॅडेट पुरस्कार.', 'Selected for the NCC parade in New Delhi and named Best Cadet.') },
-      { place: L('रोचेस्टर, अमेरिका', 'Rochester, USA'), title: L('उच्च शिक्षण', 'Higher studies'), text: L('RIT मधून जैवतंत्रज्ञान आणि उद्योजकता विकास या विषयात पदवी.', 'Biotechnology and Entrepreneurship Development at RIT.') },
-      { place: L('सोलापूर · २००९', 'Solapur · 2009'), title: L('पुन्हा आपल्या मातीत', 'Back home'), text: L('आपल्या माणसांमध्ये काम करण्यासाठी सोलापूरला परतले.', 'Returned to Solapur to work among his own people.') },
+      {
+        place: L('सोलापूर, महाराष्ट्र — पायाभरणी', 'Solapur, Maharashtra — The Foundation'), title: L('लिटल फ्लॉवर कॉन्व्हेंट स्कूल', 'Little Flower Convent School'),
+        text: L(
+          'त्यांच्या प्रवासाची सुरुवात सोलापूरमध्ये झाली, जिथे त्यांनी लिटल फ्लॉवर कॉन्व्हेंट स्कूलमध्ये शालेय शिक्षण घेतले. इयत्ता नववीपासून ते सक्रिय NCC कॅडेट होते — यातून त्यांच्यात शिस्त, नेतृत्व आणि जबाबदारीची भक्कम जाणीव रुजली.',
+          'His journey began in Solapur, where he pursued his schooling at Little Flower Convent School. From Class 9, he became an active NCC cadet, developing discipline, leadership and a strong sense of responsibility.',
+        ),
+      },
+      {
+        place: L('नवी दिल्ली — अभिमानाचा क्षण', 'New Delhi — A Proud Achievement'), title: L('NCC सर्वोत्कृष्ट कॅडेट', 'NCC Best Cadet'),
+        text: L(
+          'त्यांच्या निष्ठेमुळे आणि शिस्तीमुळे त्यांना नवी दिल्लीतील NCC संचलनात प्रतिनिधित्व करण्याची संधी मिळाली, जिथे त्यांना ‘सर्वोत्कृष्ट कॅडेट’ हा प्रतिष्ठेचा सन्मान मिळाला.',
+          'His dedication and discipline earned him the opportunity to represent at the NCC Parade in New Delhi, where he was honoured with the prestigious distinction of Best Cadet.',
+        ),
+      },
+      {
+        place: L('रोचेस्टर, अमेरिका — क्षितिजे विस्तारताना', 'Rochester, USA — Expanding Horizons'), title: L('RIT मध्ये उच्च शिक्षण', 'Higher Education at RIT'),
+        text: L(
+          'नवनिर्मिती आणि उद्योजकतेच्या ओढीने त्यांनी अमेरिकेतील रोचेस्टर इन्स्टिट्यूट ऑफ टेक्नॉलॉजी (RIT) येथे जैवतंत्रज्ञान आणि उद्योजकता विकास या विषयांत उच्च शिक्षण घेतले.',
+          'Driven by a passion for innovation and entrepreneurship, he pursued higher studies in Biotechnology and Entrepreneurship Development at the Rochester Institute of Technology (RIT), USA.',
+        ),
+      },
+      {
+        place: L('२०१६ — सेवेचा नवा अध्याय', '2016 — A New Chapter of Service'), title: L('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation'),
+        text: L(
+          'समाजात अर्थपूर्ण बदल घडवण्याचा ध्यास घेऊन परतल्यानंतर, २०१६ मध्ये त्यांनी लोकमंगल फाऊंडेशनच्या अध्यक्षपदाची जबाबदारी स्वीकारली — समाजविकास आणि सेवेसाठी समर्पित नव्या अध्यायाची ही सुरुवात होती.',
+          'Returning with a vision to create meaningful social impact, he took on the responsibility of leading Lokmangal Foundation as its President in 2016, marking the beginning of a new chapter dedicated to community development and social service.',
+        ),
+      },
     ],
     buttonLabel: L('स्वपरिचय', 'Introduction'), buttonUrl: '/about/introduction',
   },
   {
     blockType: 'homeHighlights', eyebrow: L('सामाजिक उपक्रम', 'Social initiatives'), heading: L('लोकांशी थेट नात्यावर उभे नेतृत्व', 'Leadership built on a direct bond with people'),
     items: [
-      { tag: L('त्यांची संकल्पना', 'His idea'), title: L('स्वामी विवेकानंद विचार यात्रा', 'Swami Vivekananda Vichar Yatra'), text: L('धाराशिव जिल्ह्यातील शहरे आणि गावांमधील तरुणांपर्यंत स्वामी विवेकानंदांचे विचार पोहोचवले.', 'Carried Vivekananda’s ideas to young people in towns and villages across Dharashiv.'), url: '/political-career' },
-      { tag: L('सरचिटणीस', 'General Secretary'), title: L('भारतीय जनता युवा मोर्चा', 'Bharatiya Janata Yuva Morcha'), text: L('संपूर्ण महाराष्ट्रात प्रवास करून तरुणांना राजकारणाशी आणि सामाजिक प्रश्नांशी जोडले.', 'Travelled across Maharashtra, connecting youth with politics and social issues.'), url: '/political-career' },
-      { tag: L('अपक्ष उमेदवार', 'Independent candidate'), title: L('धाराशिव लोकसभा निवडणूक', 'Dharashiv Lok Sabha election'), text: L('पक्ष नाही, फक्त लोक — गावागावात, घराघरात थेट संवाद.', 'No party, only people — village to village, door to door.'), url: '/political-career' },
+      { image: image(p, '/images/gallery/political/rd-political-26.webp', ''), tag: L('त्यांची संकल्पना', 'His idea'), title: L('स्वामी विवेकानंद विचार यात्रा', 'Swami Vivekananda Vichar Yatra'), text: L('धाराशिव जिल्ह्यातील शहरे आणि गावांमधील तरुणांपर्यंत स्वामी विवेकानंदांचे विचार पोहोचवले.', 'Carried Vivekananda’s ideas to young people in towns and villages across Dharashiv.'), url: '/political-career' },
+      { image: image(p, '/images/gallery/political/rd-political-15.webp', ''), tag: L('सरचिटणीस', 'General Secretary'), title: L('भारतीय जनता युवा मोर्चा', 'Bharatiya Janata Yuva Morcha'), text: L('संपूर्ण महाराष्ट्रात प्रवास करून तरुणांना राजकारणाशी आणि सामाजिक प्रश्नांशी जोडले.', 'Travelled across Maharashtra, connecting youth with politics and social issues.'), url: '/political-career' },
+      { image: image(p, '/images/gallery/political/rd-political-12.webp', ''), tag: L('अपक्ष उमेदवार', 'Independent candidate'), title: L('धाराशिव लोकसभा निवडणूक', 'Dharashiv Lok Sabha election'), text: L('पक्ष नाही, फक्त लोक — गावागावात, घराघरात थेट संवाद.', 'No party, only people — village to village, door to door.'), url: '/political-career' },
     ],
     buttonLabel: L('राजकीय कारकीर्द', 'Political career'), buttonUrl: '/political-career',
   },
@@ -62,6 +87,20 @@ export const homeSectionsAfterHero = (p: Payload) => [
     ],
     buttonLabel: L('लोकमंगल परिवार पहा', 'Explore Lokmangal Parivar'), buttonUrl: '/lokmangal/parivar',
   },
+  // hidden on the homepage — the कौटुंबिक पार्श्वभूमी page (/about/family) reads its content from this section
+  {
+    blockType: 'family', hidden: true, eyebrow: L('कौटुंबिक पार्श्वभूमी', 'Family background'),
+    intro: L(
+      'श्रद्धा, समाजाप्रती कर्तव्याची भावना आणि उद्योजकतेचा वारसा — आजही महाराष्ट्रात एक आदर्श एकत्र कुटुंब म्हणून ओळखला जाणारा परिवार.',
+      'Faith, a strong sense of duty towards society and a spirit of enterprise — still seen as a model joint family across Maharashtra.',
+    ),
+    members: [
+      { image: image(p, DOC_FAMILY[0].img, ''), relation: DOC_FAMILY[0].relation, name: DOC_FAMILY[0].name, text: L('शिक्षक आणि श्रद्धावान व्यक्तिमत्त्व; धाराशिव जिल्ह्यातील येडशी येथे गुरुकुलाची स्थापना.', 'Teacher and man of faith; started the gurukul at Yedshi, Dharashiv.') },
+      { image: image(p, DOC_FAMILY[1].img, ''), relation: DOC_FAMILY[1].relation, name: DOC_FAMILY[1].name, text: L('‘बापूसाहेब’ — लोकमंगल समूहाचे संस्थापक अध्यक्ष; विधानसभा आणि लोकसभेत लोकप्रतिनिधी.', 'Bapusaheb — Founder President of the Lokmangal Group; elected to the Assembly and the Lok Sabha.') },
+      { image: image(p, DOC_FAMILY[2].img, ''), relation: DOC_FAMILY[2].relation, name: DOC_FAMILY[2].name, text: L('लोकमंगल पतसंस्थेचे अध्यक्ष आणि लोकमंगल फाऊंडेशनचे उपाध्यक्ष.', 'President, Lokmangal Patsanstha; Vice President, Lokmangal Foundation.') },
+    ],
+    buttonLabel: L('संपूर्ण माहिती', 'Full family story'), buttonUrl: '/about/biography',
+  },
   {
     blockType: 'featuredVideo', eyebrow: L('व्हिडिओ', 'Video'),
     heading: L('पुण्याच्या दुधात नेमकं काय मिसळतंय?', 'Milk Adulteration in India: Pune Milk Reality Check'),
@@ -71,6 +110,16 @@ export const homeSectionsAfterHero = (p: Payload) => [
       'Following Pune’s milk from the farmer to your home — conversations with collection centres, dairy workers, vendors, consumers and health experts, and a reality check on a synthetic-milk racket in Dharashiv district.',
     ),
     links: [{ label: L('YouTube वर पहा', 'Watch on YouTube'), url: 'https://youtu.be/KN_Pb_Cm8Xs', newTab: true }],
+  },
+  {
+    blockType: 'socialFeeds', eyebrow: L('इंस्टाग्राम', 'Instagram'), heading: L('रील्स', 'Reels'),
+    text: L('रोहन यांच्या कामाची आणि लोकांसोबतच्या क्षणांची झलक — रील्सच्या स्वरूपात.', 'Glimpses of Rohan’s work and his moments with people, as reels.'),
+    instagramPosts: [
+      { url: 'https://www.instagram.com/reel/DcoDuGQs7fB/', title: L('रोहन देशमुख — रील', 'Rohan Deshmukh — reel') },
+      { url: 'https://www.instagram.com/reel/DeMgK2oOt5i/', title: L('रोहन देशमुख — रील', 'Rohan Deshmukh — reel') },
+      { url: 'https://www.instagram.com/reel/Db0vnBzvFn0/', title: L('रोहन देशमुख — रील', 'Rohan Deshmukh — reel') },
+    ],
+    showFacebook: false, showYoutube: false,
   },
 ]
 

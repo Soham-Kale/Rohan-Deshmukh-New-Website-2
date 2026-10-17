@@ -8,7 +8,7 @@ import type { Post } from '@/payload-types'
 import { payload } from '@/lib/payload'
 import { localizedHref, siteUrl, toMarathiDigits, cn } from '@/lib/utils'
 import { Pagination } from '@/components/ui/Pagination'
-import { BlogMasthead, BlogRow, LatestList, LeadStory, RecentList, SectionTitle, TopicsCard } from '@/components/blog/BlogParts'
+import { BlogRow, LatestList, LeadStory, RecentList, SectionTitle, TopicsCard } from '@/components/blog/BlogParts'
 import { QuickShare } from '@/components/blog/QuickShare'
 import { PageBanner } from '@/components/layout/PageBanner'
 
@@ -54,10 +54,9 @@ export default async function BlogPage({ params, searchParams }: P) {
 
   return (
     <>
-      <PageBanner title={t('title')} eyebrow={t('kicker')} subtitle={t('intro')} crumbs={[{ label: t('title') }]} path="/blog" />
-      <BlogMasthead posts={latest} locale={locale} edition={t('edition')} breaking={t('breaking')} />
+      <PageBanner title={t('title')} subtitle={t('intro')} crumbs={[{ label: t('title') }]} path="/blog" />
 
-      <div className="container-x pb-20 pt-12 md:pb-28 md:pt-16">
+      <div className="container-x pb-20 pt-10 md:pb-24 md:pt-12">
         {/* top stories */}
         {isFront && lead && (
           <section className="pb-16 md:pb-20">
@@ -74,7 +73,7 @@ export default async function BlogPage({ params, searchParams }: P) {
         )}
 
         {/* sections + search — stays at the top while scrolling */}
-        <div className="sticky top-[4.5rem] z-30 -mx-4 mb-10 border-b border-line bg-paper/95 px-4 backdrop-blur md:mx-0 md:px-0">
+        <div className="sticky top-[4.5rem] lg:top-20 z-30 -mx-4 mb-10 border-b border-line bg-paper/95 px-4 backdrop-blur md:mx-0 md:px-0">
           <div className="flex flex-col gap-3 py-3 md:flex-row md:items-center md:gap-6">
             <div className="flex min-w-0 flex-1 items-center gap-3">
               <span className="hidden shrink-0 items-center gap-1.5 text-sm text-muted sm:inline-flex"><SlidersHorizontal className="size-4" /> {t('sections')}:</span>

@@ -31,7 +31,7 @@ export async function InnerPage({ path, locale, title, subtitle, image, imagePos
   return (
     <>
       <PageBanner title={title} subtitle={subtitle} crumbs={autoCrumbs} image={image} imagePosition={imagePosition} tabs={tabs} tabsLabel={menu.title ?? undefined} path={path} />
-      <div className="container-x pb-20 pt-12 md:pb-28 md:pt-16">
+      <div className="container-x pb-20 pt-10 md:pb-24 md:pt-12">
         <div className="min-w-0">{children}</div>
       </div>
     </>

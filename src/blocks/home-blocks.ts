@@ -281,7 +281,8 @@ export const HomeHighlights: Block = {
     {
       name: 'items', type: 'array', maxRows: 6,
       fields: [
-        { name: 'tag', type: 'text', localized: true, admin: { description: 'Small orange line above the title' } },
+        { name: 'image', type: 'upload', relationTo: 'media', admin: { description: 'Card photo (landscape, about 16:10)' } },
+        { name: 'tag', type: 'text', localized: true, admin: { description: 'Small label above the title' } },
         { name: 'title', type: 'text', localized: true },
         { name: 'text', type: 'textarea', localized: true },
         { name: 'url', type: 'text' },

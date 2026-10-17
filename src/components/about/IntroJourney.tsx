@@ -81,7 +81,6 @@ function Journey({ block, locale }: { block: Cards; locale: 'mr' | 'en' }) {
   return (
     /* full-width warm band breaking out of the page container */
     <section className="band-cream relative left-1/2 mt-16 w-screen -translate-x-1/2 overflow-hidden md:mt-20">
-      <div aria-hidden className="absolute -bottom-32 -left-24 size-96 rounded-full border-[40px] border-saffron-500/[0.07]" />
       <div className="container-x relative py-14 md:py-20">
         {block.eyebrow && <p className="eyebrow">{block.eyebrow}</p>}
         {block.heading && <h2 className="h-section">{block.heading}</h2>}

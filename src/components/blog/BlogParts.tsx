@@ -9,11 +9,9 @@ import { cn, formatDate, mediaAlt, mediaUrl, photoFit, toMarathiDigits } from '@
 
 export function SectionTitle({ children, aside, className }: { children: React.ReactNode; aside?: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('flex items-center justify-between gap-4 border-b border-line pb-3', className)}>
-      <h2 className="flex items-center gap-2.5 text-xl text-charcoal-900 md:text-2xl">
-        <span aria-hidden className="h-0.5 w-6 shrink-0 rounded-full bg-saffron-500" />
-        {children}
-      </h2>
+    <div className={cn('flex items-end justify-between gap-4', className)}>
+      {/* same heading as every other section: navy title with a short saffron bar under it */}
+      <h2 className="h-section !mt-0 !text-[1.6rem] md:!text-[2rem]">{children}</h2>
       {aside}
     </div>
   )

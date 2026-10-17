@@ -2376,7 +2376,11 @@ export interface Home {
             items?:
               | {
                   /**
-                   * Small orange line above the title
+                   * Card photo (landscape, about 16:10)
+                   */
+                  image?: (number | null) | Media;
+                  /**
+                   * Small label above the title
                    */
                   tag?: string | null;
                   title?: string | null;
@@ -2950,6 +2954,7 @@ export interface HomeSelect<T extends boolean = true> {
               items?:
                 | T
                 | {
+                    image?: T;
                     tag?: T;
                     title?: T;
                     text?: T;

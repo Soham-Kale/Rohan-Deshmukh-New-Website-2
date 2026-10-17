@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { ChevronRight } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
@@ -25,10 +24,10 @@ export function defaultBanner(path?: string) {
 }
 
 /**
- * The top of every inner page — one design everywhere:
- * a wide photo with the breadcrumb, title and one line of introduction over its left side, then the section's
- * sibling pages in a white bar underneath. Same height, spacing and type on every page, so nothing jumps.
- * `light` (articles) swaps the photo for a warm paper band, so long headlines read like a newspaper.
+ * The top of every inner page — one design everywhere (official-site layout):
+ * a light band with the page title on the left and a photo on the right that fades into the band,
+ * then the section's sibling pages as a white tab bar, then the breadcrumb on its own row.
+ * `light` (articles) leaves the photo out, so long headlines get the full width.
  */
 export async function PageBanner({
   title, subtitle, crumbs = [], image, imagePosition, tabs, tabsLabel, compact, eyebrow, children, path, light,
@@ -41,61 +40,38 @@ export async function PageBanner({
   children?: React.ReactNode
   /** page path — picks the section's default photo when the page has none */
   path?: string
-  /** no photo: warm paper band with dark text */
+  /** no photo: full-width title */
   light?: boolean
 }) {
   const t = await getTranslations('common')
   const fallback = defaultBanner(path)
   const photo = light ? null : (image ?? fallback.src)
   const position = image ? imagePosition : fallback.position
-  const onPhoto = !!photo
 
   return (
     <>
-      <section className={cn('relative isolate overflow-hidden', onPhoto ? 'on-dark bg-charcoal-900 text-white' : 'bg-cream text-charcoal-900')}>
-        {photo ? (
-          <>
-            <Image src={photo} alt="" fill priority sizes="100vw" className="-z-20 object-cover" style={{ objectPosition: position }} />
-            {/* neutral ink wash from the left (where the text sits); the right side of the photo stays clear */}
-            <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-charcoal-950/80 via-charcoal-950/45 to-transparent max-md:from-charcoal-950/75 max-md:via-charcoal-950/55 max-md:to-charcoal-950/25" />
-          </>
-        ) : (
-          <div aria-hidden className="absolute -right-24 -top-24 -z-10 size-96 rounded-full border-[40px] border-saffron-500/[0.08]" />
+      <section className="relative isolate overflow-hidden bg-cream text-charcoal-900">
+        {photo && (
+          <div aria-hidden className="absolute inset-y-0 right-0 -z-10 hidden w-[46%] md:block">
+            <Image src={photo} alt="" fill priority sizes="46vw" className="object-cover" style={{ objectPosition: position }} />
+            {/* the photo melts into the band on its left edge */}
+            <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/40 to-transparent" />
+          </div>
         )}
-
-        <div className={cn('container-x flex flex-col justify-end pb-10 pt-12 md:pb-14 md:pt-16', onPhoto && 'min-h-[17rem] md:min-h-[22rem]')}>
-          <nav aria-label="Breadcrumb">
-            <ol className={cn('flex flex-wrap items-center gap-1.5 text-[0.95rem]', onPhoto ? 'text-white/80' : 'text-muted')}>
-              <li>
-                <Link href="/" className={cn('transition', onPhoto ? 'hover:text-saffron-300' : 'hover:text-saffron-700')}>{t('home')}</Link>
-              </li>
-              {crumbs.map((c, i) => (
-                <li key={i} className="flex min-w-0 items-center gap-1.5">
-                  <ChevronRight aria-hidden className="size-3.5 shrink-0 opacity-70" />
-                  {c.href && i < crumbs.length - 1 ? (
-                    <Link href={c.href} className={cn('transition', onPhoto ? 'hover:text-saffron-300' : 'hover:text-saffron-700')}>{c.label}</Link>
-                  ) : (
-                    <span aria-current={i === crumbs.length - 1 ? 'page' : undefined} className={cn(i === crumbs.length - 1 && cn('line-clamp-1', onPhoto ? 'text-white' : 'text-charcoal-900'))}>{c.label}</span>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
-          {eyebrow && <p className="eyebrow mt-6">{eyebrow}</p>}
-          <h1
-            className={cn(
-              'animate-fade-up max-w-4xl',
-              onPhoto ? 'text-white [text-shadow:0_2px_24px_rgb(14_24_48/0.35)]' : 'text-charcoal-900',
-              eyebrow ? 'mt-2' : 'mt-4',
-              compact ? 'text-[1.9rem] leading-[1.3] md:text-[2.7rem]' : 'text-[2.2rem] leading-[1.18] md:text-[3.2rem]',
-            )}
-          >
-            {title}
-          </h1>
-          {/* short saffron rule under the title — the site's signature mark */}
-          {!compact && <span aria-hidden className="mt-5 block h-[3px] w-14 rounded-full bg-saffron-500" />}
-          {subtitle && <p className={cn('mt-4 max-w-2xl text-[1.1rem] leading-relaxed md:text-[1.2rem]', onPhoto ? 'text-white/90' : 'text-muted')}>{subtitle}</p>}
-          {children}
+        <div className={cn('container-x flex flex-col justify-center py-10 md:py-12', photo ? 'min-h-[12rem] md:min-h-[16rem]' : 'min-h-[11rem] md:min-h-[13rem]')}>
+          <div className={cn(photo && 'md:max-w-[52%]')}>
+            {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+            <h1
+              className={cn(
+                'animate-fade-up h-section !mt-1 text-charcoal-900',
+                compact ? '!text-[1.75rem] !leading-[1.35] md:!text-[2.4rem]' : '!text-[2rem] md:!text-[2.85rem]',
+              )}
+            >
+              {title}
+            </h1>
+            {subtitle && <p className="mt-4 max-w-2xl text-[1.08rem] leading-relaxed text-muted md:text-[1.15rem]">{subtitle}</p>}
+            {children}
+          </div>
         </div>
       </section>
 
@@ -123,6 +99,25 @@ export async function PageBanner({
           </div>
         </nav>
       )}
+
+      {/* breadcrumb on its own row, under the banner */}
+      <nav aria-label="Breadcrumb" className="container-x pt-5">
+        <ol className="flex flex-wrap items-center gap-1.5 text-[0.92rem] text-muted">
+          <li>
+            <Link href="/" className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700">{t('home')}</Link>
+          </li>
+          {crumbs.map((c, i) => (
+            <li key={i} className="flex min-w-0 items-center gap-1.5">
+              <span aria-hidden className="opacity-60">/</span>
+              {c.href && i < crumbs.length - 1 ? (
+                <Link href={c.href} className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700">{c.label}</Link>
+              ) : (
+                <span aria-current={i === crumbs.length - 1 ? 'page' : undefined} className="line-clamp-1">{c.label}</span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
     </>
   )
 }

@@ -103,7 +103,7 @@ export default async function PostPage({ params }: P) {
         </div>
       </PageBanner>
 
-      <div className="container-x pb-20 pt-12 md:pb-28 md:pt-16">
+      <div className="container-x pb-20 pt-10 md:pb-24 md:pt-12">
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:gap-20">
           <article className="min-w-0 max-w-3xl">
             <Link href="/blog" className="no-print inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:gap-3 hover:text-charcoal-900">
