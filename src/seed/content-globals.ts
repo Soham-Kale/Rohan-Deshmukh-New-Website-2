@@ -59,7 +59,8 @@ export const footer = () => ({
     { title: L('परिचय', 'About'), links: [lk('कौटुंबिक पार्श्वभूमी', 'Family Background', '/about/biography'), lk('परिवार', 'Family', '/about/family'), lk('राजकीय कारकीर्द', 'Political Career', '/political-career'), lk('फोटो संग्रह', 'Photo Gallery', '/media/photos'), lk('संपर्क', 'Contact', '/contact')] },
     { title: L('सामाजिक उपक्रम', 'Social initiatives'), links: [lk('लोकमंगल फाऊंडेशन', 'Lokmangal Foundation', '/lokmangal/foundation'), lk('अन्नपूर्णा योजना', 'Annapurna Yojana', '/social-work/annapurna-yojana'), lk('लोटस', 'LOTUS', '/social-work/lotus'), lk('सामुदायिक विवाह', 'Community Weddings', '/social-work/samudayik-vivah'), lk('जलसंधारण', 'Water Conservation', '/social-work/jalsandharan'), lk('सर्व उपक्रम', 'All initiatives', '/social-work')] },
   ],
-  legalLinks: [lk('गोपनीयता धोरण', 'Privacy Policy', '/privacy-policy'), lk('अटी व शर्ती', 'Terms & Conditions', '/terms'), lk('अस्वीकरण', 'Disclaimer', '/disclaimer')],
+  // Privacy Policy, Terms & Conditions and Disclaimer were removed from the footer (Oct 2026); the pages themselves still exist
+  legalLinks: [],
   copyright: L('© २०२६. सर्व हक्क राखीव — रोहन देशमुख', '© 2026. All Rights Reserved by Rohan Deshmukh'),
 })
 

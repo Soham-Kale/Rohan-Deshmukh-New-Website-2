@@ -82,7 +82,7 @@ export default async function BlogPage({ params, searchParams }: P) {
                   const on = (category ?? '') === c.slug && !tag && !q
                   return (
                     <Link key={c.slug || 'all'} href={c.slug ? `/blog?category=${c.slug}` : '/blog'} aria-current={on ? 'true' : undefined}
-                      className={cn('shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition', on ? 'bg-charcoal-900 text-white' : 'text-charcoal-800 hover:bg-cream')}>
+                      className={cn('inline-flex min-h-10 shrink-0 items-center rounded-xl px-4 py-1.5 text-sm font-medium transition', on ? 'bg-btn text-white' : 'text-charcoal-800 hover:bg-cream')}>
                       {c.title}
                     </Link>
                   )

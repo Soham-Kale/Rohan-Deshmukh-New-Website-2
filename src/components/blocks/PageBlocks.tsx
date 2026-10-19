@@ -58,7 +58,7 @@ function render(b: Block) {
             {!!b.buttons?.length && (
               <div className="mt-8 flex flex-wrap gap-3">
                 {b.buttons.map((l, i) => (
-                  <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>{l.label}</CMSLink>
+                  <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost')}>{l.label}</CMSLink>
                 ))}
               </div>
             )}
@@ -183,7 +183,7 @@ function render(b: Block) {
             {b.text && <p className="lead mt-4 whitespace-pre-line">{b.text}</p>}
             <div className="mt-8 flex flex-wrap gap-3">
               {b.buttons?.map((l, i) => (
-                <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>
+                <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost')}>
                   {l.label} <ArrowRight className="size-4" />
                 </CMSLink>
               ))}

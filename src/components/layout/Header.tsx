@@ -7,7 +7,7 @@ import { normalizeNav } from '@/lib/nav'
 
 /**
  * Site header, identical on every page (official-site layout): one sticky white bar —
- * logo on the left, the menu centred, language switch and a solid "संपर्क साधा" button on the right.
+ * logo on the left, the menu centred and a solid "Get in touch" button on the right.
  * (Phone, email and social links live in the footer and beside the home hero.)
  */
 export async function Header({ locale }: { locale: Locale }) {
@@ -21,7 +21,7 @@ export async function Header({ locale }: { locale: Locale }) {
         logoUrl={mediaUrl(settings.logoLight)}
         logoDarkUrl={mediaUrl(settings.logoDark)}
         cta={{ label: locale === 'mr' ? 'संपर्क साधा' : 'Get in touch', href: '/contact' }}
-        t={{ menu: tn('menu'), close: tn('close'), language: tn('language') }}
+        t={{ menu: tn('menu'), close: tn('close') }}
       />
     </>
   )

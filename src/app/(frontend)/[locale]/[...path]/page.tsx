@@ -4,7 +4,7 @@ import { isRemovedPath } from '@/lib/removed'
 import { draftMode } from 'next/headers'
 import { setRequestLocale } from 'next-intl/server'
 import { cache } from 'react'
-import type { Locale } from '@/i18n/routing'
+import { routing, type Locale } from '@/i18n/routing'
 import { payload } from '@/lib/payload'
 import { mediaPosition, mediaUrl } from '@/lib/utils'
 import { InnerPage } from '@/components/layout/InnerPage'
@@ -36,7 +36,7 @@ export async function generateStaticParams() {
   try {
     const p = await payload()
     const res = await p.find({ collection: 'pages', limit: 200, depth: 0, select: { path: true } })
-    return res.docs.filter((d) => !isRemovedPath(d.path) && !OWN_ROUTE.includes(d.path)).flatMap((d) => ['mr', 'en'].map((locale) => ({ locale, path: d.path.split('/').filter(Boolean) })))
+    return res.docs.filter((d) => !isRemovedPath(d.path) && !OWN_ROUTE.includes(d.path)).flatMap((d) => routing.locales.map((locale) => ({ locale, path: d.path.split('/').filter(Boolean) })))
   } catch {
     return []
   }

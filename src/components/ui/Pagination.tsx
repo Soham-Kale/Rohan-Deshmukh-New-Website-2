@@ -12,14 +12,14 @@ export function Pagination({ page, totalPages, base, query = {} }: { page: numbe
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1).filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
   return (
     <nav aria-label="Pagination" className="mt-12 flex items-center justify-center gap-1.5">
-      {page > 1 && <Link href={href(page - 1)} className="grid size-10 place-items-center rounded-full border border-line hover:bg-cream" aria-label="Previous"><ChevronLeft className="size-4" /></Link>}
+      {page > 1 && <Link href={href(page - 1)} className="btn-icon size-10" aria-label="Previous"><ChevronLeft className="size-4" /></Link>}
       {pages.map((p, i) => (
         <span key={p} className="flex items-center gap-1.5">
           {i > 0 && pages[i - 1] !== p - 1 && <span className="px-1 text-muted">…</span>}
-          <Link href={href(p)} aria-current={p === page ? 'page' : undefined} className={cn('grid size-10 place-items-center rounded-full border font-semibold', p === page ? 'border-charcoal-900 bg-charcoal-900 text-white' : 'border-line hover:bg-cream')}>{p}</Link>
+          <Link href={href(p)} aria-current={p === page ? 'page' : undefined} className={cn('grid size-10 place-items-center rounded-xl border font-semibold', p === page ? 'border-btn bg-btn text-white' : 'border-line hover:bg-cream')}>{p}</Link>
         </span>
       ))}
-      {page < totalPages && <Link href={href(page + 1)} className="grid size-10 place-items-center rounded-full border border-line hover:bg-cream" aria-label="Next"><ChevronRight className="size-4" /></Link>}
+      {page < totalPages && <Link href={href(page + 1)} className="btn-icon size-10" aria-label="Next"><ChevronRight className="size-4" /></Link>}
     </nav>
   )
 }
@@ -31,7 +31,7 @@ export function FilterChips({ items, active, base, param = 'category' }: { items
         const on = (active ?? '') === it.value
         return (
           <Link key={it.value || 'all'} href={it.value ? `${base}?${param}=${encodeURIComponent(it.value)}` : base} aria-current={on ? 'true' : undefined}
-            className={cn('shrink-0 rounded-full border px-4 py-2 text-[0.95rem] font-medium transition', on ? 'border-charcoal-900 bg-charcoal-900 text-white' : 'border-charcoal-900/10 bg-white text-muted hover:border-charcoal-900/30 hover:text-charcoal-900')}>
+            className={cn('shrink-0 rounded-xl border px-4 py-2 text-[0.95rem] font-medium transition', on ? 'border-btn bg-btn text-white' : 'border-charcoal-900/10 bg-white text-muted hover:border-charcoal-900/30 hover:text-charcoal-900')}>
             {it.label}
           </Link>
         )

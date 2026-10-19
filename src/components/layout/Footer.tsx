@@ -8,6 +8,9 @@ import type { Locale } from '@/i18n/routing'
 import { CMSLink } from '../ui/CMSLink'
 import { SocialIcon, socialLabels } from '../ui/SocialIcon'
 
+/** Removed from the footer (Oct 2026) — hidden even if an older footer in the database still lists them */
+const HIDDEN_LEGAL = ['/privacy-policy', '/terms', '/disclaimer']
+
 export async function Footer({ locale }: { locale: Locale }) {
   const [settings, footer, t] = await Promise.all([getGlobal('site-settings', locale), getGlobal('footer', locale), getTranslations('common')])
   const social = Object.entries(settings.social ?? {}).filter(([k, v]) => v && k !== 'id')
@@ -93,7 +96,7 @@ export async function Footer({ locale }: { locale: Locale }) {
             )}
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            {footer.legalLinks?.filter((l) => isLiveLink(l.url)).map((l) => (
+            {footer.legalLinks?.filter((l) => isLiveLink(l.url) && !HIDDEN_LEGAL.includes(l.url ?? '')).map((l) => (
               <CMSLink key={l.id} url={l.url} className="underline underline-offset-4 hover:text-white">
                 {l.label}
               </CMSLink>

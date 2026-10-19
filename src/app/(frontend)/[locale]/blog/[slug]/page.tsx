@@ -5,7 +5,7 @@ import { draftMode } from 'next/headers'
 import { cache } from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { ArrowLeft, ArrowRight, CalendarDays, CircleCheckBig, Clock, MapPin } from 'lucide-react'
-import type { Locale } from '@/i18n/routing'
+import { routing, type Locale } from '@/i18n/routing'
 import type { Post } from '@/payload-types'
 import { payload } from '@/lib/payload'
 import { articleHeadings, primaryCategory, readTimeLabel } from '@/lib/blog'
@@ -28,7 +28,7 @@ export async function generateStaticParams() {
   if (process.env.NODE_ENV === 'development') return [] // see [locale]/layout.tsx
   try {
     const r = await (await payload()).find({ collection: 'posts', limit: 200, depth: 0, select: { slug: true } })
-    return r.docs.flatMap((d) => ['mr', 'en'].map((locale) => ({ locale, slug: d.slug })))
+    return r.docs.flatMap((d) => routing.locales.map((locale) => ({ locale, slug: d.slug })))
   } catch { return [] }
 }
 

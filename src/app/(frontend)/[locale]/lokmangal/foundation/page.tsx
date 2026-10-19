@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
 }
 
 const viewAll = (href: string, label: string) => (
-  <Link href={href} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-saffron-700 hover:text-saffron-600">
+  <Link href={href} className="-my-2.5 inline-flex shrink-0 items-center gap-1 py-2.5 text-sm font-semibold text-saffron-700 hover:text-saffron-600">
     {label} <ArrowRight className="size-4" />
   </Link>
 )

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Link, usePathname } from '@/i18n/navigation'
-import { ChevronDown, Menu, X, Languages, ArrowUpRight } from 'lucide-react'
+import { ChevronDown, Menu, X, ArrowUpRight } from 'lucide-react'
 import { cn, isExternal } from '@/lib/utils'
 
 export type NavNode = { id?: string | null; label: string; url?: string | null; newTab?: boolean | null; children?: NavNode[] | null }
@@ -18,7 +18,7 @@ type Props = {
   logoDarkUrl?: string | null
   /** call-to-action button at the end of the bar */
   cta?: { label: string; href: string }
-  t: { menu: string; close: string; language: string }
+  t: { menu: string; close: string }
 }
 
 /* top-level menu item: plain text, with a short saffron underline under the active section */
@@ -186,15 +186,6 @@ export function HeaderClient({ nav, locale, siteName, logoUrl, logoDarkUrl, cta,
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5 xl:ml-0">
-            <Link
-              href={pathname}
-              locale={locale === 'mr' ? 'en' : 'mr'}
-              className={cn('flex h-10 items-center gap-1.5 rounded-full px-3 text-[0.95rem] ring-1 transition', heroTop ? 'ring-line hover:bg-cream max-lg:ring-white/40 max-lg:hover:bg-white/10' : 'ring-line hover:bg-cream')}
-              aria-label={t.language}
-            >
-              <Languages className="hidden size-4 sm:block" />
-              <span>{t.language}</span>
-            </Link>
             {cta && (
               <Link href={cta.href} className="btn btn-dark ml-1 hidden !min-h-0 px-5 py-2.5 text-[0.95rem] lg:inline-flex">
                 {cta.label}

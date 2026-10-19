@@ -62,12 +62,12 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
                 aria-pressed={on}
                 onClick={() => setCat(c.value)}
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition',
-                  on ? 'border-charcoal-900 bg-charcoal-900 text-white' : 'border-charcoal-900/10 bg-white text-charcoal-900 hover:border-charcoal-900/30',
+                  'inline-flex items-center gap-2 rounded-xl border px-3.5 py-1.5 text-sm font-semibold transition',
+                  on ? 'border-btn bg-btn text-white' : 'border-charcoal-900/10 bg-white text-charcoal-900 hover:border-charcoal-900/30',
                 )}
               >
                 {c.label}
-                <span className={cn('grid min-w-6 place-items-center rounded-full px-1.5 text-xs leading-5', on ? 'bg-white/15 text-highlight' : 'bg-cream text-saffron-700')}>{n(c.count)}</span>
+                <span className={cn('grid min-w-6 place-items-center rounded-full px-1.5 text-xs leading-5', on ? 'bg-white/20 text-white' : 'bg-cream text-saffron-700')}>{n(c.count)}</span>
               </button>
             )
           })}
@@ -98,7 +98,7 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
       ) : (
         <div className="mt-10 rounded-2xl bg-cream p-10 text-center">
           <p className="text-muted">{labels.empty}</p>
-          <button type="button" onClick={() => { setQ(''); setCat('') }} className="btn btn-light mt-4 border border-line px-5 py-2">
+          <button type="button" onClick={() => { setQ(''); setCat('') }} className="btn btn-light mt-4 px-5 py-2">
             <X aria-hidden className="size-4" /> {labels.clear}
           </button>
         </div>
@@ -165,10 +165,10 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
               </Link>
               {count > 1 && (
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => go(i - 1)} aria-label={labels.prev} className="grid size-10 place-items-center rounded-full border border-line text-charcoal-900 transition hover:border-charcoal-900 hover:bg-cream">
+                  <button type="button" onClick={() => go(i - 1)} aria-label={labels.prev} className="btn-icon size-10">
                     <ChevronLeft aria-hidden className="size-5" />
                   </button>
-                  <button type="button" onClick={() => go(i + 1)} aria-label={labels.next} className="grid size-10 place-items-center rounded-full border border-line text-charcoal-900 transition hover:border-charcoal-900 hover:bg-cream">
+                  <button type="button" onClick={() => go(i + 1)} aria-label={labels.next} className="btn-icon size-10">
                     <ChevronRight aria-hidden className="size-5" />
                   </button>
                 </div>
@@ -187,8 +187,11 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
               onClick={() => go(k)}
               aria-label={`${labels.slide} ${n(k + 1)}`}
               aria-current={k === i ? 'true' : undefined}
-              className={cn('h-2 rounded-full transition-all', k === i ? 'w-7 bg-saffron-500' : 'w-2 bg-frame hover:bg-saffron-400')}
-            />
+              className="group grid h-8 min-w-8 place-items-center"
+            >
+              {/* the dot stays small; the button around it is a full 32px tap area */}
+              <span className={cn('block h-2 rounded-full transition-all', k === i ? 'w-7 bg-saffron-500' : 'w-2 bg-frame group-hover:bg-saffron-400')} />
+            </button>
           ))}
         </div>
       )}

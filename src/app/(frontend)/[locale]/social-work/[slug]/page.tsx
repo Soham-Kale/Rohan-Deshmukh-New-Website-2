@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { draftMode } from 'next/headers'
 import { cache } from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import type { Locale } from '@/i18n/routing'
+import { routing, type Locale } from '@/i18n/routing'
 import type { Post } from '@/payload-types'
 import { payload } from '@/lib/payload'
 import Image from 'next/image'
@@ -32,7 +32,7 @@ export async function generateStaticParams() {
   if (process.env.NODE_ENV === 'development') return [] // see [locale]/layout.tsx
   try {
     const r = await (await payload()).find({ collection: 'initiatives', limit: 200, depth: 0, select: { slug: true } })
-    return r.docs.flatMap((d) => ['mr', 'en'].map((locale) => ({ locale, slug: d.slug })))
+    return r.docs.flatMap((d) => routing.locales.map((locale) => ({ locale, slug: d.slug })))
   } catch { return [] }
 }
 
@@ -139,7 +139,7 @@ export default async function InitiativePage({ params }: P) {
           <aside className="space-y-10 lg:sticky lg:top-28 lg:self-start">
             <div className="flex flex-col gap-3">
               <Link href="/contact" className="btn btn-primary"><HeartHandshake aria-hidden className="size-4" /> {x.support}</Link>
-              <Link href="/lokmangal/foundation#projects" className="btn btn-ghost text-charcoal-900">{x.all}</Link>
+              <Link href="/lokmangal/foundation#projects" className="btn btn-ghost">{x.all}</Link>
             </div>
             {events.length > 0 && (
               <section>

@@ -1,9 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import Image from 'next/image'
-import { ArrowRight } from 'lucide-react'
-import { CMSLink } from '../ui/CMSLink'
 import { cn } from '@/lib/utils'
 
 export type Slide = {
@@ -40,7 +37,6 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
   const [prev, setPrev] = useState<number | null>(null)
   const [paused, setPaused] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const bgRef = useRef<HTMLDivElement>(null)
   const touch = useRef<number | null>(null)
   const [ready, setReady] = useState(false)
   const indexRef = useRef(0)
@@ -95,25 +91,6 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
-  // photo stays (almost) fixed while the page scrolls over it — transform-based, so it also works on iOS
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    let raf = 0
-    const onScroll = () => {
-      cancelAnimationFrame(raf)
-      raf = requestAnimationFrame(() => {
-        const y = Math.min(window.scrollY, window.innerHeight)
-        if (bgRef.current) bgRef.current.style.transform = `translate3d(0, ${y * 0.45}px, 0)`
-      })
-    }
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('scroll', onScroll)
-    }
-  }, [])
-
   // the previous slide only needs to stay mounted while it fades out
   useEffect(() => {
     if (prev === null) return
@@ -126,7 +103,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
   return (
     <section
       data-hero-overlay
-      className="relative isolate h-[100svh] min-h-[560px] overflow-hidden bg-charcoal-950 text-white max-lg:-mt-[4.5rem] lg:h-[calc(100svh-5rem)] lg:max-h-[780px] lg:min-h-[580px]"
+      className="relative isolate flex flex-col overflow-hidden bg-charcoal-950 text-white max-lg:-mt-[4.5rem] lg:min-h-[560px]"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -140,50 +117,10 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
         touch.current = null
       }}
     >
-      {/* photos */}
-      <div ref={bgRef} className="absolute inset-0 -z-20 will-change-transform">
-        {slides.map((s, i) => {
-          const active = i === index
-          const leaving = i === prev
-          return (
-            <div
-              key={i}
-              aria-hidden={!active}
-              className={cn('absolute inset-0 transition-opacity duration-[1200ms] ease-out', active ? 'z-10 opacity-100' : leaving ? 'z-0 opacity-0' : 'z-0 opacity-0')}
-            >
-              <Image
-                src={s.image}
-                alt={active ? s.alt : ''}
-                fill
-                priority={i === 0}
-                sizes="100vw"
-                style={{ objectPosition: s.position }}
-                className={cn('object-cover transition-transform duration-[7000ms] ease-out', s.mobileImage && 'max-lg:hidden', active ? 'scale-110' : 'scale-100')}
-              />
-              {s.mobileImage && (
-                <Image
-                  src={s.mobileImage}
-                  alt={active ? s.alt : ''}
-                  fill
-                  priority={i === 0}
-                  sizes="100vw"
-                  style={{ objectPosition: s.mobilePosition }}
-                  className={cn('object-cover transition-transform duration-[7000ms] ease-out lg:hidden', active ? 'scale-105' : 'scale-100')}
-                />
-              )}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* tint — desktop: flat; phones: clear in the middle, darker at the top (header) and deep at the bottom (text) */}
-      <div aria-hidden className="absolute inset-0 -z-10 hidden bg-overlay lg:block" />
-      <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 hidden h-1/3 bg-gradient-to-t from-charcoal-950/40 to-transparent lg:block" />
-      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-charcoal-950/60 to-transparent lg:hidden" />
-      <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-[70%] bg-gradient-to-t from-charcoal-950/95 via-charcoal-950/60 to-transparent lg:hidden" />
+      {/* cover photos removed (Oct 2026): the slides show their words on the navy band; the photos stay in the admin */}
 
       {/* text */}
-      <div className="container-x relative flex h-full items-end pb-12 pr-16 pt-28 sm:pb-16 lg:items-center lg:pb-20 lg:pr-36">
+      <div className="container-x relative flex flex-1 items-end pb-12 pr-16 pt-36 sm:pb-16 sm:pt-40 lg:items-center lg:pb-28 lg:pr-36 lg:pt-20">
         {/* all slides share one grid cell, so the block keeps one height and nothing jumps */}
         <div className="relative grid w-full max-w-4xl">
           {slides.map((s, i) => {
@@ -218,15 +155,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
                     {s.subheading}
                   </p>
                 )}
-                {s.buttons.length > 0 && (
-                  <div className="hero-line mt-6 flex flex-wrap gap-3 lg:mt-9" data-state={state} style={{ ['--hero-x' as string]: '400px', transitionDelay: state === 'in' ? '450ms' : '0ms' }}>
-                    {s.buttons.map((b, j) => (
-                      <CMSLink key={j} url={b.url} tabIndex={state === 'in' ? undefined : -1} className={cn('btn text-base max-lg:!min-h-11 max-lg:px-5 max-lg:text-[0.95rem]', j === 0 ? 'btn-primary' : 'btn-ghost text-white')}>
-                        {b.label} <ArrowRight className="size-4" />
-                      </CMSLink>
-                    ))}
-                  </div>
-                )}
+                {/* buttons removed from the cover (Oct 2026); the slides' buttons stay in the admin */}
               </div>
             )
           })}
@@ -235,7 +164,7 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
 
       {/* numbered pager on the right — phones: lower right beside the text; desktop: centred */}
       {order.length > 1 && (
-        <nav aria-label="Slides" className="absolute right-4 top-[44%] z-10 sm:right-8 md:right-16 lg:right-20 lg:top-1/2 lg:-translate-y-1/2">
+        <nav aria-label="Slides" className="absolute right-4 top-24 z-10 sm:right-8 sm:top-28 md:right-16 lg:right-20 lg:top-1/2 lg:-translate-y-1/2">
           <ol className="flex flex-col items-end gap-3 lg:gap-6">
             {slides.map((s, i) => {
               const mobilePos = mobileList.indexOf(i)

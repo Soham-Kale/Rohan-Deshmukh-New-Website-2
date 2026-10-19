@@ -40,6 +40,8 @@
   --color-frame: #ffc9a3;
   --color-highlight: #ffb070;
   --color-overlay: rgb(20 33 61 / .55); /* over photos */
+  --color-btn: #f26b1d;           /* every button */
+  --color-btn-hover: #d9590f;
 
   --font-display: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
   --font-sans: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
@@ -91,20 +93,20 @@
   .is-center .h-section::after, .h-section.is-center::after { left: 50%; transform: translateX(-50%); }
   .on-dark .h-section { color: #fff; }
 
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.875rem; border-radius: .375rem; padding: .65rem 1.5rem; font-weight: 600; font-size: 1rem; line-height: 1.3; transition: background .2s, color .2s, transform .2s, box-shadow .2s, border-color .2s; white-space: nowrap; }
-  .btn:active { transform: translateY(1px); }
-  .btn-primary { background: var(--color-saffron-600); color: #fff; box-shadow: 0 10px 24px -14px var(--color-saffron-600); }
-  .btn-primary:hover { background: var(--color-saffron-700); box-shadow: 0 14px 28px -14px var(--color-saffron-700); }
-  .btn-primary:hover, .btn-dark:hover { transform: translateY(-1px); }
+  /* Buttons (Oct 2026): every button on the site is #F26B1D with white text and a softly rounded 12px corner.
+     The variant names (primary / dark / light / ghost) are kept so no component had to change its markup. */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.875rem; border-radius: .75rem; padding: .65rem 1.5rem; font-weight: 600; font-size: 1rem; line-height: 1.3; background: var(--color-btn); color: #fff; transition: background .2s, transform .2s, box-shadow .2s; white-space: nowrap; }
+  .btn:hover { background: var(--color-btn-hover); }
   .btn:active { transform: translateY(1px); }
   .btn svg { transition: transform .2s; }
   .btn:hover svg.lucide-arrow-right { transform: translateX(3px); }
-  .btn-dark { background: var(--color-charcoal-900); color: #fff; }
-  .btn-dark:hover { background: var(--color-charcoal-800); }
-  .btn-light { background: #fff; color: var(--color-charcoal-900); }
-  .btn-light:hover { background: var(--color-cream); }
-  .btn-ghost { border: 1.5px solid currentColor; }
-  .btn-ghost:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+  .btn-primary, .btn-dark, .btn-light, .btn-ghost { background: var(--color-btn); color: #fff; }
+  .btn-primary:hover, .btn-dark:hover, .btn-light:hover, .btn-ghost:hover { background: var(--color-btn-hover); }
+  /* on an orange band a button keeps a white outline so it stays visible */
+  .on-saffron .btn { box-shadow: inset 0 0 0 2px #fff; }
+  /* icon-only buttons (slider arrows, pagination arrows, back to top) */
+  .btn-icon { display: grid; place-items: center; border-radius: .75rem; background: var(--color-btn); color: #fff; transition: background .2s, opacity .2s; }
+  .btn-icon:hover { background: var(--color-btn-hover); }
 
   .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: .625rem; overflow: hidden; }
   .card-hover { transition: transform .25s, box-shadow .25s; }
@@ -151,6 +153,8 @@
   /* text link with an arrow that nudges on hover */
   .more-link { display: inline-flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--color-charcoal-900); transition: color .2s, gap .2s; }
   .more-link:hover, .tile:hover .more-link { gap: .8rem; color: var(--color-saffron-700); }
+  /* phones: a taller tap area for text links, without changing the layout */
+  @media (max-width: 1023px) { .more-link { padding-block: .6rem; margin-block: -.6rem; } }
   .on-dark .more-link { color: var(--color-highlight); }
   .on-dark .more-link:hover, .on-dark .tile:hover .more-link { color: #fff; }
 
@@ -221,3 +225,8 @@
 }
 
 @keyframes rv-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+
+/* Phones (most visitors): small print never goes below 13px */
+@media (max-width: 639px) {
+  .text-xs, .text-\[0\.75rem\], .text-\[0\.78rem\] { font-size: .8125rem !important; }
+}

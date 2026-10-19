@@ -71,5 +71,7 @@ export const siteUrl = () => (process.env.NEXT_PUBLIC_SITE_URL || 'http://localh
 
 export const localizedHref = (path: string, locale: string) => {
   if (!path || isExternal(path) || path.startsWith('mailto:') || path.startsWith('tel:') || path.startsWith('#')) return path
-  return locale === 'mr' ? path : `/en${path === '/' ? '' : path}`
+  // single-language site: paths never carry a locale prefix
+  void locale
+  return path
 }

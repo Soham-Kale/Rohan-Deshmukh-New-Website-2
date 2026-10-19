@@ -53,15 +53,15 @@ export function FamilySpotlight({ members, panels, labels }: { members: Spotligh
               onClick={() => go(i)}
               className={cn(
                 'flex min-w-0 max-w-full items-center gap-3 rounded-full border py-1.5 pl-1.5 pr-5 text-left transition',
-                on ? 'border-charcoal-900 bg-charcoal-900 text-white shadow-lg shadow-charcoal-900/15' : 'border-line bg-white text-charcoal-900 hover:border-frame hover:bg-cream',
+                on ? 'border-btn bg-btn text-white' : 'border-line bg-white text-charcoal-900 hover:border-frame hover:bg-cream',
               )}
             >
-              <span className={cn('relative grid size-11 shrink-0 place-items-center overflow-hidden rounded-full text-sm font-semibold', on ? 'bg-white/10 text-highlight' : 'bg-cream text-saffron-700')}>
+              <span className={cn('relative grid size-11 shrink-0 place-items-center overflow-hidden rounded-full text-sm font-semibold', on ? 'bg-white/20 text-white' : 'bg-cream text-saffron-700')}>
                 {m.thumb ? <Image src={m.thumb} alt="" fill sizes="44px" className="object-cover object-top" /> : m.initials}
               </span>
               <span className="min-w-0">
                 <span className="block truncate text-[0.95rem] font-semibold leading-snug">{m.name}</span>
-                <span className={cn('block text-sm leading-snug', on ? 'text-highlight' : 'text-muted')}>{m.relation}</span>
+                <span className={cn('block text-sm leading-snug', on ? 'text-white/90' : 'text-muted')}>{m.relation}</span>
               </span>
             </button>
           )
@@ -86,10 +86,10 @@ export function FamilySpotlight({ members, panels, labels }: { members: Spotligh
                 <div className="mt-4">{panels[i]?.body}</div>
                 {count > 1 && (
                   <div className="mt-7 flex flex-wrap gap-3">
-                    <button type="button" onClick={() => go(active - 1)} className="btn border border-line bg-white px-5 py-2 text-charcoal-900 hover:border-frame hover:bg-cream">
+                    <button type="button" onClick={() => go(active - 1)} className="btn px-5 py-2">
                       <ArrowLeft className="size-4" /> {labels.prev}
                     </button>
-                    <button type="button" onClick={() => go(active + 1)} className="btn border border-line bg-white px-5 py-2 text-charcoal-900 hover:border-frame hover:bg-cream">
+                    <button type="button" onClick={() => go(active + 1)} className="btn px-5 py-2">
                       {labels.next} <ArrowRight className="size-4" />
                     </button>
                   </div>

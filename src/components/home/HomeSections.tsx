@@ -180,7 +180,7 @@ async function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
               <CMSLink url={b.buttonUrl} className="btn btn-dark">
                 {b.buttonLabel} <ArrowRight className="size-4" />
               </CMSLink>
-              <CMSLink url="/contact" className="btn btn-ghost text-charcoal-900">
+              <CMSLink url="/contact" className="btn btn-ghost">
                 {t('getInTouch')}
               </CMSLink>
             </div>
@@ -254,7 +254,7 @@ function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
         {links.length > 0 && (
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             {links.map((l, i) => (
-              <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-dark' : 'btn-ghost text-charcoal-900')}>
+              <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-dark' : 'btn-ghost')}>
                 {l.label} <ArrowUpRight className="size-4" />
               </CMSLink>
             ))}
@@ -593,7 +593,7 @@ function FaqSection({ b }: { b: Of<'homeFaq'> }) {
           {b.text && <p className="lead mt-4">{b.text}</p>}
           <div className="mt-8 flex flex-wrap gap-3">
             {b.buttons?.map((l, i) => (
-              <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost text-charcoal-900')}>{l.label}</CMSLink>
+              <CMSLink key={l.id} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-primary' : 'btn-ghost')}>{l.label}</CMSLink>
             ))}
           </div>
         </div>
@@ -693,7 +693,7 @@ async function AppealSection({ b, locale }: { b: Of<'appealBand'>; locale: Local
   const wa = settings?.whatsappNumber?.replace(/\D/g, '')
   return (
     /* the page closes with one clear call to action on saffron */
-    <section className="relative isolate overflow-hidden bg-saffron-600 text-white">
+    <section className="on-saffron relative isolate overflow-hidden bg-saffron-600 text-white">
       <div aria-hidden className="absolute -right-20 -top-24 -z-10 size-80 rounded-full border-[40px] border-white/10" />
       <div className="container-x flex flex-col items-start gap-8 py-14 md:flex-row md:items-center md:justify-between md:py-16">
         <div className="max-w-2xl">
@@ -702,8 +702,8 @@ async function AppealSection({ b, locale }: { b: Of<'appealBand'>; locale: Local
           {b.text && <p className="mt-3 text-lg text-white/90">{b.text}</p>}
         </div>
         <div className="flex flex-wrap gap-3">
-          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn bg-white px-6 py-3 text-charcoal-900 hover:bg-saffron-50">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
-          {wa && <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" className="btn btn-ghost px-6 py-3 text-white">WhatsApp <ArrowUpRight className="size-4" /></a>}
+          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn px-6 py-3">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
+          {wa && <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" className="btn btn-ghost px-6 py-3">WhatsApp <ArrowUpRight className="size-4" /></a>}
         </div>
       </div>
     </section>

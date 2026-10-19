@@ -32,9 +32,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     metadataBase: new URL(siteUrl()),
     title: { default: s.siteName, template: `%s | ${s.siteName}` },
     description: s.tagline ?? undefined,
-    openGraph: { siteName: s.siteName, locale: locale === 'mr' ? 'mr_IN' : 'en_IN', type: 'website', images: image ? [image] : undefined },
+    openGraph: { siteName: s.siteName, locale: 'en_IN', type: 'website', images: image ? [image] : undefined },
     twitter: { card: 'summary_large_image', site: '@rohandeshmukhh' },
-    alternates: { languages: { mr: '/', en: '/en' } },
   }
 }
 

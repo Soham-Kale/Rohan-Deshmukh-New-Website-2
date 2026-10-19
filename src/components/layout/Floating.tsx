@@ -51,7 +51,7 @@ export function FloatingButtons({ whatsapp, labels }: { whatsapp?: string | null
         type="button"
         onClick={() => window.scrollTo({ top: 0 })}
         aria-label={labels.top}
-        className={cn('grid size-11 place-items-center rounded-full bg-charcoal-900 text-white shadow-lg transition', show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0')}
+        className={cn('btn-icon size-11 shadow-lg', show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0')}
       >
         <ArrowUp className="size-5" />
       </button>

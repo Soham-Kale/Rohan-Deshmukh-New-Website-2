@@ -185,7 +185,7 @@ export function TopicsCard({ cats, active, title, allLabel }: { cats: Category[]
           const on = (active ?? '') === c.slug
           return (
             <Link key={c.slug || 'all'} href={c.slug ? `/blog?category=${c.slug}` : '/blog'} aria-current={on ? 'true' : undefined}
-              className={cn('rounded-full px-3.5 py-1.5 text-sm font-medium transition', on ? 'bg-charcoal-900 text-white' : 'bg-white text-charcoal-800 hover:bg-charcoal-900 hover:text-white')}>
+              className={cn('inline-flex min-h-10 items-center rounded-xl px-3.5 py-1.5 text-sm font-medium transition', on ? 'bg-btn text-white' : 'bg-white text-charcoal-800 hover:bg-btn hover:text-white')}>
               {c.title}
             </Link>
           )

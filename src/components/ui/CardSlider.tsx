@@ -40,7 +40,7 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
   }, [api, update])
 
   const scrollable = can.prev || can.next
-  const arrow = 'grid size-11 shrink-0 place-items-center rounded-full border border-charcoal-900/15 bg-white text-charcoal-900 transition hover:border-saffron-500 hover:bg-saffron-500 hover:text-white disabled:pointer-events-none disabled:opacity-30'
+  const arrow = 'btn-icon size-11 shrink-0 disabled:pointer-events-none disabled:opacity-30'
 
   return (
     <div className="relative">

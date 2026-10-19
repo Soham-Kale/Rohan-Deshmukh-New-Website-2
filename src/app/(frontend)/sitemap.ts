@@ -27,6 +27,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return entries.map((e) => ({
     url: `${base}${e.path === '/' ? '' : e.path}`,
     lastModified: e.updatedAt ? new Date(e.updatedAt) : undefined,
-    alternates: { languages: { mr: `${base}${e.path === '/' ? '' : e.path}`, en: `${base}/en${e.path === '/' ? '' : e.path}` } },
   }))
 }
