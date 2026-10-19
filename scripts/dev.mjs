@@ -1,40 +1,35 @@
 /**
- * One-command local development:
- *   1. starts a private PostgreSQL server inside this project (no install / account needed)
- *   2. creates the database and loads the website content on first run
- *   3. starts the Next.js dev server (website + admin panel)
+ * One command for the whole three-tier site:
+ *   npm run dev       development (code changes appear instantly)
+ *   npm run preview   fast production build (rebuilt only after code changes)
  *
- * Uses the user, password, port and database name from DATABASE_URI in .env.
- * Set USE_EMBEDDED_DB=false in .env to use your own PostgreSQL / Neon instead.
+ *   1. db        — starts the private PostgreSQL server (db/start.mjs), unless an external database is configured
+ *   2. backend   — Payload CMS + API on http://localhost:3001 (admin at /admin); loads content on first run
+ *   3. frontend  — the public website on http://localhost:3000, reading content from the backend's API
  */
-import 'dotenv/config'
 import { spawn } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import net from 'node:net'
 import path from 'node:path'
-import EmbeddedPostgres from 'embedded-postgres'
+import dotenv from 'dotenv'
 import pg from 'pg'
+import { startDb } from '../db/start.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
-const onlyDb = process.argv.includes('--db-only')
-const prod = process.argv.includes('--prod') // fast production preview (what visitors get)
-const uri = process.env.DATABASE_URI
-if (!uri) {
-  console.error('\n✖ DATABASE_URI is missing in .env (copy .env.example to .env first)\n')
-  process.exit(1)
-}
-if (!process.env.PAYLOAD_SECRET) {
-  console.error('\n✖ PAYLOAD_SECRET is missing in .env — set it to any long random text\n')
-  process.exit(1)
-}
+const prod = process.argv.includes('--prod')
+const tier = (name) => path.join(root, name)
 
-const url = new URL(uri)
-const local = ['localhost', '127.0.0.1'].includes(url.hostname)
-const embedded = local && process.env.USE_EMBEDDED_DB !== 'false'
-const dbName = url.pathname.replace(/^\//, '') || 'rohan'
-const port = Number(url.port || 5432)
-const user = decodeURIComponent(url.username || 'postgres')
-const password = decodeURIComponent(url.password || 'postgres')
+for (const t of ['db', 'backend', 'frontend']) {
+  if (!existsSync(path.join(tier(t), '.env'))) {
+    console.error(`\n✖ ${t}/.env is missing — copy ${t}/.env.example to ${t}/.env first\n`)
+    process.exit(1)
+  }
+}
+const backendEnv = dotenv.parse(readFileSync(path.join(tier('backend'), '.env')))
+if (!backendEnv.DATABASE_URI || !backendEnv.PAYLOAD_SECRET) {
+  console.error('\n✖ DATABASE_URI and PAYLOAD_SECRET must be set in backend/.env\n')
+  process.exit(1)
+}
 
 const run = (cmd, args, opts = {}) =>
   new Promise((resolve, reject) => {
@@ -42,66 +37,8 @@ const run = (cmd, args, opts = {}) =>
     child.on('exit', (code) => (code === 0 ? resolve() : reject(new Error(`${cmd} ${args.join(' ')} exited with ${code}`))))
   })
 
-let server = null
-async function canConnect(connectionString) {
-  const c = new pg.Client({ connectionString, connectionTimeoutMillis: 3000 })
-  try {
-    await c.connect()
-    await c.end()
-    return true
-  } catch {
-    return false
-  }
-}
-
-async function startDb() {
-  // A database left running by an earlier window (crash / closed terminal) is simply reused
-  const adminUri = new URL(uri)
-  adminUri.pathname = '/postgres'
-  if (await canConnect(adminUri.toString())) {
-    console.log(`🐘 Using the PostgreSQL server already running on localhost:${port}`)
-    const client = new pg.Client({ connectionString: adminUri.toString() })
-    await client.connect()
-    const found = await client.query('SELECT 1 FROM pg_database WHERE datname = $1', [dbName])
-    if (!found.rowCount) await client.query(`CREATE DATABASE "${dbName.replace(/"/g, '')}" WITH ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0`)
-    await client.end()
-    return
-  }
-  const dataDir = path.join(root, '.postgres-data')
-  server = new EmbeddedPostgres({
-    databaseDir: dataDir, user, password, port, persistent: true,
-    // Marathi text needs UTF-8 (Windows would otherwise default to a WIN1252 database)
-    initdbFlags: ['--encoding=UTF8', '--locale=C'],
-    onLog: () => {}, onError: () => {},
-  })
-  if (!existsSync(path.join(dataDir, 'PG_VERSION'))) {
-    console.log('🐘 Setting up the built-in PostgreSQL database (first run only)…')
-    await server.initialise()
-  }
-  try {
-    await server.start()
-  } catch (e) {
-    console.error(`\n✖ Could not start PostgreSQL on port ${port}. Another program may be using it.`)
-    console.error(`  Change the port in DATABASE_URI (e.g. localhost:5433) and try again.\n`)
-    throw e
-  }
-  const client = server.getPgClient()
-  await client.connect()
-  const safe = dbName.replace(/"/g, '')
-  const create = () => client.query(`CREATE DATABASE "${safe}" WITH ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0`)
-  const found = await client.query('SELECT pg_encoding_to_char(encoding) AS enc FROM pg_database WHERE datname = $1', [dbName])
-  if (!found.rowCount) await create()
-  else if (found.rows[0].enc !== 'UTF8') {
-    console.log(`🐘 Re-creating database "${dbName}" with UTF-8 encoding…`)
-    await client.query(`DROP DATABASE "${safe}" WITH (FORCE)`)
-    await create()
-  }
-  await client.end()
-  console.log(`🐘 PostgreSQL running on localhost:${port} (database "${dbName}")`)
-}
-
 async function hasContent() {
-  const client = new pg.Client({ connectionString: uri })
+  const client = new pg.Client({ connectionString: backendEnv.DATABASE_URI })
   await client.connect()
   try {
     const r = await client.query(`SELECT to_regclass('public.pages') AS t`)
@@ -113,7 +50,13 @@ async function hasContent() {
   }
 }
 
-/** A crashed/duplicate server can leave half-written JSON in the build folder */
+const portBusy = (port) =>
+  new Promise((resolve) => {
+    const t = net.createServer().once('error', () => resolve(true)).once('listening', () => t.close(() => resolve(false)))
+    t.listen(port)
+  })
+
+/** A crashed/duplicate server can leave half-written JSON in a build folder */
 function manifestsOk(dir) {
   if (!existsSync(dir)) return true
   for (const f of ['prerender-manifest.json', 'build-manifest.json', 'routes-manifest.json']) {
@@ -128,92 +71,119 @@ function clearDir(dir) {
   try {
     rmSync(dir, { recursive: true, force: true, maxRetries: 3 })
   } catch {
-    console.error(`\n✖ Could not clear ${path.basename(dir)} — another copy of the website is still running and has it locked.`)
+    console.error(`\n✖ Could not clear ${path.relative(root, dir)} — another copy of the site is still running and has it locked.`)
     console.error('  Close every terminal / VS Code window running the website and try again.\n')
     process.exit(1)
   }
 }
 
-/** Rebuild only when the code changed since the last production build */
-function needsBuild(dir) {
-  const id = path.join(dir, 'BUILD_ID')
-  if (!existsSync(id) || !manifestsOk(dir)) return true
+/** Rebuild a tier only when its code changed since its last production build */
+function needsBuild(app, extra = []) {
+  const id = path.join(tier(app), '.next', 'BUILD_ID')
+  if (!existsSync(id) || !manifestsOk(path.join(tier(app), '.next'))) return true
   const built = statSync(id).mtimeMs
   const newer = (p) => {
     const st = statSync(p)
     if (st.isDirectory()) return readdirSync(p).some((f) => newer(path.join(p, f)))
     return st.mtimeMs > built
   }
-  return ['src', 'public', 'next.config.mjs', 'package.json', '.env'].some((p) => existsSync(path.join(root, p)) && newer(path.join(root, p)))
+  return ['src', 'public', 'next.config.mjs', 'package.json', '.env', ...extra].map((p) => path.join(tier(app), p)).some((p) => existsSync(p) && newer(p))
 }
 
+let db = null
+const children = []
 let stopping = false
 async function stop(code = 0) {
   if (stopping) return
   stopping = true
-  if (server) {
+  for (const c of children) c.kill()
+  if (db) {
     console.log('\n🐘 Stopping PostgreSQL…')
-    await server.stop().catch(() => {})
+    await db.stop()
   }
   process.exit(code)
 }
 process.on('SIGINT', () => stop(0))
 process.on('SIGTERM', () => stop(0))
 
-try {
-  if (embedded) await startDb()
-  else console.log(`Using external PostgreSQL at ${url.hostname}`)
+/** start a long-running tier; if it exits, everything stops */
+function serve(name, args, env = {}) {
+  const child = spawn('npm', args, { cwd: tier(name), stdio: 'inherit', shell: process.platform === 'win32', env: { ...process.env, ...env } })
+  child.on('exit', (code) => stop(code ?? 0))
+  children.push(child)
+  return child
+}
 
-  // Content changes (menu, renamed/removed pages) are applied once per version — see src/seed/content-updates.ts
-  const contentVersion = readFileSync(path.join(root, 'src/seed/content-updates.ts'), 'utf8').match(/CONTENT_VERSION = '([^']+)'/)?.[1] ?? ''
+async function waitFor(url, label, seconds = 600) {
+  const end = Date.now() + seconds * 1000
+  while (Date.now() < end) {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(10000) })
+      if (res.status < 500) return
+    } catch { /* not up yet */ }
+    await new Promise((r) => setTimeout(r, 2000))
+  }
+  throw new Error(`${label} did not start within ${seconds}s`)
+}
+
+try {
+  // ---- 1. data tier
+  db = await startDb()
+
+  // ---- content: first run loads everything; later runs apply new content changes once per version
+  const contentVersion = readFileSync(path.join(tier('backend'), 'src/seed/content-updates.ts'), 'utf8').match(/CONTENT_VERSION = '([^']+)'/)?.[1] ?? ''
   const marker = path.join(root, '.content-version')
-  const stamp = `${contentVersion} ${url.hostname}:${port}/${dbName}`
+  const dbUrl = new URL(backendEnv.DATABASE_URI)
+  const stamp = `${contentVersion} ${dbUrl.hostname}:${dbUrl.port || 5432}${dbUrl.pathname}`
   if (!(await hasContent())) {
     console.log('🌱 Empty database — loading website content (takes 1–3 minutes)…')
-    await run('node', ['--env-file=.env', '--import', 'tsx', 'src/seed/index.ts'])
+    await run('npm', ['run', 'seed'], { cwd: tier('backend') })
     writeFileSync(marker, stamp)
   } else if (contentVersion && (!existsSync(marker) || readFileSync(marker, 'utf8').trim() !== stamp)) {
     console.log('🔄 Applying the latest menu and page changes to the database…')
     try {
-      await run('node', ['--env-file=.env', '--import', 'tsx', 'src/seed/apply-menu.ts'])
+      await run('npm', ['run', 'content:update'], { cwd: tier('backend') })
       writeFileSync(marker, stamp)
     } catch {
       console.warn('⚠ Could not apply the content changes — run "npm run content:update" later.')
     }
   }
 
-  if (!onlyDb) {
-    // Only one copy of the website may run at a time
-    const webPort = Number(process.env.PORT || 3000)
-    const busy = await new Promise((resolve) => {
-      const t = net.createServer().once('error', () => resolve(true)).once('listening', () => t.close(() => resolve(false)))
-      t.listen(webPort)
-    })
-    if (busy) {
-      console.error(`\n✖ Port ${webPort} is already in use — the website is probably already running in another window`)
-      console.error('  (for example an "npm run dev" in the VS Code terminal). Stop it with Ctrl+C, close that window, and run this again.\n')
+  // ---- only one copy of the site may run at a time
+  for (const [port, name] of [[3001, 'backend'], [3000, 'website']]) {
+    if (await portBusy(port)) {
+      console.error(`\n✖ Port ${port} (${name}) is already in use — the site is probably already running in another window.`)
+      console.error('  Stop it with Ctrl+C, close that window, and run this again.\n')
       await stop(1)
     }
   }
 
-  if (onlyDb) {
-    console.log('Database ready. Press Ctrl+C to stop.')
-  } else if (prod) {
-    const distDir = path.join(root, '.next')
-    if (needsBuild(distDir)) {
-      console.log('🏗️  Building the optimised website (2–5 minutes, only after code changes)…')
-      clearDir(distDir)
-      await run('npx', ['next', 'build'], { env: { ...process.env, NEXT_DIST_DIR: '.next', NODE_ENV: 'production' } })
-    } else console.log('✓ Using existing optimised build')
-    const next = spawn('npx', ['next', 'start'], { cwd: root, stdio: 'inherit', shell: process.platform === 'win32', env: { ...process.env, NEXT_DIST_DIR: '.next', NODE_ENV: 'production' } })
-    next.on('exit', (code) => stop(code ?? 0))
+  if (prod) {
+    // ---- production preview: build what changed, then start both apps
+    if (needsBuild('backend')) {
+      console.log('🏗️  Building the backend (2–4 minutes, only after code changes)…')
+      clearDir(path.join(tier('backend'), '.next'))
+      await run('npm', ['run', 'build'], { cwd: tier('backend'), env: { ...process.env, NODE_ENV: 'production' } })
+    } else console.log('✓ Using the existing backend build')
+    serve('backend', ['run', 'start'], { NODE_ENV: 'production' })
+    await waitFor('http://localhost:3001/api/globals/site-settings', 'The backend')
+    // the website reads content from the backend while it builds, so the backend starts first
+    if (needsBuild('frontend', ['../backend/src/payload-types.ts'])) {
+      console.log('🏗️  Building the website (2–4 minutes, only after code changes)…')
+      clearDir(path.join(tier('frontend'), '.next'))
+      await run('npm', ['run', 'build'], { cwd: tier('frontend'), env: { ...process.env, NODE_ENV: 'production' } })
+    } else console.log('✓ Using the existing website build')
+    serve('frontend', ['run', 'start'], { NODE_ENV: 'production' })
   } else {
-    // Development: Turbopack (much faster compiles) in its own build folder
-    const distDir = path.join(root, '.next-dev')
-    if (!manifestsOk(distDir)) clearDir(distDir)
-    const next = spawn('npx', ['next', 'dev', '--turbopack'], { cwd: root, stdio: 'inherit', shell: process.platform === 'win32', env: { ...process.env, NEXT_DIST_DIR: '.next-dev' } })
-    next.on('exit', (code) => stop(code ?? 0))
+    // ---- development (Turbopack); each app keeps its dev build in .next-dev
+    for (const t of ['backend', 'frontend']) if (!manifestsOk(path.join(tier(t), '.next-dev'))) clearDir(path.join(tier(t), '.next-dev'))
+    serve('backend', ['run', 'dev'])
+    await waitFor('http://localhost:3001/api/globals/site-settings', 'The backend')
+    serve('frontend', ['run', 'dev'])
   }
+  console.log('\n  Website      → http://localhost:3000')
+  console.log('  Admin panel  → http://localhost:3001/admin')
+  console.log('  Content API  → http://localhost:3001/api\n')
 } catch (e) {
   console.error(e?.message ?? e)
   await stop(1)

@@ -1,0 +1,16 @@
+{
+  "name": "@rohan/db",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Data tier: the PostgreSQL server the backend talks to (embedded for local development, Docker or a hosted Postgres in production)",
+  "main": "start.mjs",
+  "scripts": {
+    "start": "node start.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.7",
+    "embedded-postgres": "^17.10.0-beta.17",
+    "pg": "^8.20.0"
+  }
+}

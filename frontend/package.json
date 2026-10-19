@@ -1,0 +1,43 @@
+{
+  "name": "@rohan/frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Presentation tier: the public website. Reads all content from the backend's REST API; never touches the database.",
+  "scripts": {
+    "dev": "cross-env NEXT_DIST_DIR=.next-dev next dev --turbopack -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fontsource/poppins": "^5.3.0",
+    "@payloadcms/richtext-lexical": "^3.90.2",
+    "clsx": "^2.1.1",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "lucide-react": "^1.54.0",
+    "next": "^15.4.11",
+    "next-intl": "^4.14.9",
+    "nextjs-toploader": "^3.9.17",
+    "qs-esm": "^8.0.1",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "server-only": "^0.0.1",
+    "yet-another-react-lightbox": "^3.32.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.4.11",
+    "payload": "^3.90.2",
+    "postcss": "^8.5.29",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3"
+  }
+}

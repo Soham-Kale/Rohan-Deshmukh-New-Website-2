@@ -1,22 +1,38 @@
 # Rohan Subhash Deshmukh — Official Website
 
-Bilingual (Marathi / English) website with a built-in admin panel.
+English website with an admin panel, built as a **three-tier application**:
 
-| Layer | Technology |
+```
+  Browser
+     │
+     ▼
+┌───────────────┐   REST API (HTTP)   ┌───────────────┐       SQL       ┌───────────────┐
+│   frontend/   │ ──────────────────▶ │   backend/    │ ──────────────▶ │     db/       │
+│ public website│ ◀── cache refresh ──│ Payload CMS   │                 │  PostgreSQL   │
+│  port 3000    │      (webhook)      │ admin + API   │                 │  port 5432    │
+└───────────────┘                     │  port 3001    │                 └───────────────┘
+ presentation tier                    └───────────────┘                    data tier
+                                       application tier
+```
+
+| Tier | Folder | Technology | Talks to |
+|---|---|---|---|
+| Presentation | `frontend/` | Next.js 15 (App Router) · TypeScript · Tailwind CSS 4 · next-intl | the backend's REST API only — never the database |
+| Application | `backend/` | Payload CMS 3 on Next.js — admin panel `/admin`, REST/GraphQL API `/api`, contact form endpoint, schema, migrations, seed | the database |
+| Data | `db/` | PostgreSQL (private embedded server locally, Docker optional, Neon / any hosted Postgres in production) | — |
+
+| Other | |
 |---|---|
-| Frontend | Next.js 15 (App Router) · TypeScript · Tailwind CSS 4 · next-intl |
-| Backend / Admin (CMS) | Payload CMS 3 (runs inside the same Next.js app at `/admin`) |
-| Database | PostgreSQL (local, or Neon / Supabase / any hosted Postgres) |
-| Media storage | Local `/media` folder in development · Vercel Blob in production |
-| Email | Resend (form notifications + auto-acknowledgement) |
-| Spam protection | Google reCAPTCHA v3 + honeypot + rate limit |
+| Media storage | `backend/media` in development · Vercel Blob in production (served to visitors under the website's own `/api/media/…`) |
+| Email | Resend (form notifications + auto-acknowledgement), sent by the backend |
+| Spam protection | Google reCAPTCHA v3 + honeypot + rate limit, checked by the backend |
 
 ---
 
 ## 1. Run it on your computer (Windows / macOS / Linux)
 
 **Requirement:** Node.js 20.9+ (22 LTS recommended). **No PostgreSQL install or account needed:**
-the project ships its own private PostgreSQL server (stored in the `.postgres-data` folder).
+the data tier runs its own private PostgreSQL server (stored in `db/.postgres-data`).
 
 On Windows just double-click:
 
@@ -25,31 +41,48 @@ On Windows just double-click:
 | `start-website.bat` | **Fast / production** (`npm run preview`) | Viewing and managing the site — pages load instantly. Rebuilds automatically (2–5 min) only after code changes. |
 | `start-dev.bat` | Development (`npm run dev`, Turbopack) | Editing code — changes appear instantly, but each page compiles on its first visit. |
 
-Run only one of them at a time. On macOS/Linux: `npm install`, `cp .env.example .env`, then `npm run preview` or `npm run dev`.
+Run only one of them at a time. On macOS/Linux: `npm install`, copy `.env.example` to `.env` in **each** of
+`db/`, `backend/` and `frontend/`, then `npm run preview` or `npm run dev` from the project root.
+One command starts all three tiers in order: database → backend → website.
 The first run sets up the database and loads all content and photos from the current site (2–4 minutes).
 
 Open:
-- Website → http://localhost:3000 (Marathi) and http://localhost:3000/en (English)
-- Admin panel → http://localhost:3000/admin — **admin@rohandeshmukh.in / ChangeMe@123** (change it after first login)
+- Website → http://localhost:3000
+- Admin panel → http://localhost:3001/admin — **admin@rohandeshmukh.in / ChangeMe@123** (change it after first login)
+- Content API → http://localhost:3001/api (e.g. `/api/pages`, `/api/globals/home`)
 
-Other commands (run in a second terminal while the site is running):
+Other commands (from the project root, in a second terminal while the site is running):
 - `npm run seed:fresh` — delete all content and load it again from the current site
 - `npm run db` — start only the database
+- `npm run typecheck` — type-check backend and frontend
 
-Port 5432 already used? Change it in `DATABASE_URI` (e.g. `localhost:5433`).
-To use your own PostgreSQL or a cloud database (Neon) instead, put its URL in `DATABASE_URI`; for a local server also add `USE_EMBEDDED_DB=false`.
+Environment files — each tier has its own (`.env.example` lists every setting):
 
-## 2. Deploy to Vercel
+| File | Holds |
+|---|---|
+| `db/.env` | `DATABASE_URI` for the local PostgreSQL server |
+| `backend/.env` | `DATABASE_URI` (same value), `PAYLOAD_SECRET`, `PAYLOAD_PUBLIC_SERVER_URL`, `FRONTEND_URL`, `INTERNAL_API_SECRET`, email, Blob, reCAPTCHA secret |
+| `frontend/.env` | `CMS_URL` (the backend), `NEXT_PUBLIC_SITE_URL`, `INTERNAL_API_SECRET` (same value), reCAPTCHA site key, GA |
+
+Port 5432 already used? Change the port in `DATABASE_URI` in both `db/.env` and `backend/.env` (e.g. `localhost:5433`).
+To use your own PostgreSQL, Docker (`db/docker-compose.yml`) or a cloud database (Neon), put its URL in `backend/.env` — the local server only starts for `localhost` addresses.
+
+## 2. Deploy to Vercel (two projects)
+
+The frontend and backend deploy as **two Vercel projects from the same repository**; the database is a hosted Postgres.
 
 1. Create a Postgres database (e.g. **Neon** from the Vercel Marketplace) and a **Vercel Blob** store.
-2. Add these environment variables in Vercel → Settings → Environment Variables:
-   `DATABASE_URI`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SITE_URL=https://rohandeshmukh.in`,
-   `BLOB_READ_WRITE_TOKEN`, `RESEND_API_KEY`, `EMAIL_FROM`,
-   `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`, `NEXT_PUBLIC_GA_ID`.
-3. Set **Build Command** to `npm run ci`, which runs the database migrations and then the build.
-4. Deploy. Then run the seed once against the production database: put the production `DATABASE_URI` and `BLOB_READ_WRITE_TOKEN` in your local `.env` and run `npm run seed`.
+2. **Backend project** — Root Directory `backend`, Build Command `npm run ci` (migrations, then build). Environment variables:
+   `DATABASE_URI`, `PAYLOAD_SECRET`, `PAYLOAD_PUBLIC_SERVER_URL` (e.g. `https://cms.rohandeshmukh.in`),
+   `FRONTEND_URL=https://rohandeshmukh.in`, `INTERNAL_API_SECRET`, `BLOB_READ_WRITE_TOKEN`, `RESEND_API_KEY`, `EMAIL_FROM`, `RECAPTCHA_SECRET_KEY`.
+3. **Frontend project** — Root Directory `frontend`, default build. Environment variables:
+   `CMS_URL` (the backend's address), `NEXT_PUBLIC_SITE_URL=https://rohandeshmukh.in`, `INTERNAL_API_SECRET` (same value as the backend),
+   `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`, `NEXT_PUBLIC_GA_ID`.
+4. Deploy the **backend first** — the website reads content from it while it builds.
+5. Run the seed once against the production database: put the production values in `backend/.env` and run `npm run seed`.
 
-When you change collections or fields, run `npm run migrate:create` locally and commit the new file in `src/migrations`.
+When you change collections or fields, run `npm run migrate:create -w backend` and commit the new file in `backend/src/migrations`,
+then `npm run generate:types` so the website picks up the new types.
 
 ## 3. What the admin team can manage
 
@@ -66,21 +99,38 @@ When you change collections or fields, run `npm run migrate:create` locally and 
 
 **Roles:** Super Admin (everything, including users) · Editor (all content and the inbox) · Media Uploader (photos, albums, videos, quotes).
 
-**Language:** use the locale switcher at the top of any edit screen (मराठी / English). If an English field is empty, the site shows the Marathi text.
+**Language:** the website is English only. The admin still has both languages (locale switcher at the top of any edit screen); the site shows the English version, and if an English field is empty it shows the Marathi text.
 
 ## 4. Project structure
 
 ```
-src/
-  app/(frontend)/[locale]/   website pages (mr = /, en = /en)
-  app/(payload)/             admin panel + REST/GraphQL API
-  collections/  globals/     CMS schema
-  blocks/                    page & homepage section blocks
-  components/                UI (layout, home sections, blocks, forms)
-  lib/                       data helpers, form server actions
-  i18n/                      routing + UI strings (messages/mr.json, en.json)
-  seed/                      content import from the current website
-  migrations/                database migrations for production
+package.json            npm workspaces + one-command scripts (npm run dev / preview / build)
+scripts/dev.mjs         starts db → backend → frontend in order
+
+db/                     DATA TIER
+  start.mjs             private PostgreSQL server for local development (data in db/.postgres-data)
+  docker-compose.yml    optional Docker alternative
+
+backend/                APPLICATION TIER (Payload CMS, http://localhost:3001)
+  src/payload.config.ts CMS configuration
+  src/collections/  src/globals/  src/blocks/  src/fields/   schema
+  src/endpoints/        custom API endpoints (contact form)
+  src/hooks/            e.g. tell the website to refresh its cache after an edit
+  src/app/(payload)/    admin panel + REST/GraphQL API routes
+  src/components/admin/ admin dashboard and UI tweaks
+  src/migrations/       database migrations for production
+  src/seed/             content import from the current website
+  src/payload-types.ts  generated content types (the website imports these types only)
+  media/                uploaded files (development)
+
+frontend/               PRESENTATION TIER (public website, http://localhost:3000)
+  src/app/[locale]/     website pages
+  src/app/api/revalidate/  cache refresh called by the backend
+  src/components/       UI (layout, home sections, blocks, forms)
+  src/lib/cms.ts        the only way to content: a client for the backend's REST API
+  src/lib/forms.ts      forwards the contact form to the backend
+  src/i18n/             routing + UI strings
+  public/               fonts and the site's own photos
 ```
 
 ## 5. Sections intentionally not included

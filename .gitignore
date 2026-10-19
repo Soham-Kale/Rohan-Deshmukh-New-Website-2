@@ -3,6 +3,10 @@ node_modules
 .env
 .env*.local
 /media
+# uploaded files live with the backend (Payload upload folders)
+/backend/media
+/backend/documents
+/backend/form-uploads
 *.tsbuildinfo
 next-env.d.ts
 .postgres-data

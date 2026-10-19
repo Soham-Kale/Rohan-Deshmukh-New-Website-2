@@ -1,0 +1,20 @@
+# Data tier with Docker (optional alternative to the embedded server in start.mjs).
+#   docker compose -f db/docker-compose.yml up -d
+# Then set the backend's DATABASE_URI to postgresql://postgres:postgres@localhost:5432/rohan
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: rohan-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rohan
+      # Marathi content needs UTF-8
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C
+    ports:
+      - "5432:5432"
+    volumes:
+      - rohan-db-data:/var/lib/postgresql/data
+volumes:
+  rohan-db-data:
