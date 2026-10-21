@@ -447,18 +447,18 @@ function HighlightsSection({ b }: { b: Of<'homeHighlights'> }) {
           return (
             <StaggerItem as="li" key={c.id}>
               <Lift className="h-full">
-              <CMSLink url={c.url || b.buttonUrl || '#'} className={cn('group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow hover:shadow-2xl', i === 1 ? 'border-2 border-saffron-500' : 'border border-saffron-100')}>
-                <div className="relative h-56 w-full overflow-hidden bg-gray-100">
-                  {img && <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" style={photoFit(c.image, 1.6)} />}
-                </div>
-                <div className="flex flex-1 flex-col justify-between p-6">
-                  <div>
-                    {c.title && <h3 className="mb-3 text-lg text-charcoal-950 transition-colors group-hover:text-saffron-600">{c.title}</h3>}
-                    {c.text && <p className="text-sm leading-relaxed text-gray-600">{c.text}</p>}
+                <CMSLink url={c.url || b.buttonUrl || '#'} className={cn('group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow hover:shadow-2xl', i === 1 ? 'border-2 border-saffron-500' : 'border border-saffron-100')}>
+                  <div className="relative h-56 w-full overflow-hidden bg-gray-100">
+                    {img && <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" style={photoFit(c.image, 1.6)} />}
                   </div>
-                  <ArrowRight aria-hidden className="mt-6 size-5 text-saffron-600 transition-transform group-hover:translate-x-1" />
-                </div>
-              </CMSLink>
+                  <div className="flex flex-1 flex-col justify-between p-6">
+                    <div>
+                      {c.title && <h3 className="mb-3 text-lg text-charcoal-950 transition-colors group-hover:text-saffron-600">{c.title}</h3>}
+                      {c.text && <p className="text-sm leading-relaxed text-gray-600">{c.text}</p>}
+                    </div>
+                    <ArrowRight aria-hidden className="mt-6 size-5 text-saffron-600 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </CMSLink>
               </Lift>
             </StaggerItem>
           )

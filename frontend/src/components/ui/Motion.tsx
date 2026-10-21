@@ -16,7 +16,7 @@ type Tag = 'div' | 'section' | 'ul' | 'ol' | 'li' | 'dl' | 'p' | 'span' | 'artic
 
 type Props = { as?: Tag; className?: string; children?: ReactNode; id?: string; style?: CSSProperties }
 
-export function Reveal({ as = 'div', className, delay = 0, y = 28, children, id, style }: Props & { delay?: number; y?: number }) {
+export function Reveal({ as = 'div', className, delay = 0, y = 20, children, id, style }: Props & { delay?: number; y?: number }) {
   const M = m[as] as typeof m.div
   return (
     <M
@@ -25,24 +25,24 @@ export function Reveal({ as = 'div', className, delay = 0, y = 28, children, id,
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15, margin: '0px 0px -8% 0px' }}
-      transition={{ duration: 0.75, ease: EASE, delay }}
+      viewport={{ once: true, amount: 0.05 }}
+      transition={{ duration: 0.6, ease: EASE, delay }}
     >
       {children}
     </M>
   )
 }
 
-const list: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } }
+const list: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.02 } } }
 const item: Variants = {
-  hidden: { opacity: 0, y: 26 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: EASE } },
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
 }
 
 export function Stagger({ as = 'div', className, children, style }: Props) {
   const M = m[as] as typeof m.div
   return (
-    <M className={className} style={style} variants={list} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1, margin: '0px 0px -8% 0px' }}>
+    <M className={className} style={style} variants={list} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }}>
       {children}
     </M>
   )

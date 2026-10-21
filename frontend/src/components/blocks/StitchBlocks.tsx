@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ArrowRight, Download, FileText, Quote } from 'lucide-react'
+import { ArrowRight, Award, BookOpen, Building2, Download, FileText, HeartHandshake, Quote, Sparkles, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { mediaAlt, mediaPosition, mediaUrl, photoFit, toGallery } from '@/lib/media'
 import { RichText } from '../ui/RichText'
@@ -26,6 +26,16 @@ type MediaText = Extract<PageBlock, { blockType: 'mediaText' }>
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
+const getCardIcon = (title?: string | null, url?: string | null) => {
+  const s = `${title ?? ''} ${url ?? ''}`.toLowerCase()
+  if (s.includes('family') || s.includes('biography') || s.includes('कौटुंबिक')) return Users
+  if (s.includes('parivar') || s.includes('foundation') || s.includes('संस्था')) return Building2
+  if (s.includes('politic') || s.includes('career') || s.includes('राजकीय')) return Award
+  if (s.includes('vision') || s.includes('manifesto') || s.includes('व्हिजन')) return BookOpen
+  if (s.includes('social') || s.includes('कार्य') || s.includes('सेवा')) return HeartHandshake
+  return Sparkles
+}
+
 /** label + heading + intro, Stitch style */
 export function StitchHead({ eyebrow, heading, intro, as: H = 'h2', className }: { eyebrow?: string | null; heading?: string | null; intro?: string | null; as?: 'h2' | 'h3'; className?: string }) {
   if (!eyebrow && !heading && !intro) return null
@@ -38,7 +48,7 @@ export function StitchHead({ eyebrow, heading, intro, as: H = 'h2', className }:
   )
 }
 
-const card = 'rounded-2xl border border-stone-200/90 bg-white shadow-[0_15px_40px_-10px_rgba(9,20,34,0.07)]'
+const card = 'rounded-3xl border border-stone-200/90 bg-white shadow-[0_15px_40px_-10px_rgba(9,20,34,0.07)]'
 
 /** one or more consecutive Content blocks: white cards with a kesariya edge, two per row when there are several */
 export function StitchContent({ blocks }: { blocks: Content[] }) {
@@ -57,20 +67,65 @@ export function StitchContent({ blocks }: { blocks: Content[] }) {
   }
   return (
     <Stagger className="grid gap-8 md:grid-cols-2">
-      {blocks.map((b, i) => (
-        <StaggerItem key={b.id ?? i} className={cn(card, 'group flex flex-col p-8 transition-all duration-300 hover:border-saffron-200 hover:shadow-xl lg:p-10')}>
-          <div className="mb-6 flex items-center gap-3.5">
-            <span className="grid size-12 shrink-0 place-items-center rounded-xl border border-saffron-200 bg-saffron-50 font-display text-base font-bold text-saffron-600 transition-colors group-hover:bg-saffron-600 group-hover:text-white">
-              {pad(i + 1)}
-            </span>
-            <div className="min-w-0">
-              {b.eyebrow && <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-saffron-600">{b.eyebrow}</p>}
-              {b.heading && <h2 className="font-display text-xl font-bold leading-snug text-charcoal-950 md:text-2xl">{b.heading}</h2>}
+      {blocks.map((b, i) => {
+        const isSocial = `${b.eyebrow ?? ''} ${b.heading ?? ''}`.toLowerCase().includes('social') || `${b.eyebrow ?? ''} ${b.heading ?? ''}`.toLowerCase().includes('lokmangal')
+        const Icon = isSocial ? HeartHandshake : BookOpen
+        const accentGradient = isSocial ? 'from-leaf-600 to-emerald-500' : 'from-saffron-600 to-amber-500'
+        const ctaUrl = isSocial ? '/lokmangal/foundation' : '/vision'
+        const ctaLabel = isSocial ? 'Explore Lokmangal Foundation' : 'Read Vision & Manifesto'
+
+        return (
+          <StaggerItem
+            key={b.id ?? i}
+            className={cn(
+              card,
+              'group relative flex flex-col justify-between overflow-hidden p-8 transition-all duration-300 hover:border-saffron-300 hover:shadow-2xl hover:-translate-y-1.5 lg:p-10',
+            )}
+          >
+            {/* Top accent bar */}
+            <span aria-hidden className={cn('absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r', accentGradient)} />
+
+            {/* Ambient corner light */}
+            <span
+              aria-hidden
+              className={cn(
+                'pointer-events-none absolute right-0 top-0 size-36 rounded-bl-full bg-gradient-to-bl opacity-40',
+                isSocial ? 'from-leaf-100/60 to-transparent' : 'from-saffron-100/60 to-transparent',
+              )}
+            />
+
+            <div className="relative flex flex-col gap-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span
+                    className={cn(
+                      'grid size-12 shrink-0 place-items-center rounded-xl font-display text-base font-bold text-white shadow-sm',
+                      isSocial ? 'bg-gradient-to-br from-leaf-600 to-emerald-500' : 'bg-gradient-to-br from-saffron-600 to-amber-500',
+                    )}
+                  >
+                    <Icon className="size-6" />
+                  </span>
+                  <div className="min-w-0">
+                    {b.eyebrow && <p className={cn('text-[11px] font-bold uppercase tracking-[0.2em]', isSocial ? 'text-leaf-600' : 'text-saffron-600')}>{b.eyebrow}</p>}
+                    {b.heading && <h2 className="font-display text-xl font-bold leading-snug text-charcoal-950 md:text-2xl">{b.heading}</h2>}
+                  </div>
+                </div>
+                <span className="font-display text-xs font-bold text-stone-300">{pad(i + 1)}</span>
+              </div>
+              <div className="text-[0.98rem] leading-relaxed text-charcoal-900/85">
+                <RichText html={b.body} />
+              </div>
             </div>
-          </div>
-          <RichText html={b.body} />
-        </StaggerItem>
-      ))}
+
+            <div className="relative mt-8 border-t border-stone-100 pt-5">
+              <CMSLink url={ctaUrl} className="group/btn inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-saffron-600 transition-colors hover:text-saffron-700">
+                <span>{ctaLabel}</span>
+                <ArrowRight className="size-3.5 transition-transform group-hover/btn:translate-x-1" />
+              </CMSLink>
+            </div>
+          </StaggerItem>
+        )
+      })}
     </Stagger>
   )
 }
@@ -97,14 +152,14 @@ export function StitchChapter({ b, n }: { b: MediaText; n?: number }) {
       <div className={cn('grid grid-cols-1 items-stretch gap-8', hasImg && 'lg:grid-cols-12')}>
         {hasImg && (
           <Reveal className={cn('lg:col-span-7', right && 'lg:order-2')}>
-            <div className={cn('relative aspect-[4/3] w-full overflow-hidden rounded-xl shadow-md sm:aspect-[3/2] lg:aspect-auto lg:h-[460px]', cover ? 'bg-charcoal-950' : 'bg-cream')}>
+            <div className={cn('relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-md sm:aspect-[3/2] lg:aspect-auto lg:h-[460px]', cover ? 'bg-charcoal-950' : 'bg-cream')}>
               <Img media={b.image} variant="card" alt={mediaAlt(b.image, b.heading ?? '')} fill sizes="(max-width:1024px) 100vw, 680px" className="h-full w-full transition-transform duration-[1.2s] ease-out hover:scale-[1.03]" style={fit} />
               {cover && <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />}
               <span aria-hidden className="absolute bottom-5 right-6 size-2.5 rounded-full bg-saffron-500 shadow-[0_0_8px_#FF7A00]" />
             </div>
           </Reveal>
         )}
-        <Reveal delay={0.1} className={cn('flex flex-col gap-6 rounded-xl bg-ivory p-8 shadow-sm ring-1 ring-stone-200/70 md:p-10', hasImg && 'lg:col-span-5')}>
+        <Reveal delay={0.1} className={cn('flex flex-col gap-6 rounded-2xl bg-ivory p-8 shadow-sm ring-1 ring-stone-200/70 md:p-10', hasImg && 'lg:col-span-5')}>
           <RichText html={b.body} />
           {!!b.buttons?.length && (
             <div className="flex flex-wrap gap-3 border-t border-stone-200/80 pt-6">
@@ -155,30 +210,37 @@ function Cards({ b }: { b: Extract<PageBlock, { blockType: 'cards' }> }) {
           }
           // text-only cards: Stitch "area" cards with a numbered icon box (the whole card is the link when it has one)
           const green = i % 3 === 1
+          const Icon = getCardIcon(c.title, c.url)
           return (
             <StaggerItem key={c.id} className="h-full">
-              <Box url={c.url} className={cn('group flex h-full flex-col justify-between rounded-xl bg-white p-8 shadow-sm ring-1 ring-stone-200/70 transition-all duration-300 hover:shadow-md', c.url && 'hover:-translate-y-1 hover:ring-saffron-300')}>
+              <Box url={c.url} className={cn('group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-white p-7 shadow-xs ring-1 ring-stone-200/80 transition-all duration-300 hover:shadow-xl sm:p-8', c.url && 'hover:-translate-y-1.5 hover:ring-saffron-300')}>
+                {/* Top accent line */}
+                <span aria-hidden className={cn('absolute inset-x-0 top-0 h-1 bg-gradient-to-r', green ? 'from-leaf-500 to-emerald-400' : 'from-saffron-500 to-amber-400')} />
+
                 <div className="flex flex-col gap-4">
-                  <span
-                    aria-hidden
-                    className={cn(
-                      'grid size-12 place-items-center rounded-xl font-display text-base font-bold transition-colors',
-                      green ? 'bg-leaf-600/10 text-leaf-600 group-hover:bg-leaf-600 group-hover:text-white' : 'bg-saffron-500/10 text-saffron-600 group-hover:bg-saffron-600 group-hover:text-white',
-                    )}
-                  >
-                    {pad(i + 1)}
-                  </span>
-                  <CardTitle className="font-display text-xl font-bold leading-snug text-charcoal-950">{c.title}</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <span
+                      aria-hidden
+                      className={cn(
+                        'grid size-12 place-items-center rounded-xl font-display text-base font-bold transition-all duration-300',
+                        green ? 'bg-leaf-600/10 text-leaf-600 group-hover:bg-leaf-600 group-hover:text-white' : 'bg-saffron-500/10 text-saffron-600 group-hover:bg-saffron-600 group-hover:text-white',
+                      )}
+                    >
+                      <Icon className="size-5" />
+                    </span>
+                    <span className="font-display text-xs font-bold text-stone-300">{pad(i + 1)}</span>
+                  </div>
+                  <CardTitle className="font-display text-xl font-bold leading-snug text-charcoal-950 transition-colors group-hover:text-saffron-700">{c.title}</CardTitle>
                   {c.text && <p className="whitespace-pre-line text-[0.95rem] leading-relaxed text-gray-600">{c.text}</p>}
                   {!!c.tags?.length && (
-                    <ul className="flex flex-wrap gap-1.5">
-                      {c.tags.map((t, k) => <li key={k} className="rounded bg-cream px-2.5 py-1 text-xs font-medium text-charcoal-800">{t}</li>)}
+                    <ul className="flex flex-wrap gap-1.5 pt-1">
+                      {c.tags.map((t, k) => <li key={k} className="rounded-full bg-cream px-2.5 py-1 text-xs font-medium text-charcoal-800">{t}</li>)}
                     </ul>
                   )}
                 </div>
-                <div className="mt-6 flex items-center justify-between gap-3 border-t border-stone-100 pt-5 text-xs font-semibold text-gray-500">
-                  <span>{c.meta}</span>
-                  <ArrowRight aria-hidden className={cn('size-4 transition-transform group-hover:translate-x-1', green ? 'text-leaf-600' : 'text-saffron-600')} />
+                <div className="mt-6 flex items-center justify-between gap-3 border-t border-stone-100 pt-5 text-xs font-bold tracking-wider uppercase text-saffron-600">
+                  <span>{c.meta || (c.url ? 'Explore' : '')}</span>
+                  <ArrowRight aria-hidden className={cn('size-4 transition-transform duration-300 group-hover:translate-x-1.5', green ? 'text-leaf-600' : 'text-saffron-600')} />
                 </div>
               </Box>
             </StaggerItem>
@@ -237,18 +299,21 @@ export function StitchBlock({ b }: { b: PageBlock }): ReactNode {
       )
     case 'quote':
       return (
-        <Reveal as="figure" className="on-dark relative overflow-hidden rounded-3xl border border-saffron-500/20 bg-gradient-to-r from-charcoal-950 via-[#0c1a2e] to-[#10233d] p-8 text-white shadow-2xl sm:p-12 lg:p-16">
-          <Quote aria-hidden className="pointer-events-none absolute -bottom-10 -right-6 size-64 text-white opacity-[0.07]" />
+        <Reveal as="figure" className="on-dark relative overflow-hidden rounded-3xl border border-saffron-500/30 bg-gradient-to-r from-charcoal-950 via-[#0a1728] to-[#10233d] p-8 text-white shadow-2xl sm:p-12 lg:p-16">
+          <div aria-hidden className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-saffron-500 via-amber-400 to-leaf-500" />
+          <Quote aria-hidden className="pointer-events-none absolute -bottom-10 -right-6 size-64 text-white opacity-[0.05]" />
           <span aria-hidden className="pointer-events-none absolute -top-24 right-1/4 size-80 bg-saffron-600/20 blur-3xl" />
           <div className="relative z-10 max-w-4xl space-y-6">
-            <Quote aria-hidden className="size-9 text-saffron-500" />
-            <blockquote className="font-quote text-xl leading-relaxed text-stone-100 sm:text-2xl lg:text-3xl">{b.text}</blockquote>
-            {b.author && (
-              <figcaption className="flex items-center gap-4 border-t border-white/15 pt-5">
-                <span aria-hidden className="h-0.5 w-10 bg-saffron-500" />
-                <span className="font-bold tracking-wide text-white">{b.author}</span>
-              </figcaption>
-            )}
+            <span className="grid size-12 place-items-center rounded-2xl border border-saffron-500/30 bg-saffron-500/20 text-saffron-400 shadow-sm">
+              <Quote aria-hidden className="size-6 text-saffron-400" />
+            </span>
+            <blockquote className="font-quote text-xl font-light italic leading-relaxed text-stone-100 sm:text-2xl lg:text-3xl">{b.text}</blockquote>
+            <figcaption className="flex items-center gap-4 border-t border-white/15 pt-5">
+              <span aria-hidden className="h-0.5 w-10 bg-gradient-to-r from-saffron-500 to-amber-400" />
+              <span className="font-display text-sm font-bold tracking-wider uppercase text-saffron-200">
+                {b.author || 'रोहन सुभाष देशमुख | Rohan Subhash Deshmukh'}
+              </span>
+            </figcaption>
           </div>
         </Reveal>
       )
