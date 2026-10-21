@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
-import { useTranslations } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { Img } from '../ui/Img'
 
@@ -27,13 +26,14 @@ function defaultBanner(path?: string) {
 /**
  * The top of every inner page — one design everywhere (official-site layout):
  * a light band with the page title on the left and a photo on the right that fades into the band,
- * then the section's sibling pages as a white tab bar, then the breadcrumb on its own row.
+ * then the section's sibling pages as a white tab bar (the breadcrumb row was removed, Oct 2026).
  * `light` (articles) leaves the photo out, so long headlines get the full width.
  */
 export function PageBanner({
-  title, subtitle, crumbs = [], image, imagePosition, tabs, tabsLabel, compact, eyebrow, children, path, light,
+  title, subtitle, image, imagePosition, tabs, tabsLabel, compact, eyebrow, children, path, light, variant,
 }: {
-  title: string; eyebrow?: string | null; subtitle?: string | null; crumbs?: Crumb[]; image?: string | null; imagePosition?: string
+  title: string; eyebrow?: string | null; subtitle?: string | null; /** kept so existing pages can still pass it; no longer shown (breadcrumbs removed, Oct 2026) */
+  crumbs?: Crumb[]; image?: string | null; imagePosition?: string
   tabs?: BannerTab[]; tabsLabel?: string
   /** article pages: long headline in a smaller size */
   compact?: boolean
@@ -43,11 +43,14 @@ export function PageBanner({
   path?: string
   /** no photo: full-width title */
   light?: boolean
+  /** Stitch page header (Oct 2026): 'navy' = deep navy band with kesariya & green glows, 'light' = warm ivory band */
+  variant?: 'navy' | 'light'
 }) {
-  const t = useTranslations('common')
   const fallback = defaultBanner(path)
   const photo = light ? null : (image ?? fallback.src)
   const position = image ? imagePosition : fallback.position
+
+  if (variant) return <StitchBanner title={title} subtitle={subtitle} eyebrow={eyebrow} tabs={tabs} tabsLabel={tabsLabel} variant={variant} />
 
   return (
     <>
@@ -101,24 +104,73 @@ export function PageBanner({
         </nav>
       )}
 
-      {/* breadcrumb on its own row, under the banner */}
-      <nav aria-label="Breadcrumb" className="container-x pt-5">
-        <ol className="flex flex-wrap items-center gap-1.5 text-[0.92rem] text-muted">
-          <li>
-            <Link to="/" className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700">{t('home')}</Link>
-          </li>
-          {crumbs.map((c, i) => (
-            <li key={i} className="flex min-w-0 items-center gap-1.5">
-              <span aria-hidden className="opacity-60">/</span>
-              {c.href && i < crumbs.length - 1 ? (
-                <Link to={c.href} className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700">{c.label}</Link>
-              ) : (
-                <span aria-current={i === crumbs.length - 1 ? 'page' : undefined} className="line-clamp-1">{c.label}</span>
+    </>
+  )
+}
+
+/**
+ * Stitch page header (Oct 2026): the eyebrow, the page title and its subtitle (no breadcrumb — removed Oct 2026) — on deep navy with soft kesariya / green glows ('navy'), or on warm ivory ('light', where the subtitle sits in
+ * a card beside the title). The section's sibling pages follow as a row of pills.
+ */
+function StitchBanner({
+  title, subtitle, eyebrow, tabs, tabsLabel, variant,
+}: {
+  title: string; subtitle?: string | null; eyebrow?: string | null; tabs?: BannerTab[]; tabsLabel?: string; variant: 'navy' | 'light'
+}) {
+  const navy = variant === 'navy'
+  return (
+    <>
+      <section className={cn('relative isolate w-full overflow-hidden', navy ? 'bg-gradient-to-b from-charcoal-950 via-[#0c1a2e] to-[#10233d] text-white' : 'bg-ivory text-charcoal-950')}>
+        <div aria-hidden className={cn('pointer-events-none absolute -top-40 right-0 -z-10 size-[36rem] rounded-full blur-[140px]', navy ? 'bg-saffron-600/20' : 'bg-saffron-500/10')} />
+        <div aria-hidden className={cn('pointer-events-none absolute bottom-0 left-10 -z-10 size-[28rem] rounded-full blur-[150px]', navy ? 'bg-leaf-600/15' : 'bg-leaf-600/5')} />
+        {navy && <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] opacity-[0.035] [background-size:24px_24px]" />}
+        <div className={cn('container-x relative', navy ? 'pb-16 pt-10 lg:pb-24 lg:pt-14' : 'pb-14 pt-10 lg:pb-16')}>
+
+          {navy ? (
+            <div className="max-w-4xl space-y-5">
+              {eyebrow && <p className="text-xs font-bold uppercase tracking-[0.2em] text-saffron-500">{eyebrow}</p>}
+              <h1 className="animate-fade-up text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">{title}</h1>
+              {subtitle && <p className="max-w-3xl text-lg leading-relaxed text-slate-200 sm:text-xl">{subtitle}</p>}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-10">
+              <div className="flex flex-col gap-4 lg:col-span-8">
+                {eyebrow && <p className="text-sm font-bold uppercase tracking-wider text-saffron-600">{eyebrow}</p>}
+                <h1 className="animate-fade-up text-4xl font-bold leading-tight tracking-tight text-charcoal-950 sm:text-5xl">{title}</h1>
+              </div>
+              {subtitle && (
+                <div className="rounded-xl border-l-4 border-saffron-500 bg-cream p-6 shadow-sm lg:col-span-4">
+                  <p className="leading-relaxed text-gray-700">{subtitle}</p>
+                </div>
               )}
-            </li>
-          ))}
-        </ol>
-      </nav>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* the section's pages as pills under the header (the current page in kesariya) */}
+      {!!tabs?.length && (
+        <nav aria-label={tabsLabel} className="border-b border-saffron-100 bg-white">
+          <div className="container-x">
+            <ul className="no-scrollbar -mx-6 flex gap-2 overflow-x-auto px-6 py-3 md:mx-0 md:px-0">
+              {tabs.map((tab) => (
+                <li key={tab.href} className="shrink-0">
+                  <Link
+                    to={tab.href}
+                    aria-current={tab.active ? 'page' : undefined}
+                    className={cn(
+                      'block rounded-lg px-4 py-2 text-sm font-semibold transition-colors',
+                      tab.active ? 'bg-gradient-to-r from-saffron-600 to-saffron-500 text-white shadow-sm' : 'text-charcoal-900 hover:bg-saffron-50 hover:text-saffron-600',
+                    )}
+                  >
+                    {tab.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </nav>
+      )}
     </>
   )
 }

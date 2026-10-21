@@ -1,5 +1,4 @@
-import type { CSSProperties } from 'react'
-import { ArrowRight, ArrowUpRight, Award, BookOpen, CalendarDays, Camera, Flag, Heart, Info, Leaf, PenLine, Phone, Quote, User, Video, Vote } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Award, BookOpen, CalendarDays, Camera, Flag, GraduationCap, HandHeart, Heart, Info, Leaf, Medal, PenLine, Phone, User, Video, Vote } from 'lucide-react'
 import { Link } from 'react-router'
 import type { Event, Home, Page, Post, Video as VideoDoc } from '@/types/cms'
 import { useLayout } from '@/lib/layout'
@@ -10,14 +9,14 @@ import { CMSLink } from '../ui/CMSLink'
 import { CountUp } from '../ui/CountUp'
 import { Img } from '../ui/Img'
 import { RichText } from '../ui/RichText'
-import { Section, SectionHead } from '../ui/Section'
-import { SocialIcon } from '../ui/SocialIcon'
+import { Section } from '../ui/Section'
 import { socialLabels } from '@/lib/social'
 import { YouTube } from '../ui/YouTube'
 import { LatestList, LeadStory } from '../blog/BlogParts'
 import { FaqAccordion } from './FaqAccordion'
 import { HeroSlider } from './HeroSlider'
 import { InstagramReels } from './InstagramReels'
+import { Lift, Reveal, Stagger, StaggerItem } from '../ui/Motion'
 
 type Block = NonNullable<Home['sections']>[number]
 type Of<T extends Block['blockType']> = Extract<Block, { blockType: T }>
@@ -62,8 +61,8 @@ export function HomeSections({ sections, extras, locale = LOCALE }: { sections: 
 }
 
 /**
- * Hero (official-site layout): the slideshow, the follow-us icons standing on its left edge (wide screens),
- * and a navy message bar that overlaps the bottom of the photos — one line on how Rohan works, his quote, one button.
+ * Hero (Stitch design, Oct 2026): the navy slideshow band, then the New India Manifesto bar — a white card with a kesariya
+ * top edge that overlaps the bottom of the band (its label, headline, one line and "Apply now").
  */
 function Hero({ b }: { b: Of<'heroSlider'> }) {
   const { settings } = useLayout()
@@ -84,35 +83,22 @@ function Hero({ b }: { b: Of<'heroSlider'> }) {
     }))
     .filter((s) => s.image)
   if (!slides.length) return null
-  const social = Object.entries(settings.social ?? {}).filter(([k, v]) => v && k !== 'id') as [string, string][]
+  const social = (Object.entries(settings.social ?? {}).filter(([k, v]) => v && k !== 'id') as [string, string][]).map(([key, url]) => ({ key, url, label: socialLabels[key] ?? key }))
   return (
     <>
-      <div className="relative">
-        <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 5} />
-        {!!social.length && (
-          <ul aria-label={t('followUs')} className="absolute left-4 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-2.5 xl:flex">
-            {social.map(([k, v]) => (
-              <li key={k}>
-                <a href={v} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} className="grid size-10 place-items-center rounded-full bg-white text-charcoal-900 shadow-md ring-1 ring-black/5 transition hover:bg-saffron-600 hover:text-white">
-                  <SocialIcon name={k === 'whatsappChannel' ? 'whatsapp' : k} className="size-[17px]" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div className="container-x relative z-10 mt-6 lg:-mt-20">
-        <div className="grid gap-5 rounded-lg border-l-4 border-saffron-500 bg-charcoal-900 p-6 text-white shadow-[0_24px_50px_-28px_rgb(20_33_61/0.7)] md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-10 md:p-8">
-          <div>
-            <p className="text-[0.95rem] font-semibold tracking-wide text-highlight">{t('engageEyebrow')}</p>
-            <p className="mt-1.5 text-[1.12rem] leading-relaxed md:text-[1.3rem]">{t('engageText')}</p>
-            <p className="mt-2 text-[1rem] leading-relaxed text-white/75 md:text-[1.05rem]">{t('engageQuote')}</p>
+      <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 5} social={social} labels={{ prev: t('prev'), next: t('next') }} />
+      <section className="container-x relative z-30 -mt-10">
+        <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border-t-4 border-saffron-500 bg-white p-6 shadow-[0_12px_40px_rgba(14,30,52,0.12)] transition-shadow hover:shadow-[0_16px_50px_rgba(14,30,52,0.16)] lg:flex-row lg:p-8">
+          <div className="flex max-w-3xl flex-col gap-2">
+            <span className="self-start rounded-md border border-saffron-200 bg-saffron-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-saffron-600">{t('engageEyebrow')}</span>
+            <h2 className="text-xl text-charcoal-950 lg:text-2xl">{t('engageText')}</h2>
+            <p className="text-sm leading-relaxed text-gray-600">{t('engageQuote')}</p>
           </div>
-          <CMSLink url="https://newindiamanifesto.com/apply/founder" newTab className="btn btn-primary justify-self-start md:justify-self-end">
-            {t('engageButton')} <ArrowUpRight className="size-4" />
+          <CMSLink url="https://newindiamanifesto.com/apply/founder" newTab className="btn w-full shrink-0 sm:w-auto">
+            {t('engageButton')} <ArrowRight className="size-5" />
           </CMSLink>
         </div>
-      </div>
+      </section>
     </>
   )
 }
@@ -141,52 +127,44 @@ function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
 }
 
 function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
+  const img = mediaUrl(b.image, 'card')
   return (
-    <section className="section">
-      {/* official-site "About" block: words on the left, the portrait on the right on a soft panel */}
-      <div className="container-x grid items-center gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-20">
-        <div data-reveal className="lg:order-1">
+    <section className="container-x py-20 lg:py-28">
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+        {img && (
+          <Reveal className="relative order-2 lg:order-1 lg:col-span-5">
+            <div className="relative mx-auto max-w-md overflow-hidden rounded-2xl border border-saffron-100 bg-white shadow-2xl">
+              <Img media={b.image} variant="card" alt={mediaAlt(b.image, b.heading ?? '')} sizes="(max-width:1024px) 90vw, 448px" className="h-auto w-full" />
+            </div>
+            <div aria-hidden className="absolute -bottom-4 -right-4 -z-10 hidden h-full w-full rounded-2xl border-2 border-saffron-500/20 bg-saffron-500/10 sm:block lg:max-w-md" />
+          </Reveal>
+        )}
+        <Reveal className="order-1 flex flex-col items-start gap-4 lg:order-2 lg:col-span-7" delay={0.1}>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-          {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.text && <p className="mt-6 text-[1.08rem] leading-[1.85] text-ink md:text-[1.15rem]">{b.text}</p>}
-          {/* tagline as his own words, with a quote mark */}
+          {b.heading && <h2 className="text-3xl leading-tight tracking-tight text-charcoal-950 sm:text-4xl lg:text-5xl">{b.heading}</h2>}
           {b.pledge && (
-            <p className="mt-6 flex gap-3 font-display text-[1.25rem] leading-snug text-charcoal-900 md:text-[1.4rem]">
-              <Quote aria-hidden className="mt-1 size-6 shrink-0 fill-saffron-500 text-saffron-500" />
-              {b.pledge}
-            </p>
+            <blockquote className="font-quote my-2 w-full rounded-r-2xl border-l-4 border-saffron-500 bg-gradient-to-r from-charcoal-950 to-charcoal-900 py-4 pl-6 pr-4 text-lg leading-relaxed text-white shadow-md sm:text-xl">
+              “{b.pledge}”
+            </blockquote>
           )}
-          {/* quick facts (Born, Studied, Leads, Author) as a plain row, separated by thin rules */}
+          {b.text && <p className="text-base leading-relaxed text-gray-700">{b.text}</p>}
+          {/* quick facts as small white tiles with a kesariya label */}
           {!!b.stats?.length && (
-            <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line pt-6 sm:grid-cols-4">
+            <Stagger as="dl" className="grid w-full grid-cols-2 gap-3 pt-2 sm:grid-cols-4">
               {b.stats.map((f) => (
-                <div key={f.id}>
-                  <dt className="text-[0.78rem] font-semibold text-saffron-700">{f.label}</dt>
-                  <dd className="mt-0.5 font-semibold leading-snug text-charcoal-900">{f.value}</dd>
-                </div>
+                <StaggerItem key={f.id} className="rounded-xl border border-saffron-100 bg-white p-3 shadow-sm">
+                  <dt className="text-xs font-bold uppercase tracking-wider text-saffron-600">{f.label}</dt>
+                  <dd className="mt-1 font-display text-lg font-bold leading-snug text-charcoal-950">{f.value}</dd>
+                </StaggerItem>
               ))}
-            </dl>
+            </Stagger>
           )}
           {b.buttonUrl && (
-            <div className="mt-9 flex flex-wrap gap-3">
-              <CMSLink url={b.buttonUrl} className="btn btn-dark">
-                {b.buttonLabel} <ArrowRight className="size-4" />
-              </CMSLink>
-            </div>
+            <CMSLink url={b.buttonUrl} className="btn btn-dark mt-4">
+              {b.buttonLabel} <ArrowRight className="size-5" />
+            </CMSLink>
           )}
-        </div>
-        {mediaUrl(b.image, 'card') && (
-          /* the portrait exactly as photographed — whole picture, no crop, no colour block behind, just a soft shadow */
-          <div data-reveal className="mx-auto w-full max-w-md lg:order-2 lg:max-w-[30rem]">
-            <Img
-              media={b.image}
-              variant="card"
-              alt={mediaAlt(b.image, b.heading ?? '')}
-              sizes="(max-width:1024px) 90vw, 480px"
-              className="h-auto w-full rounded-2xl shadow-[0_28px_60px_-28px_rgb(20_33_61/0.45)]"
-            />
-          </div>
-        )}
+        </Reveal>
       </div>
     </section>
   )
@@ -199,7 +177,7 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
         <div>
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
           {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.intro && <p className="mt-6 font-display text-2xl leading-relaxed text-charcoal-800">“{b.intro}”</p>}
+          {b.intro && <p className="font-quote mt-6 text-2xl leading-relaxed text-charcoal-800">“{b.intro}”</p>}
           {mediaUrl(b.image) && (
             /* full photo at its natural shape — never crop portraits */
             <div className="mt-8 overflow-hidden rounded-3xl bg-cream">
@@ -226,26 +204,38 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
   )
 }
 
-/** Home → video, centred like the official site's "Stay connected" block: heading, the video large, one line, button */
+/**
+ * Featured video (Stitch design): a sand band, the eyebrow and the video's title, then one white card — the video on the left
+ * (thumbnail until it is played), the description and the YouTube button on the right.
+ */
 function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
   const links = b.links ?? []
   return (
-    <section className="section">
+    <section className="w-full border-y border-saffron-100 bg-cream py-20 lg:py-28">
       <div className="container-x">
-        <SectionHead eyebrow={b.eyebrow} heading={b.heading} center />
-        <div data-reveal className="mx-auto max-w-4xl">
-          <YouTube url={b.youtubeUrl} title={b.heading} />
-        </div>
-        {b.text && <p className="mx-auto mt-7 max-w-3xl text-center text-[1.05rem] leading-relaxed text-muted md:text-[1.12rem]">{b.text}</p>}
-        {links.length > 0 && (
-          <div className="mt-7 flex flex-wrap justify-center gap-3">
-            {links.map((l, i) => (
-              <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className={cn('btn', i === 0 ? 'btn-dark' : 'btn-ghost')}>
-                {l.label} <ArrowUpRight className="size-4" />
-              </CMSLink>
-            ))}
+        <Reveal className="mb-12 max-w-3xl">
+          {b.eyebrow && <p className="eyebrow mb-1">{b.eyebrow}</p>}
+          {b.heading && <h2 className="h-section">{b.heading}</h2>}
+        </Reveal>
+        <Reveal className="grid grid-cols-1 overflow-hidden rounded-2xl border border-saffron-100 bg-white shadow-xl lg:grid-cols-12">
+          <div className="flex items-center bg-charcoal-950 lg:col-span-7 [&>div]:rounded-none">
+            <YouTube url={b.youtubeUrl} title={null} />
           </div>
-        )}
+          <div className="flex flex-col justify-between p-8 lg:col-span-5 lg:p-10">
+            <div>
+              {b.text && <p className="mb-6 text-[0.95rem] leading-relaxed text-gray-600">{b.text}</p>}
+            </div>
+            {links.length > 0 && (
+              <div className="flex flex-wrap gap-3 pt-2">
+                {links.map((l, i) => (
+                  <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className={cn('btn', i > 0 && 'btn-ghost')}>
+                    {l.label} <ArrowUpRight className="size-5" />
+                  </CMSLink>
+                ))}
+              </div>
+            )}
+          </div>
+        </Reveal>
       </div>
     </section>
   )
@@ -306,59 +296,78 @@ function InitiativesSection({ b, page }: { b: Of<'initiativesShowcase'>; page: P
   )
 }
 
-/** "More →" text link used beside section headings */
-function MoreLink({ url, label, dark }: { url?: string | null; label?: string | null; dark?: boolean }) {
+/** "More →" text link used beside section headings (Stitch: bold kesariya text with an arrow) */
+function MoreLink({ url, label }: { url?: string | null; label?: string | null; dark?: boolean }) {
   if (!url || !label) return null
   return (
-    <CMSLink url={url} className={cn('more-link shrink-0', dark && 'text-highlight')}>
+    <CMSLink url={url} className="more-link shrink-0">
       {label}
-      <span aria-hidden className="grid size-6 place-items-center rounded-full ring-[1.5px] ring-current">
-        <ArrowRight className="size-3.5" />
-      </span>
+      <ArrowRight className="size-5" />
     </CMSLink>
+  )
+}
+
+/** eyebrow + heading on the left, the "more" link on the right (Stitch section header) */
+function HeadRow({ eyebrow, heading, intro, url, label }: { eyebrow?: string | null; heading?: string | null; intro?: string | null; url?: string | null; label?: string | null }) {
+  return (
+    <Reveal className="mb-14 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      <div className="max-w-3xl">
+        {eyebrow && <p className="eyebrow mb-1">{eyebrow}</p>}
+        {heading && <h2 className="h-section">{heading}</h2>}
+        {intro && <p className="lead">{intro}</p>}
+      </div>
+      <MoreLink url={url} label={label} />
+    </Reveal>
   )
 }
 
 const DEV = '०१२३४५६७८९'
 const digits = (n: number, locale: Locale) => (locale === 'mr' ? String(n).replace(/\d/g, (d) => DEV[Number(d)]) : String(n))
+const JOURNEY_ICONS = [Medal, Award, GraduationCap, HandHeart]
 
 /**
- * Journey as an official-site timeline: centred heading, one line across the page with a dot per stop,
- * the stops alternating above and below the line (a vertical list on phones and tablets).
+ * Journey (Stitch design): a sand band with four milestone cards joined by a kesariya-to-green line on wide screens.
+ * Each card: a numbered circle and the place as a small chip, the title, the text, and a footer line with an icon
+ * (the part of "Place — Subtitle" after the dash). The latest milestone is highlighted with a kesariya border.
  */
 function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale }) {
   const items = b.items ?? []
   if (!items.length) return null
   return (
-    <section className="section band-cream">
+    <section className="w-full border-y border-saffron-100 bg-cream py-20 lg:py-28">
       <div className="container-x">
-        <SectionHead eyebrow={b.eyebrow} heading={b.heading} center />
-        <ol data-reveal-stagger className="relative lg:grid lg:grid-cols-[repeat(var(--n),minmax(0,1fr))] lg:gap-6" style={{ '--n': items.length } as CSSProperties}>
-          <span aria-hidden className="absolute bottom-3 left-[11px] top-3 w-0.5 bg-saffron-300 lg:inset-x-0 lg:bottom-auto lg:top-1/2 lg:h-0.5 lg:w-auto lg:-translate-y-1/2" />
-          {items.map((it, i) => {
-            const up = i % 2 === 0
-            const last = i === items.length - 1
-            return (
-              <li key={it.id} className="relative pb-8 pl-12 last:pb-0 lg:grid lg:min-h-[25rem] lg:grid-rows-[1fr_auto_1fr] lg:pb-0 lg:pl-0">
-                <span aria-hidden className={cn('absolute left-0 top-5 size-6 rounded-full border-[5px] border-cream ring-2 lg:static lg:row-start-2 lg:mx-auto', last ? 'bg-saffron-500 ring-saffron-500' : 'bg-charcoal-900 ring-charcoal-900')} />
-                <div className={cn('relative', up ? 'lg:row-start-1 lg:self-end lg:pb-7' : 'lg:row-start-3 lg:self-start lg:pt-7')}>
-                  {/* short stem from the card to the line */}
-                  <span aria-hidden className={cn('absolute left-1/2 hidden h-7 w-px bg-saffron-300 lg:block', up ? 'bottom-0' : 'top-0')} />
-                  <div className="rounded-lg border-t-[3px] border-saffron-500 bg-white p-5 shadow-[0_14px_30px_-24px_rgb(20_33_61/0.5)]">
-                    <p className="text-[0.95rem] text-saffron-700">{digits(i + 1, locale)} · {it.place}</p>
-                    {it.title && <h3 className="mt-1 text-[1.2rem] leading-snug text-charcoal-900">{it.title}</h3>}
-                    {it.text && <p className="mt-2 text-[0.97rem] leading-relaxed text-muted">{it.text}</p>}
+        <HeadRow eyebrow={b.eyebrow} heading={b.heading} url={b.buttonUrl} label={b.buttonLabel} />
+        <div className="relative">
+          <div aria-hidden className="absolute left-12 right-12 top-7 hidden h-0.5 bg-gradient-to-r from-saffron-200 via-saffron-500 to-leaf-200 lg:block" />
+          <Stagger as="ol" className="relative z-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {items.map((it, i) => {
+              const last = i === items.length - 1
+              const [place, sub] = (it.place ?? '').split(/\s+[—–-]\s+/)
+              const Icon = JOURNEY_ICONS[i % JOURNEY_ICONS.length]
+              const accents = ['text-saffron-600', 'text-leaf-600', 'text-charcoal-900', 'text-saffron-600']
+              return (
+                <StaggerItem as="li" key={it.id} className={cn('group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all hover:shadow-lg', last ? 'border-2 border-saffron-500' : 'border border-saffron-100 hover:border-saffron-500')}>
+                  {last && <div aria-hidden className="absolute right-0 top-0 size-16 rounded-bl-3xl bg-saffron-500/10" />}
+                  <div>
+                    <div className="mb-4 flex flex-wrap items-center gap-3">
+                      <span className={cn('grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold', last ? 'bg-gradient-to-r from-saffron-600 to-saffron-500 text-white shadow-sm' : 'border border-saffron-200 bg-saffron-50 text-saffron-600')}>
+                        {digits(i + 1, locale).padStart(2, locale === 'mr' ? '०' : '0')}
+                      </span>
+                      {place && <span className={cn('rounded-md px-2.5 py-1 text-xs font-bold uppercase', last ? 'border border-saffron-200 bg-saffron-50 text-saffron-600' : 'bg-paper text-gray-700')}>{place}</span>}
+                    </div>
+                    {it.title && <h3 className="mb-2 text-lg text-charcoal-950">{it.title}</h3>}
+                    {it.text && <p className="text-sm leading-relaxed text-gray-600">{it.text}</p>}
                   </div>
-                </div>
-              </li>
-            )
-          })}
-        </ol>
-        {b.buttonUrl && (
-          <div className="mt-10 text-center lg:mt-6">
-            <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
-          </div>
-        )}
+                  {sub && (
+                    <div className={cn('mt-6 flex items-center border-t border-gray-100 pt-4 text-xs font-bold', accents[i % accents.length])}>
+                      <Icon className="mr-1.5 size-[18px]" /> {sub}
+                    </div>
+                  )}
+                </StaggerItem>
+              )
+            })}
+          </Stagger>
+        </div>
       </div>
     </section>
   )
@@ -389,57 +398,72 @@ function FamilySection({ b }: { b: Of<'family'> }) {
   )
 }
 
-/** लोकमंगल परिवार: heading row with "View all", the introduction, then one equal card per group of institutions */
+/**
+ * Lokmangal Parivar (Stitch design): heading and introduction, five number tiles with a coloured top bar
+ * (kesariya, green, navy, deep kesariya, slate), then the "more" link.
+ */
 function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
+  const bars = ['bg-saffron-500', 'bg-leaf-600', 'bg-charcoal-900', 'bg-saffron-600', 'bg-slate-500']
+  const items = b.items ?? []
   return (
-    <section className="section band-cream">
-      <div className="container-x">
-        <div className="section-head-row">
-          <SectionHead eyebrow={b.eyebrow} heading={b.heading} intro={b.text} />
+    <section className="container-x py-20 lg:py-28">
+      <Reveal className="mb-14 max-w-3xl">
+        {b.eyebrow && <p className="eyebrow mb-1">{b.eyebrow}</p>}
+        {b.heading && <h2 className="h-section mb-3">{b.heading}</h2>}
+        {b.text && <p className="text-base leading-relaxed text-gray-700">{b.text}</p>}
+      </Reveal>
+      <Stagger as="ul" className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-6">
+        {items.map((g, i) => (
+          <StaggerItem as="li" key={g.id} className={cn('relative flex flex-col justify-between overflow-hidden rounded-2xl border border-saffron-100 bg-white p-6 shadow-sm transition-all hover:shadow-lg', i === items.length - 1 && items.length % 2 === 1 && 'col-span-2 md:col-span-1')}>
+            <div aria-hidden className={cn('absolute left-0 top-0 h-1.5 w-full', bars[i % bars.length])} />
+            <div>
+              <span className="mb-1 block font-display text-3xl font-bold text-charcoal-950 sm:text-4xl">{g.value && <CountUp value={g.value} />}</span>
+              {g.title && <span className="block text-xs font-bold uppercase tracking-wider text-charcoal-900">{g.title}</span>}
+            </div>
+            {g.text && <p className="mt-3 text-xs text-gray-500">{g.text}</p>}
+          </StaggerItem>
+        ))}
+      </Stagger>
+      {b.buttonUrl && (
+        <div className="mt-8 text-center sm:text-left">
           <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
         </div>
-        <ul data-reveal-stagger className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {b.items?.map((g) => (
-            <li key={g.id}>
-              <div className="h-full rounded-lg border-b-[3px] border-saffron-500 bg-white p-5 shadow-[0_14px_30px_-24px_rgb(20_33_61/0.45)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_40px_-24px_rgb(20_33_61/0.5)] md:p-6">
-                <p className="font-display text-[2.6rem] leading-none text-saffron-600">{g.value && <CountUp value={g.value} />}</p>
-                {g.title && <p className="mt-3 leading-snug text-charcoal-900">{g.title}</p>}
-                {g.text && <p className="mt-1 text-[0.92rem] leading-snug text-muted">{g.text}</p>}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      )}
     </section>
   )
 }
 
-/** सामाजिक उपक्रम: one card per chapter — photo on top, a soft cream body, a small green label, title and a line of text */
+/**
+ * Social initiatives (Stitch design): three white cards — photo with a label badge on it, title, text and an arrow. The middle card carries a kesariya border; badges alternate kesariya / navy / ivory.
+ */
 function HighlightsSection({ b }: { b: Of<'homeHighlights'> }) {
+  // the photos carry no label (removed Oct 2026) — the title and text below say what each one is
   return (
-    <section className="section">
-      <div className="container-x">
-        <div className="section-head-row">
-          <SectionHead eyebrow={b.eyebrow} heading={b.heading} intro={b.text} />
-          <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
-        </div>
-        <ol className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-reveal-stagger>
-          {b.items?.map((c) => (
-            <li key={c.id}>
-              <CMSLink url={c.url || b.buttonUrl || '#'} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-[#fffaf4] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_44px_-26px_rgb(20_33_61/0.45)]">
-                <div className="relative aspect-[16/10] overflow-hidden bg-cream">
-                  <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw" className="object-cover transition duration-700 group-hover:scale-[1.06]" style={photoFit(c.image, 1.6)} />
+    <section className="container-x py-20 lg:py-28">
+      <HeadRow eyebrow={b.eyebrow} heading={b.heading} intro={b.text} url={b.buttonUrl} label={b.buttonLabel} />
+      <Stagger as="ol" className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        {b.items?.map((c, i) => {
+          const img = mediaUrl(c.image, 'card')
+          return (
+            <StaggerItem as="li" key={c.id}>
+              <Lift className="h-full">
+              <CMSLink url={c.url || b.buttonUrl || '#'} className={cn('group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow hover:shadow-2xl', i === 1 ? 'border-2 border-saffron-500' : 'border border-saffron-100')}>
+                <div className="relative h-56 w-full overflow-hidden bg-gray-100">
+                  {img && <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" style={photoFit(c.image, 1.6)} />}
                 </div>
-                <div className="flex flex-1 flex-col p-6 md:p-7">
-                  {c.tag && <span className="self-start rounded-full bg-leaf-50 px-3 py-0.5 text-[0.88rem] font-semibold text-leaf-600">{c.tag}</span>}
-                  {c.title && <h3 className="mt-4 text-[1.35rem] leading-snug text-charcoal-900 transition group-hover:text-saffron-700">{c.title}</h3>}
-                  {c.text && <p className="mt-2 text-[1rem] leading-relaxed text-ink">{c.text}</p>}
+                <div className="flex flex-1 flex-col justify-between p-6">
+                  <div>
+                    {c.title && <h3 className="mb-3 text-lg text-charcoal-950 transition-colors group-hover:text-saffron-600">{c.title}</h3>}
+                    {c.text && <p className="text-sm leading-relaxed text-gray-600">{c.text}</p>}
+                  </div>
+                  <ArrowRight aria-hidden className="mt-6 size-5 text-saffron-600 transition-transform group-hover:translate-x-1" />
                 </div>
               </CMSLink>
-            </li>
-          ))}
-        </ol>
-      </div>
+              </Lift>
+            </StaggerItem>
+          )
+        })}
+      </Stagger>
     </section>
   )
 }
@@ -480,25 +504,40 @@ function EventsSection({ b, events: all, locale }: { b: Of<'homeEvents'>; events
   )
 }
 
+/**
+ * Vision (Stitch design): a deep navy band with a kesariya top edge and soft glows — the book cover tilted on the left
+ * with a kesariya glow under it, the eyebrow, heading, text and a kesariya button on the right.
+ */
 function VisionSection({ b }: { b: Of<'homeVision'> }) {
+  const img = mediaUrl(b.image)
   return (
-    <section className="section">
-      <div data-reveal-stagger className="container-x grid items-center gap-12 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-20">
-        <div className="flex justify-center">
-          {mediaUrl(b.image) ? (
-            /* the book cover at its own shape, tilted slightly like a book on a shelf */
-            <div className="relative w-52 -rotate-2 transition duration-500 hover:rotate-0 sm:w-60 md:w-64 lg:w-72">
-              <Img media={b.image} alt={mediaAlt(b.image, b.heading ?? '')} sizes="(max-width:768px) 240px, 288px" className="h-auto w-full rounded-md shadow-[18px_26px_50px_-18px_rgb(20_33_61/0.55)] ring-1 ring-charcoal-900/10" />
-            </div>
-          ) : (
-            <BookOpen className="size-24 text-saffron-600" />
-          )}
-        </div>
-        <div>
-          {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-          {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.text && <p className="mt-6 text-[1.08rem] leading-[1.85] text-ink md:text-[1.15rem]">{b.text}</p>}
-          {b.buttonUrl && <CMSLink url={b.buttonUrl} className="btn btn-dark mt-8">{b.buttonLabel} <ArrowRight className="size-4" /></CMSLink>}
+    <section className="on-dark band-navy relative w-full overflow-hidden py-20 lg:py-28">
+      <div aria-hidden className="glow-tl !right-1/4 !top-0" />
+      <div aria-hidden className="glow-br" />
+      <div className="container-x relative z-10">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+          <Reveal className="flex justify-center lg:col-span-5">
+            {img ? (
+              <div className="group relative">
+                <div className="w-60 -rotate-2 overflow-hidden rounded-xl border border-saffron-500/40 shadow-2xl transition-transform duration-500 group-hover:rotate-0 sm:w-72">
+                  <Img media={b.image} alt={mediaAlt(b.image, b.heading ?? '')} sizes="288px" className="h-auto w-full" />
+                </div>
+                <div aria-hidden className="mx-auto mt-2 h-6 w-60 rounded-full bg-saffron-500/30 blur-xl sm:w-72" />
+              </div>
+            ) : (
+              <BookOpen className="size-24 text-saffron-500" />
+            )}
+          </Reveal>
+          <Reveal className="flex flex-col items-start gap-4 lg:col-span-7">
+            {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
+            {b.heading && <h2 className="text-3xl leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">{b.heading}</h2>}
+            {b.text && <p className="font-quote text-lg leading-relaxed text-slate-200">{b.text}</p>}
+            {b.buttonUrl && (
+              <CMSLink url={b.buttonUrl} className="btn mt-2 px-8">
+                {b.buttonLabel} <ArrowRight className="size-5" />
+              </CMSLink>
+            )}
+          </Reveal>
         </div>
       </div>
     </section>
@@ -587,8 +626,8 @@ function BlogSection({ b, posts, locale }: { b: Of<'latestBlog'>; posts: Post[];
 }
 
 /**
- * Reels (like the Lokmangal Foundation site): centred heading, then the chosen Instagram reels side by side
- * (a swipeable row on phones), each loading only when it scrolls into view. Facebook / YouTube stay optional below.
+ * Reels (Stitch design): heading on the left and "More reels on Instagram" as a white button on the right,
+ * then the chosen Instagram reels as three tall cards (a swipeable row on phones), each loading only near the screen.
  */
 function SocialSection({ b, videos: all }: { b: Of<'socialFeeds'>; videos: VideoDoc[] }) {
   const { settings } = useLayout()
@@ -597,41 +636,47 @@ function SocialSection({ b, videos: all }: { b: Of<'socialFeeds'>; videos: Video
   const fb = settings.social?.facebook
   const insta = settings.social?.instagram
   return (
-    <section className="section border-t border-line">
-      <div className="container-x">
-        <SectionHead eyebrow={b.eyebrow} heading={b.heading} intro={b.text} center />
-        {!!b.instagramPosts?.length && <InstagramReels reels={b.instagramPosts.map((x) => ({ url: x.url, title: x.title ?? '' }))} />}
+    <section className="container-x py-20 lg:py-28">
+      <Reveal className="mb-14 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <div className="max-w-3xl">
+          {b.eyebrow && <p className="eyebrow mb-1">{b.eyebrow}</p>}
+          {b.heading && <h2 className="h-section">{b.heading}</h2>}
+          {b.text && <p className="lead">{b.text}</p>}
+        </div>
         {insta && (
-          <p className="mt-8 text-center">
-            <a href={`${insta.replace(/\/$/, '')}/reels/`} target="_blank" rel="noopener noreferrer" className="btn btn-dark">
-              {t('moreReels')} <ArrowUpRight className="size-4" />
-            </a>
-          </p>
+          <a href={`${insta.replace(/\/$/, '')}/reels/`} target="_blank" rel="noopener noreferrer" className="btn btn-ghost shrink-0 self-start md:self-auto">
+            {t('moreReels')} <ArrowUpRight className="size-[18px]" />
+          </a>
         )}
-        {(videos.length > 0 || (fb && b.showFacebook)) && (
-          <div className={cn('mt-12 grid gap-8', fb && b.showFacebook ? 'lg:grid-cols-[1fr_380px]' : '')}>
-            {videos.length > 0 && (
-              <div className="grid gap-6 sm:grid-cols-2">
-                {videos.slice(0, 2).map((v) => <YouTube key={v.id} url={v.youtubeUrl} title={v.title} />)}
-                <Link to="/media/videos" className="btn btn-dark self-start sm:col-span-2 sm:justify-self-start">YouTube <ArrowRight className="size-4" /></Link>
-              </div>
-            )}
-            {fb && b.showFacebook && (
-              <div className="overflow-hidden rounded-2xl bg-white">
-                <iframe
-                  title="Facebook"
-                  loading="lazy"
-                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=380&height=520&small_header=true&hide_cover=false&show_facepile=false`}
-                  width="100%"
-                  height="520"
-                  style={{ border: 0 }}
-                  allow="encrypted-media"
-                />
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      </Reveal>
+      {!!b.instagramPosts?.length && (
+        <Reveal>
+          <InstagramReels reels={b.instagramPosts.map((x) => ({ url: x.url, title: x.title ?? '' }))} />
+        </Reveal>
+      )}
+      {(videos.length > 0 || (fb && b.showFacebook)) && (
+        <div className={cn('mt-12 grid gap-8', fb && b.showFacebook ? 'lg:grid-cols-[1fr_380px]' : '')}>
+          {videos.length > 0 && (
+            <div className="grid gap-6 sm:grid-cols-2">
+              {videos.slice(0, 2).map((v) => <YouTube key={v.id} url={v.youtubeUrl} title={v.title} />)}
+              <Link to="/media/videos" className="btn btn-dark self-start sm:col-span-2 sm:justify-self-start">YouTube <ArrowRight className="size-4" /></Link>
+            </div>
+          )}
+          {fb && b.showFacebook && (
+            <div className="overflow-hidden rounded-2xl bg-white">
+              <iframe
+                title="Facebook"
+                loading="lazy"
+                src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=380&height=520&small_header=true&hide_cover=false&show_facepile=false`}
+                width="100%"
+                height="520"
+                style={{ border: 0 }}
+                allow="encrypted-media"
+              />
+            </div>
+          )}
+        </div>
+      )}
     </section>
   )
 }

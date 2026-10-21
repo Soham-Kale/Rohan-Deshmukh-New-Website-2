@@ -15,6 +15,9 @@
     "seed:fresh": "node src/seed/index.js --fresh",
     "migrate": "node src/db/migrate-cli.js",
     "import:payload": "node scripts/import-from-payload.mjs",
+    "content:hero-covers": "node scripts/hero-covers.mjs",
+    "content:intro-education": "node scripts/intro-education.mjs",
+    "content:home-highlights": "node scripts/home-highlights.mjs",
     "test": "node --test --test-concurrency=1 \"test/*.test.js\"",
     "lint": "eslint .",
     "admin": "node src/seed/admin.js"

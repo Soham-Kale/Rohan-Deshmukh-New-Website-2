@@ -1,75 +1,78 @@
 import type { Page } from '@/types/cms'
+import { cn } from '@/lib/utils'
 import { mediaAlt, mediaUrl, photoFit } from '@/lib/media'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
 import { RichText } from '@/components/ui/RichText'
 import { Img } from '@/components/ui/Img'
-import { FamilySpotlight, type SpotlightMember } from './FamilySpotlight'
+import { Reveal, Stagger, StaggerItem } from '@/components/ui/Motion'
 
 type Block = NonNullable<Page['layout']>[number]
 type MediaText = Extract<Block, { blockType: 'mediaText' }>
 type Content = Extract<Block, { blockType: 'content' }>
 
-const LABELS = {
-  mr: { list: 'कुटुंबातील सदस्य', prev: 'मागील', next: 'पुढील' },
-  en: { list: 'Family members', prev: 'Previous', next: 'Next' },
-}
-
-/** "Sureshchandra Deshmukh" → "SD"; Marathi names → first letter */
-const initials = (name: string) => {
-  const words = name.replace(/^(कै\.|मा\.|श्री\.|Late|Hon\.|Shri\.?)\s*/g, '').split(/[\s,]+/).filter(Boolean)
-  return /[ऀ-ॿ]/.test(name) ? (words[0]?.[0] ?? '') : words.slice(0, 2).map((w) => w[0]).join('').toUpperCase()
-}
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
+/** top bar of each generation card: kesariya, green, navy (Stitch) */
+const BARS = ['bg-saffron-600', 'bg-leaf-600', 'bg-charcoal-950']
 
 /**
- * कौटुंबिक पार्श्वभूमी page in the "spotlight" layout: the family introduction beside its heading,
- * then the family members (the page's consecutive Media + text blocks, edited under Pages in the admin)
- * as chips with one large story card. Blocks before/after (e.g. the closing call to action) render as usual.
+ * कौटुंबिक पार्श्वभूमी page (Stitch design, Oct 2026): the family introduction beside its heading, then the family
+ * members (the page's consecutive Media + text blocks, edited under Pages in the admin) as generation cards side by side —
+ * coloured top bar, relation badge, portrait, name and story. Blocks before/after render as usual.
  */
-export function FamilyBackground({ blocks, locale }: { blocks?: Block[] | null; locale: 'mr' | 'en' }) {
+export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?: 'mr' | 'en' }) {
   const list = (blocks ?? []).filter((b) => !('hidden' in b && b.hidden))
   const start = list.findIndex((b) => b.blockType === 'mediaText')
   let end = start
   while (end >= 0 && list[end]?.blockType === 'mediaText') end++
-  if (start < 0) return <PageBlocks blocks={list} />
+  if (start < 0) return <PageBlocks blocks={list} design="stitch" />
 
   const members = list.slice(start, end) as MediaText[]
   const introIdx = start > 0 && list[start - 1].blockType === 'content' ? start - 1 : -1
   const intro = introIdx >= 0 ? (list[introIdx] as Content) : null
   const before = list.slice(0, introIdx >= 0 ? introIdx : start)
   const after = list.slice(end)
-
-  const chips: SpotlightMember[] = members.map((m, i) => {
-    const name = m.heading ?? ''
-    return { key: m.id ?? String(i), name: name.split(',')[0], title: name, relation: m.eyebrow ?? '', thumb: mediaUrl(m.image, 'thumb'), initials: initials(name) }
-  })
-  const panels = members.map((m) => ({
-    media: mediaUrl(m.image, 'card') ? (
-      /* photo on a soft cream backdrop; shown whole when its shape is far from the frame (faces never cropped) */
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-cream">
-        <Img media={m.image} variant="card" alt={mediaAlt(m.image, m.heading ?? '')} fill sizes="(max-width:768px) 92vw, 360px" className="h-full w-full" style={photoFit(m.image, 0.8, 0.3)} />
-      </div>
-    ) : null,
-    body: <RichText html={m.body} />,
-  }))
+  const cols = members.length >= 3 ? 'md:grid-cols-2 lg:grid-cols-3' : members.length === 2 ? 'md:grid-cols-2' : ''
 
   return (
     <div className="space-y-16 md:space-y-24">
-      {before.length > 0 && <PageBlocks blocks={before} />}
+      {before.length > 0 && <PageBlocks blocks={before} design="stitch" />}
 
-      <section>
+      <section className="flex flex-col gap-12">
         {intro && (
-          <div className="mb-10 grid gap-5 md:mb-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
-            <div>
-              {intro.eyebrow && <p className="eyebrow">{intro.eyebrow}</p>}
-              {intro.heading && <h2 className="mt-2 text-[1.7rem] leading-tight text-charcoal-900 md:text-[2.2rem]">{intro.heading}</h2>}
-            </div>
-            <RichText html={intro.body} />
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-12">
+            <Reveal className="lg:col-span-5">
+              {intro.eyebrow && <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-saffron-600">{intro.eyebrow}</p>}
+              {intro.heading && <h2 className="mt-1 font-display text-3xl font-bold leading-tight tracking-tight text-charcoal-950 sm:text-4xl">{intro.heading}</h2>}
+              <span aria-hidden className="mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-saffron-600 to-leaf-600" />
+            </Reveal>
+            <Reveal delay={0.1} className="rounded-xl border-l-4 border-saffron-500 bg-cream p-6 shadow-sm md:p-8 lg:col-span-7">
+              <RichText html={intro.body} />
+            </Reveal>
           </div>
         )}
-        <FamilySpotlight members={chips} panels={panels} labels={LABELS[locale] ?? LABELS.en} />
+
+        <Stagger className={cn('grid grid-cols-1 items-stretch gap-8', cols)}>
+          {members.map((m, i) => (
+            <StaggerItem as="article" key={m.id ?? i} className="group relative flex flex-col overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-stone-200/70 transition-shadow duration-300 hover:shadow-xl md:p-8">
+              <span aria-hidden className={cn('absolute inset-x-0 top-0 h-1.5', BARS[i % BARS.length])} />
+              <div className="mb-6 flex items-center justify-between gap-2">
+                {m.eyebrow ? <span className="inline-block rounded-full bg-cream px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-charcoal-900">{m.eyebrow}</span> : <span />}
+                <span aria-hidden className={cn('font-display text-sm font-bold', i % 3 === 1 ? 'text-leaf-600' : 'text-saffron-600')}>{ROMAN[i] ?? i + 1}</span>
+              </div>
+              {mediaUrl(m.image, 'card') && (
+                <div className="relative mb-6 h-72 w-full overflow-hidden rounded-lg bg-cream shadow-sm">
+                  <Img media={m.image} variant="card" alt={mediaAlt(m.image, m.heading ?? '')} fill sizes="(max-width:768px) 92vw, (max-width:1024px) 45vw, 380px" className="h-full w-full transition-transform duration-500 group-hover:scale-105" style={photoFit(m.image, 1.3, 0.35)} />
+                  <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal-950/50 via-transparent to-transparent" />
+                </div>
+              )}
+              {m.heading && <h3 className="mb-4 font-display text-xl font-bold leading-snug text-charcoal-950 md:text-2xl">{m.heading}</h3>}
+              <RichText html={m.body} className="!text-[0.98rem]" />
+            </StaggerItem>
+          ))}
+        </Stagger>
       </section>
 
-      {after.length > 0 && <PageBlocks blocks={after} />}
+      {after.length > 0 && <PageBlocks blocks={after} design="stitch" />}
     </div>
   )
 }

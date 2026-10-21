@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { m } from 'motion/react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { SocialIcon } from '../ui/SocialIcon'
 
 export type Slide = {
   image: string
@@ -16,30 +19,44 @@ export type Slide = {
   buttons: { label?: string | null; url?: string | null }[]
 }
 
+export type HeroSocial = { key: string; url: string; label: string }
+
 const pad = (n: number) => String(n).padStart(2, '0')
 
+/** the last two words of a headline get the kesariya gradient (Stitch: "… is a *big one*", "… at the *grassroots*") */
+function Headline({ text }: { text?: string | null }) {
+  if (!text) return null
+  const words = text.trim().split(/\s+/)
+  if (words.length < 3) return <>{text}</>
+  const cut = words.length - 2
+  return (
+    <>
+      {words.slice(0, cut).join(' ')}{' '}
+      <span className="bg-gradient-to-r from-saffron-500 to-[#ffa726] bg-clip-text text-transparent">{words.slice(cut).join(' ')}</span>
+    </>
+  )
+}
+
 /**
- * Full-screen hero slideshow.
- * Photos cross-fade, the kicker / heading / buttons slide in one after another, numbered pager on the right.
- * Desktop: the slide photos under a dark tint, text centred on the left.
- * Phones & tablets: full-screen portrait photos ("mobile image" of each slide) under the see-through header,
- * text at the bottom over a dark fade. Only slides that have a mobile image are shown there (all of them if none has one).
- * Autoplay pauses on hover, on focus and when the tab is hidden.
+ * Home hero (Stitch design, Oct 2026): a deep navy band with soft kesariya and green glows.
+ * Left: a small badge row (kicker · place · slide counter), the headline with its last words in kesariya, an italic
+ * subheading, then the controls (dots, previous / next and a place line). Right: the slide photo (4:3, so the cover photos are not cut down) in a frame with a
+ * kesariya ring, and the social links docked on its left edge. Photos cross-fade with a slow zoom; text rises in.
+ * Phones show the text first, then the photo (each slide's "mobile image" when there is one).
+ * Autoplay pauses on hover, on focus and when the tab is hidden; swipe left / right on phones.
  */
-export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay?: number }) {
+export function HeroSlider({ slides, autoplay = 7, social = [], place, labels }: { slides: Slide[]; autoplay?: number; social?: HeroSocial[]; place?: string; labels?: { prev: string; next: string } }) {
   const count = slides.length
   const mobileList = useMemo(() => slides.map((s, i) => (s.mobileImage ? i : -1)).filter((i) => i >= 0), [slides])
   const hasMobile = mobileList.length > 0
 
+  const line = { in: { opacity: 1, y: 0, x: 0, transition: { duration: 0.7, ease: [0.2, 0.7, 0.2, 1] as const } }, out: { opacity: 0, x: -24 } }
   const [index, setIndex] = useState(0)
-  const [prev, setPrev] = useState<number | null>(null)
   const [paused, setPaused] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const touch = useRef<number | null>(null)
-  const [ready, setReady] = useState(false)
   const indexRef = useRef(0)
 
-  // which slides take part right now (phones: only those with a mobile photo)
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 1023px)')
     const on = () => setIsMobile(mq.matches)
@@ -50,13 +67,10 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
   const order = useMemo(() => (isMobile && hasMobile ? mobileList : slides.map((_, i) => i)), [isMobile, hasMobile, mobileList, slides])
 
   const show = useCallback((next: number) => {
-    const cur = indexRef.current
-    if (next === cur) return
+    if (next === indexRef.current) return
     indexRef.current = next
-    setPrev(cur)
     setIndex(next)
   }, [])
-  /** step through the slides that take part (dir +1 / -1) */
   const step = useCallback(
     (dir: number) => {
       const pos = Math.max(0, order.indexOf(indexRef.current))
@@ -64,44 +78,59 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
     },
     [order, show],
   )
-  // a slide without a phone photo is never left on screen after switching to the phone layout
   useEffect(() => {
     if (!order.includes(indexRef.current)) show(order[0])
   }, [order, show])
 
-  // first slide animates in after hydration (text is still in the HTML for search engines)
-  useEffect(() => {
-    const id = window.requestAnimationFrame(() => setReady(true))
-    return () => window.cancelAnimationFrame(id)
-  }, [])
-
-  // autoplay
   useEffect(() => {
     if (order.length < 2 || paused) return
     const id = window.setTimeout(() => step(1), autoplay * 1000)
     return () => window.clearTimeout(id)
   }, [index, paused, autoplay, order, step])
 
-  // pause while the tab is hidden
   useEffect(() => {
     const onVis = () => setPaused(document.hidden)
     document.addEventListener('visibilitychange', onVis)
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
-  // the previous slide only needs to stay mounted while it fades out
-  useEffect(() => {
-    if (prev === null) return
-    const id = window.setTimeout(() => setPrev(null), 1300)
-    return () => window.clearTimeout(id)
-  }, [prev, index])
-
   if (!count) return null
+  const pos = Math.max(0, order.indexOf(index))
+
+  /* dots, previous / next and the place line — under the words on desktop, under the photo on phones */
+  const controls = (className: string) =>
+    order.length > 1 && (
+      <div className={cn('flex items-center gap-6', className)}>
+        <div className="flex items-center gap-2">
+          {order.map((i, n) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => show(i)}
+              aria-label={`Slide ${n + 1}`}
+              aria-current={i === index ? 'true' : undefined}
+              className="grid h-6 place-items-center"
+            >
+              <span className={cn('block h-2 rounded-full transition-all', i === index ? 'w-10 bg-gradient-to-r from-saffron-600 to-saffron-500 shadow-lg shadow-saffron-500/40' : 'w-3 bg-white/30 hover:bg-white/60')} />
+            </button>
+          ))}
+        </div>
+        <div className="h-4 w-px bg-white/20" />
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => step(-1)} aria-label={labels?.prev ?? 'Previous slide'} className="grid size-10 place-items-center rounded-lg border border-white/10 bg-white/10 text-white transition-colors hover:bg-saffron-500">
+            <ChevronLeft className="size-5" />
+          </button>
+          <button type="button" onClick={() => step(1)} aria-label={labels?.next ?? 'Next slide'} className="grid size-10 place-items-center rounded-lg border border-white/10 bg-white/10 text-white transition-colors hover:bg-saffron-500">
+            <ChevronRight className="size-5" />
+          </button>
+        </div>
+        {place && <span className="hidden text-xs font-bold uppercase tracking-wider text-saffron-200 sm:inline-block">{place.replace(/,\s*/g, ' • ')} • New India</span>}
+      </div>
+    )
 
   return (
     <section
-      data-hero-overlay
-      className="relative isolate flex flex-col overflow-hidden bg-charcoal-950 text-white max-lg:-mt-[4.5rem] lg:min-h-[560px]"
+      className="relative isolate w-full overflow-hidden border-b-4 border-saffron-600 bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-[#12233c] text-white"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -115,83 +144,105 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
         touch.current = null
       }}
     >
-      {/* cover photos removed (Oct 2026): the slides show their words on the navy band; the photos stay in the admin */}
+      <div aria-hidden className="glow-tl" />
+      <div aria-hidden className="glow-br" />
 
-      {/* text */}
-      <div className="container-x relative flex flex-1 items-end pb-12 pr-16 pt-36 sm:pb-16 sm:pt-40 lg:items-center lg:pb-28 lg:pr-36 lg:pt-20">
-        {/* all slides share one grid cell, so the block keeps one height and nothing jumps */}
-        <div className="relative grid w-full max-w-4xl">
-          {slides.map((s, i) => {
-            const state = i === index ? (ready ? 'in' : 'pre') : i === prev ? 'out' : 'idle'
-            return (
-              <div
-                key={i}
-                aria-hidden={state === 'out' || state === 'idle'}
-                className={cn(
-                  '[grid-area:1/1] max-lg:self-end lg:self-center',
-                  (state === 'out' || state === 'idle') && 'pointer-events-none',
-                  state === 'idle' && 'invisible',
-                  hasMobile && !s.mobileImage && 'max-lg:hidden',
-                )}
-              >
-                {s.kicker && (
-                  <p className="hero-line hero-kicker mb-3 text-[0.95rem] font-light uppercase text-saffron-300 sm:text-xl lg:mb-4 lg:text-2xl" data-state={state} style={{ ['--hero-x' as string]: '100px', transitionDelay: state === 'in' ? '150ms' : '0ms' }}>
-                    {s.kicker}
-                  </p>
-                )}
-                {i === 0 ? (
-                  <h1 className="hero-line text-[2.3rem] font-semibold leading-[1.12] sm:text-5xl md:text-6xl lg:text-7xl" data-state={state} style={{ ['--hero-x' as string]: '200px', transitionDelay: state === 'in' ? '250ms' : '0ms' }}>
-                    {s.heading}
-                  </h1>
-                ) : (
-                  <p className="hero-line font-display text-[2.3rem] font-semibold leading-[1.12] sm:text-5xl md:text-6xl lg:text-7xl" data-state={state} style={{ ['--hero-x' as string]: '200px', transitionDelay: state === 'in' ? '250ms' : '0ms' }}>
-                    {s.heading}
-                  </p>
-                )}
-                {s.subheading && (
-                  <p className="hero-line mt-4 max-w-2xl text-base text-white/85 sm:text-lg lg:mt-5 lg:text-xl" data-state={state} style={{ ['--hero-x' as string]: '300px', transitionDelay: state === 'in' ? '350ms' : '0ms' }}>
-                    {s.subheading}
-                  </p>
-                )}
-                {/* buttons removed from the cover (Oct 2026); the slides' buttons stay in the admin */}
-              </div>
-            )
-          })}
+      <div className="container-x relative z-10 pb-20 pt-12 lg:pb-24 lg:pt-16">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-8">
+          {/* words */}
+          <div className="flex min-w-0 flex-col justify-center lg:col-span-6 lg:pr-4">
+            <div className="mb-6 flex flex-wrap items-center gap-3">
+              {place && (
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-saffron-200 backdrop-blur-md">
+                  <span className="size-2 animate-pulse rounded-full bg-saffron-500" />
+                  {place}
+                </span>
+              )}
+              {order.length > 1 && (
+                <span className="font-display text-xs tracking-widest text-slate-300" aria-live="polite">
+                  <span className="font-bold text-saffron-500">{pad(pos + 1)}</span> / {pad(order.length)}
+                </span>
+              )}
+            </div>
+
+            {/* all slides share one grid cell, so the block keeps the height of the longest and nothing jumps */}
+            <div className="grid">
+              {slides.map((s, i) => {
+                const active = i === index
+                return (
+                  <m.div
+                    key={i}
+                    aria-hidden={!active}
+                    className={cn('[grid-area:1/1]', !active && 'pointer-events-none', hasMobile && !s.mobileImage && 'max-lg:hidden')}
+                    initial={false}
+                    animate={active ? 'in' : 'out'}
+                    variants={{ in: { opacity: 1, y: 0, transition: { staggerChildren: 0.12, delayChildren: 0.1 } }, out: { opacity: 0, y: 16, transition: { duration: 0.4 } } }}
+                  >
+                    {s.kicker && <m.p variants={line} className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-saffron-300">{s.kicker}</m.p>}
+                    {i === 0 ? (
+                      <m.h1 variants={line} className="mb-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+                        <Headline text={s.heading} />
+                      </m.h1>
+                    ) : (
+                      <m.p variants={line} className="mb-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+                        <Headline text={s.heading} />
+                      </m.p>
+                    )}
+                    {s.subheading && <m.p variants={line} className="font-quote max-w-xl text-lg leading-relaxed text-slate-200 sm:text-xl">{s.subheading}</m.p>}
+                  </m.div>
+                )
+              })}
+            </div>
+
+            {/* desktop: the controls under the words */}
+            {controls('mt-10 border-t border-white/10 pt-6 max-lg:hidden')}
+          </div>
+
+          {/* photo with the social links docked on its left edge (desktop only — phones show the photo alone) */}
+          <div className="relative flex items-center justify-center lg:col-span-6">
+            {!!social.length && (
+              <ul aria-label="Follow" className="absolute -left-2 top-1/2 z-20 hidden -translate-y-1/2 lg:flex flex-col gap-2 rounded-xl border border-white/10 bg-charcoal-950/90 p-2 shadow-2xl backdrop-blur-md sm:-left-6">
+                {social.map((s) => (
+                  <li key={s.key}>
+                    <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label} title={s.label} className="grid size-9 place-items-center rounded-lg text-slate-300 transition-all hover:bg-saffron-600 hover:text-white">
+                      <SocialIcon name={s.key === 'whatsappChannel' ? 'whatsapp' : s.key} className="size-4" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <m.div
+              className="relative aspect-[4/3] w-full max-w-xl overflow-hidden rounded-2xl border-2 border-white/10 bg-charcoal-900 shadow-2xl ring-4 ring-saffron-500/30"
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.9, ease: [0.2, 0.7, 0.2, 1], delay: 0.15 }}
+            >
+              {slides.map((s, i) => {
+                const active = i === index
+                const mobile = s.mobileImage && s.mobileImage !== s.image ? s.mobileImage : null
+                return (
+                  <m.div
+                    key={i}
+                    aria-hidden={!active}
+                    className="absolute inset-0"
+                    initial={false}
+                    animate={{ opacity: active ? 1 : 0, scale: active ? 1 : 1.06 }}
+                    transition={{ opacity: { duration: 1.1, ease: 'easeInOut' }, scale: { duration: active ? 7 : 1.1, ease: [0.2, 0.7, 0.2, 1] } }}
+                  >
+                    <img src={s.image} alt={active ? s.alt : ''} loading="eager" fetchPriority={i === 0 ? 'high' : 'low'} decoding="async" className={cn('absolute inset-0 size-full object-cover', mobile && 'max-lg:hidden')} style={{ objectPosition: s.position }} />
+                    {mobile && <img src={mobile} alt={active ? s.alt : ''} loading="eager" decoding="async" className="absolute inset-0 size-full object-cover lg:hidden" style={{ objectPosition: s.mobilePosition }} />}
+                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/70 via-transparent to-transparent" />
+                  </m.div>
+                )
+              })}
+              <span aria-hidden className="absolute bottom-5 right-6 size-2.5 rounded-full bg-saffron-500 shadow-[0_0_8px_#FF7A00]" />
+            </m.div>
+          </div>
+
+          {/* phones: the controls under the photo */}
+          {controls('-mt-4 justify-center lg:hidden')}
         </div>
       </div>
-
-      {/* numbered pager on the right — phones: lower right beside the text; desktop: centred */}
-      {order.length > 1 && (
-        <nav aria-label="Slides" className="absolute right-4 top-24 z-10 sm:right-8 sm:top-28 md:right-16 lg:right-20 lg:top-1/2 lg:-translate-y-1/2">
-          <ol className="flex flex-col items-end gap-3 lg:gap-6">
-            {slides.map((s, i) => {
-              const mobilePos = mobileList.indexOf(i)
-              return (
-                <li key={i} className={cn(hasMobile && !s.mobileImage && 'max-lg:hidden')}>
-                  <button
-                    type="button"
-                    onClick={() => show(i)}
-                    aria-current={i === index ? 'true' : undefined}
-                    className={cn('group flex min-h-9 items-center gap-3 py-1 text-base tabular-nums transition-colors lg:text-lg', i === index ? 'text-white' : 'text-white/55 hover:text-white')}
-                  >
-                    <span aria-hidden className={cn('h-px bg-white transition-all duration-500', i === index ? 'w-8 lg:w-12' : 'w-0 group-hover:w-4')} />
-                    {/* the name is read from the content, so it always contains the number that is shown */}
-                    <span className="sr-only">Slide</span>
-                    {hasMobile ? (
-                      <>
-                        <span className="lg:hidden">{pad(mobilePos + 1)}</span>
-                        <span className="max-lg:hidden">{pad(i + 1)}</span>
-                      </>
-                    ) : (
-                      pad(i + 1)
-                    )}
-                  </button>
-                </li>
-              )
-            })}
-          </ol>
-        </nav>
-      )}
     </section>
   )
 }

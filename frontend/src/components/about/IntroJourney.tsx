@@ -1,10 +1,13 @@
 import type { CSSProperties } from 'react'
+import { m } from 'motion/react'
+import { Compass, GraduationCap, MapPin } from 'lucide-react'
 import type { Page } from '@/types/cms'
 import { cn } from '@/lib/utils'
 import { mediaAlt, mediaPosition, mediaUrl } from '@/lib/media'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
 import { RichText } from '@/components/ui/RichText'
 import { Img } from '@/components/ui/Img'
+import { Reveal, Stagger, StaggerItem } from '@/components/ui/Motion'
 
 type Block = NonNullable<Page['layout']>[number]
 type MediaText = Extract<Block, { blockType: 'mediaText' }>
@@ -18,7 +21,7 @@ const num = (n: number, locale: string) => (locale === 'mr' ? String(n).replace(
  *  - the first Media + text block is the profile (photo, name, intro)
  *  - a Cards block right after it with short items (Born, Birthplace…) becomes small fact tags beside the name
  *  - a Cards block whose items all have a "meta" line becomes the journey: meta = place, title, text;
- *    shown as a numbered route on a warm band, the last stop highlighted
+ *    shown as a route map on a navy band — numbered pins joined by a line that draws itself in (Oct 2026)
  * Every other block renders as usual, in order.
  */
 export function IntroJourney({ blocks, locale }: { blocks?: Block[] | null; locale: 'mr' | 'en' }) {
@@ -37,79 +40,134 @@ export function IntroJourney({ blocks, locale }: { blocks?: Block[] | null; loca
   return (
     <div>
       {hero && <Profile hero={hero} facts={facts} />}
-      {between.length > 0 && <div className="mt-14 md:mt-16"><PageBlocks blocks={between} /></div>}
+      {between.length > 0 && <div className="mt-16 md:mt-24"><PageBlocks blocks={between} design="stitch" /></div>}
       {journey && <Journey block={journey} locale={locale} />}
-      {after.length > 0 && <div className="mt-14 md:mt-16"><PageBlocks blocks={after} /></div>}
+      {after.length > 0 && <div className="mt-16 md:mt-24"><PageBlocks blocks={after} design="stitch" /></div>}
     </div>
   )
 }
 
 function Profile({ hero, facts }: { hero: MediaText; facts: Cards | null }) {
+  const hasImg = Boolean(mediaUrl(hero.image, 'card'))
   return (
-    /* photo in a fixed 5:6 frame (about 380 × 456 px on desktop), text centred beside it */
-    <section className="grid items-center gap-10 md:grid-cols-[minmax(0,380px)_minmax(0,1fr)] md:gap-16 lg:gap-20">
-      {mediaUrl(hero.image, 'card') && (
-        <div className="relative mx-auto aspect-[5/6] w-full max-w-[380px] overflow-hidden rounded-3xl bg-cream shadow-[0_24px_60px_-34px_rgb(20_33_61/0.45)]">
-          <Img media={hero.image} variant="card" alt={mediaAlt(hero.image, hero.heading ?? '')} fill sizes="(max-width:768px) 92vw, 380px" priority className="object-cover" style={{ objectPosition: mediaPosition(hero.image) }} />
-        </div>
+    /* Stitch: portrait card with a name plaque on the left; the intro card and the quick-fact tiles on the right */
+    <section className={cn('grid grid-cols-1 items-stretch gap-8 lg:gap-10', hasImg && 'lg:grid-cols-12')}>
+      {hasImg && (
+        <Reveal className="flex flex-col lg:col-span-5">
+          <div className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_20px_50px_-12px_rgba(9,20,34,0.18)] transition-shadow hover:shadow-[0_25px_60px_-15px_rgba(9,20,34,0.25)]">
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-charcoal-950 lg:aspect-auto lg:min-h-[520px] lg:flex-1">
+              <Img media={hero.image} variant="card" alt={mediaAlt(hero.image, hero.heading ?? '')} fill sizes="(max-width:1024px) 92vw, 480px" priority className="object-cover" style={{ objectPosition: mediaPosition(hero.image) }} />
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-950/20 to-transparent" />
+              {hero.heading && (
+                <div className="absolute inset-x-6 bottom-6">
+                  <h2 className="font-display text-2xl font-bold tracking-wide text-saffron-100 drop-shadow-md md:text-[1.7rem]">{hero.heading}</h2>
+                  <span aria-hidden className="mt-3 block h-1 w-12 rounded-full bg-saffron-500" />
+                </div>
+              )}
+            </div>
+          </div>
+        </Reveal>
       )}
-      <div className="min-w-0">
-        {hero.eyebrow && <p className="eyebrow">{hero.eyebrow}</p>}
-        {hero.heading && <h2 className="mt-2 text-[1.9rem] leading-tight text-charcoal-900 md:text-[2.4rem]">{hero.heading}</h2>}
-        {/* quick facts as a plain row under the name, divided by a thin rule */}
+      <div className={cn('flex min-w-0 flex-col gap-6', hasImg && 'lg:col-span-7')}>
+        <Reveal delay={0.1} className="relative overflow-hidden rounded-2xl border border-stone-200/90 bg-white p-8 shadow-[0_20px_50px_-12px_rgba(9,20,34,0.12)] lg:p-10">
+          <span aria-hidden className="pointer-events-none absolute right-0 top-0 size-32 rounded-bl-full bg-gradient-to-bl from-saffron-100/60 to-transparent" />
+          <div className="relative mb-5 flex items-center gap-3.5">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-saffron-600 via-saffron-500 to-[#f97316] text-white shadow-md shadow-orange-950/20">
+              <Compass className="size-5" />
+            </span>
+            {hero.eyebrow && <p className="text-[11px] font-bold uppercase tracking-widest text-saffron-600">{hero.eyebrow}</p>}
+            {!hasImg && hero.heading && <h2 className="font-display text-2xl font-bold text-charcoal-950">{hero.heading}</h2>}
+          </div>
+          <div className="relative">
+            <RichText html={hero.body} />
+          </div>
+        </Reveal>
+        {/* quick facts as Stitch tiles */}
         {!!facts?.items?.length && (
-          <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-line py-5 sm:grid-cols-4">
+          <Stagger as="dl" className={cn('grid grid-cols-2 gap-4', facts.items.length > 2 && 'sm:grid-cols-4')}>
             {facts.items.map((f) => (
-              <div key={f.id}>
-                <dt className="text-[0.78rem] font-semibold text-saffron-700">{f.title}</dt>
-                <dd className="mt-0.5 font-semibold leading-snug text-charcoal-900">{f.text}</dd>
-              </div>
+              <StaggerItem key={f.id} className="group rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm transition-all hover:border-saffron-400/60 hover:shadow-md">
+                <dt className="mb-1 text-[11px] font-bold uppercase tracking-wider text-saffron-600">{f.title}</dt>
+                <dd className="font-display text-xl font-bold leading-snug text-charcoal-950 transition-colors group-hover:text-saffron-600 lg:text-2xl">{f.text}</dd>
+              </StaggerItem>
             ))}
-          </dl>
+          </Stagger>
         )}
-        <div className="mt-6 max-w-2xl">
-          <RichText html={hero.body} />
-        </div>
       </div>
     </section>
   )
 }
 
+/** each stop's marker takes the next of the site's accents: kesariya, green, white */
+const STOP = [
+  { pin: 'bg-gradient-to-br from-saffron-600 via-saffron-500 to-[#f97316] text-white shadow-saffron-500/40', chip: 'bg-saffron-500/15 text-saffron-200', glow: 'group-hover:border-saffron-500/60' },
+  { pin: 'bg-leaf-600 text-white shadow-leaf-600/40', chip: 'bg-leaf-600/20 text-leaf-200', glow: 'group-hover:border-leaf-200/50' },
+  { pin: 'bg-white text-charcoal-950 shadow-white/20', chip: 'bg-white/10 text-white', glow: 'group-hover:border-white/40' },
+]
+
 function Journey({ block, locale }: { block: Cards; locale: 'mr' | 'en' }) {
   const stops = block.items ?? []
-  const last = stops.length - 1
   return (
-    /* full-width warm band breaking out of the page container */
-    <section className="band-cream relative left-1/2 mt-16 w-screen -translate-x-1/2 overflow-hidden md:mt-20">
-      <div className="container-x relative py-14 md:py-20">
-        {block.eyebrow && <p className="eyebrow">{block.eyebrow}</p>}
-        {block.heading && <h2 className="h-section">{block.heading}</h2>}
-        {block.intro && <p className="lead mt-3 max-w-2xl">{block.intro}</p>}
+    /* a route map on deep navy: the heading in the middle, the stops in a row joined by a line that draws itself in
+       (a column on phones); each stop has a numbered pin, its place, title and text */
+    <section className="on-dark relative left-1/2 mt-16 w-screen -translate-x-1/2 overflow-hidden border-y-4 border-y-saffron-500 bg-gradient-to-b from-charcoal-950 via-[#0c1a2e] to-[#10233d] text-white md:mt-24">
+      <div aria-hidden className="glow-tl" />
+      <div aria-hidden className="glow-br" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] opacity-[0.04] [background-size:24px_24px]" />
+      <div className="container-x relative py-16 lg:py-24">
+        <Reveal className="mx-auto mb-12 max-w-2xl space-y-3 text-center lg:mb-16">
+          {block.eyebrow && (
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-saffron-200 backdrop-blur-md">
+              <GraduationCap aria-hidden className="size-4 text-saffron-500" />
+              {block.eyebrow}
+            </span>
+          )}
+          {block.heading && <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">{block.heading}</h2>}
+          {block.intro && <p className="text-base leading-relaxed text-slate-300 sm:text-lg">{block.intro}</p>}
+        </Reveal>
 
-        <ol className="mt-10 grid md:mt-12 md:grid-cols-[repeat(var(--stops),minmax(0,1fr))] md:gap-6" style={{ '--stops': stops.length } as CSSProperties}>
-          {stops.map((s, i) => {
-            const end = i === last
-            return (
-              <li key={s.id} className="relative flex gap-5 pb-9 last:pb-0 md:block md:pb-0">
-                {/* route: vertical on phones, horizontal from tablet up (dashed line to the next stop) */}
-                {!end && <span aria-hidden className="absolute bottom-0 left-[1.2rem] top-11 border-l-2 border-dashed border-saffron-500/40 md:left-12 md:right-[-1.5rem] md:top-[1.2rem] md:bottom-auto md:border-l-0 md:border-t-2" />}
-                <span
-                  className={cn(
-                    'relative z-10 grid size-10 shrink-0 place-items-center rounded-full border-2 text-[0.95rem] font-semibold',
-                    end ? 'border-saffron-600 bg-saffron-600 text-white shadow-[0_0_0_6px_rgb(232_115_28/0.18)]' : 'border-saffron-500 bg-paper text-saffron-700',
-                  )}
-                >
-                  {num(i + 1, locale)}
-                </span>
-                <div className="min-w-0 md:mt-5 md:pr-4">
-                  {s.meta && <p className="text-[0.85rem] text-saffron-700">{s.meta}</p>}
-                  <h3 className="mt-1 text-lg leading-snug text-charcoal-900 md:text-[1.2rem]">{s.title}</h3>
-                  {s.text && <p className="mt-2 text-[0.98rem] leading-relaxed text-muted">{s.text}</p>}
-                </div>
-              </li>
-            )
-          })}
-        </ol>
+        <div className="relative">
+          {/* the route: across the pins on desktop, down the left on phones */}
+          <m.span
+            aria-hidden
+            className="absolute left-7 top-7 bottom-7 w-0.5 origin-top bg-gradient-to-b from-saffron-500 via-leaf-600 to-white/70 lg:hidden"
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 1.4, ease: [0.2, 0.7, 0.2, 1] }}
+          />
+          {stops.length > 1 && (
+            <m.span
+              aria-hidden
+              className="absolute top-7 hidden h-0.5 origin-left bg-[repeating-linear-gradient(90deg,var(--color-saffron-500)_0_10px,transparent_10px_18px)] lg:block"
+              style={{ left: `calc(100% / ${stops.length * 2})`, right: `calc(100% / ${stops.length * 2})` }}
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 1.4, ease: [0.2, 0.7, 0.2, 1], delay: 0.2 }}
+            />
+          )}
+          <Stagger as="ol" className="relative grid grid-cols-1 gap-8 lg:grid-cols-[repeat(var(--stops),minmax(0,1fr))]" style={{ '--stops': stops.length } as CSSProperties}>
+            {stops.map((s, i) => {
+              const a = STOP[i % STOP.length]
+              return (
+                <StaggerItem as="li" key={s.id} className="group relative flex gap-5 lg:flex-col lg:items-center lg:gap-6 lg:text-center">
+                  <span className={cn('relative z-10 grid size-14 shrink-0 place-items-center rounded-full shadow-lg ring-8 ring-charcoal-950 transition-transform duration-300 group-hover:scale-110', a.pin)}>
+                    <MapPin aria-hidden className="size-6" />
+                    <span className="absolute -right-1 -top-1 grid size-6 place-items-center rounded-full bg-charcoal-950 font-display text-[11px] font-bold text-white ring-2 ring-white/20">
+                      {num(i + 1, locale)}
+                    </span>
+                  </span>
+                  <div className={cn('min-w-0 flex-1 rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:bg-white/[0.07] lg:w-full lg:p-7', a.glow)}>
+                    {s.meta && <span className={cn('inline-block rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider', a.chip)}>{s.meta}</span>}
+                    <h3 className="mt-3 font-display text-xl font-bold leading-snug text-white lg:text-2xl">{s.title}</h3>
+                    {s.text && <p className="mt-2 text-[0.95rem] leading-relaxed text-slate-300">{s.text}</p>}
+                  </div>
+                </StaggerItem>
+              )
+            })}
+          </Stagger>
+        </div>
       </div>
     </section>
   )

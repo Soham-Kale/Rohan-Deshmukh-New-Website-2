@@ -10,6 +10,7 @@ import { Img } from '../ui/Img'
 import { YouTube } from '../ui/YouTube'
 import { FaqAccordion } from '../home/FaqAccordion'
 import { CountUp } from '../ui/CountUp'
+import { StitchBlock, StitchChapter, StitchContent } from './StitchBlocks'
 
 export type PageBlock = NonNullable<Page['layout']>[number]
 
@@ -21,9 +22,41 @@ const Heading = ({ eyebrow, heading }: { eyebrow?: string | null; heading?: stri
     </div>
   ) : null
 
-/** The content blocks of a page (Pages → Content in the admin), one after another */
-export function PageBlocks({ blocks }: { blocks?: PageBlock[] | null }) {
+type Content = Extract<PageBlock, { blockType: 'content' }>
+
+/** Stitch design: consecutive Content blocks share one row of cards; Media + text blocks become numbered chapters when there are two or more */
+function StitchList({ blocks }: { blocks: PageBlock[] }) {
+  const list = blocks.filter((b) => !('hidden' in b && b.hidden))
+  const chapters = list.filter((b) => b.blockType === 'mediaText').length
+  const groups: { key: string; node: ReactNode; anchor?: string }[] = []
+  let chapter = 0
+  for (let i = 0; i < list.length; i++) {
+    const b = list[i]
+    const key = b.id ?? String(i)
+    if (b.blockType === 'content') {
+      const run: Content[] = [b]
+      while (list[i + 1]?.blockType === 'content') run.push(list[++i] as Content)
+      groups.push({ key, node: <StitchContent blocks={run} />, anchor: b.heading ? `s-${i}` : undefined })
+    } else if (b.blockType === 'mediaText') {
+      chapter++
+      groups.push({ key, node: <StitchChapter b={b} n={chapters > 1 ? chapter : undefined} />, anchor: b.heading ? `s-${i}` : undefined })
+    } else groups.push({ key, node: <StitchBlock b={b} />, anchor: 'heading' in b && b.heading ? `s-${i}` : undefined })
+  }
+  return (
+    <div className="space-y-16 md:space-y-24">
+      {groups.map((g) => (
+        <div key={g.key} id={g.anchor} className="scroll-mt-28">
+          {g.node}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/** The content blocks of a page (Pages → Content in the admin), one after another. `design="stitch"`: the Stitch look (Oct 2026) */
+export function PageBlocks({ blocks, design }: { blocks?: PageBlock[] | null; design?: 'stitch' }) {
   if (!blocks?.length) return null
+  if (design === 'stitch') return <StitchList blocks={blocks} />
   return (
     <div className="space-y-16 md:space-y-24">
       {blocks.filter((b) => !('hidden' in b && b.hidden)).map((b, i) => (
@@ -159,7 +192,7 @@ function render(b: PageBlock): ReactNode {
         /* pull quote: words on the page, held by a saffron rule — no box */
         <figure className="max-w-4xl border-l-4 border-saffron-500 py-2 pl-6 md:pl-10">
           <Quote aria-hidden className="size-9 text-saffron-500" />
-          <blockquote className="mt-4 font-display text-2xl leading-relaxed text-charcoal-900 md:text-[2rem] md:leading-[1.5]">{b.text}</blockquote>
+          <blockquote className="font-quote mt-4 text-2xl leading-relaxed text-charcoal-900 md:text-[1.9rem] md:leading-[1.5]">{b.text}</blockquote>
           {b.author && <figcaption className="mt-5 font-semibold text-saffron-700">— {b.author}</figcaption>}
         </figure>
       )
