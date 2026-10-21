@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import type { Event, Home, Page, Post, Video as VideoDoc } from '@/types/cms'
 import { useLayout } from '@/lib/layout'
 import { LOCALE, useTranslations, type Locale } from '@/lib/i18n'
-import { mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit } from '@/lib/media'
+import { mediaAlt, mediaPosition, mediaUrl, photoFit } from '@/lib/media'
 import { cn } from '@/lib/utils'
 import { CMSLink } from '../ui/CMSLink'
 import { CountUp } from '../ui/CountUp'
@@ -68,20 +68,8 @@ function Hero({ b }: { b: Of<'heroSlider'> }) {
   const { settings } = useLayout()
   const t = useTranslations('common')
   const slides = (b.slides ?? [])
-    .map((s) => ({
-      image: mediaUrl(s.image, 'hero') ?? '',
-      position: mediaPosition(s.image),
-      mobileImage: mediaUrl(s.imageMobile, 'card'),
-      mobilePosition: mediaPosition(s.imageMobile),
-      ratio: mediaSize(s.image).width / mediaSize(s.image).height,
-      mobileRatio: mediaUrl(s.imageMobile, 'card') ? mediaSize(s.imageMobile).width / mediaSize(s.imageMobile).height : undefined,
-      alt: mediaAlt(s.image, s.heading ?? ''),
-      kicker: s.kicker,
-      heading: s.heading,
-      subheading: s.subheading,
-      buttons: s.buttons ?? [],
-    }))
-    .filter((s) => s.image)
+    .map((s) => ({ kicker: s.kicker, heading: s.heading, subheading: s.subheading, buttons: s.buttons ?? [] }))
+    .filter((s) => s.heading || s.kicker || s.subheading)
   if (!slides.length) return null
   const social = (Object.entries(settings.social ?? {}).filter(([k, v]) => v && k !== 'id') as [string, string][]).map(([key, url]) => ({ key, url, label: socialLabels[key] ?? key }))
   return (
@@ -189,7 +177,7 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
           {b.items?.map((it, i) => (
             <li key={it.id}>
               <CMSLink url={it.url} className="tile group flex-row gap-6 py-7">
-                <span className="font-display text-3xl leading-none text-saffron-500">{String(i + 1).padStart(2, '0')}</span>
+                <span className="font-display text-3xl leading-none text-saffron-600">{String(i + 1).padStart(2, '0')}</span>
                 <span className="flex-1">
                   <span className="tile-title block text-xl">{it.title}</span>
                   <span className="tile-text block">{it.text}</span>

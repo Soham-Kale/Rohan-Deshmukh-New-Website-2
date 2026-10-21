@@ -101,6 +101,7 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
           type="file"
           accept=".pdf,.jpg,.jpeg,.png,.webp"
           aria-invalid={Boolean(fileError)}
+          aria-describedby={fileError ? 'f-attachment-error' : undefined}
           onChange={(e) => {
             const f = e.target.files?.[0] ?? null
             setFileError(null)
@@ -116,18 +117,26 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
           }}
           className="block w-full cursor-pointer rounded-xl border-2 border-dashed border-saffron-200 bg-ivory px-4 py-3 text-sm text-gray-600 transition hover:border-saffron-400 file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-charcoal-950 file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-saffron-600"
         />
-        {fileError && <p className="mt-1 text-sm text-red-600">{t.has(fileError) ? t(fileError) : fileError}</p>}
+        {fileError && <p id="f-attachment-error" className="mt-1 text-sm text-danger">{t.has(fileError) ? t(fileError) : fileError}</p>}
       </div>
 
       {banner && (
-        <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 md:col-span-2" role="alert">{banner}</p>
+        <p className="rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger md:col-span-2" role="alert">{banner}</p>
       )}
 
       <div className="md:col-span-2">
-        <label className="flex items-start gap-3 text-sm text-muted">
-          <input type="checkbox" className="mt-1 size-4 accent-saffron-600" aria-invalid={Boolean(errors.consent)} {...register('consent', { required: 'required', onChange: () => clearErrors('consent') })} /> {t('consent')}
+        {/* the whole line is the touch area (44px high); the box itself is 24px with a clear edge */}
+        <label className="flex min-h-11 cursor-pointer items-start gap-3 py-2 text-sm text-muted">
+          <input
+            type="checkbox"
+            className="check -mt-0.5"
+            aria-invalid={Boolean(errors.consent)}
+            aria-describedby={errors.consent ? 'f-consent-error' : undefined}
+            {...register('consent', { required: 'required', onChange: () => clearErrors('consent') })}
+          />
+          <span>{t('consent')}</span>
         </label>
-        {errors.consent && <p className="mt-1 text-sm text-red-600">{t.has('required') ? t('required') : 'required'}</p>}
+        {errors.consent && <p id="f-consent-error" className="mt-1 text-sm text-danger">{t.has('required') ? t('required') : 'required'}</p>}
       </div>
       <div className="md:col-span-2">
         <button type="submit" disabled={isSubmitting} className="btn min-w-44 text-base disabled:opacity-60 max-sm:w-full">
@@ -161,22 +170,24 @@ function Field({ id, label, required, error, full, as = 'input', inputProps, tex
   const fieldId = `f-${id}`
   const cls = cn('w-full rounded-xl border bg-ivory px-4 py-3 text-charcoal-950 outline-none transition placeholder:text-gray-400 hover:border-saffron-300 focus:border-saffron-500 focus:bg-white focus:ring-4 focus:ring-saffron-100', error ? 'border-red-400' : 'border-stone-200')
   const message = error?.message
+  const errorId = `${fieldId}-error`
+  const aria = { 'aria-invalid': Boolean(error), 'aria-required': required || undefined, 'aria-describedby': message ? errorId : undefined } as const
   return (
     <div className={cn(full && 'md:col-span-2')}>
       <label htmlFor={fieldId} className="mb-1.5 block text-sm font-semibold text-charcoal-900">
-        {label} {required && <span className="text-saffron-600">*</span>}
+        {label} {required && <span aria-hidden className="text-saffron-700">*</span>}
       </label>
       {as === 'textarea' ? (
-        <textarea id={fieldId} className={cls} aria-invalid={Boolean(error)} {...textareaProps} />
+        <textarea id={fieldId} className={cls} {...aria} {...textareaProps} />
       ) : as === 'select' ? (
-        <select id={fieldId} className={cls} aria-invalid={Boolean(error)} defaultValue="" {...selectProps}>
+        <select id={fieldId} className={cls} {...aria} defaultValue="" {...selectProps}>
           <option value="" disabled>—</option>
           {options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
       ) : (
-        <input id={fieldId} className={cls} aria-invalid={Boolean(error)} {...inputProps} />
+        <input id={fieldId} className={cls} {...aria} {...inputProps} />
       )}
-      {message && <p className="mt-1 text-sm text-red-600">{t.has(message) ? t(message) : message}</p>}
+      {message && <p id={errorId} className="mt-1 text-sm text-danger">{t.has(message) ? t(message) : message}</p>}
     </div>
   )
 }

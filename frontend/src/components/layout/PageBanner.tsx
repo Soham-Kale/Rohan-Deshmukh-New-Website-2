@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { cn } from '@/lib/utils'
 import { Img } from '../ui/Img'
+import { ScrollRow } from '../ui/ScrollRow'
 
 export type Crumb = { label: string; href?: string }
 export type BannerTab = { label: string; href: string; active?: boolean }
@@ -83,14 +84,14 @@ export function PageBanner({
       {!!tabs?.length && (
         <nav aria-label={tabsLabel} className="border-b border-line bg-white">
           <div className="container-x">
-            <ul className="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:gap-2 md:px-0">
+            <ScrollRow as="ul" className="-mx-4 flex gap-1 px-4 md:mx-0 md:gap-2 md:px-0">
               {tabs.map((tab) => (
                 <li key={tab.href} className="shrink-0">
                   <Link
                     to={tab.href}
                     aria-current={tab.active ? 'page' : undefined}
                     className={cn(
-                      'relative block px-3 py-4 text-[1rem] transition-colors md:px-4',
+                      'relative block px-3 py-4 text-[1rem] transition-colors focus-visible:outline-offset-[-3px] md:px-4',
                       "after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:rounded-t-full after:transition-colors after:content-[''] md:after:inset-x-4",
                       tab.active ? 'text-charcoal-900 after:bg-saffron-500' : 'text-muted after:bg-transparent hover:text-charcoal-900 hover:after:bg-line',
                     )}
@@ -99,49 +100,24 @@ export function PageBanner({
                   </Link>
                 </li>
               ))}
-            </ul>
+            </ScrollRow>
           </div>
         </nav>
       )}
 
-    </>
-  )
-}
-
-/**
- * Stitch page header (Oct 2026): the eyebrow, the page title and its subtitle (no breadcrumb — removed Oct 2026) — on deep navy with soft kesariya / green glows ('navy'), or on warm ivory ('light', where the subtitle sits in
- * a card beside the title). The section's sibling pages follow as a row of pills.
- */
-function StitchBanner({
-  title, subtitle, eyebrow, tabs, tabsLabel, variant,
-}: {
-  title: string; subtitle?: string | null; eyebrow?: string | null; tabs?: BannerTab[]; tabsLabel?: string; variant: 'navy' | 'light'
-}) {
-  const navy = variant === 'navy'
-  return (
-    <>
-      <section className={cn('relative isolate w-full overflow-hidden', navy ? 'bg-gradient-to-b from-charcoal-950 via-[#0c1a2e] to-[#10233d] text-white' : 'bg-ivory text-charcoal-950')}>
-        <div aria-hidden className={cn('pointer-events-none absolute -top-40 right-0 -z-10 size-[36rem] rounded-full blur-[140px]', navy ? 'bg-saffron-600/20' : 'bg-saffron-500/10')} />
-        <div aria-hidden className={cn('pointer-events-none absolute bottom-0 left-10 -z-10 size-[28rem] rounded-full blur-[150px]', navy ? 'bg-leaf-600/15' : 'bg-leaf-600/5')} />
-        {navy && <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] opacity-[0.035] [background-size:24px_24px]" />}
-        <div className={cn('container-x relative', navy ? 'pb-16 pt-10 lg:pb-24 lg:pt-14' : 'pb-14 pt-10 lg:pb-16')}>
-
-          {navy ? (
-            <div className="max-w-4xl space-y-5">
-              {eyebrow && <p className="text-xs font-bold uppercase tracking-[0.2em] text-saffron-500">{eyebrow}</p>}
-              <h1 className="animate-fade-up text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">{title}</h1>
-              {subtitle && <p className="max-w-3xl text-lg leading-relaxed text-slate-200 sm:text-xl">{subtitle}</p>}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-10">
-              <div className="flex flex-col gap-4 lg:col-span-8">
-                {eyebrow && <p className="text-sm font-bold uppercase tracking-wider text-saffron-600">{eyebrow}</p>}
-                <h1 className="animate-fade-up text-4xl font-bold leading-tight tracking-tight text-charcoal-950 sm:text-5xl">{title}</h1>
-              </div>
-              {subtitle && (
-                <div className="rounded-xl border-l-4 border-saffron-500 bg-cream p-6 shadow-sm lg:col-span-4">
-                  <p className="leading-relaxed text-gray-700">{subtitle}</p>
-                </div>
+      {/* breadcrumb on its own row, under the banner (on phones its links are 44px high, so the row is a little closer to the banner) */}
+      <nav aria-label="Breadcrumb" className="container-x pt-5 max-lg:pt-1">
+        <ol className="flex flex-wrap items-center gap-1.5 text-[0.92rem] text-muted">
+          <li className="flex items-center">
+            <Link to="/" className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700 max-lg:-mx-2 max-lg:inline-flex max-lg:min-h-11 max-lg:items-center max-lg:px-2">{t('home')}</Link>
+          </li>
+          {crumbs.map((c, i) => (
+            <li key={i} className="flex min-w-0 items-center gap-1.5">
+              <span aria-hidden className="opacity-60">/</span>
+              {c.href && i < crumbs.length - 1 ? (
+                <Link to={c.href} className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700 max-lg:-mx-2 max-lg:inline-flex max-lg:min-h-11 max-lg:items-center max-lg:px-2">{c.label}</Link>
+              ) : (
+                <span aria-current={i === crumbs.length - 1 ? 'page' : undefined} className="line-clamp-1">{c.label}</span>
               )}
             </div>
           )}

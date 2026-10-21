@@ -79,17 +79,39 @@ const buttonUrl = [text('buttonLabel', { localized: true }), text('buttonUrl')]
 export const homeBlocks = [
   block('heroSlider', 'Hero slider', 'Hero sliders', [
     checkbox('hidden', { defaultValue: false }),
+    select(
+      'heroStyle',
+      [
+        { label: 'With a photo and buttons', value: 'photo' },
+        { label: 'Text only (navy band, no buttons)', value: 'text' },
+      ],
+      {
+        label: 'Hero style',
+        defaultValue: 'photo',
+        admin: { description: 'Switch between the two to compare them (the site does not split visitors by itself). Clicks on the hero buttons are reported to Google Analytics as "hero_cta_click".' },
+      },
+    ),
+    upload('photo', 'media', {
+      admin: {
+        description:
+          'The photo behind the words on wide screens: landscape, 2400 px wide or more, Rohan on the right (the left side is darkened for the text). Click his face in the photo library to set the focal point.',
+      },
+    }),
+    upload('photoMobile', 'media', {
+      label: 'Photo for phones',
+      admin: { description: 'Portrait photo for phones and tablets, 1080×1600 or taller. If empty, the wide photo is cropped around its focal point.' },
+    }),
     number('autoplaySeconds', { defaultValue: 5, min: 3, max: 15 }),
     array(
       'slides',
       [
         upload('image', 'media', {
-          required: true,
-          admin: { description: 'Wide photo, 2400×1350 recommended. Set the focal point (click the face) so phones keep it in view.' },
+          label: 'Slide photo (not used)',
+          admin: { description: 'The current hero shows the Photo above behind every slide; this older field is kept so existing content is not lost.' },
         }),
         upload('imageMobile', 'media', {
-          label: 'Mobile image (optional)',
-          admin: { description: 'Portrait photo for phones (1080×1350). If empty, the wide photo is cropped around its focal point.' },
+          label: 'Slide photo for phones (not used)',
+          admin: { description: 'Not used by the current hero (see Photo for phones above).' },
         }),
         text('kicker', {
           label: 'Small line above the heading (optional)',
@@ -98,7 +120,7 @@ export const homeBlocks = [
         }),
         text('heading', { localized: true }),
         textarea('subheading', { localized: true }),
-        array('buttons', linkFields, { maxRows: 2 }),
+        array('buttons', linkFields, { maxRows: 2, admin: { description: 'The first button is the main one (orange), the second an outline. Shown with the "With a photo" style.' } }),
       ],
       { minRows: 1, maxRows: 10, admin: { initCollapsed: true } },
     ),

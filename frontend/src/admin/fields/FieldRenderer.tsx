@@ -56,7 +56,7 @@ function Shell({ field, path, children, wide }: { field: FieldDef; path: string;
       </div>
       {field.admin?.description && <p className="mb-1.5 text-[0.8rem] leading-snug text-charcoal-800/75">{field.admin.description}</p>}
       {!isSwitch && children(id)}
-      {message && <p className="mt-1 text-[0.82rem] font-medium text-red-700" role="alert">{message}</p>}
+      {message && <p className="mt-1 text-[0.82rem] font-medium text-danger" role="alert">{message}</p>}
     </div>
   )
 }
@@ -85,7 +85,7 @@ function Control({ field, name, id }: { field: FieldDef; name: string; id: strin
     case 'relationship':
       return <RelationshipControl {...props} />
     default:
-      return <p className="text-red-700">Unsupported field type “{field.type}”.</p>
+      return <p className="text-danger">Unsupported field type “{field.type}”.</p>
   }
 }
 
@@ -160,7 +160,7 @@ function TabsField({ field, path }: { field: FieldDef; path: string }) {
             className={cn('relative -mb-px shrink-0 border-b-2 px-4 py-2.5 text-[0.92rem] font-semibold transition', active === i ? 'border-saffron-600 text-charcoal-900' : 'border-transparent text-charcoal-800/75 hover:text-charcoal-900')}
           >
             {t.label}
-            {errored[i] && <span className="ml-1.5 inline-block size-2 rounded-full bg-red-500 align-middle" aria-label="has problems" />}
+            {errored[i] && <span className="ml-1.5 inline-block size-2 rounded-full bg-danger align-middle" aria-label="has problems" />}
           </button>
         ))}
       </div>
@@ -272,7 +272,7 @@ function RowShell(p: RowShellProps) {
   return (
     <li
       {...p.sortable.rowProps(p.index)}
-      className={cn('min-w-0 rounded-xl bg-white ring-1 transition', p.hasError ? 'ring-red-400' : 'ring-charcoal-900/12', p.sortable.over === p.index && p.sortable.from !== p.index && 'ring-2 ring-saffron-500', p.sortable.from === p.index && 'opacity-50')}
+      className={cn('min-w-0 rounded-xl bg-white ring-1 transition', p.hasError ? 'ring-danger' : 'ring-charcoal-900/12', p.sortable.over === p.index && p.sortable.from !== p.index && 'ring-2 ring-saffron-500', p.sortable.from === p.index && 'opacity-50')}
     >
       <div className="flex flex-wrap items-center gap-1 px-2 py-1.5 sm:flex-nowrap">
         <span {...p.sortable.handleProps(p.index)} className="grid size-8 cursor-grab place-items-center rounded-md text-charcoal-800/75 hover:bg-charcoal-900/[0.06] active:cursor-grabbing" aria-hidden title="Drag to reorder">
@@ -291,7 +291,7 @@ function RowShell(p: RowShellProps) {
           <IconButton label="Move up" onClick={p.onMoveUp} disabled={p.index === 0}><ChevronUp className="size-4" /></IconButton>
           <IconButton label="Move down" onClick={p.onMoveDown} disabled={p.index === p.count - 1}><ChevronDown className="size-4" /></IconButton>
           <IconButton label="Duplicate" onClick={p.onDuplicate}><Copy className="size-4" /></IconButton>
-          <IconButton label="Remove" onClick={p.onRemove} disabled={!p.canRemove} className="text-red-700 hover:bg-red-50"><Trash2 className="size-4" /></IconButton>
+          <IconButton label="Remove" onClick={p.onRemove} disabled={!p.canRemove} className="text-danger hover:bg-danger-soft"><Trash2 className="size-4" /></IconButton>
         </div>
       </div>
       {!p.collapsed && <div className="border-t border-charcoal-900/10 p-4">{p.children}</div>}
@@ -344,7 +344,7 @@ function ArrayField({ field, path }: { field: FieldDef; path: string }) {
       <RowsHeader field={field} count={items.length}>
         <Button size="sm" onClick={add} disabled={atMax}><Plus className="size-4" /> Add {singular.toLowerCase()}</Button>
       </RowsHeader>
-      {message && <p className="mb-1 text-[0.82rem] font-medium text-red-700" role="alert">{message}</p>}
+      {message && <p className="mb-1 text-[0.82rem] font-medium text-danger" role="alert">{message}</p>}
       {items.length === 0 ? (
         <p className="rounded-lg border border-dashed border-charcoal-900/20 px-4 py-4 text-center text-[0.88rem] text-charcoal-800/75">Nothing here yet.</p>
       ) : (
@@ -411,7 +411,7 @@ function BlocksField({ field, path }: { field: FieldDef; path: string }) {
           )}
         </div>
       </RowsHeader>
-      {message && <p className="mb-1 text-[0.82rem] font-medium text-red-700" role="alert">{message}</p>}
+      {message && <p className="mb-1 text-[0.82rem] font-medium text-danger" role="alert">{message}</p>}
       {items.length === 0 ? (
         <p className="rounded-lg border border-dashed border-charcoal-900/20 px-4 py-6 text-center text-[0.88rem] text-charcoal-800/75">No sections yet. Press “Add section”.</p>
       ) : (
@@ -437,7 +437,7 @@ function BlocksField({ field, path }: { field: FieldDef; path: string }) {
                 canRemove
                 sortable={sortable}
               >
-                {def ? <FieldList fields={def.fields} prefix={`${path}.${i}`} /> : <p className="text-red-700">Unknown section type.</p>}
+                {def ? <FieldList fields={def.fields} prefix={`${path}.${i}`} /> : <p className="text-danger">Unknown section type.</p>}
               </RowShell>
             )
           })}

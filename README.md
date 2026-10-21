@@ -197,6 +197,19 @@ Quotes, Meetings with leaders, Awards, Official photos, Career openings, Media f
 `family` · `homeParivar` · `homeHighlights` · `homeEvents` · `homeVision` · `homeGallery` · `homeStats` · `homeFaq` · `latestBlog` ·
 `socialFeeds` (Instagram reels) · `appealBand`. Each can be hidden, duplicated and re-ordered in the admin.
 
+**The hero** (`heroSlider`) puts one photo of Rohan behind the words of every slide. The first button of a slide is the main call to action
+(orange), the second an outline. Under *Homepage → Hero*:
+
+* **Hero style** — *With a photo and buttons* (the default) or *Text only (navy band, no buttons)*. Switching is manual and the site does not split
+  visitors by itself: run each style for a while and compare the Contact form's `generate_lead` events and visits to `/contact`. With the photo
+  style every click on a hero button is also sent to Google Analytics as `hero_cta_click` (label, link, slide number, main or second button);
+  analytics only runs once `VITE_GA_ID` is set.
+* **Photo** (wide screens — Rohan on the right, the left side is darkened for the words) and **Photo for phones** (portrait). Click the face in the
+  photo library to set the focal point; a phone shows the part around it. The bundled content already has both; a site that was set up
+  earlier keeps its text-only hero until a Photo is chosen here.
+* The slideshow has a **Pause / Play** button. It also holds while the pointer or keyboard focus is on it and while the tab is hidden. Visitors
+  whose device asks for reduced motion get no autoplay until they press Play.
+
 ---
 
 ## 5. The admin panel
@@ -392,10 +405,27 @@ every photo is checked, converted to WebP and resized before it is stored — wh
 
 Checked with axe-core (WCAG 2.0/2.1 A + AA + best practices) on all public page types and the admin, on desktop and phone widths: **no violations**.
 What that took: the orange used behind white text is `#c9500b` (white on it is 4.5:1; the old `#f26b1d` was 3.0:1) — change `--color-saffron-600`,
-`--color-saffron-700`, `--color-btn` and `--color-btn-hover` in `frontend/src/index.css` to restyle it; heading levels that follow the page structure;
+`--color-saffron-700`, `--color-btn`, `--color-btn-hover` and `--color-btn-active` in `frontend/src/index.css` to restyle it; heading levels that follow the page structure;
 visible text contained in every control's name; labelled form fields, editor and landmarks in the admin; keyboard support (Esc closes dialogs and the phone menu).
 
-Measured on the production build: layout shift 0.000 on every main page; about 196 kB (gzip) of JavaScript for the public site (the admin loads
+A second pass looked at touch, edges, colour and motion (all tokens live in `@theme` at the top of `frontend/src/index.css`):
+
+* **Edges you can see** — the border of form fields, checkboxes, filter chips and share buttons is `--color-field` `#8b93a1` (3.1:1 on white, WCAG 1.4.11);
+  the pale `--color-line` is for dividers only. Fields get a 2 px dark-orange ring while typing; errors use `--color-danger` and are tied to their field with `aria-describedby`.
+* **Touch targets** — on phones links, chips, tabs, share and pagination buttons and the footer links are at least 44 px high (`min-h-11`; the `.tap-pad`
+  class gives a small text link a 44 px touch area without moving anything). The consent checkbox is a 24 px custom box (`.check`) inside a 44 px-high label.
+* **Colour with a job** — the bright `#f26b1d` is only for lines, dots and glows, never behind text or a button; buttons are `#c9500b` (hover `#a8430a`, pressed `#8f3a08`).
+  Meaning colours: `--color-success #1f7a3a`, `--color-warning #a84a06`, `--color-danger #b42318`, `--color-info #1d4ed8`, each with a `-soft` background
+  (4.5:1 or better on white and on its own soft background; `warning` is a little darker than the usual amber `#b45309`, which is 4.46:1 on the admin page background).
+  Impact numbers are green. The cream sections use `#fff8f0`. The admin uses the same tokens for status pills, toasts and errors.
+* **Focus ring** — 3 px dark orange on light backgrounds, light saffron on navy and on the hero photo.
+* **Motion** — the hero's first slide is on screen from the first paint (the heading is the largest text at once); slides fade, nothing slides sideways. Both auto-advancing
+  sliders (hero, featured initiatives) have a Pause / Play button (WCAG 2.2.2). With "reduce motion" on nothing moves — no sliding, growing or bouncing, entrances
+  become plain fades — and the sliders do not play until the visitor presses Play.
+* **Rows that scroll sideways** (filter chips, tabs) fade at the edge where more is waiting and keep the current item in view; the filter chips wrap into rows on wider screens.
+* The words on the hero photo were measured against the actual pixels behind them (the worst 5 % of each text box, all four slides, ten screen sizes from a 360 px phone to a 1920 px desktop): all at or above 4.5:1 (3:1 for large text).
+
+Measured on the production build: layout shift 0.000 on every main page; about 198 kB (gzip) of JavaScript for the public site (the admin loads
 separately, only at `/admin`); the animation features and the contact form load only when needed; two self-hosted font files (122 kB in all); API answers in a few milliseconds.
 
 ---
@@ -404,7 +434,7 @@ separately, only at `/admin`); the animation features and the contact form load 
 
 | | How | What it covers |
 |---|---|---|
-| Backend | `npm test` (139 tests, about 30 s) | sign-in and roles, lock-out, CSRF, password reset; every collection's access rules and the query language; drafts, scheduling and versions; uploads (types, sizes, traversal, replace, delete); Contact form (validation, honeypot, e-mail, attachments); seed completeness; SEO tags, sitemap, redirects, 404; units (query, languages, sanitising, CSV, Payload converter) |
+| Backend | `npm test` (140 tests, about 40 s) | sign-in and roles, lock-out, CSRF, password reset; every collection's access rules and the query language; drafts, scheduling and versions; uploads (types, sizes, traversal, replace, delete); Contact form (validation, honeypot, e-mail, attachments); seed completeness; SEO tags, sitemap, redirects, 404; units (query, languages, sanitising, CSV, Payload converter) |
 | Backend on MySQL | `TEST_MYSQL_URL=mysql://root@127.0.0.1:3306 npm test` | the same suite on MySQL / MariaDB, a fresh database for every test server (verified on MariaDB 11.4) |
 | Browser | `npm run e2e` (start `npm run preview` first) | every address in the sitemap (no console errors, broken images, sideways scroll), real 404s, the Contact form into the inbox; the admin from sign-in through creating, publishing, editing, history, search, bulk delete, photo upload and sign-out — see `e2e/README.md` |
 | Static | `npm run lint`, `npm run typecheck` | ESLint (incl. React hooks rules) for both tiers; strict TypeScript for the frontend |

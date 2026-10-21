@@ -49,7 +49,7 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
     <div className="relative">
       <div>
         <div className="min-w-0 flex-1 overflow-hidden" ref={ref}>
-          {/* transition-none: with "reduce motion" on, the global 0.01ms transition makes a just-cleared transform linger for a moment, and Embla then measures the slides against the wrong parent (the first card jumps by one gutter after a resize) */}
+          {/* transition-none: Embla moves the track itself; a CSS transition on the track would make a just-cleared transform linger for a moment, and Embla would measure the slides against the wrong parent (the first card jumps by one gutter after a resize) */}
           <ul className="-ml-5 flex touch-pan-y transition-none md:-ml-7">
             {cards.map((c, i) => (
               <li key={c.href + i} className="min-w-0 shrink-0 grow-0 basis-[88%] pl-5 transition-none sm:basis-1/2 md:pl-7 lg:basis-1/3">

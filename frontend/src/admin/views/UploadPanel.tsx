@@ -117,7 +117,7 @@ export function UploadPanel({ upload, doc, file, onFile, focal, onFocal, error, 
               onDragOver={(e) => (e.preventDefault(), setDrag(true))}
               onDragLeave={() => setDrag(false)}
               onDrop={onDrop}
-              className={cn('rounded-xl border-2 border-dashed p-4 text-center transition', drag ? 'border-saffron-500 bg-saffron-50' : 'border-charcoal-900/20')}
+              className={cn('rounded-xl border-2 border-dashed p-4 text-center transition', drag ? 'border-saffron-500 bg-saffron-50' : 'border-field')}
             >
               <input ref={input} type="file" accept={upload.mimeTypes.join(',')} aria-label={isImage ? 'Choose a photo' : 'Choose a file'} className="sr-only" tabIndex={-1} onChange={(e) => (choose(e.target.files?.[0]), (e.target.value = ''))} />
               <UploadIcon className="mx-auto size-6 text-charcoal-800/75" aria-hidden />
@@ -142,7 +142,7 @@ export function UploadPanel({ upload, doc, file, onFile, focal, onFocal, error, 
           )}
         </div>
       </div>
-      {message && <p className="mt-3 text-[0.85rem] font-medium text-red-700" role="alert">{message}</p>}
+      {message && <p className="mt-3 text-[0.85rem] font-medium text-danger" role="alert">{message}</p>}
     </Card>
   )
 }

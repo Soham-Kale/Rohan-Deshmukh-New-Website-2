@@ -101,7 +101,7 @@ export function SchemaProvider({ children }: { children: ReactNode }) {
     () => (schema ? { schema, collection: (s) => schema.collections.find((c) => c.slug === s), global: (s) => schema.globals.find((g) => g.slug === s) } : null),
     [schema],
   )
-  if (error) return <p className="p-10 text-red-700" role="alert">Could not load the admin: {error}</p>
+  if (error) return <p className="p-10 text-danger" role="alert">Could not load the admin: {error}</p>
   if (!value) return <Spinner />
   return <SchemaContext.Provider value={value}>{children}</SchemaContext.Provider>
 }

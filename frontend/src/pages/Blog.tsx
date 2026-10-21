@@ -10,6 +10,7 @@ import { QuickShare } from '@/components/blog/QuickShare'
 import { PageBanner } from '@/components/layout/PageBanner'
 import { Seo } from '@/components/layout/Seo'
 import { Pagination } from '@/components/ui/Pagination'
+import { ScrollRow } from '@/components/ui/ScrollRow'
 import { searchOf } from './helpers'
 
 const PER_PAGE = 10
@@ -87,7 +88,7 @@ export default function BlogPage() {
                     </Link>
                   )
                 })}
-              </div>
+              </ScrollRow>
             </div>
             <Form action="/blog" method="get" className="flex h-11 items-center gap-2 rounded-full bg-ivory px-4 ring-1 ring-stone-200 transition focus-within:bg-white focus-within:ring-2 focus-within:ring-saffron-400 md:w-80" role="search">
               <Search className="size-4 shrink-0 text-saffron-600" />

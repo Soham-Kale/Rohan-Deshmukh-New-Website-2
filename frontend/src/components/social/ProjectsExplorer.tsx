@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { ArrowRight, ChevronLeft, ChevronRight, Newspaper, Search, Sparkles, TrendingUp, X } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, Newspaper, Pause, Play, Search, Sparkles, TrendingUp, X } from 'lucide-react'
 import { Link } from 'react-router'
 import type { Media } from '@/types/cms'
+import { useTranslations } from '@/lib/i18n'
+import { usePrefersReducedMotion } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 import { Img } from '../ui/Img'
 
@@ -61,8 +63,8 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
                 aria-pressed={on}
                 onClick={() => setCat(c.value)}
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-xl border px-3.5 py-1.5 text-sm font-semibold transition',
-                  on ? 'border-btn bg-btn text-white' : 'border-charcoal-900/10 bg-white text-charcoal-900 hover:border-charcoal-900/30',
+                  'inline-flex min-h-11 items-center gap-2 rounded-xl border px-4 py-1.5 text-sm font-semibold transition',
+                  on ? 'border-btn bg-btn text-white' : 'border-field bg-white text-charcoal-900 hover:border-field-hover hover:bg-cream',
                 )}
               >
                 {c.label}
@@ -80,7 +82,7 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder={labels.search}
-            className="w-full rounded-full border border-line bg-white py-2.5 pl-10 pr-4 text-sm text-charcoal-900 outline-none transition placeholder:text-muted focus:border-saffron-400 focus:ring-4 focus:ring-saffron-100"
+            className="min-h-11 w-full rounded-full border border-field bg-white py-2.5 pl-10 pr-4 text-sm text-charcoal-900 outline-none transition placeholder:text-muted hover:border-field-hover focus:border-saffron-700 focus:ring-2 focus:ring-saffron-700"
           />
         </label>
       </div>
@@ -117,18 +119,22 @@ function Photo({ p, sizes, className }: { p: ProjectCard; sizes: string; classNa
   )
 }
 
-/** Large highlight card: photo left, story right; arrows, dots and a gentle auto-advance */
+/** Large highlight card: photo left, story right; arrows, dots and a gentle auto-advance with a Pause button (WCAG 2.2.2) */
 function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: Labels; n: (v: number) => string }) {
+  const tc = useTranslations('common')
   const [i, setI] = useState(0)
-  const [paused, setPaused] = useState(false)
+  const [hold, setHold] = useState(false) // pointer or focus is inside
+  const [choice, setChoice] = useState<boolean | null>(null) // true = the visitor pressed Pause, false = Play
+  const reduced = usePrefersReducedMotion()
+  const paused = choice ?? reduced // people who ask for less motion get no auto-advance unless they press Play
   const count = items.length
   const go = useCallback((to: number) => setI(((to % count) + count) % count), [count])
 
   useEffect(() => {
-    if (count < 2 || paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const t = window.setInterval(() => setI((v) => (v + 1) % count), 6500)
-    return () => window.clearInterval(t)
-  }, [count, paused])
+    if (count < 2 || paused || hold) return
+    const id = window.setInterval(() => setI((v) => (v + 1) % count), 6500)
+    return () => window.clearInterval(id)
+  }, [count, paused, hold])
 
   const p = items[Math.min(i, count - 1)]
   return (
@@ -136,10 +142,10 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
       aria-roledescription="carousel"
       aria-label={labels.featured}
       className="mt-8 md:mt-10"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
+      onMouseEnter={() => setHold(true)}
+      onMouseLeave={() => setHold(false)}
+      onFocusCapture={() => setHold(true)}
+      onBlurCapture={() => setHold(false)}
     >
       <div className="overflow-hidden rounded-[1.6rem] bg-surface shadow-[0_24px_60px_-34px_rgb(20_33_61/0.35)] ring-1 ring-charcoal-900/[0.06]">
         <div key={p.id} aria-roledescription="slide" aria-label={`${n(i + 1)} / ${n(count)}`} className="grid animate-fade-up md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
@@ -164,10 +170,19 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
               </Link>
               {count > 1 && (
                 <div className="flex gap-2">
-                  <button type="button" onClick={() => go(i - 1)} aria-label={labels.prev} className="btn-icon size-10">
+                  <button type="button" onClick={() => go(i - 1)} aria-label={labels.prev} className="btn-icon size-11">
                     <ChevronLeft aria-hidden className="size-5" />
                   </button>
-                  <button type="button" onClick={() => go(i + 1)} aria-label={labels.next} className="btn-icon size-10">
+                  <button
+                    type="button"
+                    onClick={() => setChoice(!paused)}
+                    aria-label={paused ? tc('playSlides') : tc('pauseSlides')}
+                    title={paused ? tc('playSlides') : tc('pauseSlides')}
+                    className="btn-icon size-11"
+                  >
+                    {paused ? <Play aria-hidden className="size-4 fill-current" /> : <Pause aria-hidden className="size-4 fill-current" />}
+                  </button>
+                  <button type="button" onClick={() => go(i + 1)} aria-label={labels.next} className="btn-icon size-11">
                     <ChevronRight aria-hidden className="size-5" />
                   </button>
                 </div>
@@ -178,7 +193,7 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
       </div>
 
       {count > 1 && (
-        <div className="mt-4 flex justify-center gap-2">
+        <div className="mt-2 flex flex-wrap justify-center">
           {items.map((it, k) => (
             <button
               key={it.id}
@@ -186,9 +201,9 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
               onClick={() => go(k)}
               aria-label={`${labels.slide} ${n(k + 1)}`}
               aria-current={k === i ? 'true' : undefined}
-              className="group grid h-8 min-w-8 place-items-center"
+              className="group grid h-11 min-w-11 place-items-center"
             >
-              {/* the dot stays small; the button around it is a full 32px tap area */}
+              {/* the dot stays small; the button around it is a full 44px tap area */}
               <span className={cn('block h-2 rounded-full transition-all', k === i ? 'w-7 bg-saffron-500' : 'w-2 bg-frame group-hover:bg-saffron-400')} />
             </button>
           ))}

@@ -99,7 +99,7 @@ export function Footer() {
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {footer.legalLinks?.filter((l) => isLiveLink(l.url) && !HIDDEN_LEGAL.includes(l.url ?? '')).map((l) => (
-              <CMSLink key={l.id} url={l.url} className="underline underline-offset-4 hover:text-white">
+              <CMSLink key={l.id} url={l.url} className="underline underline-offset-4 hover:text-white max-lg:inline-flex max-lg:min-h-11 max-lg:items-center">
                 {l.label}
               </CMSLink>
             ))}

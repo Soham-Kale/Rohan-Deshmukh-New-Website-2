@@ -107,7 +107,7 @@ export function RichTextControl({ name, id }: { name: string; id: string }) {
 
   if (!editor) return <div className="h-48 animate-pulse rounded-lg bg-charcoal-900/[0.05]" />
   return (
-    <div className="overflow-hidden rounded-lg border border-charcoal-900/20 bg-white focus-within:border-saffron-500 focus-within:ring-4 focus-within:ring-saffron-100">
+    <div className="overflow-hidden rounded-lg border border-field bg-white focus-within:border-saffron-700 focus-within:ring-2 focus-within:ring-saffron-700">
       <Toolbar editor={editor} onImage={() => setPickPhoto(true)} />
       <EditorContent editor={editor} />
       <MediaPicker

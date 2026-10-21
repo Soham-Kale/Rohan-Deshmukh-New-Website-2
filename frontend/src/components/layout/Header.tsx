@@ -114,9 +114,20 @@ export function Header() {
           scrolled ? 'shadow-[0_6px_24px_rgba(14,30,52,0.08)]' : 'shadow-[0_2px_15px_rgba(14,30,52,0.05)]',
         )}
       >
-        <div className="container-x flex h-20 items-center justify-between gap-4">
-          <Link to="/" className="flex min-w-0 items-center" aria-label={siteName}>
-            <Logo siteName={siteName} logoUrl={logoUrl} logoDarkUrl={logoDarkUrl} />
+        <div className="container-x flex h-[4.5rem] items-center gap-2 sm:gap-4 lg:h-20">
+          <Link to="/" className="flex min-h-11 min-w-0 shrink items-center" aria-label={siteName}>
+            {heroTop && logoUrl && (
+              /* white logo over the photo (phones/tablets) */
+              <img src={logoUrl} alt={siteName} width={190} height={48} fetchPriority="high" className="h-9 w-auto max-w-full object-contain object-left sm:h-10 lg:hidden" />
+            )}
+            {logoDarkUrl ? (
+              <img src={logoDarkUrl} alt={siteName} width={190} height={48} fetchPriority="high" className={cn('h-9 w-auto max-w-full object-contain object-left sm:h-10', heroTop && logoUrl && 'max-lg:hidden')} />
+            ) : logoUrl ? (
+              /* the white logo drawn in ink through a mask (upload a "logo for light backgrounds" to replace it) */
+              <span role="img" aria-label={siteName} className={cn('block h-9 w-[133px] bg-charcoal-900 sm:h-10 sm:w-[148px]', heroTop && 'max-lg:hidden')} style={maskStyle(logoUrl)} />
+            ) : (
+              <span className="font-display text-2xl leading-none">{siteName}</span>
+            )}
           </Link>
 
           <nav aria-label="Main" className="hidden xl:block">

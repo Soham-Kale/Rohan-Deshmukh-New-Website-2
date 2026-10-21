@@ -8,7 +8,7 @@ import '@fontsource/mukta/latin-600.css'
 import '@fontsource/mukta/latin-700.css'
 import './admin.css'
 import { useEffect } from 'react'
-import { LazyMotion } from 'motion/react'
+import { LazyMotion, MotionConfig } from 'motion/react'
 import { Navigate, Route, Routes, useLocation } from 'react-router'
 import { AuthProvider, SchemaProvider, useAuth } from './context'
 import { AdminLayout } from './layout'
@@ -49,24 +49,27 @@ export function Component() {
   return (
     <div className="admin-root">
       <LazyMotion features={loadMotion} strict>
-        <Feedback>
-          <AuthProvider>
-            <Routes>
-              <Route path="login" element={<LoginView />} />
-              <Route path="forgot-password" element={<ForgotPasswordView />} />
-              <Route path="reset-password" element={<ResetPasswordView />} />
-              <Route element={<RequireAuth />}>
-                <Route index element={<Dashboard />} />
-                <Route path="collections/:slug" element={<ListView />} />
-                <Route path="collections/:slug/create" element={<EditView />} />
-                <Route path="collections/:slug/:id" element={<EditView />} />
-                <Route path="globals/:slug" element={<GlobalView />} />
-                <Route path="account" element={<Account />} />
-                <Route path="*" element={<Unavailable title="Page not found">There is nothing at this address in the admin.</Unavailable>} />
-              </Route>
-            </Routes>
-          </AuthProvider>
-        </Feedback>
+        {/* people who ask for less motion get fades only: nothing slides in or out */}
+        <MotionConfig reducedMotion="user">
+          <Feedback>
+            <AuthProvider>
+              <Routes>
+                <Route path="login" element={<LoginView />} />
+                <Route path="forgot-password" element={<ForgotPasswordView />} />
+                <Route path="reset-password" element={<ResetPasswordView />} />
+                <Route element={<RequireAuth />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="collections/:slug" element={<ListView />} />
+                  <Route path="collections/:slug/create" element={<EditView />} />
+                  <Route path="collections/:slug/:id" element={<EditView />} />
+                  <Route path="globals/:slug" element={<GlobalView />} />
+                  <Route path="account" element={<Account />} />
+                  <Route path="*" element={<Unavailable title="Page not found">There is nothing at this address in the admin.</Unavailable>} />
+                </Route>
+              </Routes>
+            </AuthProvider>
+          </Feedback>
+        </MotionConfig>
       </LazyMotion>
     </div>
   )

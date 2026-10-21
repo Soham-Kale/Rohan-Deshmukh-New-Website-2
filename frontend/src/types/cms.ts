@@ -513,15 +513,27 @@ export interface Home {
     | (
         | {
             hidden?: boolean | null;
+            /**
+             * "photo" shows the Photo behind the words, with buttons; "text" is the navy band without buttons.
+             */
+            heroStyle?: ('photo' | 'text') | null;
+            /**
+             * The photo behind the words on wide screens (landscape, Rohan on the right)
+             */
+            photo?: (number | null) | Media;
+            /**
+             * Portrait photo for phones and tablets
+             */
+            photoMobile?: (number | null) | Media;
             autoplaySeconds?: number | null;
             slides?:
               | {
                   /**
-                   * Wide photo, 2400×1350 recommended. Set the focal point (click the face) so phones keep it in view.
+                   * Older field, not used by the current hero
                    */
-                  image: number | Media;
+                  image?: (number | null) | Media;
                   /**
-                   * Portrait photo for phones (1080×1350). If empty, the wide photo is cropped around its focal point.
+                   * Older field, not used by the current hero
                    */
                   imageMobile?: (number | null) | Media;
                   /**

@@ -71,7 +71,7 @@ export function RootLayout() {
     <LazyMotion features={loadMotion} strict>
       <MotionConfig reducedMotion="user">
         <TopLoader />
-        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-saffron-500 focus:px-5 focus:py-2 focus:text-white">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-btn focus:px-5 focus:py-2 focus:text-white">
           {tn('skip')}
         </a>
         <Header />

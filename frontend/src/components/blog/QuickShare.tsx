@@ -15,8 +15,8 @@ export function QuickShare({ url, title, label }: { url: string; title: string; 
     } catch { /* cancelled */ }
   }
   return (
-    <button type="button" onClick={onClick} aria-label={label} title={label} className="grid size-8 place-items-center rounded-full text-muted transition hover:bg-cream hover:text-charcoal-900">
-      {done ? <Check className="size-4 text-saffron-600" /> : <Share2 className="size-4" />}
+    <button type="button" onClick={onClick} aria-label={label} title={label} className="-my-1.5 grid size-11 place-items-center rounded-full text-muted transition hover:bg-cream hover:text-charcoal-900">
+      {done ? <Check className="size-4 text-success" /> : <Share2 className="size-4" />}
     </button>
   )
 }

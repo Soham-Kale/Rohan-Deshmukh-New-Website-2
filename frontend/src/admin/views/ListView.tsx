@@ -380,7 +380,7 @@ function PhotoDropZone({ slug, onDone }: { slug: string; onDone: () => void }) {
       onDragOver={(e) => (e.preventDefault(), setDrag(true))}
       onDragLeave={() => setDrag(false)}
       onDrop={(e) => (e.preventDefault(), setDrag(false), void upload([...e.dataTransfer.files]))}
-      className={cn('mb-5 flex flex-wrap items-center gap-4 rounded-xl border-2 border-dashed bg-white px-5 py-4 transition', drag ? 'border-saffron-500 bg-saffron-50' : 'border-charcoal-900/20')}
+      className={cn('mb-5 flex flex-wrap items-center gap-4 rounded-xl border-2 border-dashed bg-white px-5 py-4 transition', drag ? 'border-saffron-500 bg-saffron-50' : 'border-field')}
     >
       <UploadIcon className="size-6 shrink-0 text-saffron-600" aria-hidden />
       <div className="min-w-0 flex-1">
