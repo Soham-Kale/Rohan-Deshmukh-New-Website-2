@@ -1,7 +1,7 @@
 import { useEffect, useState, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 import { useForm, type FieldError, type UseFormRegisterReturn } from 'react-hook-form'
 import axios from 'axios'
-import { CheckCircle2, Loader2, Paperclip } from 'lucide-react'
+import { CheckCircle2, Loader2, Paperclip, Send } from 'lucide-react'
 import { api } from '@/lib/api'
 import { trackEvent } from '@/lib/analytics'
 import { captchaEnabled, captchaToken, loadCaptcha } from '@/lib/captcha'
@@ -15,7 +15,7 @@ const mobileOk = (v: string) => /^(\+?91[\s-]?)?[6-9]\d{9}$/.test(v.replace(/\s/
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
 
 /**
- * The Contact page form (React Hook Form). Validated in the browser first, and again by the backend, which answers
+ * The Contact page form (React Hook Form; site colours, Oct 2026 — the page draws the card around it). Validated in the browser first, and again by the backend, which answers
  * with the same error codes ("required", "invalidMobile", "fileType"…) shown under the fields.
  */
 export function ContactForm({ offices }: { offices: { value: string; label: string }[] }) {
@@ -68,14 +68,16 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
 
   if (sent)
     return (
-      <div className="rounded-3xl border border-success/30 bg-success-soft p-8 text-center" role="status">
-        <CheckCircle2 aria-hidden className="mx-auto size-12 text-success" />
-        <p className="mt-4 text-xl font-semibold text-charcoal-900">{t('success')}</p>
+      <div className="flex flex-col items-center rounded-2xl bg-ivory px-6 py-12 text-center ring-1 ring-saffron-200" role="status">
+        <span className="grid size-16 place-items-center rounded-full bg-gradient-to-br from-saffron-600 to-saffron-500 text-white shadow-lg shadow-saffron-500/30">
+          <CheckCircle2 className="size-8" />
+        </span>
+        <p className="mt-5 font-display text-2xl font-bold text-charcoal-950">{t('success')}</p>
       </div>
     )
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-5 rounded-[1.75rem] bg-white p-6 shadow-[0_30px_70px_-45px_rgb(20_33_61/0.4)] ring-1 ring-charcoal-900/[0.04] md:grid-cols-2 md:p-10" noValidate>
+    <form onSubmit={onSubmit} className="grid gap-5 md:grid-cols-2" noValidate>
       <input type="text" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden {...register('website')} />
 
       <Field id="name" label={t('name')} required error={errors.name} inputProps={{ autoComplete: 'name', ...register('name', { ...required, maxLength: 120 }) }} />
@@ -93,7 +95,7 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
       <Field id="message" label={t('message')} error={errors.message} full as="textarea" textareaProps={{ rows: 5, ...register('message', { maxLength: 5000 }) }} />
 
       <div className="md:col-span-2">
-        <label htmlFor="f-attachment" className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-charcoal-900"><Paperclip className="size-4" /> {t('attachment')}</label>
+        <label htmlFor="f-attachment" className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-charcoal-900"><Paperclip className="size-4 text-saffron-600" /> {t('attachment')}</label>
         <input
           id="f-attachment"
           type="file"
@@ -113,7 +115,7 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
               e.target.value = ''
             } else setFile(f)
           }}
-          className={cn('block w-full rounded-xl border border-dashed bg-paper px-4 py-3 text-sm file:mr-4 file:rounded-full file:border-0 file:bg-charcoal-900 file:px-4 file:py-2 file:text-white', fileError ? 'border-danger' : 'border-field hover:border-field-hover')}
+          className="block w-full cursor-pointer rounded-xl border-2 border-dashed border-saffron-200 bg-ivory px-4 py-3 text-sm text-gray-600 transition hover:border-saffron-400 file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-charcoal-950 file:px-4 file:py-2 file:font-semibold file:text-white hover:file:bg-saffron-600"
         />
         {fileError && <p id="f-attachment-error" className="mt-1 text-sm text-danger">{t.has(fileError) ? t(fileError) : fileError}</p>}
       </div>
@@ -137,8 +139,8 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
         {errors.consent && <p id="f-consent-error" className="mt-1 text-sm text-danger">{t.has('required') ? t('required') : 'required'}</p>}
       </div>
       <div className="md:col-span-2">
-        <button type="submit" disabled={isSubmitting} className="btn btn-primary min-w-40 text-base disabled:opacity-60">
-          {isSubmitting ? <><Loader2 className="size-4 animate-spin" /> {t('sending')}</> : t('submit')}
+        <button type="submit" disabled={isSubmitting} className="btn min-w-44 text-base disabled:opacity-60 max-sm:w-full">
+          {isSubmitting ? <><Loader2 className="size-4 animate-spin" /> {t('sending')}</> : <>{t('submit')} <Send className="size-4" /></>}
         </button>
         {captchaEnabled && (
           <p className="mt-3 text-xs text-muted">
@@ -166,11 +168,7 @@ type FieldProps = {
 function Field({ id, label, required, error, full, as = 'input', inputProps, textareaProps, selectProps, options }: FieldProps) {
   const t = useTranslations('forms')
   const fieldId = `f-${id}`
-  // a 3.1:1 edge (the page's pale line colour is 1.25:1 on white), and a clear dark-orange ring while typing
-  const cls = cn(
-    'w-full rounded-xl border bg-paper px-4 py-3 outline-none transition focus:ring-2',
-    error ? 'border-danger focus:ring-danger' : 'border-field hover:border-field-hover focus:border-saffron-700 focus:ring-saffron-700',
-  )
+  const cls = cn('w-full rounded-xl border bg-ivory px-4 py-3 text-charcoal-950 outline-none transition placeholder:text-gray-400 hover:border-saffron-300 focus:border-saffron-500 focus:bg-white focus:ring-4 focus:ring-saffron-100', error ? 'border-red-400' : 'border-stone-200')
   const message = error?.message
   const errorId = `${fieldId}-error`
   const aria = { 'aria-invalid': Boolean(error), 'aria-required': required || undefined, 'aria-describedby': message ? errorId : undefined } as const

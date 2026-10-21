@@ -19,6 +19,20 @@ export type HeroPhoto = { wide?: MaybeMedia; tall?: MaybeMedia; alt: string }
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
+/** the last two words of a headline get the kesariya gradient (Stitch: "… is a *big one*", "… at the *grassroots*") */
+function Headline({ text }: { text?: string | null }) {
+  if (!text) return null
+  const words = text.trim().split(/\s+/)
+  if (words.length < 3) return <>{text}</>
+  const cut = words.length - 2
+  return (
+    <>
+      {words.slice(0, cut).join(' ')}{' '}
+      <span className="bg-gradient-to-r from-saffron-500 to-[#ffa726] bg-clip-text text-transparent">{words.slice(cut).join(' ')}</span>
+    </>
+  )
+}
+
 /**
  * The homepage hero: a stable photo of Rohan with the slides' words on top and one clear next step (the slide's first button).
  *
@@ -40,6 +54,7 @@ export function HeroSlider({ slides, photo, autoplay = 5 }: { slides: Slide[]; p
   const withPhoto = Boolean(wideUrl)
   const headingSize = withPhoto ? 'lg:text-5xl xl:text-[length:clamp(3.5rem,4.4vw,4rem)]' : 'lg:text-7xl'
 
+  const line = { in: { opacity: 1, y: 0, x: 0, transition: { duration: 0.7, ease: [0.2, 0.7, 0.2, 1] as const } }, out: { opacity: 0, x: -24 } }
   const [index, setIndex] = useState(0)
   const [prev, setPrev] = useState<number | null>(null)
   const [hold, setHold] = useState(false) // pointer or focus inside, or the tab is hidden
@@ -52,10 +67,8 @@ export function HeroSlider({ slides, photo, autoplay = 5 }: { slides: Slide[]; p
   const playing = count > 1 && !paused && !hold
 
   const show = useCallback((next: number) => {
-    const cur = indexRef.current
-    if (next === cur) return
+    if (next === indexRef.current) return
     indexRef.current = next
-    setPrev(cur)
     setIndex(next)
   }, [])
   const step = useCallback((dir: number) => show((indexRef.current + dir + count) % count), [count, show])
@@ -67,7 +80,6 @@ export function HeroSlider({ slides, photo, autoplay = 5 }: { slides: Slide[]; p
     return () => window.clearTimeout(id)
   }, [index, playing, autoplay, step])
 
-  // pause while the tab is hidden
   useEffect(() => {
     const onVis = () => setHold(document.hidden)
     document.addEventListener('visibilitychange', onVis)
@@ -82,6 +94,38 @@ export function HeroSlider({ slides, photo, autoplay = 5 }: { slides: Slide[]; p
   }, [prev, index])
 
   if (!count) return null
+  const pos = Math.max(0, order.indexOf(index))
+
+  /* dots, previous / next and the place line — under the words on desktop, under the photo on phones */
+  const controls = (className: string) =>
+    order.length > 1 && (
+      <div className={cn('flex items-center gap-6', className)}>
+        <div className="flex items-center gap-2">
+          {order.map((i, n) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => show(i)}
+              aria-label={`Slide ${n + 1}`}
+              aria-current={i === index ? 'true' : undefined}
+              className="grid h-6 place-items-center"
+            >
+              <span className={cn('block h-2 rounded-full transition-all', i === index ? 'w-10 bg-gradient-to-r from-saffron-600 to-saffron-500 shadow-lg shadow-saffron-500/40' : 'w-3 bg-white/30 hover:bg-white/60')} />
+            </button>
+          ))}
+        </div>
+        <div className="h-4 w-px bg-white/20" />
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => step(-1)} aria-label={labels?.prev ?? 'Previous slide'} className="grid size-10 place-items-center rounded-lg border border-white/10 bg-white/10 text-white transition-colors hover:bg-saffron-500">
+            <ChevronLeft className="size-5" />
+          </button>
+          <button type="button" onClick={() => step(1)} aria-label={labels?.next ?? 'Next slide'} className="grid size-10 place-items-center rounded-lg border border-white/10 bg-white/10 text-white transition-colors hover:bg-saffron-500">
+            <ChevronRight className="size-5" />
+          </button>
+        </div>
+        {place && <span className="hidden text-xs font-bold uppercase tracking-wider text-saffron-200 sm:inline-block">{place.replace(/,\s*/g, ' • ')} • New India</span>}
+      </div>
+    )
 
   return (
     <section

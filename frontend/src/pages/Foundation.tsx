@@ -5,7 +5,7 @@ import { INITIATIVE_CATEGORIES, categoryLabel } from '@/lib/categories'
 import { LOCALE, useTranslations } from '@/lib/i18n'
 import { mediaAlt, mediaPosition, mediaUrl, photoFit } from '@/lib/media'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
-import { SectionTitle } from '@/components/blog/BlogParts'
+import { Reveal } from '@/components/ui/Motion'
 import { InnerPage } from '@/components/layout/InnerPage'
 import { Seo } from '@/components/layout/Seo'
 import { ProjectsExplorer, type ProjectCard } from '@/components/social/ProjectsExplorer'
@@ -79,21 +79,32 @@ export default function FoundationPage() {
   return (
     <>
       <Seo title={page.meta?.title || page.title} description={page.meta?.description || page.subtitle} image={mediaUrl(page.meta?.image, 'card') || mediaUrl(page.bannerImage, 'card')} />
-      <InnerPage path={PATH} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)}>
+      <InnerPage path={PATH} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} variant="navy">
         <SectionTabs label={x.tabs} tabs={[{ id: 'about', label: x.about }, { id: 'events', label: x.events }, { id: 'projects', label: x.projects }]} />
 
         <section id="about" className="scroll-mt-36">
-          <PageBlocks blocks={about} />
+          <PageBlocks blocks={about} design="stitch" />
         </section>
 
         <section id="events" className="mt-20 scroll-mt-36 md:mt-28">
-          <SectionTitle aside={viewAll('/events', x.allEvents)}>{x.events}</SectionTitle>
-          <p className="lead mb-9 mt-4 max-w-3xl">{x.eventsIntro}</p>
+          {/* Stitch section header: heading + intro on the left, "all events" on the right */}
+          <Reveal className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div className="flex max-w-2xl flex-col gap-2">
+              <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-charcoal-950 sm:text-4xl">{x.events}</h2>
+              <p className="text-base leading-relaxed text-gray-600 md:text-lg">{x.eventsIntro}</p>
+            </div>
+            <div className="shrink-0">{viewAll('/events', x.allEvents)}</div>
+          </Reveal>
           {eventGroups.length ? (
             <div className="space-y-14">
               {eventGroups.map((g) => (
                 <div key={g.label}>
-                  {eventGroups.length > 1 && <h3 className="mb-6 text-[1.25rem] font-semibold text-charcoal-900 md:text-[1.4rem]">{g.label}</h3>}
+                  {eventGroups.length > 1 && (
+                    <h3 className="mb-6 flex items-center gap-3 font-display text-xl font-bold text-charcoal-950 md:text-2xl">
+                      <span aria-hidden className="h-0.5 w-8 bg-saffron-500" />
+                      {g.label}
+                    </h3>
+                  )}
                   <CardSlider cards={g.cards} {...slider} />
                 </div>
               ))}
@@ -105,13 +116,15 @@ export default function FoundationPage() {
 
         <section id="projects" className="mt-20 scroll-mt-36 md:mt-28">
           {/* same layout as lokmangalfoundation.com/projects → "Explore all social initiatives" */}
-          <div className="section band-cream relative left-1/2 w-screen -translate-x-1/2">
-            <div className="container-x">
-              <div className="section-head is-center">
+          <div className="section relative left-1/2 w-screen -translate-x-1/2 overflow-hidden border-y border-stone-200/70 bg-ivory">
+            <div aria-hidden className="pointer-events-none absolute -top-24 right-0 size-96 rounded-full bg-saffron-500/5 blur-3xl" />
+            <div aria-hidden className="pointer-events-none absolute -left-20 top-1/2 size-80 rounded-full bg-leaf-600/5 blur-3xl" />
+            <div className="container-x relative">
+              <Reveal className="section-head is-center relative">
                 <p className="eyebrow justify-center">{x.projectsEyebrow}</p>
                 <h2 className="h-section">{x.projectsHeading(total)}</h2>
                 <p className="lead">{x.projectsIntro}</p>
-              </div>
+              </Reveal>
               {projectCards.length ? (
                 <ProjectsExplorer items={projectCards} categories={projectCategories} labels={x.explorer} locale={locale} />
               ) : (
@@ -123,7 +136,7 @@ export default function FoundationPage() {
 
         {closing.length > 0 && (
           <div className="mt-20 md:mt-28">
-            <PageBlocks blocks={closing} />
+            <PageBlocks blocks={closing} design="stitch" />
           </div>
         )}
       </InnerPage>

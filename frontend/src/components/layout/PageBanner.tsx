@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
-import { useTranslations } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { Img } from '../ui/Img'
 import { ScrollRow } from '../ui/ScrollRow'
@@ -28,13 +27,14 @@ function defaultBanner(path?: string) {
 /**
  * The top of every inner page — one design everywhere (official-site layout):
  * a light band with the page title on the left and a photo on the right that fades into the band,
- * then the section's sibling pages as a white tab bar, then the breadcrumb on its own row.
+ * then the section's sibling pages as a white tab bar (the breadcrumb row was removed, Oct 2026).
  * `light` (articles) leaves the photo out, so long headlines get the full width.
  */
 export function PageBanner({
-  title, subtitle, crumbs = [], image, imagePosition, tabs, tabsLabel, compact, eyebrow, children, path, light,
+  title, subtitle, image, imagePosition, tabs, tabsLabel, compact, eyebrow, children, path, light, variant,
 }: {
-  title: string; eyebrow?: string | null; subtitle?: string | null; crumbs?: Crumb[]; image?: string | null; imagePosition?: string
+  title: string; eyebrow?: string | null; subtitle?: string | null; /** kept so existing pages can still pass it; no longer shown (breadcrumbs removed, Oct 2026) */
+  crumbs?: Crumb[]; image?: string | null; imagePosition?: string
   tabs?: BannerTab[]; tabsLabel?: string
   /** article pages: long headline in a smaller size */
   compact?: boolean
@@ -44,11 +44,14 @@ export function PageBanner({
   path?: string
   /** no photo: full-width title */
   light?: boolean
+  /** Stitch page header (Oct 2026): 'navy' = deep navy band with kesariya & green glows, 'light' = warm ivory band */
+  variant?: 'navy' | 'light'
 }) {
-  const t = useTranslations('common')
   const fallback = defaultBanner(path)
   const photo = light ? null : (image ?? fallback.src)
   const position = image ? imagePosition : fallback.position
+
+  if (variant) return <StitchBanner title={title} subtitle={subtitle} eyebrow={eyebrow} tabs={tabs} tabsLabel={tabsLabel} variant={variant} />
 
   return (
     <>
@@ -116,10 +119,34 @@ export function PageBanner({
               ) : (
                 <span aria-current={i === crumbs.length - 1 ? 'page' : undefined} className="line-clamp-1">{c.label}</span>
               )}
-            </li>
-          ))}
-        </ol>
-      </nav>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* the section's pages as pills under the header (the current page in kesariya) */}
+      {!!tabs?.length && (
+        <nav aria-label={tabsLabel} className="border-b border-saffron-100 bg-white">
+          <div className="container-x">
+            <ul className="no-scrollbar -mx-6 flex gap-2 overflow-x-auto px-6 py-3 md:mx-0 md:px-0">
+              {tabs.map((tab) => (
+                <li key={tab.href} className="shrink-0">
+                  <Link
+                    to={tab.href}
+                    aria-current={tab.active ? 'page' : undefined}
+                    className={cn(
+                      'block rounded-lg px-4 py-2 text-sm font-semibold transition-colors',
+                      tab.active ? 'bg-gradient-to-r from-saffron-600 to-saffron-500 text-white shadow-sm' : 'text-charcoal-900 hover:bg-saffron-50 hover:text-saffron-600',
+                    )}
+                  >
+                    {tab.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </nav>
+      )}
     </>
   )
 }

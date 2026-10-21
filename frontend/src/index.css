@@ -9,51 +9,41 @@
 @font-face { font-family: 'Tiro Devanagari Marathi'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-400-italic.woff2') format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 
 @theme {
-  /* "Fresh saffron" palette (developer CSS variables → site tokens):
-     --color-bg #FFFCF7 → paper · --color-bg-alt #FFF3E6 → cream · --color-surface #FFFFFF → surface
-     --color-heading / --color-dark #14213D → charcoal-900 (headings, dark buttons, stat cards, footer)
-     --color-text #4A5568 → ink · --color-primary #F26B1D → saffron-500/600 (buttons, numbers; white text on it)
-     --color-highlight #FFB070 → highlight · --color-frame #FFC9A3 → frame · --color-border #F1E4D6 → line
-     --color-hero-overlay rgba(20,33,61,.55) → overlay
-     (token names kept so every component follows: "charcoal" = navy) */
-  --color-charcoal-950: #0e1830;
-  --color-charcoal-900: #14213d;  /* headings, dark buttons, stat cards, footer */
-  --color-charcoal-800: #1d2e52;
-  --color-charcoal-700: #2a3f69;
-  --color-charcoal-600: #3a5080;
-  --color-saffron-50: #fff3e6;
-  --color-saffron-100: #ffe6cf;
-  --color-saffron-200: #ffc9a3;   /* photo frame */
-  --color-saffron-300: #ffb070;   /* highlight */
-  --color-saffron-400: #f7883f;
-  --color-saffron-500: #f26b1d;   /* primary */
-  --color-saffron-600: #c9500b;   /* surfaces with white text (buttons, badges), big numbers, icons — white on it is 4.5:1 (WCAG AA) */
-  --color-saffron-700: #b84a0a;   /* small orange text on white and cream (4.8:1), button hover */
-  --color-leaf-50: #ebf5ee;
-  --color-leaf-600: #1f7a3a;      /* tricolour line above the footer; the green of the impact numbers */
-  --color-cream: #fff8f0;         /* alternate section: a light cream (the earlier #fff3e6 read as peach) */
-  --color-paper: #ffffff;         /* page background (clean white, like an official site) */
+  /* Stitch design (Oct 2026, "Rohan Deshmukh Official Portal"): BJP navy · kesariya saffron · tricolour green · warm ivory.
+     Token names are kept ("charcoal" = navy, "saffron" = kesariya, "cream" = sand band) so every page follows the new theme. */
+  --color-charcoal-950: #091422;  /* navy dark: footer, hero gradient top */
+  --color-charcoal-900: #0e1e34;  /* navy: headings, dark buttons, dark bands */
+  --color-charcoal-800: #142540;  /* navy surface */
+  --color-charcoal-700: #1c3150;  /* navy accent */
+  --color-charcoal-600: #2a4266;
+  --color-saffron-50: #fff7ed;
+  --color-saffron-100: #ffedd5;   /* card borders */
+  --color-saffron-200: #fed7aa;
+  --color-saffron-300: #fdba74;   /* highlight on navy */
+  --color-saffron-400: #fb923c;
+  --color-saffron-500: #ff7a00;   /* kesariya */
+  --color-saffron-600: #e65100;   /* kesariya deep: buttons, numbers, eyebrows */
+  --color-saffron-700: #c2410c;   /* small orange text on light backgrounds, hover */
+  --color-saffron-800: #9a3412;
+  --color-leaf-50: #e8f5e9;
+  --color-leaf-200: #86d988;
+  --color-leaf-600: #138808;      /* tricolour green */
+  --color-cream: #f3ede3;         /* sand band (alternate sections) */
+  --color-ivory: #fdfbf7;         /* header */
+  --color-paper: #faf6f0;         /* page background */
   --color-surface: #ffffff;       /* cards */
-  --color-ink: #4a5568;           /* body text */
-  --color-muted: #5c6779;         /* secondary text */
-  --color-line: #f1e4d6;          /* hairlines and dividers between things — never the edge of a control (1.25:1 on white) */
-  --color-field: #8b93a1;         /* the edge of form fields, checkboxes and filter chips: 3.1:1 on white (WCAG 1.4.11) */
-  --color-field-hover: #5c6779;   /* … when pointed at */
-  --color-frame: #ffc9a3;
-  --color-highlight: #ffb070;
-  --color-overlay: rgb(20 33 61 / .55); /* over photos */
-  --color-btn: #c9500b;           /* every button (white text on it: 4.5:1) */
-  --color-btn-hover: #a8430a;
-  --color-btn-active: #8f3a08;    /* while pressed */
+  --color-ink: #374151;           /* body text */
+  --color-muted: #4b5563;         /* secondary text */
+  --color-line: #ffedd5;          /* borders */
+  --color-frame: #fed7aa;
+  --color-highlight: #fdba74;
+  --color-overlay: rgb(9 20 34 / .55);
+  --color-btn: #e65100;
+  --color-btn-hover: #c2410c;
 
-  /* meaning, not decoration: each colour is at least 4.5:1 on white and on its own soft background */
-  --color-success: #1f7a3a;  --color-success-soft: #ebf5ee;
-  --color-warning: #a84a06;  --color-warning-soft: #fdf1df;
-  --color-danger: #b42318;   --color-danger-soft: #fdeceb;
-  --color-info: #1d4ed8;     --color-info-soft: #e8efff;
-
-  --font-display: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
-  --font-sans: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', 'Tiro Devanagari Marathi', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Tiro Devanagari Marathi', system-ui, sans-serif;
+  --font-quote: 'Literata Variable', 'Literata', 'Tiro Devanagari Marathi', Georgia, serif;
 
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   @keyframes fade-up {
@@ -66,11 +56,9 @@
   /* never allow sideways scrolling (clip keeps sticky header working, unlike hidden) */
   html, body { overflow-x: clip; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  /* Tiro has a smaller eye than a sans, so the base is 17px (16px on phones) for comfortable Marathi reading */
-  body { background: #fff; color: var(--color-ink); font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.75; font-kerning: normal; }
-  @media (max-width: 639px) { body { font-size: 1rem; } }
-  /* Tiro comes in one weight; its regular is already sturdy at heading sizes, so headings use it as drawn (no fake bold) */
-  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.3; letter-spacing: 0; text-wrap: balance; }
+  body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); font-size: 1rem; line-height: 1.7; font-kerning: normal; }
+  /* Space Grotesk, bold and slightly tight (Stitch headline scale) */
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.2; letter-spacing: -0.015em; color: var(--color-charcoal-900); text-wrap: balance; }
   p, li { text-wrap: pretty; }
   ::selection { background: var(--color-highlight); color: var(--color-charcoal-900); }
   :focus-visible { outline: 3px solid var(--color-saffron-700); outline-offset: 2px; border-radius: 4px; }
@@ -88,43 +76,40 @@
 }
 
 @layer components {
-  .font-display { font-weight: 400; }
-  .container-x { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
-  /* hero slideshow text: a slide's lines fade in one after another and fade out; nothing travels, so the heading is readable at first paint */
-  /* wide letter-spacing suits Latin capitals but breaks Devanagari conjuncts apart */
-  .hero-kicker { letter-spacing: 0.18em; }
-  :lang(mr) .hero-kicker { letter-spacing: 0.01em; }
-  .hero-line { transition: opacity 0.45s ease; }
-  .hero-line[data-state='in'] { opacity: 1; }
-  .hero-line[data-state='out'] { opacity: 0; transition-duration: 0.2s; transition-delay: 0s !important; }
-  .hero-line[data-state='idle'] { opacity: 0; transition: none; }
-  @media (min-width: 768px) { .container-x { padding-inline: 32px; } }
-
+  .font-display { font-family: var(--font-display); }
+  .font-quote { font-family: var(--font-quote); font-style: italic; font-weight: 400; letter-spacing: 0; }
+  .container-x { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: 24px; }
   /* small label above a heading (like a section mark on an official site) */
-  .eyebrow { display: inline-block; font-size: .95rem; color: var(--color-saffron-700); letter-spacing: .02em; }
-  .on-dark .eyebrow { color: var(--color-highlight); }
+  /* Stitch eyebrow: small bold capitals in deep kesariya, with a short pill-shaped bar before it */
+  .eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .75rem; line-height: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--color-saffron-600); }
+  .eyebrow::before { content: ''; width: .625rem; height: .25rem; border-radius: 9999px; background: var(--color-saffron-500); }
+  .on-dark .eyebrow { color: var(--color-saffron-200); }
 
   /* section title with a short saffron bar under it — the one heading style used on every section */
-  .h-section { position: relative; font-size: clamp(1.8rem, 1.35rem + 1.8vw, 2.6rem); line-height: 1.25; color: var(--color-charcoal-900); margin-top: .35rem; padding-bottom: 1rem; }
-  .h-section::after { content: ''; position: absolute; left: 0; bottom: 0; width: 3rem; height: 3px; border-radius: 2px; background: var(--color-saffron-500); }
-  .is-center .h-section::after, .h-section.is-center::after { left: 50%; transform: translateX(-50%); }
+  /* section title (Stitch: Space Grotesk bold, 30 → 36px, navy, no underline) */
+  .h-section { font-size: 1.875rem; line-height: 2.25rem; font-weight: 700; letter-spacing: -0.02em; color: var(--color-charcoal-900); margin-top: .25rem; }
+  @media (min-width: 640px) { .h-section { font-size: 2.25rem; line-height: 2.6rem; } }
   .on-dark .h-section { color: #fff; }
 
   /* Buttons (Oct 2026): every button on the site is the dark saffron --color-btn (#c9500b) with white text (4.5:1) and a softly rounded 12px corner;
      it darkens on hover and once more while pressed. The bright #F26B1D is kept for lines, dots and glows only.
      The variant names (primary / dark / light / ghost) are kept so no component had to change its markup. */
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.875rem; border-radius: .75rem; padding: .65rem 1.5rem; font-weight: 600; font-size: 1rem; line-height: 1.3; background: var(--color-btn); color: #fff; transition: background .2s, transform .2s, box-shadow .2s; white-space: nowrap; }
-  .btn:hover { background: var(--color-btn-hover); }
-  .btn:active { background: var(--color-btn-active); transform: translateY(1px); }
+  /* Stitch buttons: 48px tall, 12px corners, bold small text. Primary = kesariya gradient, dark = navy, ghost = white outline card */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3rem; border-radius: .75rem; padding: .75rem 1.75rem; font-weight: 700; font-size: .875rem; line-height: 1.25rem; color: #fff; background-image: linear-gradient(to right, var(--color-saffron-600), var(--color-saffron-500), #f97316); box-shadow: 0 10px 15px -3px rgb(255 122 0 / .3), 0 4px 6px -4px rgb(255 122 0 / .3); transition: background .2s, transform .15s, box-shadow .2s, filter .2s; white-space: nowrap; }
+  .btn:hover { filter: brightness(.94); box-shadow: 0 20px 25px -5px rgb(255 122 0 / .4), 0 8px 10px -6px rgb(255 122 0 / .4); }
+  .btn:active { transform: scale(.98); }
   .btn svg { transition: transform .2s; }
   .btn:hover svg.lucide-arrow-right { transform: translateX(3px); }
-  .btn-primary, .btn-dark, .btn-light, .btn-ghost { background: var(--color-btn); color: #fff; }
-  .btn-primary:hover, .btn-dark:hover, .btn-light:hover, .btn-ghost:hover { background: var(--color-btn-hover); }
-  .btn-primary:active, .btn-dark:active, .btn-light:active, .btn-ghost:active { background: var(--color-btn-active); }
+  .btn-dark { background: var(--color-charcoal-950); background-image: none; box-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1); }
+  .btn-dark:hover { background: var(--color-charcoal-900); filter: none; box-shadow: 0 10px 15px -3px rgb(0 0 0 / .12); }
+  .btn-dark svg { color: var(--color-saffron-500); }
+  .btn-ghost, .btn-light { background: #fff; background-image: none; color: var(--color-charcoal-950); box-shadow: inset 0 0 0 1px var(--color-saffron-200), 0 1px 2px rgb(0 0 0 / .05); }
+  .btn-ghost:hover, .btn-light:hover { filter: none; box-shadow: inset 0 0 0 1px var(--color-saffron-500), 0 1px 2px rgb(0 0 0 / .05); }
+  .btn-ghost svg, .btn-light svg { color: var(--color-saffron-600); }
   /* on an orange band a button keeps a white outline so it stays visible */
   .on-saffron .btn { box-shadow: inset 0 0 0 2px #fff; }
   /* icon-only buttons (slider arrows, pagination arrows, back to top) */
-  .btn-icon { display: grid; place-items: center; border-radius: .75rem; background: var(--color-btn); color: #fff; transition: background .2s, opacity .2s; }
+  .btn-icon { display: grid; place-items: center; border-radius: .75rem; background: var(--color-charcoal-900); color: #fff; transition: background .2s, opacity .2s; }
   .btn-icon:hover { background: var(--color-btn-hover); }
   .btn-icon:active { background: var(--color-btn-active); }
   /* a second button on a photo or on navy: white text, a clear white outline, no fill (declared after .btn so it wins) */
@@ -132,54 +117,56 @@
   .btn.btn-outline-light:hover { background: rgb(255 255 255 / .16); }
   .btn.btn-outline-light:active { background: rgb(255 255 255 / .26); }
 
-  .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: .625rem; overflow: hidden; }
-  .card-hover { transition: transform .25s, box-shadow .25s; }
-  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -22px rgb(20 33 61 / .22); }
+  /* Stitch card: white, 16px corners, kesariya-100 hairline, soft shadow that grows on hover */
+  .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 1rem; overflow: hidden; box-shadow: 0 1px 2px rgb(0 0 0 / .05); }
+  .card-hover { transition: transform .25s, box-shadow .25s, border-color .25s; }
+  .card-hover:hover { transform: translateY(-3px); border-color: var(--color-saffron-500); box-shadow: 0 10px 15px -3px rgb(14 30 52 / .1), 0 4px 6px -4px rgb(14 30 52 / .1); }
 
   /* ---------- page rhythm: every section breathes the same amount ---------- */
-  .section { padding-block: 4rem; }
-  .section-tight { padding-block: 3rem; }
-  @media (min-width: 768px) { .section { padding-block: 5.5rem; } .section-tight { padding-block: 4rem; } }
+  .section { padding-block: 5rem; }
+  .section-tight { padding-block: 3.5rem; }
+  @media (min-width: 1024px) { .section { padding-block: 7rem; } .section-tight { padding-block: 4.5rem; } }
   .band-cream { background: var(--color-cream); }
   .band-white { background: var(--color-surface); }
-  .band-navy { background: var(--color-charcoal-900); color: #fff; }
-  /* two neighbouring sections on the same background: a hairline marks where one story ends */
-  .section:not([class*='band-']) + .section:not([class*='band-']),
-  .section.band-cream + .section.band-cream { border-top: 1px solid var(--color-line); }
+  .band-cream { border-block: 1px solid var(--color-line); }
+  .band-navy { background-image: linear-gradient(to bottom, var(--color-charcoal-950), var(--color-charcoal-900)); color: #fff; border-top: 4px solid var(--color-saffron-500); }
+  /* soft kesariya and green glows on navy bands (decorative, behind the content) */
+  .glow-tl, .glow-br { position: absolute; width: 24rem; height: 24rem; border-radius: 9999px; filter: blur(64px); pointer-events: none; }
+  .glow-tl { top: -8rem; right: -8rem; background: rgb(255 122 0 / .18); }
+  .glow-br { bottom: 0; left: 2.5rem; background: rgb(19 136 8 / .13); }
 
   /* section heading: eyebrow → title → short intro; centred variant for list/grid sections */
-  .section-head { max-width: 46rem; margin-bottom: 2.5rem; }
-  @media (min-width: 768px) { .section-head { margin-bottom: 3rem; } }
+  .section-head { max-width: 48rem; margin-bottom: 3rem; }
+  @media (min-width: 768px) { .section-head { margin-bottom: 3.5rem; } }
   .section-head.is-center { margin-inline: auto; text-align: center; }
-  .section-head .lead { margin-top: 1.1rem; }
+  .section-head .lead { margin-top: .75rem; }
   /* heading on the left, "View all →" on the right */
   .section-head-row { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
   .section-head-row .section-head { margin-bottom: 0; }
-  @media (min-width: 768px) { .section-head-row { flex-direction: row; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; } }
-  .lead { font-size: 1.1rem; line-height: 1.75; color: var(--color-muted); }
-  @media (min-width: 768px) { .lead { font-size: 1.18rem; } }
+  @media (min-width: 768px) { .section-head-row { flex-direction: row; align-items: flex-end; justify-content: space-between; margin-bottom: 3.5rem; } }
+  .lead { font-size: 1rem; line-height: 1.7; color: var(--color-ink); }
   .on-dark .lead { color: rgb(255 255 255 / .75); }
 
   /* ---------- open "story" tiles: photo + text on the page itself, no box around them ---------- */
   .tile { position: relative; display: flex; flex-direction: column; }
-  .tile-media { position: relative; overflow: hidden; border-radius: .625rem; background: var(--color-saffron-100); isolation: isolate; }
+  .tile-media { position: relative; overflow: hidden; border-radius: 1rem; background: var(--color-saffron-100); isolation: isolate; }
   .tile-media img { transition: transform .7s cubic-bezier(0.2, 0.7, 0.2, 1); }
   .tile:hover .tile-media img { transform: scale(1.045); }
   .tile-body { display: flex; flex: 1; flex-direction: column; padding-top: 1.15rem; }
-  .tile-kicker { font-size: .88rem; color: var(--color-saffron-700); letter-spacing: .01em; }
-  .tile-title { color: var(--color-charcoal-900); font-size: 1.3rem; line-height: 1.4; transition: color .2s; }
+  .tile-kicker { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--color-saffron-600); }
+  .tile-title { font-family: var(--font-display); font-weight: 700; color: var(--color-charcoal-900); font-size: 1.125rem; line-height: 1.4; transition: color .2s; }
   .tile:hover .tile-title { color: var(--color-saffron-700); }
-  .tile-text { margin-top: .5rem; color: var(--color-muted); font-size: 1rem; line-height: 1.7; }
+  .tile-text { margin-top: .5rem; color: var(--color-muted); font-size: .9375rem; line-height: 1.65; }
   .on-dark .tile-title { color: #fff; }
   .on-dark .tile:hover .tile-title { color: var(--color-highlight); }
   .on-dark .tile-text { color: rgb(255 255 255 / .7); }
 
   /* text link with an arrow that nudges on hover */
-  .more-link { display: inline-flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--color-charcoal-900); transition: color .2s, gap .2s; }
-  .more-link:hover, .tile:hover .more-link { gap: .8rem; color: var(--color-saffron-700); }
+  .more-link { display: inline-flex; align-items: center; gap: .3rem; font-family: var(--font-display); font-size: .875rem; font-weight: 700; color: var(--color-saffron-600); transition: color .2s, gap .2s; }
+  .more-link:hover, .tile:hover .more-link { gap: .55rem; color: var(--color-saffron-700); }
   /* phones: a taller tap area for text links, without changing the layout */
-  @media (max-width: 1023px) { .more-link { padding-block: .75rem; margin-block: -.75rem; } }
-  .on-dark .more-link { color: var(--color-highlight); }
+  @media (max-width: 1023px) { .more-link { padding-block: .6rem; margin-block: -.6rem; } }
+  .on-dark .more-link { color: var(--color-saffron-300); }
   .on-dark .more-link:hover, .on-dark .tile:hover .more-link { color: #fff; }
 
   /* a small text link keeps its looks and gets a 44px-high touch area: padding that its negative margin takes back */
@@ -199,10 +186,10 @@
   /* big numbers sitting on the page (no tiles), separated by thin rules */
   .stat-row { display: grid; gap: 2rem 1.5rem; }
   .stat-item { border-left: 2px solid var(--color-saffron-500); padding-left: 1.1rem; }
-  .stat-value { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.1rem, 1.7rem + 1.4vw, 2.9rem); line-height: 1.1; color: var(--color-success); font-variant-numeric: lining-nums; }
+  .stat-value { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.875rem, 1.6rem + 1vw, 2.25rem); line-height: 1.1; color: var(--color-charcoal-900); font-variant-numeric: tabular-nums; }
   /* a soft, slightly raised card — used only for key numbers */
   /* key numbers on a navy card (palette: "dark button, stat card") */
-  .stat-card { border-radius: .625rem; background: var(--color-charcoal-900); color: #fff; padding: 1.35rem 1.25rem 1.25rem; box-shadow: 0 18px 40px -28px rgb(20 33 61 / .6); transition: transform .3s, box-shadow .3s; }
+  .stat-card { border-radius: 1rem; background: var(--color-charcoal-900); color: #fff; padding: 1.35rem 1.25rem 1.25rem; box-shadow: 0 18px 40px -28px rgb(14 30 52 / .6); transition: transform .3s, box-shadow .3s; }
   .stat-card:hover { transform: translateY(-2px); box-shadow: 0 24px 46px -26px rgb(20 33 61 / .65); }
   .stat-card .stat-value { color: #7ddc9a; }
   .stat-card .stat-label { color: rgb(255 255 255 / .75); }
@@ -216,7 +203,7 @@
   .photo-backdrop::before { content: ''; position: absolute; z-index: -1; inset: 1.5rem -1.25rem -1.25rem 1.5rem; border-radius: 2rem; }
   @media (min-width: 768px) { .photo-backdrop::before { inset: 2rem -1.75rem -1.75rem 2rem; } }
 
-  .prose-rd { font-size: 1.1rem; line-height: 1.85; color: var(--color-ink); }
+  .prose-rd { font-size: 1.0625rem; line-height: 1.8; color: var(--color-ink); }
   .prose-rd > * + * { margin-top: 1.05em; }
   .prose-rd h2 { font-size: 1.75rem; line-height: 1.3; color: var(--color-charcoal-900); margin-top: 1.7em; }
   .prose-rd h3 { font-size: 1.4rem; line-height: 1.35; color: var(--color-charcoal-900); margin-top: 1.5em; }
@@ -225,10 +212,10 @@
   .prose-rd ul { list-style: disc; padding-left: 1.4em; }
   .prose-rd ol { list-style: decimal; padding-left: 1.4em; }
   .prose-rd li + li { margin-top: .35em; }
-  .prose-rd blockquote { border-left: 3px solid var(--color-saffron-500); padding: .2em 0 .2em 1.2em; font-family: var(--font-display); font-style: italic; font-size: 1.35rem; line-height: 1.6; color: var(--color-charcoal-900); }
-  .prose-rd img { border-radius: 10px; }
+  .prose-rd blockquote { border-left: 4px solid var(--color-saffron-500); padding: .2em 0 .2em 1.2em; font-family: var(--font-quote); font-style: italic; font-size: 1.3rem; line-height: 1.6; color: var(--color-charcoal-900); }
+  .prose-rd img { border-radius: 1rem; }
   /* article page (newspaper style): saffron bar on sub-headings */
-  .article-body .prose-rd { font-size: 1.1rem; line-height: 1.85; }
+  .article-body .prose-rd { font-size: 1.0625rem; line-height: 1.8; }
   @media (max-width: 639px) { .article-body .prose-rd { font-size: 1.02rem; line-height: 1.8; } }
   .article-body .prose-rd h2 { font-size: 1.45em; border-left: 4px solid var(--color-saffron-500); padding-left: .7em; line-height: 1.35; }
   .article-body .prose-rd h3 { font-size: 1.2em; border-left: 3px solid var(--color-saffron-300); padding-left: .7em; }
@@ -238,21 +225,9 @@
     body { background: #fff !important; }
     .article-body .prose-rd { font-size: 12pt; }
   }
-  .prose-rd strong { color: var(--color-charcoal-900); font-weight: 600; }
+  .prose-rd strong { color: var(--color-charcoal-900); font-weight: 700; }
 
-  /* ---------- scroll reveal: pure CSS (scroll-driven animation), so the HTML is never changed after load and
-     React hydration always matches. Browsers without support, and visitors who ask for reduced motion, just see the page. ---------- */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      :is(.section-head, .section-head-row, .tile, [data-reveal], [data-reveal-stagger] > *) {
-        animation: rv-rise linear both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 90%;
-      }
-      [data-reveal-stagger] > :nth-child(3n+2) { animation-range: entry 8% entry 100%; }
-      [data-reveal-stagger] > :nth-child(3n+3) { animation-range: entry 16% cover 30%; }
-    }
-  }
+  /* scroll reveal: Framer Motion (components/ui/Motion.tsx) */
 
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { scrollbar-width: none; }
@@ -262,7 +237,6 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 }
 
-@keyframes rv-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
 
 /* less motion: the entrance that rises 14px becomes a plain fade (the same timing, no movement). It switches the animation to another
    keyframes name instead of redefining `fade-up`: Tailwind writes the theme's own keyframes after everything else, so a redefinition would lose. */

@@ -15,8 +15,9 @@ describe('the bundled website content', () => {
   after(() => srv.stop())
 
   it('loads completely: every document, with the same ids as the old site', async () => {
-    assert.equal(stats.documents, 235)
-    assert.equal(stats.media, 171)
+    // 235 documents / 171 photos from the old site, plus the three homepage cover photos (Oct 2026)
+    assert.equal(stats.documents, 238)
+    assert.equal(stats.media, 174)
     assert.equal(stats.globals, 5)
     assert.deepEqual(stats.problems, [])
     const post = (await srv.client().get('/api/posts/1?locale=en')).data

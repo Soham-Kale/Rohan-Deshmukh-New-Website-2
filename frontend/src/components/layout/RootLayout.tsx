@@ -26,7 +26,7 @@ function TopLoader() {
       {show && (
         <m.div
           aria-hidden
-          className="fixed inset-x-0 top-0 z-[90] h-[3px] origin-left bg-saffron-500 shadow-[0_0_10px_#f26b1d,0_0_5px_#f26b1d]"
+          className="fixed inset-x-0 top-0 z-[90] h-[3px] origin-left bg-saffron-500 shadow-[0_0_10px_#FF7A00,0_0_5px_#FF7A00]"
           initial={{ scaleX: 0, opacity: 1 }}
           animate={{ scaleX: 0.85, transition: { duration: 6, ease: 'easeOut' } }}
           exit={{ scaleX: 1, opacity: 0, transition: { duration: 0.35 } }}

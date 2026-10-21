@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { Reveal } from './Motion'
 
 type Props = {
   eyebrow?: string | null
@@ -19,11 +20,11 @@ type Props = {
 export function SectionHead({ eyebrow, heading, intro, center, className, as: Tag = 'h2' }: { eyebrow?: string | null; heading?: string | null; intro?: string | null; center?: boolean; className?: string; as?: 'h2' | 'h3' }) {
   if (!eyebrow && !heading && !intro) return null
   return (
-    <div className={cn('section-head', center && 'is-center', className)}>
+    <Reveal className={cn('section-head', center && 'is-center', className)}>
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       {heading && <Tag className="h-section">{heading}</Tag>}
       {intro && <p className="lead">{intro}</p>}
-    </div>
+    </Reveal>
   )
 }
 

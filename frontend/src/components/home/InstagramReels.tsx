@@ -34,10 +34,10 @@ function ReelCard({ reel }: { reel: Reel }) {
   }, [])
 
   return (
-    <div ref={ref} className="relative h-[640px] overflow-hidden rounded-2xl border border-line bg-white shadow-[0_6px_18px_rgb(20_33_61/0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgb(20_33_61/0.4)]">
+    <div ref={ref} className="relative h-[640px] overflow-hidden rounded-2xl border border-saffron-100 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
       {/* placeholder (also what shows if Instagram is blocked): a link to the reel */}
       <a href={reel.url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-cream p-6 text-center text-charcoal-900">
-        <SocialIcon name="instagram" className="size-10 animate-pulse text-saffron-500" />
+        <SocialIcon name="instagram" className="size-10 animate-pulse text-saffron-600" />
         {reel.title && <span className="text-[0.98rem] leading-snug">{reel.title}</span>}
       </a>
       {show && src && (
@@ -58,9 +58,9 @@ function ReelCard({ reel }: { reel: Reel }) {
 /** reels side by side on wide screens; a swipeable row (one and a bit visible) on phones and tablets */
 export function InstagramReels({ reels }: { reels: Reel[] }) {
   return (
-    <div data-reveal className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 py-2 lg:mx-0 lg:grid lg:snap-none lg:grid-cols-3 lg:overflow-visible lg:px-0">
+    <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 py-2 md:mx-0 md:grid md:snap-none md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0">
       {reels.map((r) => (
-        <div key={r.url} className="w-[min(22rem,calc(100vw-3rem))] shrink-0 snap-center lg:w-auto">
+        <div key={r.url} className="w-[min(22rem,calc(100vw-3rem))] shrink-0 snap-center md:w-auto">
           <ReelCard reel={r} />
         </div>
       ))}

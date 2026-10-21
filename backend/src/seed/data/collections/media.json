@@ -3589,5 +3589,68 @@
   "folder": null,
   "createdAt": "2026-10-19T10:08:44.985Z",
   "updatedAt": "2026-10-19T10:08:44.985Z"
+ },
+ {
+  "id": 172,
+  "alt": {
+   "en": null,
+   "mr": "रोहन सुभाष देशमुख — नमस्कार"
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "hero-greeting.webp",
+  "mimeType": "image/webp",
+  "filesize": 110844,
+  "width": 1152,
+  "height": 922,
+  "focalX": 50,
+  "focalY": 50,
+  "folder": null,
+  "createdAt": "2026-10-19T12:00:00.000Z",
+  "updatedAt": "2026-10-19T12:00:00.000Z"
+ },
+ {
+  "id": 173,
+  "alt": {
+   "en": null,
+   "mr": "रोहन सुभाष देशमुख — भाषण, सोलापूर"
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "hero-speech.webp",
+  "mimeType": "image/webp",
+  "filesize": 101546,
+  "width": 1536,
+  "height": 1024,
+  "focalX": 50,
+  "focalY": 50,
+  "folder": null,
+  "createdAt": "2026-10-19T12:00:00.000Z",
+  "updatedAt": "2026-10-19T12:00:00.000Z"
+ },
+ {
+  "id": 174,
+  "alt": {
+   "en": null,
+   "mr": "रोहन सुभाष देशमुख — कार्यकर्त्यांशी संवाद"
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "hero-rally.webp",
+  "mimeType": "image/webp",
+  "filesize": 238356,
+  "width": 1600,
+  "height": 1067,
+  "focalX": 50,
+  "focalY": 50,
+  "folder": null,
+  "createdAt": "2026-10-19T12:00:00.000Z",
+  "updatedAt": "2026-10-19T12:00:00.000Z"
  }
 ]
