@@ -82,7 +82,7 @@ export function Account() {
               <input value={user.email} readOnly className={inputClass} />
             </Row>
             <p className="text-[0.88rem] text-charcoal-800/70">{ROLES[user.role] ?? user.role}</p>
-            {nameError && <p className="rounded-lg bg-red-50 px-3 py-2 text-[0.88rem] text-red-700" role="alert">{nameError}</p>}
+            {nameError && <p className="rounded-lg bg-danger-soft px-3 py-2 text-[0.88rem] text-danger" role="alert">{nameError}</p>}
             <Button type="submit" variant="primary" loading={savingName} disabled={name.trim() === (user.name ?? '')}>Save name</Button>
           </form>
         </Card>
@@ -99,7 +99,7 @@ export function Account() {
             <Row label="New password again">
               <input type="password" value={again} onChange={(e) => setAgain(e.target.value)} autoComplete="new-password" className={inputClass} />
             </Row>
-            {passwordError && <p className="rounded-lg bg-red-50 px-3 py-2 text-[0.88rem] text-red-700" role="alert">{passwordError}</p>}
+            {passwordError && <p className="rounded-lg bg-danger-soft px-3 py-2 text-[0.88rem] text-danger" role="alert">{passwordError}</p>}
             <Button type="submit" variant="primary" loading={savingPassword} disabled={!current || !next}>Change password</Button>
           </form>
         </Card>

@@ -66,7 +66,7 @@ export function LoginView() {
         {params.get('expired') && !error && <p className="rounded-lg bg-saffron-50 px-3 py-2 text-[0.88rem] text-saffron-700" role="status">Your session ended. Please sign in again.</p>}
         <Field label="Email"><input type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} autoFocus /></Field>
         <Field label="Password"><input type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} /></Field>
-        {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-[0.88rem] text-red-700" role="alert">{error}</p>}
+        {error && <p className="rounded-lg bg-danger-soft px-3 py-2 text-[0.88rem] text-danger" role="alert">{error}</p>}
         <Button type="submit" variant="primary" loading={busy} className="w-full">Sign in</Button>
         <p className="text-center text-[0.88rem]"><Link to="/admin/forgot-password" className="text-charcoal-800 underline underline-offset-4 hover:text-saffron-700">Forgot password?</Link></p>
       </form>
@@ -97,7 +97,7 @@ export function ForgotPasswordView() {
       ) : (
         <form onSubmit={submit} className="space-y-4" noValidate>
           <Field label="Email"><input type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} autoFocus /></Field>
-          {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-[0.88rem] text-red-700" role="alert">{error}</p>}
+          {error && <p className="rounded-lg bg-danger-soft px-3 py-2 text-[0.88rem] text-danger" role="alert">{error}</p>}
           <Button type="submit" variant="primary" loading={busy} className="w-full">Send the link</Button>
         </form>
       )}
@@ -132,12 +132,12 @@ export function ResetPasswordView() {
   return (
     <Frame title="Choose a new password" intro="Use at least 8 characters.">
       {!token ? (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-[0.88rem] text-red-700" role="alert">This link is not complete. Ask for a new one.</p>
+        <p className="rounded-lg bg-danger-soft px-3 py-2 text-[0.88rem] text-danger" role="alert">This link is not complete. Ask for a new one.</p>
       ) : (
         <form onSubmit={submit} className="space-y-4" noValidate>
           <Field label="New password"><input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} autoFocus /></Field>
           <Field label="New password again"><input type="password" autoComplete="new-password" value={again} onChange={(e) => setAgain(e.target.value)} className={inputClass} /></Field>
-          {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-[0.88rem] text-red-700" role="alert">{error}</p>}
+          {error && <p className="rounded-lg bg-danger-soft px-3 py-2 text-[0.88rem] text-danger" role="alert">{error}</p>}
           <Button type="submit" variant="primary" loading={busy} className="w-full">Save the password</Button>
         </form>
       )}

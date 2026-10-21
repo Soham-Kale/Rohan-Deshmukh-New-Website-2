@@ -97,7 +97,7 @@ export default function PostPage() {
       <div className="container-x pb-20 pt-10 md:pb-24 md:pt-12">
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:gap-20">
           <article className="min-w-0 max-w-3xl">
-            <Link to="/blog" className="no-print inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:gap-3 hover:text-charcoal-900">
+            <Link to="/blog" className="no-print tap-pad inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:gap-3 hover:text-charcoal-900">
               <ArrowLeft className="size-4" /> {tb('back')}
             </Link>
 
@@ -132,8 +132,8 @@ export default function PostPage() {
 
             {(!!tags.length || !!post.categories?.length) && (
               <div className="no-print mt-12 flex flex-wrap gap-2 border-t border-line pt-7">
-                {post.categories?.map((c) => typeof c === 'object' && <Link key={c.id} to={`/blog?category=${c.slug}`} className="rounded-full bg-charcoal-900 px-3 py-1 text-sm text-white">{c.title}</Link>)}
-                {tags.map((tag) => <Link key={tag} to={`/blog?tag=${encodeURIComponent(tag)}`} className="rounded-full bg-white px-3 py-1 text-sm text-saffron-700 ring-1 ring-line transition hover:ring-saffron-400">#{tag}</Link>)}
+                {post.categories?.map((c) => typeof c === 'object' && <Link key={c.id} to={`/blog?category=${c.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-charcoal-900 px-4 py-1 text-sm text-white">{c.title}</Link>)}
+                {tags.map((tag) => <Link key={tag} to={`/blog?tag=${encodeURIComponent(tag)}`} className="inline-flex min-h-11 items-center rounded-full bg-white px-4 py-1 text-sm text-saffron-700 ring-1 ring-field transition hover:ring-field-hover">#{tag}</Link>)}
               </div>
             )}
             <div className="no-print mt-8 border-t border-line pt-7"><Share url={url} title={post.title} label={tc('share')} /></div>
@@ -170,7 +170,7 @@ function KeyPoints({ headings, title, num }: { headings: { id: string; text: str
         {headings.map((h, i) => (
           <li key={h.id}>
             <a href={`#${h.id}`} className="flex gap-3 py-3 text-[0.97rem] leading-snug text-ink transition hover:text-saffron-700">
-              <span className="font-display text-saffron-500">{num(i + 1)}</span>
+              <span className="font-display text-saffron-700">{num(i + 1)}</span>
               {h.text}
             </a>
           </li>

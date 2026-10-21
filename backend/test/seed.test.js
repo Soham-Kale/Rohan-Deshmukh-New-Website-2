@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { after, before, describe, it } from 'node:test'
 import { clearContent, ensureAdmin, isEmpty, loadSnapshot, readSnapshot, resetAdmin } from '../src/seed/load.js'
-import { startServer } from './helpers.js'
+import { signedIn, startServer } from './helpers.js'
 
 describe('the bundled website content', () => {
   let srv
@@ -36,6 +36,24 @@ describe('the bundled website content', () => {
     assert.match(hero.slides[0].image.url, /^\/uploads\/.+\.webp$/)
     assert.ok(existsSync(path.join(srv.dir, 'uploads', hero.slides[0].image.filename)))
     assert.equal(home.sections.find((s) => s.blockType === 'family').hidden, true)
+  })
+
+  it('the hero shows a photo of Rohan with "Get in touch" as the main button (the hero style can be switched to text only)', async () => {
+    const home = (await srv.client().get('/api/globals/home?depth=2&locale=en')).data
+    const hero = home.sections[0]
+    assert.equal(hero.heroStyle, 'photo')
+    for (const photo of [hero.photo, hero.photoMobile]) {
+      assert.match(photo.url, /^\/uploads\/.+\.webp$/)
+      assert.ok(existsSync(path.join(srv.dir, 'uploads', photo.filename)))
+    }
+    assert.ok(hero.photo.focalX > 50, 'the wide photo keeps Rohan (on the right) in view')
+    assert.equal(hero.slides[0].buttons[0].url, '/contact')
+    // the style is a real choice: anything but photo / text is refused
+    const admin = await signedIn(srv)
+    const raw = (await admin.get('/api/globals/home?depth=0&locale=all')).data
+    const bad = await admin.post('/api/globals/home', { json: { sections: raw.sections.map((s) => (s.blockType === 'heroSlider' ? { ...s, heroStyle: 'video' } : s)) } })
+    assert.equal(bad.status, 400)
+    assert.match(JSON.stringify(bad.data), /listed options/)
   })
 
   it('the menu, footer and settings came across', async () => {

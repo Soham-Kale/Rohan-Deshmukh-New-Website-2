@@ -92,7 +92,7 @@ export function SelectControl({ field, name, id }: ControlProps) {
               aria-pressed={on}
               disabled={field.admin?.readOnly}
               onClick={() => setValue(on ? chosen.filter((v) => v !== o.value) : [...chosen, o.value])}
-              className={cn('rounded-full px-3 py-1 text-[0.85rem] font-medium ring-1 transition', on ? 'bg-charcoal-900 text-white ring-charcoal-900' : 'bg-white text-charcoal-800 ring-charcoal-900/20 hover:bg-cream')}
+              className={cn('rounded-full px-3 py-1 text-[0.85rem] font-medium ring-1 transition', on ? 'bg-charcoal-900 text-white ring-charcoal-900' : 'bg-white text-charcoal-800 ring-field hover:bg-cream hover:ring-field-hover')}
             >
               {o.label}
             </button>
@@ -157,7 +157,7 @@ export function TagsControl({ name, id }: ControlProps) {
     } else if (e.key === 'Backspace' && !draft && tags.length) setValue(tags.slice(0, -1))
   }
   return (
-    <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-charcoal-900/20 bg-white p-1.5 focus-within:border-saffron-500 focus-within:ring-4 focus-within:ring-saffron-100">
+    <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-field bg-white p-1.5 focus-within:border-saffron-700 focus-within:ring-2 focus-within:ring-saffron-700">
       {tags.map((t) => (
         <span key={t} className="inline-flex items-center gap-1 rounded-full bg-charcoal-900/[0.07] py-0.5 pl-2.5 pr-1 text-[0.85rem]">
           {t}

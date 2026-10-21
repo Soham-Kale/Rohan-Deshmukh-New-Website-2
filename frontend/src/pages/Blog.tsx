@@ -9,6 +9,7 @@ import { QuickShare } from '@/components/blog/QuickShare'
 import { PageBanner } from '@/components/layout/PageBanner'
 import { Seo } from '@/components/layout/Seo'
 import { Pagination } from '@/components/ui/Pagination'
+import { ScrollRow } from '@/components/ui/ScrollRow'
 import { searchOf } from './helpers'
 
 const PER_PAGE = 10
@@ -74,19 +75,20 @@ export default function BlogPage() {
           <div className="flex flex-col gap-3 py-3 md:flex-row md:items-center md:gap-6">
             <div className="flex min-w-0 flex-1 items-center gap-3">
               <span className="hidden shrink-0 items-center gap-1.5 text-sm text-muted sm:inline-flex"><SlidersHorizontal className="size-4" /> {t('sections')}:</span>
-              <div className="no-scrollbar -mx-1 flex min-w-0 gap-2 overflow-x-auto px-1">
+              {/* padding keeps the focus ring from being clipped by the scrolling row */}
+              <ScrollRow className="-mx-1 -my-1.5 flex min-w-0 gap-2 px-1 py-1.5">
                 {[{ slug: '', title: tc('all') }, ...cats].map((c) => {
                   const on = (category ?? '') === c.slug && !tag && !q
                   return (
                     <Link key={c.slug || 'all'} to={c.slug ? `/blog?category=${c.slug}` : '/blog'} aria-current={on ? 'true' : undefined}
-                      className={cn('inline-flex min-h-10 shrink-0 items-center rounded-xl px-4 py-1.5 text-sm font-medium transition', on ? 'bg-btn text-white' : 'text-charcoal-800 hover:bg-cream')}>
+                      className={cn('inline-flex min-h-11 shrink-0 items-center rounded-xl px-4 py-1.5 text-sm font-medium transition', on ? 'bg-btn text-white' : 'text-charcoal-800 hover:bg-cream')}>
                       {c.title}
                     </Link>
                   )
                 })}
-              </div>
+              </ScrollRow>
             </div>
-            <Form action="/blog" method="get" className="flex h-10 items-center gap-2 rounded-full bg-white px-4 ring-1 ring-charcoal-900/10 transition focus-within:ring-2 focus-within:ring-saffron-400 md:w-80" role="search">
+            <Form action="/blog" method="get" className="flex h-11 items-center gap-2 rounded-full bg-white px-4 ring-1 ring-field transition focus-within:ring-2 focus-within:ring-saffron-700 md:w-80" role="search">
               <Search className="size-4 shrink-0 text-muted" />
               <input name="q" defaultValue={q ?? ''} key={q ?? ''} placeholder={t('searchPlaceholder')} className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none" aria-label={t('searchPlaceholder')} />
             </Form>

@@ -11,7 +11,7 @@ const VARIANTS: Record<Variant, string> = {
   primary: 'bg-saffron-600 text-white hover:bg-saffron-700 disabled:bg-saffron-300',
   secondary: 'bg-white text-charcoal-900 ring-1 ring-charcoal-900/15 hover:bg-cream disabled:text-charcoal-900/60',
   ghost: 'text-charcoal-800 hover:bg-charcoal-900/[0.06] disabled:text-charcoal-900/60',
-  danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300',
+  danger: 'bg-danger text-white hover:brightness-90 disabled:opacity-60',
 }
 
 export function Button({ variant = 'secondary', size = 'md', loading, className, children, disabled, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: 'sm' | 'md'; loading?: boolean }) {
@@ -43,7 +43,7 @@ export function IconButton({ label, className, children, ...rest }: ButtonHTMLAt
 
 /* ---------------------------------------------------------------- pieces */
 
-export const inputClass = 'w-full rounded-lg border border-charcoal-900/20 bg-white px-3 py-2 text-[0.92rem] text-charcoal-900 outline-none transition placeholder:text-charcoal-900/50 focus:border-saffron-500 focus:ring-4 focus:ring-saffron-100 disabled:bg-charcoal-900/[0.04] read-only:bg-charcoal-900/[0.04]'
+export const inputClass = 'w-full rounded-lg border border-field bg-white px-3 py-2 text-[0.92rem] text-charcoal-900 outline-none transition placeholder:text-charcoal-900/50 hover:border-field-hover focus:border-saffron-700 focus:ring-2 focus:ring-saffron-700 disabled:bg-charcoal-900/[0.04] read-only:bg-charcoal-900/[0.04]'
 
 export function Spinner({ label = 'Loading…' }: { label?: string }) {
   return (
@@ -59,14 +59,14 @@ export function Card({ className, children }: { className?: string; children: Re
 }
 
 const PILL: Record<string, string> = {
-  published: 'bg-leaf-50 text-leaf-600',
-  scheduled: 'bg-blue-50 text-blue-700',
-  draft: 'bg-charcoal-900/[0.07] text-charcoal-800',
+  published: 'bg-success-soft text-success',
+  scheduled: 'bg-info-soft text-info',
+  draft: 'bg-warning-soft text-warning',
   new: 'bg-saffron-100 text-saffron-700',
-  'in-progress': 'bg-blue-50 text-blue-700',
-  resolved: 'bg-leaf-50 text-leaf-600',
-  spam: 'bg-red-50 text-red-700',
-  yes: 'bg-leaf-50 text-leaf-600',
+  'in-progress': 'bg-info-soft text-info',
+  resolved: 'bg-success-soft text-success',
+  spam: 'bg-danger-soft text-danger',
+  yes: 'bg-success-soft text-success',
   no: 'bg-charcoal-900/[0.05] text-charcoal-800/75',
 }
 export function Pill({ tone, children }: { tone: string; children: ReactNode }) {
@@ -225,8 +225,8 @@ export function Feedback({ children }: { children: ReactNode }) {
                 exit={{ opacity: 0, x: 40 }}
                 className={cn(
                   'pointer-events-auto flex items-start gap-3 rounded-xl px-4 py-3 text-[0.9rem] font-medium shadow-lg',
-                  t.tone === 'success' && 'bg-charcoal-900 text-white',
-                  t.tone === 'error' && 'bg-red-600 text-white',
+                  t.tone === 'success' && 'bg-success text-white',
+                  t.tone === 'error' && 'bg-danger text-white',
                   t.tone === 'info' && 'bg-white text-charcoal-900 ring-1 ring-charcoal-900/10',
                 )}
                 role={t.tone === 'error' ? 'alert' : 'status'}

@@ -34,7 +34,7 @@ export function HistoryDialog({ open, onClose, load, onRestore }: { open: boolea
       {list.loading && !versions.length ? (
         <Spinner />
       ) : list.error ? (
-        <p className="text-red-700" role="alert">{list.error}</p>
+        <p className="text-danger" role="alert">{list.error}</p>
       ) : !versions.length ? (
         <p className="py-6 text-center text-charcoal-800/70"><HistoryIcon className="mx-auto mb-2 size-6" aria-hidden />No earlier versions yet. Every save is kept here (the last 20).</p>
       ) : (

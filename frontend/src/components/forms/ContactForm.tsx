@@ -68,8 +68,8 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
 
   if (sent)
     return (
-      <div className="rounded-3xl border border-saffron-300 bg-saffron-50 p-8 text-center" role="status">
-        <CheckCircle2 className="mx-auto size-12 text-saffron-600" />
+      <div className="rounded-3xl border border-success/30 bg-success-soft p-8 text-center" role="status">
+        <CheckCircle2 aria-hidden className="mx-auto size-12 text-success" />
         <p className="mt-4 text-xl font-semibold text-charcoal-900">{t('success')}</p>
       </div>
     )
@@ -99,6 +99,7 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
           type="file"
           accept=".pdf,.jpg,.jpeg,.png,.webp"
           aria-invalid={Boolean(fileError)}
+          aria-describedby={fileError ? 'f-attachment-error' : undefined}
           onChange={(e) => {
             const f = e.target.files?.[0] ?? null
             setFileError(null)
@@ -112,20 +113,28 @@ export function ContactForm({ offices }: { offices: { value: string; label: stri
               e.target.value = ''
             } else setFile(f)
           }}
-          className="block w-full rounded-xl border border-dashed border-line bg-paper px-4 py-3 text-sm file:mr-4 file:rounded-full file:border-0 file:bg-charcoal-900 file:px-4 file:py-2 file:text-white"
+          className={cn('block w-full rounded-xl border border-dashed bg-paper px-4 py-3 text-sm file:mr-4 file:rounded-full file:border-0 file:bg-charcoal-900 file:px-4 file:py-2 file:text-white', fileError ? 'border-danger' : 'border-field hover:border-field-hover')}
         />
-        {fileError && <p className="mt-1 text-sm text-red-600">{t.has(fileError) ? t(fileError) : fileError}</p>}
+        {fileError && <p id="f-attachment-error" className="mt-1 text-sm text-danger">{t.has(fileError) ? t(fileError) : fileError}</p>}
       </div>
 
       {banner && (
-        <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 md:col-span-2" role="alert">{banner}</p>
+        <p className="rounded-xl bg-danger-soft px-4 py-3 text-sm text-danger md:col-span-2" role="alert">{banner}</p>
       )}
 
       <div className="md:col-span-2">
-        <label className="flex items-start gap-3 text-sm text-muted">
-          <input type="checkbox" className="mt-1 size-4 accent-saffron-600" aria-invalid={Boolean(errors.consent)} {...register('consent', { required: 'required', onChange: () => clearErrors('consent') })} /> {t('consent')}
+        {/* the whole line is the touch area (44px high); the box itself is 24px with a clear edge */}
+        <label className="flex min-h-11 cursor-pointer items-start gap-3 py-2 text-sm text-muted">
+          <input
+            type="checkbox"
+            className="check -mt-0.5"
+            aria-invalid={Boolean(errors.consent)}
+            aria-describedby={errors.consent ? 'f-consent-error' : undefined}
+            {...register('consent', { required: 'required', onChange: () => clearErrors('consent') })}
+          />
+          <span>{t('consent')}</span>
         </label>
-        {errors.consent && <p className="mt-1 text-sm text-red-600">{t.has('required') ? t('required') : 'required'}</p>}
+        {errors.consent && <p id="f-consent-error" className="mt-1 text-sm text-danger">{t.has('required') ? t('required') : 'required'}</p>}
       </div>
       <div className="md:col-span-2">
         <button type="submit" disabled={isSubmitting} className="btn btn-primary min-w-40 text-base disabled:opacity-60">
@@ -157,24 +166,30 @@ type FieldProps = {
 function Field({ id, label, required, error, full, as = 'input', inputProps, textareaProps, selectProps, options }: FieldProps) {
   const t = useTranslations('forms')
   const fieldId = `f-${id}`
-  const cls = cn('w-full rounded-xl border bg-paper px-4 py-3 outline-none transition focus:border-saffron-500 focus:ring-4 focus:ring-saffron-100', error ? 'border-red-400' : 'border-line')
+  // a 3.1:1 edge (the page's pale line colour is 1.25:1 on white), and a clear dark-orange ring while typing
+  const cls = cn(
+    'w-full rounded-xl border bg-paper px-4 py-3 outline-none transition focus:ring-2',
+    error ? 'border-danger focus:ring-danger' : 'border-field hover:border-field-hover focus:border-saffron-700 focus:ring-saffron-700',
+  )
   const message = error?.message
+  const errorId = `${fieldId}-error`
+  const aria = { 'aria-invalid': Boolean(error), 'aria-required': required || undefined, 'aria-describedby': message ? errorId : undefined } as const
   return (
     <div className={cn(full && 'md:col-span-2')}>
       <label htmlFor={fieldId} className="mb-1.5 block text-sm font-semibold text-charcoal-900">
-        {label} {required && <span className="text-saffron-600">*</span>}
+        {label} {required && <span aria-hidden className="text-saffron-700">*</span>}
       </label>
       {as === 'textarea' ? (
-        <textarea id={fieldId} className={cls} aria-invalid={Boolean(error)} {...textareaProps} />
+        <textarea id={fieldId} className={cls} {...aria} {...textareaProps} />
       ) : as === 'select' ? (
-        <select id={fieldId} className={cls} aria-invalid={Boolean(error)} defaultValue="" {...selectProps}>
+        <select id={fieldId} className={cls} {...aria} defaultValue="" {...selectProps}>
           <option value="" disabled>—</option>
           {options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
       ) : (
-        <input id={fieldId} className={cls} aria-invalid={Boolean(error)} {...inputProps} />
+        <input id={fieldId} className={cls} {...aria} {...inputProps} />
       )}
-      {message && <p className="mt-1 text-sm text-red-600">{t.has(message) ? t(message) : message}</p>}
+      {message && <p id={errorId} className="mt-1 text-sm text-danger">{t.has(message) ? t(message) : message}</p>}
     </div>
   )
 }

@@ -10,7 +10,7 @@ export function NotFound() {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <div>
-        <p className="font-display text-8xl text-saffron-500">404</p>
+        <p className="font-display text-8xl text-saffron-600">404</p>
         <h1 className="mt-4 text-3xl text-charcoal-900">Page not found</h1>
         <p className="mt-3 text-muted">The page you are looking for does not exist or has moved.</p>
         <Link to="/" className="btn btn-dark mt-8">Home</Link>
@@ -30,7 +30,7 @@ function Problem() {
   return (
     <section className="container-x grid min-h-[60vh] place-items-center py-24 text-center" role="alert">
       <div>
-        <p className="font-display text-6xl text-saffron-500">:(</p>
+        <p className="font-display text-6xl text-saffron-600">:(</p>
         <h1 className="mt-4 text-3xl text-charcoal-900">This page could not be loaded</h1>
         <p className="mt-3 text-muted">Please check your connection and try again.</p>
         <button type="button" onClick={() => window.location.reload()} className="btn btn-dark mt-8">Try again</button>

@@ -127,7 +127,7 @@ export function Header() {
         )}
       >
         <div className="container-x flex h-[4.5rem] items-center gap-2 sm:gap-4 lg:h-20">
-          <Link to="/" className="flex min-w-0 shrink items-center" aria-label={siteName}>
+          <Link to="/" className="flex min-h-11 min-w-0 shrink items-center" aria-label={siteName}>
             {heroTop && logoUrl && (
               /* white logo over the photo (phones/tablets) */
               <img src={logoUrl} alt={siteName} width={190} height={48} fetchPriority="high" className="h-9 w-auto max-w-full object-contain object-left sm:h-10 lg:hidden" />

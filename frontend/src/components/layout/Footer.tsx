@@ -31,14 +31,14 @@ export function Footer() {
             )}
             {settings.email && (
               <li>
-                <a href={`mailto:${settings.email}`} className="flex items-center gap-3 hover:text-white">
+                <a href={`mailto:${settings.email}`} className="flex items-center gap-3 hover:text-white max-lg:min-h-11">
                   <Mail className="size-4 shrink-0 text-saffron-300" /> {settings.email}
                 </a>
               </li>
             )}
             {settings.phone && (
               <li>
-                <a href={`tel:${settings.phone.replace(/\s/g, '')}`} className="flex items-center gap-3 hover:text-white">
+                <a href={`tel:${settings.phone.replace(/\s/g, '')}`} className="flex items-center gap-3 hover:text-white max-lg:min-h-11">
                   <Phone className="size-4 shrink-0 text-saffron-300" /> {settings.phone}
                 </a>
               </li>
@@ -48,7 +48,7 @@ export function Footer() {
             <ul className="mt-5 flex flex-wrap gap-2" aria-label={t('followUs')}>
               {social.map(([k, v]) => (
                 <li key={k}>
-                  <a href={v as string} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} className="grid size-10 place-items-center rounded-full ring-1 ring-white/30 transition hover:bg-saffron-600 hover:ring-saffron-600">
+                  <a href={v as string} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} className="grid size-11 place-items-center rounded-full ring-1 ring-white/30 transition hover:bg-saffron-600 hover:ring-saffron-600">
                     <SocialIcon name={k === 'whatsappChannel' ? 'whatsapp' : k} className="size-4 text-white" />
                   </a>
                 </li>
@@ -63,10 +63,11 @@ export function Footer() {
         {footer.columns?.map((col) => (
           <div key={col.id}>
             <p className="mb-5 text-lg text-white">{col.title}</p>
-            <ul className="space-y-2.5 text-[0.98rem]">
+            <ul className="space-y-2.5 text-[0.98rem] max-lg:space-y-0">
               {col.links?.filter((l) => isLiveLink(l.url)).map((l) => (
                 <li key={l.id}>
-                  <CMSLink url={l.url} newTab={l.newTab} className="group inline-flex items-start gap-2 transition hover:text-white">
+                  {/* on phones each link is a 44px-high row */}
+                  <CMSLink url={l.url} newTab={l.newTab} className="group flex w-fit items-start gap-2 transition hover:text-white max-lg:py-[0.55rem]">
                     <ChevronRight aria-hidden className="mt-[0.4rem] size-3.5 shrink-0 text-saffron-300 transition group-hover:translate-x-0.5" />
                     {l.label}
                   </CMSLink>
@@ -97,7 +98,7 @@ export function Footer() {
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {footer.legalLinks?.filter((l) => isLiveLink(l.url) && !HIDDEN_LEGAL.includes(l.url ?? '')).map((l) => (
-              <CMSLink key={l.id} url={l.url} className="underline underline-offset-4 hover:text-white">
+              <CMSLink key={l.id} url={l.url} className="underline underline-offset-4 hover:text-white max-lg:inline-flex max-lg:min-h-11 max-lg:items-center">
                 {l.label}
               </CMSLink>
             ))}

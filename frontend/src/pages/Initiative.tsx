@@ -67,7 +67,7 @@ export default function InitiativePage() {
       </PageBanner>
 
       <div className="container-x pb-20 pt-10 md:pb-24 md:pt-12">
-        <Link to="/lokmangal/foundation#projects" className="inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:gap-3 hover:text-charcoal-900">
+        <Link to="/lokmangal/foundation#projects" className="tap-pad inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:gap-3 hover:text-charcoal-900">
           <ArrowLeft aria-hidden className="size-4" /> {x.back}
         </Link>
 

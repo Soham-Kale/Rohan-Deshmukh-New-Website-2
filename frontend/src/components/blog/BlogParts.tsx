@@ -25,11 +25,12 @@ export function CategoryChip({ cat, dark }: { cat: Category | null; dark?: boole
     <Link
       to={`/blog?category=${cat.slug}`}
       className={cn(
-        'relative z-10 inline-flex transition',
-        dark ? 'rounded-full bg-white/90 px-2.5 py-0.5 text-xs text-charcoal-900 hover:bg-white' : 'text-[0.85rem] text-saffron-700 hover:text-charcoal-900',
+        'group/chip relative z-10 inline-flex transition',
+        // on a photo the small pill sits inside a 44px-high link (its margins take the extra height back, so nothing moves)
+        dark ? '-my-3 min-h-11 items-center' : 'tap-pad text-[0.85rem] text-saffron-700 hover:text-charcoal-900',
       )}
     >
-      {cat.title}
+      {dark ? <span className="rounded-full bg-white/90 px-2.5 py-0.5 text-xs text-charcoal-900 transition group-hover/chip:bg-white">{cat.title}</span> : cat.title}
     </Link>
   )
 }
@@ -146,7 +147,7 @@ export function TopicsCard({ cats, active, title, allLabel }: { cats: Category[]
           const on = (active ?? '') === c.slug
           return (
             <Link key={c.slug || 'all'} to={c.slug ? `/blog?category=${c.slug}` : '/blog'} aria-current={on ? 'true' : undefined}
-              className={cn('inline-flex min-h-10 items-center rounded-xl px-3.5 py-1.5 text-sm font-medium transition', on ? 'bg-btn text-white' : 'bg-white text-charcoal-800 hover:bg-btn hover:text-white')}>
+              className={cn('inline-flex min-h-11 items-center rounded-xl border px-4 py-1.5 text-sm font-medium transition', on ? 'border-btn bg-btn text-white' : 'border-field bg-white text-charcoal-800 hover:border-btn hover:bg-btn hover:text-white')}>
               {c.title}
             </Link>
           )
@@ -163,7 +164,7 @@ export function RecentList({ posts, locale, title }: { posts: Post[]; locale: st
       <ol className="divide-y divide-line">
         {posts.map((p, i) => (
           <li key={p.id} className="group relative flex gap-4 py-4">
-            <span className="font-display text-xl leading-none text-saffron-500">
+            <span className="font-display text-xl leading-none text-saffron-700">
               {locale === 'mr' ? toMarathiDigits(i + 1) : i + 1}
             </span>
             <div className="min-w-0">

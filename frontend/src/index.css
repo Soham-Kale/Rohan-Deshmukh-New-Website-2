@@ -30,18 +30,27 @@
   --color-saffron-600: #c9500b;   /* surfaces with white text (buttons, badges), big numbers, icons — white on it is 4.5:1 (WCAG AA) */
   --color-saffron-700: #b84a0a;   /* small orange text on white and cream (4.8:1), button hover */
   --color-leaf-50: #ebf5ee;
-  --color-leaf-600: #1f7a3a;      /* tricolour line above the footer only */
-  --color-cream: #fff3e6;         /* alternate section */
+  --color-leaf-600: #1f7a3a;      /* tricolour line above the footer; the green of the impact numbers */
+  --color-cream: #fff8f0;         /* alternate section: a light cream (the earlier #fff3e6 read as peach) */
   --color-paper: #ffffff;         /* page background (clean white, like an official site) */
   --color-surface: #ffffff;       /* cards */
   --color-ink: #4a5568;           /* body text */
   --color-muted: #5c6779;         /* secondary text */
-  --color-line: #f1e4d6;          /* borders */
+  --color-line: #f1e4d6;          /* hairlines and dividers between things — never the edge of a control (1.25:1 on white) */
+  --color-field: #8b93a1;         /* the edge of form fields, checkboxes and filter chips: 3.1:1 on white (WCAG 1.4.11) */
+  --color-field-hover: #5c6779;   /* … when pointed at */
   --color-frame: #ffc9a3;
   --color-highlight: #ffb070;
   --color-overlay: rgb(20 33 61 / .55); /* over photos */
   --color-btn: #c9500b;           /* every button (white text on it: 4.5:1) */
   --color-btn-hover: #a8430a;
+  --color-btn-active: #8f3a08;    /* while pressed */
+
+  /* meaning, not decoration: each colour is at least 4.5:1 on white and on its own soft background */
+  --color-success: #1f7a3a;  --color-success-soft: #ebf5ee;
+  --color-warning: #a84a06;  --color-warning-soft: #fdf1df;
+  --color-danger: #b42318;   --color-danger-soft: #fdeceb;
+  --color-info: #1d4ed8;     --color-info-soft: #e8efff;
 
   --font-display: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
   --font-sans: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
@@ -64,23 +73,31 @@
   h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.3; letter-spacing: 0; text-wrap: balance; }
   p, li { text-wrap: pretty; }
   ::selection { background: var(--color-highlight); color: var(--color-charcoal-900); }
-  :focus-visible { outline: 3px solid var(--color-saffron-500); outline-offset: 2px; border-radius: 4px; }
+  :focus-visible { outline: 3px solid var(--color-saffron-700); outline-offset: 2px; border-radius: 4px; }
+  :is(.on-dark, .band-navy, .stat-card, footer, [data-hero-overlay], [class~='bg-charcoal-900'], [class~='bg-charcoal-950']) :focus-visible { outline-color: var(--color-saffron-300); }
+  /* People who ask for less motion: nothing slides, grows or bounces. Colour, opacity and shadow changes stay (short fades are fine),
+     loading spinners keep turning, and entrances become plain fades (see the end of this file). */
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, outline-color !important;
+    }
+    .animate-bounce, .animate-ping { animation: none !important; }
   }
 }
 
 @layer components {
   .font-display { font-weight: 400; }
   .container-x { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
-  /* hero slideshow text: slides in from the right, leaves to the left (distance per line via --hero-x) */
+  /* hero slideshow text: a slide's lines fade in one after another and fade out; nothing travels, so the heading is readable at first paint */
   /* wide letter-spacing suits Latin capitals but breaks Devanagari conjuncts apart */
   .hero-kicker { letter-spacing: 0.18em; }
   :lang(mr) .hero-kicker { letter-spacing: 0.01em; }
-  .hero-line { transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.9s ease; }
-  .hero-line[data-state='in'] { transform: none; opacity: 1; }
-  .hero-line[data-state='out'] { transform: translate3d(calc(var(--hero-x) * -1), 0, 0); opacity: 0; transition-duration: 0.6s; transition-delay: 0s !important; }
-  .hero-line[data-state='idle'], .hero-line[data-state='pre'] { transform: translate3d(var(--hero-x), 0, 0); opacity: 0; transition: none; }
+  .hero-line { transition: opacity 0.45s ease; }
+  .hero-line[data-state='in'] { opacity: 1; }
+  .hero-line[data-state='out'] { opacity: 0; transition-duration: 0.2s; transition-delay: 0s !important; }
+  .hero-line[data-state='idle'] { opacity: 0; transition: none; }
   @media (min-width: 768px) { .container-x { padding-inline: 32px; } }
 
   /* small label above a heading (like a section mark on an official site) */
@@ -93,20 +110,27 @@
   .is-center .h-section::after, .h-section.is-center::after { left: 50%; transform: translateX(-50%); }
   .on-dark .h-section { color: #fff; }
 
-  /* Buttons (Oct 2026): every button on the site is #F26B1D with white text and a softly rounded 12px corner.
+  /* Buttons (Oct 2026): every button on the site is the dark saffron --color-btn (#c9500b) with white text (4.5:1) and a softly rounded 12px corner;
+     it darkens on hover and once more while pressed. The bright #F26B1D is kept for lines, dots and glows only.
      The variant names (primary / dark / light / ghost) are kept so no component had to change its markup. */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.875rem; border-radius: .75rem; padding: .65rem 1.5rem; font-weight: 600; font-size: 1rem; line-height: 1.3; background: var(--color-btn); color: #fff; transition: background .2s, transform .2s, box-shadow .2s; white-space: nowrap; }
   .btn:hover { background: var(--color-btn-hover); }
-  .btn:active { transform: translateY(1px); }
+  .btn:active { background: var(--color-btn-active); transform: translateY(1px); }
   .btn svg { transition: transform .2s; }
   .btn:hover svg.lucide-arrow-right { transform: translateX(3px); }
   .btn-primary, .btn-dark, .btn-light, .btn-ghost { background: var(--color-btn); color: #fff; }
   .btn-primary:hover, .btn-dark:hover, .btn-light:hover, .btn-ghost:hover { background: var(--color-btn-hover); }
+  .btn-primary:active, .btn-dark:active, .btn-light:active, .btn-ghost:active { background: var(--color-btn-active); }
   /* on an orange band a button keeps a white outline so it stays visible */
   .on-saffron .btn { box-shadow: inset 0 0 0 2px #fff; }
   /* icon-only buttons (slider arrows, pagination arrows, back to top) */
   .btn-icon { display: grid; place-items: center; border-radius: .75rem; background: var(--color-btn); color: #fff; transition: background .2s, opacity .2s; }
   .btn-icon:hover { background: var(--color-btn-hover); }
+  .btn-icon:active { background: var(--color-btn-active); }
+  /* a second button on a photo or on navy: white text, a clear white outline, no fill (declared after .btn so it wins) */
+  .btn.btn-outline-light { background: transparent; box-shadow: inset 0 0 0 2px rgb(255 255 255 / .9); }
+  .btn.btn-outline-light:hover { background: rgb(255 255 255 / .16); }
+  .btn.btn-outline-light:active { background: rgb(255 255 255 / .26); }
 
   .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: .625rem; overflow: hidden; }
   .card-hover { transition: transform .25s, box-shadow .25s; }
@@ -154,23 +178,37 @@
   .more-link { display: inline-flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--color-charcoal-900); transition: color .2s, gap .2s; }
   .more-link:hover, .tile:hover .more-link { gap: .8rem; color: var(--color-saffron-700); }
   /* phones: a taller tap area for text links, without changing the layout */
-  @media (max-width: 1023px) { .more-link { padding-block: .6rem; margin-block: -.6rem; } }
+  @media (max-width: 1023px) { .more-link { padding-block: .75rem; margin-block: -.75rem; } }
   .on-dark .more-link { color: var(--color-highlight); }
   .on-dark .more-link:hover, .on-dark .tile:hover .more-link { color: #fff; }
+
+  /* a small text link keeps its looks and gets a 44px-high touch area: padding that its negative margin takes back */
+  .tap-pad { padding-block: .75rem; margin-block: -.75rem; }
+
+  /* checkbox: 24px with a clearly visible edge (the native one is 13px with a pale edge) */
+  .check { appearance: none; flex: none; display: inline-grid; place-content: center; width: 1.5rem; height: 1.5rem; border: 2px solid var(--color-field); border-radius: .4rem; background: #fff; transition: background-color .15s, border-color .15s; }
+  .check:hover { border-color: var(--color-field-hover); }
+  .check::after { content: ''; width: .85rem; height: .85rem; background: #fff; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0, 43% 62%); opacity: 0; transition: opacity .12s; }
+  .check:checked { background: var(--color-btn); border-color: var(--color-btn); }
+  .check:checked::after { opacity: 1; }
+  .check[aria-invalid='true'] { border-color: var(--color-danger); }
+
+  /* a row that scrolls sideways shows a soft fade on the side where more is waiting (ScrollRow sets --fade-l / --fade-r and data-fade) */
+  .scroll-fade[data-fade] { mask-image: linear-gradient(to right, transparent, #000 calc(var(--fade-l, 0) * 2.5rem), #000 calc(100% - var(--fade-r, 0) * 2.5rem), transparent); }
 
   /* big numbers sitting on the page (no tiles), separated by thin rules */
   .stat-row { display: grid; gap: 2rem 1.5rem; }
   .stat-item { border-left: 2px solid var(--color-saffron-500); padding-left: 1.1rem; }
-  .stat-value { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.1rem, 1.7rem + 1.4vw, 2.9rem); line-height: 1.1; color: var(--color-saffron-600); font-variant-numeric: lining-nums; }
+  .stat-value { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.1rem, 1.7rem + 1.4vw, 2.9rem); line-height: 1.1; color: var(--color-success); font-variant-numeric: lining-nums; }
   /* a soft, slightly raised card — used only for key numbers */
   /* key numbers on a navy card (palette: "dark button, stat card") */
   .stat-card { border-radius: .625rem; background: var(--color-charcoal-900); color: #fff; padding: 1.35rem 1.25rem 1.25rem; box-shadow: 0 18px 40px -28px rgb(20 33 61 / .6); transition: transform .3s, box-shadow .3s; }
   .stat-card:hover { transform: translateY(-2px); box-shadow: 0 24px 46px -26px rgb(20 33 61 / .65); }
-  .stat-card .stat-value { color: var(--color-highlight); }
+  .stat-card .stat-value { color: #7ddc9a; }
   .stat-card .stat-label { color: rgb(255 255 255 / .75); }
   @media (min-width: 768px) { .stat-card { padding: 1.6rem 1.5rem 1.4rem; } }
   .stat-label { margin-top: .4rem; color: var(--color-muted); font-size: 1rem; line-height: 1.5; }
-  .on-dark .stat-value { color: var(--color-highlight); }
+  .on-dark .stat-value { color: #7ddc9a; }
   .on-dark .stat-label { color: rgb(255 255 255 / .72); }
 
   /* photo with a soft offset colour block behind it (instead of an outlined frame) */
@@ -225,6 +263,15 @@
 }
 
 @keyframes rv-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+
+/* less motion: the entrance that rises 14px becomes a plain fade (the same timing, no movement). It switches the animation to another
+   keyframes name instead of redefining `fade-up`: Tailwind writes the theme's own keyframes after everything else, so a redefinition would lose. */
+@keyframes fade-only { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up { animation-name: fade-only; }
+  /* unlayered on purpose: the layered `.btn:active` above would win over a rule inside @layer base */
+  .btn:active { transform: none; }
+}
 
 /* Phones (most visitors): small print never goes below 13px */
 @media (max-width: 639px) {

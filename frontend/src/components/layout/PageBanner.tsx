@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { useTranslations } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
 import { Img } from '../ui/Img'
+import { ScrollRow } from '../ui/ScrollRow'
 
 export type Crumb = { label: string; href?: string }
 export type BannerTab = { label: string; href: string; active?: boolean }
@@ -80,14 +81,14 @@ export function PageBanner({
       {!!tabs?.length && (
         <nav aria-label={tabsLabel} className="border-b border-line bg-white">
           <div className="container-x">
-            <ul className="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 md:mx-0 md:gap-2 md:px-0">
+            <ScrollRow as="ul" className="-mx-4 flex gap-1 px-4 md:mx-0 md:gap-2 md:px-0">
               {tabs.map((tab) => (
                 <li key={tab.href} className="shrink-0">
                   <Link
                     to={tab.href}
                     aria-current={tab.active ? 'page' : undefined}
                     className={cn(
-                      'relative block px-3 py-4 text-[1rem] transition-colors md:px-4',
+                      'relative block px-3 py-4 text-[1rem] transition-colors focus-visible:outline-offset-[-3px] md:px-4',
                       "after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:rounded-t-full after:transition-colors after:content-[''] md:after:inset-x-4",
                       tab.active ? 'text-charcoal-900 after:bg-saffron-500' : 'text-muted after:bg-transparent hover:text-charcoal-900 hover:after:bg-line',
                     )}
@@ -96,22 +97,22 @@ export function PageBanner({
                   </Link>
                 </li>
               ))}
-            </ul>
+            </ScrollRow>
           </div>
         </nav>
       )}
 
-      {/* breadcrumb on its own row, under the banner */}
-      <nav aria-label="Breadcrumb" className="container-x pt-5">
+      {/* breadcrumb on its own row, under the banner (on phones its links are 44px high, so the row is a little closer to the banner) */}
+      <nav aria-label="Breadcrumb" className="container-x pt-5 max-lg:pt-1">
         <ol className="flex flex-wrap items-center gap-1.5 text-[0.92rem] text-muted">
-          <li>
-            <Link to="/" className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700">{t('home')}</Link>
+          <li className="flex items-center">
+            <Link to="/" className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700 max-lg:-mx-2 max-lg:inline-flex max-lg:min-h-11 max-lg:items-center max-lg:px-2">{t('home')}</Link>
           </li>
           {crumbs.map((c, i) => (
             <li key={i} className="flex min-w-0 items-center gap-1.5">
               <span aria-hidden className="opacity-60">/</span>
               {c.href && i < crumbs.length - 1 ? (
-                <Link to={c.href} className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700">{c.label}</Link>
+                <Link to={c.href} className="text-charcoal-900 underline underline-offset-4 transition hover:text-saffron-700 max-lg:-mx-2 max-lg:inline-flex max-lg:min-h-11 max-lg:items-center max-lg:px-2">{c.label}</Link>
               ) : (
                 <span aria-current={i === crumbs.length - 1 ? 'page' : undefined} className="line-clamp-1">{c.label}</span>
               )}

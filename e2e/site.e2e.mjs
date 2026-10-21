@@ -74,8 +74,11 @@ console.log('• contact form')
 const page = await phone.newPage()
 await page.goto(`${BASE}/contact`, { waitUntil: 'networkidle' })
 await page.getByRole('button', { name: /submit/i }).click()
-await page.waitForSelector('form [role=alert], form .text-red-600')
-ok('an empty form shows what is missing')
+await page.waitForSelector('form [aria-invalid="true"]')
+// the first invalid field is tied to a visible message (aria-describedby), whatever colour it is drawn in
+const messageId = await page.locator('form [aria-invalid="true"]').first().getAttribute('aria-describedby')
+assert.ok(messageId && (await page.locator(`#${messageId}`).innerText()).trim(), 'the first invalid field has no visible message')
+ok('an empty form shows what is missing, next to each field')
 const stamp = `e2e-${Date.now()}`
 await page.fill('#f-name', `Test Person ${stamp}`)
 await page.fill('#f-mobile', '9876543210')

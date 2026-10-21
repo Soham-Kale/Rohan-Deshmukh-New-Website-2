@@ -266,7 +266,7 @@ export function DocumentEditor({ collection, global, doc: initialDoc }: Props) {
                   <Button onClick={() => setHistoryOpen(true)}><HistoryIcon className="size-4" aria-hidden /> History</Button>
                 )}
                 {canDelete && (
-                  <Button variant="ghost" className="text-red-700 hover:bg-red-50" onClick={() => void remove()}><Trash2 className="size-4" aria-hidden /> Delete</Button>
+                  <Button variant="ghost" className="text-danger hover:bg-danger-soft" onClick={() => void remove()}><Trash2 className="size-4" aria-hidden /> Delete</Button>
                 )}
               </div>
             </div>
@@ -274,7 +274,7 @@ export function DocumentEditor({ collection, global, doc: initialDoc }: Props) {
 
           {!canSave && <p className="mb-5 rounded-lg bg-charcoal-900/[0.06] px-4 py-3 text-[0.92rem]" role="status">You can look at this, but your account is not allowed to change it.</p>}
           {restoredFrom && <p className="mb-5 rounded-lg bg-saffron-50 px-4 py-3 text-[0.92rem] text-saffron-700" role="status">Showing the version saved on {formatDate(restoredFrom, true)}. Nothing has changed on the website yet — press save to keep it, or leave this page to drop it.</p>}
-          {banner && <p className="mb-5 rounded-lg bg-red-50 px-4 py-3 text-[0.92rem] font-medium text-red-700" role="alert">{banner}</p>}
+          {banner && <p className="mb-5 rounded-lg bg-danger-soft px-4 py-3 text-[0.92rem] font-medium text-danger" role="alert">{banner}</p>}
 
           <fieldset disabled={!canSave || saving !== null} className="m-0 min-w-0 border-0 p-0">
             <div className={cn('grid items-start gap-6', sideFields.length > 0 && 'lg:grid-cols-[minmax(0,1fr)_21rem]')}>
@@ -289,7 +289,7 @@ export function DocumentEditor({ collection, global, doc: initialDoc }: Props) {
                       <label className="block">
                         <span className="mb-1.5 block text-[0.88rem] font-semibold">Email <span className="text-saffron-600" aria-hidden>*</span></span>
                         <input type="email" autoComplete="off" className={inputClass} {...form.register('email')} />
-                        {errors.email?.message && <span className="mt-1 block text-[0.82rem] font-medium text-red-700" role="alert">{String(errors.email.message)}</span>}
+                        {errors.email?.message && <span className="mt-1 block text-[0.82rem] font-medium text-danger" role="alert">{String(errors.email.message)}</span>}
                       </label>
                       {editsSelf ? (
                         <p className="self-end pb-2 text-[0.88rem] text-charcoal-800/70">To change your own password, use <Link to="/admin/account" className="font-semibold text-saffron-700 underline">My account</Link>.</p>
@@ -298,7 +298,7 @@ export function DocumentEditor({ collection, global, doc: initialDoc }: Props) {
                           <span className="mb-1.5 block text-[0.88rem] font-semibold">Password {isNew && <span className="text-saffron-600" aria-hidden>*</span>}</span>
                           <input type="password" autoComplete="new-password" className={inputClass} {...form.register('password')} />
                           <span className="mt-1 block text-[0.78rem] text-charcoal-800/75">{isNew ? 'At least 8 characters.' : 'Leave empty to keep the current password.'}</span>
-                          {errors.password?.message && <span className="mt-1 block text-[0.82rem] font-medium text-red-700" role="alert">{String(errors.password.message)}</span>}
+                          {errors.password?.message && <span className="mt-1 block text-[0.82rem] font-medium text-danger" role="alert">{String(errors.password.message)}</span>}
                         </label>
                       )}
                     </div>
