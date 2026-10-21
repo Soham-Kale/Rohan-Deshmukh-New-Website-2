@@ -78,7 +78,7 @@ export default function BlogPage() {
           <div className="flex flex-col gap-3 rounded-2xl border border-stone-200/90 bg-white/95 p-3 shadow-[0_12px_30px_-12px_rgba(9,20,34,0.18)] backdrop-blur md:flex-row md:items-center md:gap-6 md:px-4">
             <div className="flex min-w-0 flex-1 items-center gap-3">
               <span className="hidden shrink-0 items-center gap-2 text-sm font-semibold text-charcoal-900 sm:inline-flex"><span className="grid size-8 place-items-center rounded-lg bg-saffron-500/10 text-saffron-600"><SlidersHorizontal className="size-4" /></span> {t('sections')}</span>
-              <div className="no-scrollbar -mx-1 flex min-w-0 gap-2 overflow-x-auto px-1">
+              <ScrollRow className="-mx-1 flex min-w-0 gap-2 px-1">
                 {[{ slug: '', title: tc('all') }, ...cats].map((c) => {
                   const on = (category ?? '') === c.slug && !tag && !q
                   return (

@@ -4,6 +4,9 @@
       "id": "6ad5ec7515929451e81266ab",
       "blockType": "heroSlider",
       "hidden": false,
+      "heroStyle": "photo",
+      "photo": 119,
+      "photoMobile": 164,
       "autoplaySeconds": 5,
       "slides": [
         {
@@ -24,21 +27,21 @@
           },
           "buttons": [
             {
-              "id": "6ad5ec7515929451e81266a1",
-              "label": {
-                "en": "Read more",
-                "mr": "अधिक वाचा"
-              },
-              "url": "/about/biography",
-              "newTab": false
-            },
-            {
               "id": "6ad5ec7515929451e81266a2",
               "label": {
                 "en": "Get in touch",
                 "mr": "संपर्क साधा"
               },
               "url": "/contact",
+              "newTab": false
+            },
+            {
+              "id": "6ad5ec7515929451e81266a1",
+              "label": {
+                "en": "Read more",
+                "mr": "अधिक वाचा"
+              },
+              "url": "/about/biography",
               "newTab": false
             }
           ]
