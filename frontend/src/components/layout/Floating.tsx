@@ -1,45 +1,15 @@
-'use client'
-
 import { useEffect, useState } from 'react'
+import { AnimatePresence, m } from 'motion/react'
 import { ArrowUp, X } from 'lucide-react'
-import Image from 'next/image'
-import { SocialIcon, socialLabels } from '../ui/SocialIcon'
-import { cn, isExternal } from '@/lib/utils'
-
-export function SocialBar({ social }: { social: Record<string, string | null | undefined> }) {
-  const items = Object.entries(social).filter(([, v]) => v)
-  if (!items.length) return null
-  return (
-    <aside aria-label="Social media" className="fixed left-0 top-1/2 z-40 hidden -translate-y-1/2 lg:block">
-      <ul className="flex flex-col overflow-hidden rounded-r-2xl bg-charcoal-900/90 shadow-lg backdrop-blur">
-        {items.map(([k, v]) => (
-          <li key={k}>
-            <a href={v!} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} className="grid size-11 place-items-center text-white/80 transition hover:bg-saffron-500 hover:text-white">
-              <SocialIcon name={k === 'whatsappChannel' ? 'whatsapp' : k} className="size-[18px]" />
-            </a>
-          </li>
-        ))}
-      </ul>
-    </aside>
-  )
-}
-
-export function ConnectTag({ label, url }: { label?: string | null; url?: string | null }) {
-  if (!label || !url) return null
-  return (
-    <a
-      href={url}
-      target={isExternal(url) ? '_blank' : undefined}
-      rel="noopener"
-      className="fixed right-0 top-1/2 z-40 hidden -translate-y-1/2 rotate-180 rounded-r-xl bg-saffron-500 px-2 py-4 text-sm font-bold tracking-wide text-white shadow-lg transition [writing-mode:vertical-rl] hover:bg-saffron-600 md:block"
-    >
-      {label}
-    </a>
-  )
-}
+import { useLayout } from '@/lib/layout'
+import { useTranslations } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { cn } from '@/lib/utils'
+import { Img } from '../ui/Img'
 
 /** back-to-top button (the floating WhatsApp chat button was removed, Oct 2026) */
-export function FloatingButtons({ labels }: { labels: { top: string } }) {
+export function FloatingButtons() {
+  const t = useTranslations('common')
   const [show, setShow] = useState(false)
   useEffect(() => {
     const f = () => setShow(window.scrollY > 600)
@@ -51,8 +21,9 @@ export function FloatingButtons({ labels }: { labels: { top: string } }) {
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0 })}
-        aria-label={labels.top}
-        className={cn('btn-icon size-11 shadow-lg', show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0')}
+        aria-label={t('backToTop')}
+        tabIndex={show ? 0 : -1}
+        className={cn('btn-icon size-11 shadow-lg transition duration-300', show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0')}
       >
         <ArrowUp className="size-5" />
       </button>
@@ -60,50 +31,90 @@ export function FloatingButtons({ labels }: { labels: { top: string } }) {
   )
 }
 
-type PopupData = { image?: string | null; title?: string | null; text?: string | null; linkLabel?: string | null; linkUrl?: string | null; delaySeconds?: number | null; key: string }
-
-export function SitePopup({ data, closeLabel }: { data: PopupData | null; closeLabel: string }) {
+/** The optional announcement popup (Settings → Site popup): shown once per visit, within its start / end dates */
+export function SitePopup() {
+  const { popup } = useLayout()
+  const t = useTranslations('common')
+  const now = Date.now()
+  const active = popup.enabled && (!popup.startDate || new Date(popup.startDate).getTime() <= now) && (!popup.endDate || new Date(popup.endDate).getTime() >= now)
+  // a changed popup is shown again, to visitors who closed the previous one
+  const key = String(popup.updatedAt ?? '')
   const [open, setOpen] = useState(false)
+
   useEffect(() => {
-    if (!data) return
+    if (!active) return
     let seen = false
     try {
-      seen = sessionStorage.getItem('rd-popup') === data.key
-    } catch {}
+      seen = sessionStorage.getItem('rd-popup') === key
+    } catch {
+      /* storage blocked: show it */
+    }
     if (seen) return
-    const id = setTimeout(() => setOpen(true), (data.delaySeconds ?? 2) * 1000)
+    const id = setTimeout(() => setOpen(true), (popup.delaySeconds ?? 2) * 1000)
     return () => clearTimeout(id)
-  }, [data])
-  if (!data || !open) return null
-  const close = () => {
+  }, [active, key, popup.delaySeconds])
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close()
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
+  function close() {
     setOpen(false)
     try {
-      sessionStorage.setItem('rd-popup', data.key)
-    } catch {}
+      sessionStorage.setItem('rd-popup', key)
+    } catch {
+      /* storage blocked */
+    }
   }
+
+  const image = mediaUrl(popup.image, 'card')
   return (
-    <div className="fixed inset-0 z-[80] grid place-items-center bg-charcoal-950/70 p-4" role="dialog" aria-modal="true" onClick={close}>
-      <div className="animate-fade-up relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <button type="button" onClick={close} aria-label={closeLabel} className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-white/90 shadow">
-          <X className="size-5" />
-        </button>
-        {data.image && (
-          <div className="relative aspect-[4/3] w-full">
-            <Image src={data.image} alt={data.title ?? ''} fill className="object-cover" sizes="512px" />
-          </div>
-        )}
-        {(data.title || data.text || data.linkUrl) && (
-          <div className="p-6">
-            {data.title && <h2 className="font-display text-2xl text-charcoal-900">{data.title}</h2>}
-            {data.text && <p className="mt-2 text-muted">{data.text}</p>}
-            {data.linkUrl && (
-              <a href={data.linkUrl} onClick={close} className="btn btn-primary mt-5">
-                {data.linkLabel || '→'}
-              </a>
+    <AnimatePresence>
+      {active && open && (
+        <m.div
+          className="fixed inset-0 z-[80] grid place-items-center bg-charcoal-950/70 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={popup.title ?? undefined}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={close}
+        >
+          <m.div
+            className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.3, ease: [0.2, 0.7, 0.2, 1] }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button type="button" onClick={close} aria-label={t('close')} className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-white/90 shadow" autoFocus>
+              <X className="size-5" />
+            </button>
+            {image && (
+              <div className="relative aspect-[4/3] w-full">
+                <Img src={image} alt={popup.title ?? ''} fill className="object-cover" />
+              </div>
             )}
-          </div>
-        )}
-      </div>
-    </div>
+            {(popup.title || popup.text || popup.linkUrl) && (
+              <div className="p-6">
+                {popup.title && <h2 className="font-display text-2xl text-charcoal-900">{popup.title}</h2>}
+                {popup.text && <p className="mt-2 text-muted">{popup.text}</p>}
+                {popup.linkUrl && (
+                  <a href={popup.linkUrl} onClick={close} className="btn btn-primary mt-5">
+                    {popup.linkLabel || '→'}
+                  </a>
+                )}
+              </div>
+            )}
+          </m.div>
+        </m.div>
+      )}
+    </AnimatePresence>
   )
 }

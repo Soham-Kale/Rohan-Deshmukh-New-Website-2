@@ -1,9 +1,10 @@
-import type React from 'react'
-import Image from 'next/image'
-import type { Page } from '@/payload-types'
-import { cn, mediaAlt, mediaPosition, mediaUrl } from '@/lib/utils'
+import type { CSSProperties } from 'react'
+import type { Page } from '@/types/cms'
+import { cn } from '@/lib/utils'
+import { mediaAlt, mediaPosition, mediaUrl } from '@/lib/media'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
 import { RichText } from '@/components/ui/RichText'
+import { Img } from '@/components/ui/Img'
 
 type Block = NonNullable<Page['layout']>[number]
 type MediaText = Extract<Block, { blockType: 'mediaText' }>
@@ -17,7 +18,7 @@ const num = (n: number, locale: string) => (locale === 'mr' ? String(n).replace(
  *  - the first Media + text block is the profile (photo, name, intro)
  *  - a Cards block right after it with short items (Born, Birthplace…) becomes small fact tags beside the name
  *  - a Cards block whose items all have a "meta" line becomes the journey: meta = place, title, text;
- *    shown as a numbered route on a navy band, the last stop highlighted
+ *    shown as a numbered route on a warm band, the last stop highlighted
  * Every other block renders as usual, in order.
  */
 export function IntroJourney({ blocks, locale }: { blocks?: Block[] | null; locale: 'mr' | 'en' }) {
@@ -44,13 +45,12 @@ export function IntroJourney({ blocks, locale }: { blocks?: Block[] | null; loca
 }
 
 function Profile({ hero, facts }: { hero: MediaText; facts: Cards | null }) {
-  const img = mediaUrl(hero.image, 'card')
   return (
     /* photo in a fixed 5:6 frame (about 380 × 456 px on desktop), text centred beside it */
     <section className="grid items-center gap-10 md:grid-cols-[minmax(0,380px)_minmax(0,1fr)] md:gap-16 lg:gap-20">
-      {img && (
+      {mediaUrl(hero.image, 'card') && (
         <div className="relative mx-auto aspect-[5/6] w-full max-w-[380px] overflow-hidden rounded-3xl bg-cream shadow-[0_24px_60px_-34px_rgb(20_33_61/0.45)]">
-          <Image src={img} alt={mediaAlt(hero.image, hero.heading ?? '')} fill sizes="(max-width:768px) 92vw, 380px" priority className="object-cover" style={{ objectPosition: mediaPosition(hero.image) }} />
+          <Img media={hero.image} variant="card" alt={mediaAlt(hero.image, hero.heading ?? '')} fill sizes="(max-width:768px) 92vw, 380px" priority className="object-cover" style={{ objectPosition: mediaPosition(hero.image) }} />
         </div>
       )}
       <div className="min-w-0">
@@ -68,7 +68,7 @@ function Profile({ hero, facts }: { hero: MediaText; facts: Cards | null }) {
           </dl>
         )}
         <div className="mt-6 max-w-2xl">
-          <RichText data={hero.body} />
+          <RichText html={hero.body} />
         </div>
       </div>
     </section>
@@ -86,7 +86,7 @@ function Journey({ block, locale }: { block: Cards; locale: 'mr' | 'en' }) {
         {block.heading && <h2 className="h-section">{block.heading}</h2>}
         {block.intro && <p className="lead mt-3 max-w-2xl">{block.intro}</p>}
 
-        <ol className="mt-10 grid md:mt-12 md:grid-cols-[repeat(var(--stops),minmax(0,1fr))] md:gap-6" style={{ '--stops': stops.length } as React.CSSProperties}>
+        <ol className="mt-10 grid md:mt-12 md:grid-cols-[repeat(var(--stops),minmax(0,1fr))] md:gap-6" style={{ '--stops': stops.length } as CSSProperties}>
           {stops.map((s, i) => {
             const end = i === last
             return (

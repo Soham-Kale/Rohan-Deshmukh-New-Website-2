@@ -1,34 +1,34 @@
 {
   "name": "rohan-deshmukh-website",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Three-tier website: frontend (public site) → backend (Payload CMS + API) → db (PostgreSQL)",
+  "description": "Official website of Rohan Subhash Deshmukh — React + Vite frontend, Express + Sequelize backend (SQLite for development, MySQL for production)",
   "workspaces": [
-    "db",
     "backend",
     "frontend"
   ],
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "preview": "node scripts/dev.mjs --prod",
-    "db": "npm run start -w db",
-    "build": "npm run build -w backend && npm run build -w frontend",
-    "build:backend": "npm run build -w backend",
-    "build:frontend": "npm run build -w frontend",
+    "build": "npm run build -w frontend",
+    "start": "npm run start -w backend",
     "seed": "npm run seed -w backend",
     "seed:fresh": "npm run seed:fresh -w backend",
     "migrate": "npm run migrate -w backend",
-    "content:update": "npm run content:update -w backend",
-    "generate:types": "npm run generate:types -w backend",
-    "typecheck": "npm run typecheck -w backend && npm run typecheck -w frontend"
+    "import:payload": "npm run import:payload -w backend --",
+    "test": "npm run test -w backend",
+    "lint": "npm run lint -w backend && npm run lint -w frontend",
+    "typecheck": "npm run typecheck -w frontend",
+    "e2e": "npm run e2e:site && npm run e2e:admin",
+    "e2e:site": "node e2e/site.e2e.mjs",
+    "e2e:admin": "node e2e/admin.e2e.mjs",
+    "admin": "npm run admin -w backend --"
   },
   "engines": {
     "node": ">=20.9.0"
   },
   "devDependencies": {
-    "cross-env": "^10.1.0",
-    "dotenv": "^18.0.7",
-    "pg": "^8.20.0"
+    "playwright-core": "^1.64.1"
   }
 }

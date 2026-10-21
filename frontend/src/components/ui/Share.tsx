@@ -1,5 +1,3 @@
-'use client'
-
 import { Link2, Check } from 'lucide-react'
 import { useState } from 'react'
 import { SocialIcon } from './SocialIcon'

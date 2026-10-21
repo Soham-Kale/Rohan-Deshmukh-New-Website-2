@@ -1,7 +1,5 @@
-'use client'
-
 import { useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
-import Image from 'next/image'
+import { Img } from '@/components/ui/Img'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -56,12 +54,12 @@ export function FamilySpotlight({ members, panels, labels }: { members: Spotligh
                 on ? 'border-btn bg-btn text-white' : 'border-line bg-white text-charcoal-900 hover:border-frame hover:bg-cream',
               )}
             >
-              <span className={cn('relative grid size-11 shrink-0 place-items-center overflow-hidden rounded-full text-sm font-semibold', on ? 'bg-white/20 text-white' : 'bg-cream text-saffron-700')}>
-                {m.thumb ? <Image src={m.thumb} alt="" fill sizes="44px" className="object-cover object-top" /> : m.initials}
+              <span className={cn('relative grid size-11 shrink-0 place-items-center overflow-hidden rounded-full text-sm font-semibold', on ? 'bg-white/25 text-white' : 'bg-cream text-saffron-700')}>
+                {m.thumb ? <Img src={m.thumb} alt="" fill className="object-cover object-top" /> : m.initials}
               </span>
               <span className="min-w-0">
                 <span className="block truncate text-[0.95rem] font-semibold leading-snug">{m.name}</span>
-                <span className={cn('block text-sm leading-snug', on ? 'text-white/90' : 'text-muted')}>{m.relation}</span>
+                <span className={cn('block text-sm leading-snug', on ? 'text-white' : 'text-muted')}>{m.relation}</span>
               </span>
             </button>
           )

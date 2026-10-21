@@ -12,11 +12,11 @@
   "search": { "title": "Search", "placeholder": "Search pages, posts, initiatives…", "results": "Search results", "hint": "Type at least 2 characters" },
   "forms": {
     "name": "Name", "mobile": "Mobile number", "email": "Email", "subject": "Subject", "office": "Send to office", "message": "Message",
-    "attachment": "Attach file (PDF/JPG, max 5MB)", "submit": "Submit", "sending": "Sending…", "required": "required",
+    "attachment": "Attach file (PDF/JPG, max 5MB)", "submit": "Submit", "sending": "Sending…", "required": "This field is required",
     "address": "Full address", "issue": "Issue / suggestion", "type": "Type", "grievance": "Grievance", "suggestion": "Suggestion",
     "success": "Thank you! Your message has been received.", "successRef": "Thank you! Your reference number is:", "error": "Something went wrong. Please try again.",
     "cv": "CV (PDF/DOC, max 5MB)", "apply": "Apply", "consent": "I consent to my details being used to contact me.",
-    "invalidMobile": "Please enter a valid 10-digit mobile number", "fileTooBig": "File is larger than 5MB", "fileType": "This file type is not accepted"
+    "invalidMobile": "Please enter a valid 10-digit mobile number", "invalidEmail": "Please enter a valid email address", "fileTooBig": "File is larger than 5MB", "fileType": "This file type is not accepted"
   },
   "pages": {
     "socialWork": "Social Initiatives", "initiatives": "Initiatives", "allInitiatives": "All initiatives", "photoGallery": "Photo Gallery", "videoGallery": "Video Gallery",

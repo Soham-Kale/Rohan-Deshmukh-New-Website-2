@@ -1,5 +1,3 @@
-'use client'
-
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -173,11 +171,12 @@ export function HeroSlider({ slides, autoplay = 5 }: { slides: Slide[]; autoplay
                   <button
                     type="button"
                     onClick={() => show(i)}
-                    aria-label={`Slide ${i + 1}`}
                     aria-current={i === index ? 'true' : undefined}
                     className={cn('group flex min-h-9 items-center gap-3 py-1 text-base tabular-nums transition-colors lg:text-lg', i === index ? 'text-white' : 'text-white/55 hover:text-white')}
                   >
                     <span aria-hidden className={cn('h-px bg-white transition-all duration-500', i === index ? 'w-8 lg:w-12' : 'w-0 group-hover:w-4')} />
+                    {/* the name is read from the content, so it always contains the number that is shown */}
+                    <span className="sr-only">Slide</span>
                     {hasMobile ? (
                       <>
                         <span className="lg:hidden">{pad(mobilePos + 1)}</span>

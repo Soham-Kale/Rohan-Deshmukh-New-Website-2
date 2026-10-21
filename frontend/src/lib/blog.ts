@@ -1,17 +1,22 @@
-import type { Category, Post } from '@/payload-types'
+import type { Category, Post } from '@/types/cms'
 import { toMarathiDigits } from './utils'
 
-type LexNode = { type?: string; tag?: string; text?: string; children?: LexNode[] }
-const rootOf = (content: unknown): LexNode | null =>
-  content && typeof content === 'object' && 'root' in content ? ((content as { root: LexNode }).root ?? null) : null
-
-/** Plain text of a Lexical node tree */
-export const lexicalText = (n?: LexNode | null): string =>
-  !n ? '' : (n.text ?? '') + (n.children ?? []).map((c) => ` ${lexicalText(c)}`).join('')
+/** Plain text of a piece of HTML. Every tag becomes a space, so formatted runs count as separate words — as before, which keeps the reading times unchanged */
+export const htmlText = (html?: string | null): string =>
+  (html ?? '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+    .trim()
 
 /** Estimated reading time in minutes (≈180 words a minute for Marathi/English news prose) */
 export const readMinutes = (post: Pick<Post, 'content' | 'excerpt'>): number => {
-  const words = (lexicalText(rootOf(post.content)) || post.excerpt || '').split(/\s+/).filter(Boolean).length
+  const words = (htmlText(post.content) || post.excerpt || '').split(/\s+/).filter(Boolean).length
   return Math.max(1, Math.round(words / 180))
 }
 
@@ -21,12 +26,15 @@ export const readTimeLabel = (post: Pick<Post, 'content' | 'excerpt'>, locale: s
   return locale === 'mr' ? `${toMarathiDigits(n)} मिनिटे वाचन` : `${n} min read`
 }
 
-/** Section headings (h2/h3) of an article, in order — used for the "key points" box; ids match RichText anchors */
-export const articleHeadings = (content: unknown): { id: string; text: string }[] =>
-  (rootOf(content)?.children ?? [])
-    .filter((n) => n.type === 'heading' && (n.tag === 'h2' || n.tag === 'h3'))
-    .map((n, i) => ({ id: `sec-${i + 1}`, text: lexicalText(n).replace(/\s+/g, ' ').trim() }))
-    .filter((h) => h.text)
+/** Section headings (h2/h3) of an article, in order — the "key points" box; the ids match the ones RichText adds */
+export const articleHeadings = (html?: string | null): { id: string; text: string }[] => {
+  const out: { id: string; text: string }[] = []
+  for (const m of (html ?? '').matchAll(/<(h[23])>([\s\S]*?)<\/\1>/g)) {
+    const text = htmlText(m[2])
+    out.push({ id: `sec-${out.length + 1}`, text })
+  }
+  return out.filter((h) => h.text)
+}
 
 /** First category of a post (populated), if any */
 export const primaryCategory = (post: Post): Category | null => {
@@ -34,6 +42,6 @@ export const primaryCategory = (post: Post): Category | null => {
   return (c as Category) ?? null
 }
 
-/** Long newspaper date, e.g. "मंगळवार, १३ ऑक्टोबर, २०२६" */
+/** Long newspaper date, e.g. "Tuesday, 13 October 2026" */
 export const longDate = (d: Date, locale: string) =>
   new Intl.DateTimeFormat(locale === 'mr' ? 'mr-IN' : 'en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' }).format(d)

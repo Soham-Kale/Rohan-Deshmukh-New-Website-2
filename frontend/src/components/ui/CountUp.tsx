@@ -1,6 +1,4 @@
-'use client'
-
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 const DEVANAGARI = '०१२३४५६७८९'
 const toLatin = (s: string) => s.replace(/[०-९]/g, (d) => String(DEVANAGARI.indexOf(d)))
@@ -45,28 +43,31 @@ function format(p: Parsed, n: number) {
   return p.prefix + (p.deva ? toDevanagari(out) : out) + p.suffix
 }
 
+const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 /**
  * Number that counts up from 0 when it scrolls into view (once).
  * Keeps the editor's format: Marathi digits, commas, "+", "%", "कोटी"…
- * The final value is in the HTML (search engines, no-JS) and reserves the width, so nothing jumps.
+ * An invisible copy of the final value reserves the width, so nothing jumps; screen readers always read the final value.
  */
 export function CountUp({ value, duration = 1800, className }: { value: string; duration?: number; className?: string }) {
-  const parsed = parse(value)
+  const parsed = useMemo(() => parse(value), [value])
   const ref = useRef<HTMLSpanElement>(null)
-  const [shown, setShown] = useState(value)
+  // text shown while counting (for this value); until then the number reads 0, so it never flashes its final value first
+  const [counting, setCounting] = useState<{ value: string; text: string } | null>(null)
+  const animate = parsed !== null && !reducedMotion()
+  const shown = counting?.value === value ? counting.text : animate ? format(parsed, 0) : value
 
   useEffect(() => {
     const el = ref.current
-    if (!parsed || !el) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!parsed || !el || reducedMotion()) return
     let raf = 0
-    setShown(format(parsed, 0))
     const run = () => {
       const start = performance.now()
       const tick = (now: number) => {
         const t = Math.min(1, (now - start) / duration)
         const eased = 1 - Math.pow(1 - t, 3) // ease-out: fast start, gentle finish
-        setShown(t < 1 ? format(parsed, parsed.target * eased) : value)
+        setCounting({ value, text: t < 1 ? format(parsed, parsed.target * eased) : value })
         if (t < 1) raf = requestAnimationFrame(tick)
       }
       raf = requestAnimationFrame(tick)
@@ -85,8 +86,7 @@ export function CountUp({ value, duration = 1800, className }: { value: string; 
       io.disconnect()
       cancelAnimationFrame(raf)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, duration])
+  }, [parsed, value, duration])
 
   if (!parsed) return <span className={className}>{value}</span>
   return (

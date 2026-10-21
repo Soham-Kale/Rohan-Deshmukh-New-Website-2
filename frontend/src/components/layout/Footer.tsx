@@ -1,18 +1,18 @@
-import Image from 'next/image'
-import { getTranslations } from 'next-intl/server'
-import { ChevronRight, Mail, Phone, MapPin } from 'lucide-react'
-import { getGlobal } from '@/lib/cms'
-import { mediaUrl } from '@/lib/utils'
+import { ChevronRight, Mail, MapPin, Phone } from 'lucide-react'
+import { useLayout } from '@/lib/layout'
+import { LOCALE, useTranslations } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
 import { isLiveLink } from '@/lib/nav'
-import type { Locale } from '@/i18n/routing'
 import { CMSLink } from '../ui/CMSLink'
-import { SocialIcon, socialLabels } from '../ui/SocialIcon'
+import { SocialIcon } from '../ui/SocialIcon'
+import { socialLabels } from '@/lib/social'
 
 /** Removed from the footer (Oct 2026) — hidden even if an older footer in the database still lists them */
 const HIDDEN_LEGAL = ['/privacy-policy', '/terms', '/disclaimer']
 
-export async function Footer({ locale }: { locale: Locale }) {
-  const [settings, footer, t] = await Promise.all([getGlobal('site-settings', locale), getGlobal('footer', locale), getTranslations('common')])
+export function Footer() {
+  const { settings, footer } = useLayout()
+  const t = useTranslations('common')
   const social = Object.entries(settings.social ?? {}).filter(([k, v]) => v && k !== 'id')
   const logo = mediaUrl(settings.logoLight)
 
@@ -22,7 +22,7 @@ export async function Footer({ locale }: { locale: Locale }) {
       <div className="container-x grid grid-cols-2 gap-x-6 gap-y-12 py-14 md:py-16 lg:grid-cols-[1.25fr_1fr_1fr_1fr]">
         <div className="col-span-2 lg:col-span-1">
           <p className="mb-5 text-lg text-white">{t('contactUs')}</p>
-          {logo ? <Image src={logo} alt={settings.siteName} width={200} height={52} className="h-12 w-auto" /> : <p className="font-display text-2xl text-white">{settings.siteName}</p>}
+          {logo ? <img src={logo} alt={settings.siteName} width={200} height={52} loading="lazy" className="h-12 w-auto" /> : <p className="font-display text-2xl text-white">{settings.siteName}</p>}
           <ul className="mt-5 space-y-2.5 text-[0.98rem]">
             {settings.address && (
               <li className="flex gap-3">
@@ -56,7 +56,7 @@ export async function Footer({ locale }: { locale: Locale }) {
             </ul>
           )}
           <CMSLink url="/contact" className="mt-6 inline-flex min-h-11 items-center rounded-md px-5 text-[0.95rem] text-white ring-1 ring-white/60 transition hover:bg-white hover:text-charcoal-900">
-            {locale === 'mr' ? 'सर्व कार्यालये' : 'More locations'}
+            {LOCALE === 'en' ? 'More locations' : 'सर्व कार्यालये'}
           </CMSLink>
         </div>
 
@@ -86,7 +86,7 @@ export async function Footer({ locale }: { locale: Locale }) {
               <span>
                 {' · '}
                 {footer.developerUrl ? (
-                  <a href={footer.developerUrl} target="_blank" rel="noopener" className="underline-offset-4 hover:text-white hover:underline">
+                  <a href={footer.developerUrl} target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:text-white hover:underline">
                     {footer.developerCredit}
                   </a>
                 ) : (

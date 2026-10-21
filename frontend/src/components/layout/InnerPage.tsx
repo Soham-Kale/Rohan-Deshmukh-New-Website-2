@@ -1,10 +1,10 @@
-import type { Locale } from '@/i18n/routing'
+import type { ReactNode } from 'react'
+import { useLayout } from '@/lib/layout'
 import { getSectionMenu } from '@/lib/section-menu'
 import { PageBanner, type Crumb } from './PageBanner'
 
 type Props = {
   path: string
-  locale: Locale
   title: string
   subtitle?: string | null
   image?: string | null
@@ -13,10 +13,7 @@ type Props = {
   crumbs?: Crumb[]
   /** show the section's sibling pages (as tabs on the banner) */
   sideMenu?: boolean
-  /** kept for older callers; every page now uses the full content width */
-  wide?: boolean
-  menuStyle?: 'side' | 'tabs'
-  children: React.ReactNode
+  children: ReactNode
 }
 
 /**
@@ -24,8 +21,9 @@ type Props = {
  * banner (breadcrumb, title, sibling pages as tabs) → content on the site grid, starting at the same
  * left edge as the title. Blocks inside decide their own reading width.
  */
-export async function InnerPage({ path, locale, title, subtitle, image, imagePosition, crumbs, sideMenu = true, children }: Props) {
-  const menu = await getSectionMenu(path, locale)
+export function InnerPage({ path, title, subtitle, image, imagePosition, crumbs, sideMenu = true, children }: Props) {
+  const { header } = useLayout()
+  const menu = getSectionMenu(path, header)
   const autoCrumbs: Crumb[] = crumbs ?? [...(menu.title && menu.title !== title ? [{ label: menu.title, href: menu.sectionHref }] : []), { label: title }]
   const tabs = sideMenu && menu.items.length > 1 ? menu.items.map((it) => ({ ...it, active: it.href === path })) : undefined
   return (

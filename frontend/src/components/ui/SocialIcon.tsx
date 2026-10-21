@@ -15,8 +15,3 @@ export const SocialIcon = ({ name, className = 'size-5' }: Props) => (
     <path d={paths[name] ?? ''} />
   </svg>
 )
-
-export const socialLabels: Record<string, string> = {
-  facebook: 'Facebook', instagram: 'Instagram', twitter: 'X (Twitter)', youtube: 'YouTube',
-  linkedin: 'LinkedIn', whatsappChannel: 'WhatsApp', telegram: 'Telegram',
-}

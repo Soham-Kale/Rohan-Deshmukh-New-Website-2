@@ -1,9 +1,7 @@
-'use client'
-
 import { useState } from 'react'
-import Image from 'next/image'
 import { Play } from 'lucide-react'
 import { youtubeId } from '@/lib/utils'
+import { Img } from './Img'
 
 /** Lite YouTube embed: shows the thumbnail until clicked (keeps pages fast) */
 export function YouTube({ url, title }: { url?: string | null; title?: string | null }) {
@@ -16,7 +14,7 @@ export function YouTube({ url, title }: { url?: string | null; title?: string | 
         <iframe src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`} title={title ?? 'YouTube video'} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen className="absolute inset-0 size-full" />
       ) : (
         <button type="button" onClick={() => setPlay(true)} className="group absolute inset-0" aria-label={`Play: ${title ?? 'video'}`}>
-          <Image src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" fill sizes="(max-width:768px) 100vw, 800px" className="object-cover opacity-90 transition group-hover:opacity-100" />
+          <Img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" fill className="object-cover opacity-90 transition group-hover:opacity-100" />
           <span className="absolute inset-0 bg-gradient-to-t from-charcoal-950/55 to-transparent" />
           <span className="absolute left-1/2 top-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-saffron-500 text-white shadow-xl transition group-hover:scale-110">
             <Play className="ml-1 size-7 fill-current" />

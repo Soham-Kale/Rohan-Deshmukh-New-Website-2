@@ -1,16 +1,17 @@
-import Image from 'next/image'
+import type { ReactNode } from 'react'
 import { ArrowRight, ArrowUpRight, Download, FileText, Quote } from 'lucide-react'
-import type { Page } from '@/payload-types'
-import { cn, mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit, relativize } from '@/lib/utils'
+import type { Page } from '@/types/cms'
+import { cn } from '@/lib/utils'
+import { mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit, toGallery } from '@/lib/media'
 import { RichText } from '../ui/RichText'
 import { CMSLink } from '../ui/CMSLink'
 import { Gallery } from '../ui/Gallery'
-import { toGallery } from '../ui/toGallery'
+import { Img } from '../ui/Img'
 import { YouTube } from '../ui/YouTube'
 import { FaqAccordion } from '../home/FaqAccordion'
-import { CountUp } from '@/components/ui/CountUp'
+import { CountUp } from '../ui/CountUp'
 
-type Block = NonNullable<Page['layout']>[number]
+export type PageBlock = NonNullable<Page['layout']>[number]
 
 const Heading = ({ eyebrow, heading }: { eyebrow?: string | null; heading?: string | null }) =>
   eyebrow || heading ? (
@@ -20,7 +21,8 @@ const Heading = ({ eyebrow, heading }: { eyebrow?: string | null; heading?: stri
     </div>
   ) : null
 
-export function PageBlocks({ blocks }: { blocks?: Block[] | null }) {
+/** The content blocks of a page (Pages → Content in the admin), one after another */
+export function PageBlocks({ blocks }: { blocks?: PageBlock[] | null }) {
   if (!blocks?.length) return null
   return (
     <div className="space-y-16 md:space-y-24">
@@ -33,39 +35,36 @@ export function PageBlocks({ blocks }: { blocks?: Block[] | null }) {
   )
 }
 
-function render(b: Block) {
+function render(b: PageBlock): ReactNode {
   switch (b.blockType) {
     case 'content':
       return (
         <div className="max-w-[52rem]">
           <Heading eyebrow={b.eyebrow} heading={b.heading} />
-          <RichText data={b.body} />
+          <RichText html={b.body} />
         </div>
       )
     case 'mediaText': {
-      const img = mediaUrl(b.image, 'card')
       const size = mediaSize(b.image)
       // tall images (e.g. a book cover) are shown at book size instead of filling the column / the whole phone screen
       const tall = size.height > size.width * 1.3
       return (
         <div className={cn('grid items-start gap-10 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-16', b.imagePosition === 'right' && 'md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]')}>
-          {img && (
+          {mediaUrl(b.image, 'card') && (
             /* full photo at its natural shape — never crop faces */
             <div
               className={cn(
                 'overflow-hidden bg-cream md:sticky md:top-28',
-                tall
-                  ? 'mx-auto w-full max-w-60 rounded-xl shadow-[0_24px_48px_-20px_rgba(20,33,61,.45)] sm:max-w-[18rem] lg:max-w-84'
-                  : 'rounded-[1.75rem]',
+                tall ? 'mx-auto w-full max-w-60 rounded-xl shadow-[0_24px_48px_-20px_rgba(20,33,61,.45)] sm:max-w-[18rem] lg:max-w-84' : 'rounded-[1.75rem]',
                 b.imagePosition === 'right' && 'md:order-2',
               )}
             >
-              <Image src={img} alt={mediaAlt(b.image, b.heading ?? '')} width={size.width} height={size.height} sizes={tall ? '(max-width:640px) 240px, 336px' : '(max-width:768px) 100vw, 40vw'} className="h-auto w-full" />
+              <Img media={b.image} variant="card" alt={mediaAlt(b.image, b.heading ?? '')} width={size.width} height={size.height} sizes={tall ? '(max-width:640px) 240px, 336px' : '(max-width:768px) 100vw, 40vw'} className="h-auto w-full" />
             </div>
           )}
           <div className="max-w-2xl">
             <Heading eyebrow={b.eyebrow} heading={b.heading} />
-            <RichText data={b.body} />
+            <RichText html={b.body} />
             {!!b.buttons?.length && (
               <div className="mt-8 flex flex-wrap gap-3">
                 {b.buttons.map((l, i) => (
@@ -93,6 +92,8 @@ function render(b: Block) {
       )
     case 'cards': {
       const withImages = b.items?.some((c) => mediaUrl(c.image, 'card'))
+      // a card title is a sub-heading of the block's heading; without one it follows the page title directly
+      const CardTitle = b.heading ? 'h3' : 'h2'
       const cols = b.columns === '2' ? 'md:grid-cols-2' : b.columns === '4' ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-3'
       return (
         <>
@@ -101,17 +102,16 @@ function render(b: Block) {
           {/* photo cards = open tiles; text-only cards = columns under one shared rule (no boxes) */}
           <div className={cn('grid', cols, withImages ? 'gap-x-7 gap-y-12' : 'gap-x-10 gap-y-10 border-t border-charcoal-900/12')}>
             {b.items?.map((c) => {
-              const img = mediaUrl(c.image, 'card')
               const inner = (
                 <>
-                  {img && (
+                  {mediaUrl(c.image, 'card') && (
                     <div className="tile-media aspect-[16/10]">
-                      <Image src={img} alt={mediaAlt(c.image, c.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" style={photoFit(c.image, 1.6)} />
+                      <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title)} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover" style={photoFit(c.image, 1.6)} />
                     </div>
                   )}
                   {!withImages && <span aria-hidden className="absolute -top-px left-0 h-[3px] w-12 bg-saffron-500 transition-all duration-300 group-hover:w-20" />}
                   <div className={cn('tile-body', !withImages && 'pt-6')}>
-                    <h3 className="tile-title">{c.title}{c.url && <ArrowUpRight aria-hidden className="ml-1.5 inline size-4 -translate-y-px text-saffron-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />}</h3>
+                    <CardTitle className="tile-title">{c.title}{c.url && <ArrowUpRight aria-hidden className="ml-1.5 inline size-4 -translate-y-px text-saffron-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />}</CardTitle>
                     {c.meta && <p className="tile-kicker mt-1">{c.meta}</p>}
                     {c.text && <p className="tile-text whitespace-pre-line">{c.text}</p>}
                     {!!c.tags?.length && (
@@ -136,14 +136,14 @@ function render(b: Block) {
       return (
         <>
           <Heading eyebrow={b.eyebrow} heading={b.heading} />
-          <Gallery images={toGallery(b.images as never, b.heading ?? '')} layout={(b.layout as 'grid' | 'masonry') ?? 'grid'} />
+          <Gallery images={toGallery(b.images, b.heading ?? '')} layout={(b.layout as 'grid' | 'masonry') ?? 'grid'} />
         </>
       )
     case 'faq':
       return (
         <div className="max-w-4xl">
           <Heading eyebrow={b.eyebrow} heading={b.heading} />
-          <FaqAccordion items={(b.items ?? []).map((f) => ({ q: f.question, a: <RichText data={f.answer} className="!text-base !text-muted" /> }))} />
+          <FaqAccordion items={(b.items ?? []).map((f) => ({ q: f.question, a: <RichText html={f.answer} className="!text-base !text-muted" /> }))} />
         </div>
       )
     case 'video':
@@ -169,7 +169,7 @@ function render(b: Block) {
           <Heading eyebrow={b.eyebrow} heading={b.heading} />
           <ul className="divide-y divide-line border-y border-line">
             {b.files?.map((f) => {
-              const url = typeof f.file === 'object' ? relativize(f.file?.url) : null
+              const url = typeof f.file === 'object' && f.file ? f.file.url : null
               return (
                 <li key={f.id}>
                   <a href={url ?? '#'} download className="group flex items-center gap-4 py-4">
@@ -183,8 +183,7 @@ function render(b: Block) {
           </ul>
         </div>
       )
-    case 'cta': {
-      const img = mediaUrl(b.image, 'card')
+    case 'cta':
       return (
         /* closing invitation: a soft cream panel (the one place a page uses a panel) */
         <div className="grid overflow-hidden rounded-[1.75rem] bg-cream md:grid-cols-[1.3fr_1fr]">
@@ -200,16 +199,14 @@ function render(b: Block) {
               ))}
             </div>
           </div>
-          {img && (
+          {mediaUrl(b.image, 'card') && (
             <div className="relative min-h-60">
-              <Image src={img} alt={mediaAlt(b.image)} fill sizes="(max-width:768px) 100vw, 40vw" className="object-cover" style={{ objectPosition: mediaPosition(b.image) }} />
+              <Img media={b.image} variant="card" alt={mediaAlt(b.image)} fill sizes="(max-width:768px) 100vw, 40vw" className="object-cover" style={{ objectPosition: mediaPosition(b.image) }} />
             </div>
           )}
         </div>
       )
-    }
     default:
       return null
   }
 }
-

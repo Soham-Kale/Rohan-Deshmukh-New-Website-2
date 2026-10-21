@@ -7,7 +7,7 @@ type Raw = { id?: string | null; label: string; url?: string | null; newTab?: bo
 /** Links to pages removed from the website are dropped, even if an older menu in the database still lists them */
 export const isLiveLink = (url?: string | null) => !url || !url.startsWith('/') || !isRemovedPath(url.split(/[?#]/)[0])
 
-/** CMS stores level 3 as "subItems" (DB naming); expose a uniform `children` tree to the UI */
+/** The CMS stores level 3 as "subItems"; the UI gets one uniform `children` tree */
 export const normalizeNav = (items: Raw[] | null | undefined): NavNode[] =>
   (items ?? [])
     .filter((n) => isLiveLink(n.url))

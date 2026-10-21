@@ -1,8 +1,8 @@
-import Image from 'next/image'
-import type { Page } from '@/payload-types'
-import { mediaAlt, mediaUrl, photoFit } from '@/lib/utils'
+import type { Page } from '@/types/cms'
+import { mediaAlt, mediaUrl, photoFit } from '@/lib/media'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
 import { RichText } from '@/components/ui/RichText'
+import { Img } from '@/components/ui/Img'
 import { FamilySpotlight, type SpotlightMember } from './FamilySpotlight'
 
 type Block = NonNullable<Page['layout']>[number]
@@ -42,18 +42,15 @@ export function FamilyBackground({ blocks, locale }: { blocks?: Block[] | null; 
     const name = m.heading ?? ''
     return { key: m.id ?? String(i), name: name.split(',')[0], title: name, relation: m.eyebrow ?? '', thumb: mediaUrl(m.image, 'thumb'), initials: initials(name) }
   })
-  const panels = members.map((m) => {
-    const img = mediaUrl(m.image, 'card')
-    return {
-      media: img ? (
-        /* photo on a soft cream backdrop; shown whole when its shape is far from the frame (faces never cropped) */
-        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-cream">
-          <Image src={img} alt={mediaAlt(m.image, m.heading ?? '')} fill sizes="(max-width:768px) 92vw, 360px" className="h-full w-full" style={photoFit(m.image, 0.8, 0.3)} />
-        </div>
-      ) : null,
-      body: <RichText data={m.body} />,
-    }
-  })
+  const panels = members.map((m) => ({
+    media: mediaUrl(m.image, 'card') ? (
+      /* photo on a soft cream backdrop; shown whole when its shape is far from the frame (faces never cropped) */
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-cream">
+        <Img media={m.image} variant="card" alt={mediaAlt(m.image, m.heading ?? '')} fill sizes="(max-width:768px) 92vw, 360px" className="h-full w-full" style={photoFit(m.image, 0.8, 0.3)} />
+      </div>
+    ) : null,
+    body: <RichText html={m.body} />,
+  }))
 
   return (
     <div className="space-y-16 md:space-y-24">
@@ -66,10 +63,10 @@ export function FamilyBackground({ blocks, locale }: { blocks?: Block[] | null; 
               {intro.eyebrow && <p className="eyebrow">{intro.eyebrow}</p>}
               {intro.heading && <h2 className="mt-2 text-[1.7rem] leading-tight text-charcoal-900 md:text-[2.2rem]">{intro.heading}</h2>}
             </div>
-            <RichText data={intro.body} />
+            <RichText html={intro.body} />
           </div>
         )}
-        <FamilySpotlight members={chips} panels={panels} labels={LABELS[locale] ?? LABELS.mr} />
+        <FamilySpotlight members={chips} panels={panels} labels={LABELS[locale] ?? LABELS.en} />
       </section>
 
       {after.length > 0 && <PageBlocks blocks={after} />}

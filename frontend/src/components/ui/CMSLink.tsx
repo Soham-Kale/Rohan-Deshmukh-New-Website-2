@@ -1,8 +1,10 @@
-import { Link } from '@/i18n/navigation'
+import type { ReactNode } from 'react'
+import { Link } from 'react-router'
 import { isExternal } from '@/lib/utils'
 
-type Props = { url?: string | null; newTab?: boolean | null; className?: string; children: React.ReactNode; 'aria-label'?: string; tabIndex?: number }
+type Props = { url?: string | null; newTab?: boolean | null; className?: string; children: ReactNode; 'aria-label'?: string; tabIndex?: number }
 
+/** A link from the CMS: a page of this site (client-side navigation), another site, e-mail or phone */
 export function CMSLink({ url, newTab, className, children, ...rest }: Props) {
   if (!url) return <span className={className}>{children}</span>
   if (isExternal(url) || url.startsWith('mailto:') || url.startsWith('tel:') || newTab)
@@ -12,7 +14,7 @@ export function CMSLink({ url, newTab, className, children, ...rest }: Props) {
       </a>
     )
   return (
-    <Link href={url} className={className} {...rest}>
+    <Link to={url} className={className} {...rest}>
       {children}
     </Link>
   )

@@ -1,13 +1,14 @@
+import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 type Props = {
   eyebrow?: string | null
   heading?: string | null
-  children?: React.ReactNode
+  children?: ReactNode
   className?: string
   /** kept for older callers: now a soft warm band (the site has no dark sections) */
   dark?: boolean
-  action?: React.ReactNode
+  action?: ReactNode
   intro?: string | null
   id?: string
   /** centred heading (sections that show a list or grid) */

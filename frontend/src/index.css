@@ -1,0 +1,232 @@
+@import 'tailwindcss';
+
+/* Tiro Devanagari Marathi (self-hosted, one weight): Marathi + English on every page */
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-devanagari-400-normal.woff2') format('woff2'); unicode-range: U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-devanagari-400-italic.woff2') format('woff2'); unicode-range: U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-ext-400-normal.woff2') format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-ext-400-italic.woff2') format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-400-normal.woff2') format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: 'Tiro Devanagari Marathi'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/tiro/tiro-devanagari-marathi-latin-400-italic.woff2') format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+
+@theme {
+  /* "Fresh saffron" palette (developer CSS variables → site tokens):
+     --color-bg #FFFCF7 → paper · --color-bg-alt #FFF3E6 → cream · --color-surface #FFFFFF → surface
+     --color-heading / --color-dark #14213D → charcoal-900 (headings, dark buttons, stat cards, footer)
+     --color-text #4A5568 → ink · --color-primary #F26B1D → saffron-500/600 (buttons, numbers; white text on it)
+     --color-highlight #FFB070 → highlight · --color-frame #FFC9A3 → frame · --color-border #F1E4D6 → line
+     --color-hero-overlay rgba(20,33,61,.55) → overlay
+     (token names kept so every component follows: "charcoal" = navy) */
+  --color-charcoal-950: #0e1830;
+  --color-charcoal-900: #14213d;  /* headings, dark buttons, stat cards, footer */
+  --color-charcoal-800: #1d2e52;
+  --color-charcoal-700: #2a3f69;
+  --color-charcoal-600: #3a5080;
+  --color-saffron-50: #fff3e6;
+  --color-saffron-100: #ffe6cf;
+  --color-saffron-200: #ffc9a3;   /* photo frame */
+  --color-saffron-300: #ffb070;   /* highlight */
+  --color-saffron-400: #f7883f;
+  --color-saffron-500: #f26b1d;   /* primary */
+  --color-saffron-600: #c9500b;   /* surfaces with white text (buttons, badges), big numbers, icons — white on it is 4.5:1 (WCAG AA) */
+  --color-saffron-700: #b84a0a;   /* small orange text on white and cream (4.8:1), button hover */
+  --color-leaf-50: #ebf5ee;
+  --color-leaf-600: #1f7a3a;      /* tricolour line above the footer only */
+  --color-cream: #fff3e6;         /* alternate section */
+  --color-paper: #ffffff;         /* page background (clean white, like an official site) */
+  --color-surface: #ffffff;       /* cards */
+  --color-ink: #4a5568;           /* body text */
+  --color-muted: #5c6779;         /* secondary text */
+  --color-line: #f1e4d6;          /* borders */
+  --color-frame: #ffc9a3;
+  --color-highlight: #ffb070;
+  --color-overlay: rgb(20 33 61 / .55); /* over photos */
+  --color-btn: #c9500b;           /* every button (white text on it: 4.5:1) */
+  --color-btn-hover: #a8430a;
+
+  --font-display: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
+  --font-sans: 'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif;
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  /* never allow sideways scrolling (clip keeps sticky header working, unlike hidden) */
+  html, body { overflow-x: clip; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  /* Tiro has a smaller eye than a sans, so the base is 17px (16px on phones) for comfortable Marathi reading */
+  body { background: #fff; color: var(--color-ink); font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.75; font-kerning: normal; }
+  @media (max-width: 639px) { body { font-size: 1rem; } }
+  /* Tiro comes in one weight; its regular is already sturdy at heading sizes, so headings use it as drawn (no fake bold) */
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height: 1.3; letter-spacing: 0; text-wrap: balance; }
+  p, li { text-wrap: pretty; }
+  ::selection { background: var(--color-highlight); color: var(--color-charcoal-900); }
+  :focus-visible { outline: 3px solid var(--color-saffron-500); outline-offset: 2px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
+}
+
+@layer components {
+  .font-display { font-weight: 400; }
+  .container-x { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
+  /* hero slideshow text: slides in from the right, leaves to the left (distance per line via --hero-x) */
+  /* wide letter-spacing suits Latin capitals but breaks Devanagari conjuncts apart */
+  .hero-kicker { letter-spacing: 0.18em; }
+  :lang(mr) .hero-kicker { letter-spacing: 0.01em; }
+  .hero-line { transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.9s ease; }
+  .hero-line[data-state='in'] { transform: none; opacity: 1; }
+  .hero-line[data-state='out'] { transform: translate3d(calc(var(--hero-x) * -1), 0, 0); opacity: 0; transition-duration: 0.6s; transition-delay: 0s !important; }
+  .hero-line[data-state='idle'], .hero-line[data-state='pre'] { transform: translate3d(var(--hero-x), 0, 0); opacity: 0; transition: none; }
+  @media (min-width: 768px) { .container-x { padding-inline: 32px; } }
+
+  /* small label above a heading (like a section mark on an official site) */
+  .eyebrow { display: inline-block; font-size: .95rem; color: var(--color-saffron-700); letter-spacing: .02em; }
+  .on-dark .eyebrow { color: var(--color-highlight); }
+
+  /* section title with a short saffron bar under it — the one heading style used on every section */
+  .h-section { position: relative; font-size: clamp(1.8rem, 1.35rem + 1.8vw, 2.6rem); line-height: 1.25; color: var(--color-charcoal-900); margin-top: .35rem; padding-bottom: 1rem; }
+  .h-section::after { content: ''; position: absolute; left: 0; bottom: 0; width: 3rem; height: 3px; border-radius: 2px; background: var(--color-saffron-500); }
+  .is-center .h-section::after, .h-section.is-center::after { left: 50%; transform: translateX(-50%); }
+  .on-dark .h-section { color: #fff; }
+
+  /* Buttons (Oct 2026): every button on the site is #F26B1D with white text and a softly rounded 12px corner.
+     The variant names (primary / dark / light / ghost) are kept so no component had to change its markup. */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .6rem; min-height: 2.875rem; border-radius: .75rem; padding: .65rem 1.5rem; font-weight: 600; font-size: 1rem; line-height: 1.3; background: var(--color-btn); color: #fff; transition: background .2s, transform .2s, box-shadow .2s; white-space: nowrap; }
+  .btn:hover { background: var(--color-btn-hover); }
+  .btn:active { transform: translateY(1px); }
+  .btn svg { transition: transform .2s; }
+  .btn:hover svg.lucide-arrow-right { transform: translateX(3px); }
+  .btn-primary, .btn-dark, .btn-light, .btn-ghost { background: var(--color-btn); color: #fff; }
+  .btn-primary:hover, .btn-dark:hover, .btn-light:hover, .btn-ghost:hover { background: var(--color-btn-hover); }
+  /* on an orange band a button keeps a white outline so it stays visible */
+  .on-saffron .btn { box-shadow: inset 0 0 0 2px #fff; }
+  /* icon-only buttons (slider arrows, pagination arrows, back to top) */
+  .btn-icon { display: grid; place-items: center; border-radius: .75rem; background: var(--color-btn); color: #fff; transition: background .2s, opacity .2s; }
+  .btn-icon:hover { background: var(--color-btn-hover); }
+
+  .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: .625rem; overflow: hidden; }
+  .card-hover { transition: transform .25s, box-shadow .25s; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -22px rgb(20 33 61 / .22); }
+
+  /* ---------- page rhythm: every section breathes the same amount ---------- */
+  .section { padding-block: 4rem; }
+  .section-tight { padding-block: 3rem; }
+  @media (min-width: 768px) { .section { padding-block: 5.5rem; } .section-tight { padding-block: 4rem; } }
+  .band-cream { background: var(--color-cream); }
+  .band-white { background: var(--color-surface); }
+  .band-navy { background: var(--color-charcoal-900); color: #fff; }
+  /* two neighbouring sections on the same background: a hairline marks where one story ends */
+  .section:not([class*='band-']) + .section:not([class*='band-']),
+  .section.band-cream + .section.band-cream { border-top: 1px solid var(--color-line); }
+
+  /* section heading: eyebrow → title → short intro; centred variant for list/grid sections */
+  .section-head { max-width: 46rem; margin-bottom: 2.5rem; }
+  @media (min-width: 768px) { .section-head { margin-bottom: 3rem; } }
+  .section-head.is-center { margin-inline: auto; text-align: center; }
+  .section-head .lead { margin-top: 1.1rem; }
+  /* heading on the left, "View all →" on the right */
+  .section-head-row { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
+  .section-head-row .section-head { margin-bottom: 0; }
+  @media (min-width: 768px) { .section-head-row { flex-direction: row; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; } }
+  .lead { font-size: 1.1rem; line-height: 1.75; color: var(--color-muted); }
+  @media (min-width: 768px) { .lead { font-size: 1.18rem; } }
+  .on-dark .lead { color: rgb(255 255 255 / .75); }
+
+  /* ---------- open "story" tiles: photo + text on the page itself, no box around them ---------- */
+  .tile { position: relative; display: flex; flex-direction: column; }
+  .tile-media { position: relative; overflow: hidden; border-radius: .625rem; background: var(--color-saffron-100); isolation: isolate; }
+  .tile-media img { transition: transform .7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .tile:hover .tile-media img { transform: scale(1.045); }
+  .tile-body { display: flex; flex: 1; flex-direction: column; padding-top: 1.15rem; }
+  .tile-kicker { font-size: .88rem; color: var(--color-saffron-700); letter-spacing: .01em; }
+  .tile-title { color: var(--color-charcoal-900); font-size: 1.3rem; line-height: 1.4; transition: color .2s; }
+  .tile:hover .tile-title { color: var(--color-saffron-700); }
+  .tile-text { margin-top: .5rem; color: var(--color-muted); font-size: 1rem; line-height: 1.7; }
+  .on-dark .tile-title { color: #fff; }
+  .on-dark .tile:hover .tile-title { color: var(--color-highlight); }
+  .on-dark .tile-text { color: rgb(255 255 255 / .7); }
+
+  /* text link with an arrow that nudges on hover */
+  .more-link { display: inline-flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--color-charcoal-900); transition: color .2s, gap .2s; }
+  .more-link:hover, .tile:hover .more-link { gap: .8rem; color: var(--color-saffron-700); }
+  /* phones: a taller tap area for text links, without changing the layout */
+  @media (max-width: 1023px) { .more-link { padding-block: .6rem; margin-block: -.6rem; } }
+  .on-dark .more-link { color: var(--color-highlight); }
+  .on-dark .more-link:hover, .on-dark .tile:hover .more-link { color: #fff; }
+
+  /* big numbers sitting on the page (no tiles), separated by thin rules */
+  .stat-row { display: grid; gap: 2rem 1.5rem; }
+  .stat-item { border-left: 2px solid var(--color-saffron-500); padding-left: 1.1rem; }
+  .stat-value { font-family: var(--font-display); font-weight: 400; font-size: clamp(2.1rem, 1.7rem + 1.4vw, 2.9rem); line-height: 1.1; color: var(--color-saffron-600); font-variant-numeric: lining-nums; }
+  /* a soft, slightly raised card — used only for key numbers */
+  /* key numbers on a navy card (palette: "dark button, stat card") */
+  .stat-card { border-radius: .625rem; background: var(--color-charcoal-900); color: #fff; padding: 1.35rem 1.25rem 1.25rem; box-shadow: 0 18px 40px -28px rgb(20 33 61 / .6); transition: transform .3s, box-shadow .3s; }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: 0 24px 46px -26px rgb(20 33 61 / .65); }
+  .stat-card .stat-value { color: var(--color-highlight); }
+  .stat-card .stat-label { color: rgb(255 255 255 / .75); }
+  @media (min-width: 768px) { .stat-card { padding: 1.6rem 1.5rem 1.4rem; } }
+  .stat-label { margin-top: .4rem; color: var(--color-muted); font-size: 1rem; line-height: 1.5; }
+  .on-dark .stat-value { color: var(--color-highlight); }
+  .on-dark .stat-label { color: rgb(255 255 255 / .72); }
+
+  /* photo with a soft offset colour block behind it (instead of an outlined frame) */
+  .photo-backdrop { position: relative; isolation: isolate; }
+  .photo-backdrop::before { content: ''; position: absolute; z-index: -1; inset: 1.5rem -1.25rem -1.25rem 1.5rem; border-radius: 2rem; }
+  @media (min-width: 768px) { .photo-backdrop::before { inset: 2rem -1.75rem -1.75rem 2rem; } }
+
+  .prose-rd { font-size: 1.1rem; line-height: 1.85; color: var(--color-ink); }
+  .prose-rd > * + * { margin-top: 1.05em; }
+  .prose-rd h2 { font-size: 1.75rem; line-height: 1.3; color: var(--color-charcoal-900); margin-top: 1.7em; }
+  .prose-rd h3 { font-size: 1.4rem; line-height: 1.35; color: var(--color-charcoal-900); margin-top: 1.5em; }
+  .prose-rd a { color: var(--color-saffron-700); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .2s, text-decoration-color .2s; }
+  .prose-rd a:hover { color: var(--color-charcoal-900); text-decoration-color: var(--color-saffron-500); }
+  .prose-rd ul { list-style: disc; padding-left: 1.4em; }
+  .prose-rd ol { list-style: decimal; padding-left: 1.4em; }
+  .prose-rd li + li { margin-top: .35em; }
+  .prose-rd blockquote { border-left: 3px solid var(--color-saffron-500); padding: .2em 0 .2em 1.2em; font-family: var(--font-display); font-style: italic; font-size: 1.35rem; line-height: 1.6; color: var(--color-charcoal-900); }
+  .prose-rd img { border-radius: 10px; }
+  /* article page (newspaper style): saffron bar on sub-headings */
+  .article-body .prose-rd { font-size: 1.1rem; line-height: 1.85; }
+  @media (max-width: 639px) { .article-body .prose-rd { font-size: 1.02rem; line-height: 1.8; } }
+  .article-body .prose-rd h2 { font-size: 1.45em; border-left: 4px solid var(--color-saffron-500); padding-left: .7em; line-height: 1.35; }
+  .article-body .prose-rd h3 { font-size: 1.2em; border-left: 3px solid var(--color-saffron-300); padding-left: .7em; }
+  .article-body .prose-rd img { width: 100%; height: auto; }
+  @media print {
+    header, footer, .no-print, .fixed { display: none !important; }
+    body { background: #fff !important; }
+    .article-body .prose-rd { font-size: 12pt; }
+  }
+  .prose-rd strong { color: var(--color-charcoal-900); font-weight: 600; }
+
+  /* ---------- scroll reveal: pure CSS (scroll-driven animation), so the HTML is never changed after load and
+     React hydration always matches. Browsers without support, and visitors who ask for reduced motion, just see the page. ---------- */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      :is(.section-head, .section-head-row, .tile, [data-reveal], [data-reveal-stagger] > *) {
+        animation: rv-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 90%;
+      }
+      [data-reveal-stagger] > :nth-child(3n+2) { animation-range: entry 8% entry 100%; }
+      [data-reveal-stagger] > :nth-child(3n+3) { animation-range: entry 16% cover 30%; }
+    }
+  }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+
+  .grain { position: relative; isolation: isolate; }
+  .grain::after { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .07; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+}
+
+@keyframes rv-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+
+/* Phones (most visitors): small print never goes below 13px */
+@media (max-width: 639px) {
+  .text-xs, .text-\[0\.75rem\], .text-\[0\.78rem\] { font-size: .8125rem !important; }
+}

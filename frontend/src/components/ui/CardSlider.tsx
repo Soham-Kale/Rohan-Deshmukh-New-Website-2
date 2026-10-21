@@ -1,22 +1,21 @@
-'use client'
-
-import { useCallback, useEffect, useState } from 'react'
-import Image from 'next/image'
+import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Link } from '@/i18n/navigation'
+import { Link } from 'react-router'
+import { Img } from './Img'
+import type { Media } from '@/types/cms'
 
 export type SlideCard = {
   href: string
   title: string
   text?: string | null
-  image?: string | null
-  imageStyle?: React.CSSProperties
+  media?: Media | number | null
+  imageStyle?: CSSProperties
   meta?: string | null
 }
 
 /**
- * Card slider (photo on top, title, short text, "read more") with square arrow buttons on both sides —
+ * Card slider (photo on top, title, short text, "read more") with square arrow buttons under it —
  * 1 card on phones, 2 on tablets, 3 on desktop. Swipe or drag on touch screens.
  */
 export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel = 'Next' }: { cards: SlideCard[]; readMore: string; prevLabel?: string; nextLabel?: string }) {
@@ -34,9 +33,13 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
 
   useEffect(() => {
     if (!api) return
-    update()
+    // the first reading happens just after the carousel has measured itself
+    const first = requestAnimationFrame(update)
     api.on('select', update).on('reInit', update)
-    return () => void api.off('select', update).off('reInit', update)
+    return () => {
+      cancelAnimationFrame(first)
+      api.off('select', update).off('reInit', update)
+    }
   }, [api, update])
 
   const scrollable = can.prev || can.next
@@ -45,15 +48,15 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
   return (
     <div className="relative">
       <div>
-
         <div className="min-w-0 flex-1 overflow-hidden" ref={ref}>
-          <ul className="-ml-5 flex touch-pan-y md:-ml-7">
+          {/* transition-none: with "reduce motion" on, the global 0.01ms transition makes a just-cleared transform linger for a moment, and Embla then measures the slides against the wrong parent (the first card jumps by one gutter after a resize) */}
+          <ul className="-ml-5 flex touch-pan-y transition-none md:-ml-7">
             {cards.map((c, i) => (
-              <li key={c.href + i} className="min-w-0 shrink-0 grow-0 basis-[88%] pl-5 sm:basis-1/2 md:pl-7 lg:basis-1/3">
+              <li key={c.href + i} className="min-w-0 shrink-0 grow-0 basis-[88%] pl-5 transition-none sm:basis-1/2 md:pl-7 lg:basis-1/3">
                 <article className="tile group h-full">
                   <div className="tile-media aspect-[16/10]">
-                    {c.image ? (
-                      <Image src={c.image} alt="" fill sizes="(max-width:640px) 88vw, (max-width:1024px) 45vw, 380px" className="object-cover" style={c.imageStyle} />
+                    {c.media ? (
+                      <Img media={c.media} variant="card" alt="" fill sizes="(max-width:640px) 88vw, (max-width:1024px) 45vw, 380px" className="object-cover" style={c.imageStyle} />
                     ) : (
                       // no photo yet: branded placeholder with the first letter
                       <div aria-hidden className="grid h-full place-items-center bg-gradient-to-br from-saffron-50 via-paper to-saffron-100">
@@ -64,7 +67,7 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
                   <div className="tile-body">
                     {c.meta && <p className="tile-kicker mb-1">{c.meta}</p>}
                     <h3 className="tile-title text-[1.2rem] md:text-[1.3rem]">
-                      <Link href={c.href} className="after:absolute after:inset-0">{c.title}</Link>
+                      <Link to={c.href} className="after:absolute after:inset-0">{c.title}</Link>
                     </h3>
                     {c.text && <p className="tile-text line-clamp-3">{c.text}</p>}
                     <span className="more-link mt-auto pt-4 text-sm">
@@ -76,7 +79,6 @@ export function CardSlider({ cards, readMore, prevLabel = 'Previous', nextLabel 
             ))}
           </ul>
         </div>
-
       </div>
 
       {/* arrows + position under the cards, so the cards line up with the page grid */}

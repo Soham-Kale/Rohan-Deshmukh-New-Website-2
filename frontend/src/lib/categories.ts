@@ -1,6 +1,6 @@
 /**
  * Initiative categories (labels "मराठी / English"). A copy of INITIATIVE_CATEGORIES in
- * backend/src/collections/Content.ts — the website no longer imports backend code; keep the two lists in sync.
+ * backend/src/schema/collections/content.js — keep the two lists in step.
  */
 export const INITIATIVE_CATEGORIES = [
   { label: 'अन्न व पोषण / Food & Nutrition', value: 'food' },
@@ -13,3 +13,9 @@ export const INITIATIVE_CATEGORIES = [
   { label: 'ज्येष्ठ नागरिक / Senior Citizens', value: 'senior-citizens' },
   { label: 'युवा व रोजगार / Youth & Employment', value: 'youth' },
 ]
+
+/** "अन्न व पोषण / Food & Nutrition" → the part in the visitor's language */
+export const categoryLabel = (value: string, locale: 'en' | 'mr') => {
+  const [mr, en] = (INITIATIVE_CATEGORIES.find((c) => c.value === value)?.label ?? value).split(' / ')
+  return locale === 'mr' ? mr : (en ?? mr)
+}

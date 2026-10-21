@@ -1,10 +1,9 @@
-'use client'
-
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
-import Image from 'next/image'
 import { ArrowRight, ChevronLeft, ChevronRight, Newspaper, Search, Sparkles, TrendingUp, X } from 'lucide-react'
-import { Link } from '@/i18n/navigation'
+import { Link } from 'react-router'
+import type { Media } from '@/types/cms'
 import { cn } from '@/lib/utils'
+import { Img } from '../ui/Img'
 
 export type ProjectCard = {
   id: string | number
@@ -15,7 +14,7 @@ export type ProjectCard = {
   featured?: boolean | null
   stat?: string | null
   text?: string | null
-  image?: string | null
+  media?: Media | number | null
   imageAlt?: string
   imageStyle?: CSSProperties
 }
@@ -25,7 +24,7 @@ type Labels = { all: string; search: string; readMore: string; details: string; 
 const DEVANAGARI = '०१२३४५६७८९'
 
 /**
- * "Featured highlight + grid cards" layout for the 23 Lokmangal initiatives:
+ * "Featured highlight + grid cards" layout for the Lokmangal initiatives:
  * category chips with counts + search → a large slider of the main (featured) initiatives →
  * a grid of cards (photo, key-impact line + category tag, title, short description, Read more).
  * Filters and search apply to both the slider and the grid.
@@ -67,7 +66,7 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
                 )}
               >
                 {c.label}
-                <span className={cn('grid min-w-6 place-items-center rounded-full px-1.5 text-xs leading-5', on ? 'bg-white/20 text-white' : 'bg-cream text-saffron-700')}>{n(c.count)}</span>
+                <span className={cn('grid min-w-6 place-items-center rounded-full px-1.5 text-xs leading-5', on ? 'bg-white text-saffron-700' : 'bg-cream text-saffron-700')}>{n(c.count)}</span>
               </button>
             )
           })}
@@ -109,8 +108,8 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
 
 /** Photo, or a soft placeholder with an icon when an initiative has none */
 function Photo({ p, sizes, className }: { p: ProjectCard; sizes: string; className?: string }) {
-  return p.image ? (
-    <Image src={p.image} alt={p.imageAlt ?? p.title} fill sizes={sizes} className={cn('object-cover', className)} style={p.imageStyle} />
+  return p.media && typeof p.media === 'object' ? (
+    <Img media={p.media} variant="card" alt={p.imageAlt ?? p.title} fill sizes={sizes} className={cn('object-cover', className)} style={p.imageStyle} />
   ) : (
     <div className="absolute inset-0 grid place-items-center bg-cream">
       <Newspaper aria-hidden className="size-11 text-saffron-600" strokeWidth={1.5} />
@@ -118,7 +117,7 @@ function Photo({ p, sizes, className }: { p: ProjectCard; sizes: string; classNa
   )
 }
 
-/** Large navy highlight card: photo left, story right; arrows, dots and a gentle auto-advance */
+/** Large highlight card: photo left, story right; arrows, dots and a gentle auto-advance */
 function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: Labels; n: (v: number) => string }) {
   const [i, setI] = useState(0)
   const [paused, setPaused] = useState(false)
@@ -160,7 +159,7 @@ function FeaturedSlider({ items, labels, n }: { items: ProjectCard[]; labels: La
             {p.text && <p className="mt-3 line-clamp-3 text-[0.95rem] leading-relaxed text-muted md:line-clamp-4">{p.text}</p>}
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-4 md:mt-auto md:pt-6">
-              <Link href={p.href} className="btn btn-primary px-5 py-2.5">
+              <Link to={p.href} className="btn btn-primary px-5 py-2.5">
                 {labels.readMore} <ArrowRight aria-hidden className="size-4" />
               </Link>
               {count > 1 && (
@@ -217,7 +216,7 @@ function GridCard({ p, labels }: { p: ProjectCard; labels: Labels }) {
           )}
         </div>
         <h3 className="tile-title mt-1.5 text-[1rem] font-semibold md:mt-2 md:text-[1.15rem]">
-          <Link href={p.href} className="after:absolute after:inset-0 focus-visible:outline-none">{p.title}</Link>
+          <Link to={p.href} className="after:absolute after:inset-0 focus-visible:outline-none">{p.title}</Link>
         </h3>
         {p.text && <p className="tile-text hidden !text-sm sm:line-clamp-2 md:line-clamp-3">{p.text}</p>}
         <span className="more-link mt-auto pt-3 text-sm md:pt-4">
@@ -227,4 +226,3 @@ function GridCard({ p, labels }: { p: ProjectCard; labels: Labels }) {
     </li>
   )
 }
-

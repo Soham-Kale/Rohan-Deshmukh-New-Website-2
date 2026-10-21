@@ -1,14 +1,17 @@
 node_modules
-.next
 .env
 .env*.local
-/media
-# uploaded files live with the backend (Payload upload folders)
-/backend/media
-/backend/documents
-/backend/form-uploads
+
+# local database, uploaded files and backups (created when the site first runs)
+/backend/data
+/backend/uploads
+/backend/backups
+
+# the built website
+/frontend/dist
+
 *.tsbuildinfo
-next-env.d.ts
-.postgres-data
-.next-dev
-.content-version
+.DS_Store
+
+# screenshots of the end-to-end tests
+/e2e/.shots
