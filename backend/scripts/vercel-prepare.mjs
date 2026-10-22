@@ -1,12 +1,16 @@
 /**
  * Runs in the Vercel build (npm run vercel-build), after the website is built:
  *   1. migrations: creates / updates the tables (PostgreSQL schema DB_SCHEMA, e.g. "site" — other tables in the database are never touched)
- *   2. a database with no content gets the bundled content (pages, posts, the 23 initiatives, events, albums, photos → Vercel Blob…)
+ *   2. a database with no content gets the bundled content (pages, posts, the 23 initiatives, events, albums, photos → Vercel Blob…);
+ *      a database that already has content gets the content updates (npm run content:update — only fills what is missing or still
+ *      reads as before, never overwrites an edit made in the admin)
  *   3. the first admin account (ADMIN_EMAIL / ADMIN_PASSWORD) when there is none — its password is never printed
  * Safe on every deploy: an existing site's content is left exactly as it is.
  */
 import { loadConfig } from '../src/config.js'
 import { createApp } from '../src/app.js'
+import { spawnSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 import { ensureAdmin, isEmpty, loadSnapshot, readSnapshot } from '../src/seed/load.js'
 
 const started = Date.now()
@@ -22,7 +26,12 @@ try {
     console.log('[prepare] the database is empty — loading the website content (this takes a minute the first time)…')
     const stats = await loadSnapshot(ctx, await readSnapshot())
     console.log(`[prepare] ✓ loaded ${stats.documents} documents (${stats.media} photos) and ${stats.globals} settings pages`)
-  } else console.log('[prepare] ✓ the database already has content — left as it is')
+  } else {
+    console.log('[prepare] ✓ the database already has content — applying the content updates (an edit made in the admin is never overwritten)…')
+    const { status } = spawnSync(process.execPath, [fileURLToPath(new URL('./content-update.mjs', import.meta.url))], { stdio: 'inherit', env: process.env })
+    // the site still works with the content it has, so a failed update is reported but does not stop the deploy
+    if (status !== 0) console.warn('[prepare] ! the content updates did not all apply — run "npm run content:update" against this database to finish them')
+  }
   await ctx.db.syncIdCounters() // PostgreSQL: new rows get ids after the highest existing one
   // never a live admin with the example password from the README, whatever NODE_ENV the build runs with
   if (!process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD === 'ChangeMe@123') {
