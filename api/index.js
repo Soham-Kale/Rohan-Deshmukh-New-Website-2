@@ -17,6 +17,10 @@ export default async function handler(req, res) {
   })
   try {
     const app = await ready
+    // Vercel's Node runtime pre-parses the query string into req.query with flat keys ("where[path][equals]"), which hides the app's
+    // own parser (qs, nested objects) — every filtered request then returned everything (e.g. each page showed the first page).
+    // Dropping it lets Express parse the address itself, exactly as it does locally.
+    if (Object.prototype.hasOwnProperty.call(req, 'query')) delete req.query
     return app(req, res)
   } catch (err) {
     console.error('[vercel] the application could not start:', err)

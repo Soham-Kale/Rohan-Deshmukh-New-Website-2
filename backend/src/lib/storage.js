@@ -127,8 +127,9 @@ const vercelBlobClient = {
 export function createBlobStorage(cfg, client = vercelBlobClient) {
   const { blob } = cfg.storage
   const storeId = blob.token.match(/^vercel_blob_rw_([a-z\d]+)_[a-z\d]+$/i)?.[1]?.toLowerCase()
-  const base = blob.publicUrl || (storeId ? `https://${storeId}.public.blob.vercel-storage.com` : '')
-  if (!base) throw new Error('BLOB_READ_WRITE_TOKEN does not look like a Vercel Blob token (vercel_blob_rw_<store>_…); set BLOB_PUBLIC_URL')
+  // MEDIA_FROM_SITE: '' = addresses relative to the website (/site/…), where the build placed the photos
+  const base = cfg.storage.mediaFromSite ? '' : blob.publicUrl || (storeId ? `https://${storeId}.public.blob.vercel-storage.com` : '')
+  if (!base && !cfg.storage.mediaFromSite) throw new Error('BLOB_READ_WRITE_TOKEN does not look like a Vercel Blob token (vercel_blob_rw_<store>_…); set BLOB_PUBLIC_URL')
   const pathname = (key) => {
     const k = safeKey(key)
     const p = k.startsWith('private/') ? `private/${createHmac('sha256', blob.token).update(k).digest('hex').slice(0, 32)}/${k.slice(8)}` : k

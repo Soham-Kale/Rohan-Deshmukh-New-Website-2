@@ -102,6 +102,12 @@ export function loadConfig(env = process.env) {
         publicUrl: trimSlash(env.BLOB_PUBLIC_URL || ''),
         prefix: String(env.BLOB_PREFIX ?? 'site').replace(/^\/+|\/+$/g, ''),
       },
+      /**
+       * MEDIA_FROM_SITE=1 (Vercel, Oct 2026): photo addresses point at the website itself (/site/<file>) instead of the Blob store —
+       * the build copies the bundled photos there (backend/scripts/static-media.mjs). For when the Blob store cannot be read (e.g. the
+       * Hobby plan's monthly limit was reached); new uploads still go to the Blob store.
+       */
+      mediaFromSite: bool(env.MEDIA_FROM_SITE, false),
     },
 
     mail: {
