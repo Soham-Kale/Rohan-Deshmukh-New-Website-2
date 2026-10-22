@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Award, Building2, Sparkles, User, Users } from 'lucide-react'
 import { Link } from 'react-router'
 import { cn } from '@/lib/utils'
 import { Img } from '../ui/Img'
@@ -6,6 +7,14 @@ import { ScrollRow } from '../ui/ScrollRow'
 
 export type Crumb = { label: string; href?: string }
 export type BannerTab = { label: string; href: string; active?: boolean }
+
+const getTabIcon = (href: string) => {
+  if (href.includes('introduction')) return User
+  if (href.includes('biography') || href.includes('family')) return Users
+  if (href.includes('parivar') || href.includes('foundation')) return Building2
+  if (href.includes('political-career')) return Award
+  return null
+}
 
 /**
  * Real photos of Rohan among people, used behind the page title when a page has no banner photo of its own.
@@ -110,7 +119,7 @@ export function PageBanner({
 }
 
 /**
- * Stitch page header (Oct 2026): the eyebrow, the page title and its subtitle (no breadcrumb — removed Oct 2026) — on deep navy with soft kesariya / green glows ('navy'), or on warm ivory ('light', where the subtitle sits in
+ * Stitch page header (Oct 2026): the eyebrow, the page title and its subtitle — on deep navy with soft kesariya / green glows ('navy'), or on warm ivory ('light', where the subtitle sits in
  * a card beside the title). The section's sibling pages follow as a row of pills.
  */
 function StitchBanner({
@@ -121,26 +130,34 @@ function StitchBanner({
   const navy = variant === 'navy'
   return (
     <>
-      <section className={cn('relative isolate w-full overflow-hidden', navy ? 'bg-gradient-to-b from-charcoal-950 via-[#0c1a2e] to-[#10233d] text-white' : 'bg-ivory text-charcoal-950')}>
-        <div aria-hidden className={cn('pointer-events-none absolute -top-40 right-0 -z-10 size-[36rem] rounded-full blur-[140px]', navy ? 'bg-saffron-600/20' : 'bg-saffron-500/10')} />
+      <section className={cn('relative isolate w-full overflow-hidden', navy ? 'bg-gradient-to-b from-charcoal-950 via-[#0a1728] to-[#0e1e34] text-white' : 'bg-ivory text-charcoal-950')}>
+        <div aria-hidden className={cn('pointer-events-none absolute -top-40 right-0 -z-10 size-[36rem] rounded-full blur-[140px]', navy ? 'bg-saffron-600/25' : 'bg-saffron-500/10')} />
         <div aria-hidden className={cn('pointer-events-none absolute bottom-0 left-10 -z-10 size-[28rem] rounded-full blur-[150px]', navy ? 'bg-leaf-600/15' : 'bg-leaf-600/5')} />
-        {navy && <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] opacity-[0.035] [background-size:24px_24px]" />}
-        <div className={cn('container-x relative', navy ? 'pb-16 pt-10 lg:pb-24 lg:pt-14' : 'pb-14 pt-10 lg:pb-16')}>
+        {navy && <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] opacity-[0.04] [background-size:24px_24px]" />}
+        
+        {/* subtle atmospheric saffron line at top */}
+        <div aria-hidden className="h-[2px] w-full bg-gradient-to-r from-transparent via-saffron-500/50 to-transparent" />
 
+        <div className={cn('container-x relative', navy ? 'pb-14 pt-9 lg:pb-18 lg:pt-12' : 'pb-12 pt-8 lg:pb-16')}>
           {navy ? (
-            <div className="max-w-4xl space-y-5">
-              {eyebrow && <p className="text-xs font-bold uppercase tracking-[0.2em] text-saffron-500">{eyebrow}</p>}
-              <h1 className="animate-fade-up text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">{title}</h1>
-              {subtitle && <p className="max-w-3xl text-lg leading-relaxed text-slate-200 sm:text-xl">{subtitle}</p>}
+            <div className="max-w-4xl space-y-4">
+              {eyebrow ? (
+                <span className="inline-flex items-center gap-2 rounded-full border border-saffron-500/30 bg-saffron-500/15 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.2em] text-saffron-300 backdrop-blur-md">
+                  <Sparkles className="size-3.5 text-saffron-400" />
+                  {eyebrow}
+                </span>
+              ) : null}
+              <h1 className="animate-fade-up text-3xl font-extrabold leading-[1.15] tracking-tight text-white sm:text-5xl lg:text-6xl drop-shadow-sm">{title}</h1>
+              {subtitle && <p className="max-w-3xl text-base sm:text-lg lg:text-xl font-normal leading-relaxed text-slate-200">{subtitle}</p>}
             </div>
           ) : (
             <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-10">
               <div className="flex flex-col gap-4 lg:col-span-8">
                 {eyebrow && <p className="text-sm font-bold uppercase tracking-wider text-saffron-600">{eyebrow}</p>}
-                <h1 className="animate-fade-up text-4xl font-bold leading-tight tracking-tight text-charcoal-950 sm:text-5xl">{title}</h1>
+                <h1 className="animate-fade-up text-3xl font-bold leading-tight tracking-tight text-charcoal-950 sm:text-5xl">{title}</h1>
               </div>
               {subtitle && (
-                <div className="rounded-xl border-l-4 border-saffron-500 bg-cream p-6 shadow-sm lg:col-span-4">
+                <div className="rounded-2xl border-l-4 border-saffron-500 bg-cream p-6 shadow-sm lg:col-span-4">
                   <p className="leading-relaxed text-gray-700">{subtitle}</p>
                 </div>
               )}
@@ -151,24 +168,29 @@ function StitchBanner({
 
       {/* the section's pages as pills under the header (the current page in kesariya) */}
       {!!tabs?.length && (
-        <nav aria-label={tabsLabel} className="border-b border-saffron-100 bg-white">
-          <div className="container-x">
-            {/* scrolls sideways on phones, with a soft fade where more pages wait; the current page is kept in view */}
-            <ScrollRow as="ul" className="-mx-6 flex gap-2 px-6 py-3 md:mx-0 md:px-0">
-              {tabs.map((tab) => (
-                <li key={tab.href} className="shrink-0">
-                  <Link
-                    to={tab.href}
-                    aria-current={tab.active ? 'page' : undefined}
-                    className={cn(
-                      'flex min-h-11 items-center rounded-lg px-4 py-2 text-sm font-semibold transition-colors lg:min-h-0',
-                      tab.active ? 'bg-gradient-to-r from-saffron-600 to-saffron-500 text-white shadow-sm' : 'text-charcoal-900 hover:bg-saffron-50 hover:text-saffron-600',
-                    )}
-                  >
-                    {tab.label}
-                  </Link>
-                </li>
-              ))}
+        <nav aria-label={tabsLabel} className="sticky top-16 sm:top-[4.5rem] lg:top-20 z-40 border-b border-stone-200/80 bg-white/95 backdrop-blur-md shadow-[0_4px_20px_-4px_rgba(14,30,52,0.06)]">
+          <div className="container-x relative">
+            <ScrollRow as="ul" className="-mx-4 flex gap-1.5 px-4 py-2.5 sm:gap-2 sm:px-0 md:mx-0">
+              {tabs.map((tab) => {
+                const Icon = getTabIcon(tab.href)
+                return (
+                  <li key={tab.href} className="shrink-0">
+                    <Link
+                      to={tab.href}
+                      aria-current={tab.active ? 'page' : undefined}
+                      className={cn(
+                        'flex min-h-11 items-center gap-2 rounded-full px-4 py-2 lg:min-h-0 text-xs sm:text-sm font-semibold transition-all duration-200',
+                        tab.active
+                          ? 'bg-gradient-to-r from-saffron-600 via-saffron-500 to-[#f97316] text-white shadow-md shadow-saffron-600/25 scale-[1.02]'
+                          : 'text-charcoal-800 hover:bg-saffron-50/90 hover:text-saffron-700',
+                      )}
+                    >
+                      {Icon && <Icon className={cn('size-3.5', tab.active ? 'text-white' : 'text-saffron-600')} />}
+                      <span>{tab.label}</span>
+                    </Link>
+                  </li>
+                )
+              })}
             </ScrollRow>
           </div>
         </nav>
