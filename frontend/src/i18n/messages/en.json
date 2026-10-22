@@ -1,5 +1,5 @@
 {
-  "nav": { "home": "Home", "menu": "Menu", "close": "Close", "search": "Search", "skip": "Skip to content" },
+  "nav": { "home": "Home", "menu": "Menu", "close": "Close", "contact": "Contact", "search": "Search", "skip": "Skip to content" },
   "common": {
     "readMore": "Read more", "viewAll": "View all", "moreInfo": "More info", "back": "Back", "download": "Download",
     "share": "Share", "photos": "Photos", "videos": "Videos", "all": "All", "prev": "Previous", "next": "Next",
