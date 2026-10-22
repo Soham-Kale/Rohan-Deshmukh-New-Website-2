@@ -1,6 +1,7 @@
+import { m, type Variants } from 'motion/react'
 import type { Page } from '@/types/cms'
 import { cn } from '@/lib/utils'
-import { mediaAlt, mediaUrl, photoFit } from '@/lib/media'
+import { mediaAlt, mediaUrl } from '@/lib/media'
 import { PageBlocks } from '@/components/blocks/PageBlocks'
 import { RichText } from '@/components/ui/RichText'
 import { Img } from '@/components/ui/Img'
@@ -10,14 +11,32 @@ type Block = NonNullable<Page['layout']>[number]
 type MediaText = Extract<Block, { blockType: 'mediaText' }>
 type Content = Extract<Block, { blockType: 'content' }>
 
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
-/** top bar of each generation card: kesariya, green, navy (Stitch) */
-const BARS = ['bg-saffron-600', 'bg-leaf-600', 'bg-charcoal-950']
+/**
+ * One colour family per member (kesariya, green, navy — Stitch): the tint of the photo panel, the halo behind the person, the dot on the
+ * relation label, the big numeral, the rule under the name and the ring when the card is hovered. The portraits are cut-outs on a transparent
+ * background, so the panel colour is what they stand on — every panel ends in its own tint (not white), so each one reads as a tile.
+ */
+const ACCENTS = [
+  { panel: 'from-saffron-100 to-saffron-50', halo: 'bg-saffron-200/60', dot: 'bg-saffron-600', numeral: 'text-saffron-600/15', rule: 'bg-saffron-600', ring: 'group-hover:ring-saffron-300' },
+  { panel: 'from-leaf-50 to-leaf-50', halo: 'bg-leaf-200/45', dot: 'bg-leaf-600', numeral: 'text-leaf-600/15', rule: 'bg-leaf-600', ring: 'group-hover:ring-leaf-200' },
+  { panel: 'from-slate-200 to-slate-100', halo: 'bg-slate-300/60', dot: 'bg-charcoal-900', numeral: 'text-charcoal-900/10', rule: 'bg-charcoal-900', ring: 'group-hover:ring-slate-300' },
+] as const
+
+/* What happens inside a card when it scrolls into view: the halo blooms, the person rises into it, the numeral fades in and the rule under the
+   name is drawn. These variants have no `initial` of their own: they follow the card's own hidden → show (see StaggerItem), and `custom` (the
+   card's number) staggers them the same way the cards are staggered (a delay written in a variant replaces the one inherited from the card). */
+const EASE = [0.22, 1, 0.36, 1] as const
+const STEP = 0.08
+const bloom: Variants = { hidden: { opacity: 0, scale: 0.82 }, show: (i: number) => ({ opacity: 1, scale: 1, transition: { duration: 0.9, delay: 0.02 + i * STEP, ease: EASE } }) }
+const rise: Variants = { hidden: { opacity: 0, y: 22, scale: 0.97 }, show: (i: number) => ({ opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, delay: 0.12 + i * STEP, ease: EASE } }) }
+const fade: Variants = { hidden: { opacity: 0 }, show: (i: number) => ({ opacity: 1, transition: { duration: 0.8, delay: 0.25 + i * STEP } }) }
+const draw: Variants = { hidden: { scaleX: 0 }, show: (i: number) => ({ scaleX: 1, transition: { duration: 0.7, delay: 0.35 + i * STEP, ease: EASE } }) }
 
 /**
  * कौटुंबिक पार्श्वभूमी page (Stitch design, Oct 2026): the family introduction beside its heading, then the family
- * members (the page's consecutive Media + text blocks, edited under Pages in the admin) as generation cards side by side —
- * coloured top bar, relation badge, portrait, name and story. Blocks before/after render as usual.
+ * members (the page's consecutive Media + text blocks, edited under Pages in the admin) as cards — a tinted photo panel with the
+ * relation label and a numeral, then the name and the story. Three or more members sit side by side on wide screens; on tablets each
+ * card lies down (photo left, words right) so no card is left alone on a row. Blocks before/after render as usual.
  */
 export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?: 'mr' | 'en' }) {
   const list = (blocks ?? []).filter((b) => !('hidden' in b && b.hidden))
@@ -31,7 +50,9 @@ export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?:
   const intro = introIdx >= 0 ? (list[introIdx] as Content) : null
   const before = list.slice(0, introIdx >= 0 ? introIdx : start)
   const after = list.slice(end)
-  const cols = members.length >= 3 ? 'md:grid-cols-2 lg:grid-cols-3' : members.length === 2 ? 'md:grid-cols-2' : ''
+  const count = members.length
+  const stacked = count >= 3 // side by side, photo on top, on wide screens
+  const cols = count >= 5 ? 'lg:grid-cols-3' : count === 4 ? 'lg:grid-cols-2 xl:grid-cols-4' : count === 3 ? 'lg:grid-cols-3' : count === 2 ? 'lg:grid-cols-2' : ''
 
   return (
     <div className="space-y-16 md:space-y-24">
@@ -41,7 +62,7 @@ export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?:
         {intro && (
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-12">
             <Reveal className="lg:col-span-5">
-              {intro.eyebrow && <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-saffron-600">{intro.eyebrow}</p>}
+              {intro.eyebrow && <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-saffron-700">{intro.eyebrow}</p>}
               {intro.heading && <h2 className="mt-1 font-display text-3xl font-bold leading-tight tracking-tight text-charcoal-950 sm:text-4xl">{intro.heading}</h2>}
               <span aria-hidden className="mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-saffron-600 to-leaf-600" />
             </Reveal>
@@ -51,24 +72,69 @@ export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?:
           </div>
         )}
 
-        <Stagger className={cn('grid grid-cols-1 items-stretch gap-8', cols)}>
-          {members.map((m, i) => (
-            <StaggerItem as="article" key={m.id ?? i} className="group relative flex flex-col overflow-hidden rounded-xl bg-white p-6 shadow-md ring-1 ring-stone-200/70 transition-shadow duration-300 hover:shadow-xl md:p-8">
-              <span aria-hidden className={cn('absolute inset-x-0 top-0 h-1.5', BARS[i % BARS.length])} />
-              <div className="mb-6 flex items-center justify-between gap-2">
-                {m.eyebrow ? <span className="inline-block rounded-full bg-cream px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-charcoal-900">{m.eyebrow}</span> : <span />}
-                <span aria-hidden className={cn('font-display text-sm font-bold', i % 3 === 1 ? 'text-leaf-600' : 'text-saffron-600')}>{ROMAN[i] ?? i + 1}</span>
-              </div>
-              {mediaUrl(m.image, 'card') && (
-                <div className="relative mb-6 h-72 w-full overflow-hidden rounded-lg bg-cream shadow-sm">
-                  <Img media={m.image} variant="card" alt={mediaAlt(m.image, m.heading ?? '')} fill sizes="(max-width:768px) 92vw, (max-width:1024px) 45vw, 380px" className="h-full w-full transition-transform duration-500 group-hover:scale-105" style={photoFit(m.image, 1.3, 0.35)} />
-                  <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal-950/50 via-transparent to-transparent" />
+        <Stagger className={cn('grid grid-cols-1 items-stretch gap-6 lg:gap-7', cols)}>
+          {members.map((member, i) => {
+            const a = ACCENTS[i % ACCENTS.length]
+            const hasPhoto = Boolean(mediaUrl(member.image, 'card'))
+            return (
+              <StaggerItem
+                as="article"
+                key={member.id ?? i}
+                className={cn(
+                  'group relative flex flex-col gap-1 rounded-3xl bg-white p-3 shadow-[0_18px_40px_-26px_rgba(14,30,52,0.4)] ring-1 ring-stone-200/80',
+                  'transition-[box-shadow,translate] duration-300 hover:shadow-[0_28px_56px_-28px_rgba(14,30,52,0.5)] motion-safe:hover:-translate-y-1.5',
+                  stacked ? 'md:flex-row md:gap-3 lg:flex-col lg:gap-1' : 'md:flex-row md:gap-3',
+                  a.ring,
+                )}
+              >
+                {/* the photo panel: a soft tint, a halo behind the person, a faint numeral, the relation label */}
+                <div
+                  className={cn(
+                    'relative isolate aspect-[4/3.7] overflow-hidden rounded-xl bg-gradient-to-b md:aspect-[4/4.4] md:w-[38%] md:shrink-0 md:self-start',
+                    stacked ? 'lg:aspect-[4/4.1] lg:w-auto lg:self-auto' : '',
+                    a.panel,
+                  )}
+                >
+                  <m.span aria-hidden variants={bloom} custom={i} className={cn('absolute left-1/2 top-[56%] -z-10 aspect-square w-[74%] -translate-x-1/2 -translate-y-1/2 rounded-full', a.halo)} />
+                  <m.span aria-hidden variants={fade} custom={i} className={cn('pointer-events-none absolute right-4 top-2.5 -z-10 select-none font-display text-6xl font-bold leading-none tabular-nums', a.numeral)}>
+                    {String(i + 1).padStart(2, '0')}
+                  </m.span>
+                  {member.eyebrow && (
+                    <span className="absolute left-3.5 top-3.5 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-charcoal-900 shadow-sm ring-1 ring-black/5">
+                      <span aria-hidden className={cn('size-2 rounded-full', a.dot)} />
+                      {member.eyebrow}
+                    </span>
+                  )}
+                  {hasPhoto ? (
+                    <m.div variants={rise} custom={i} className="absolute inset-x-[8%] bottom-0 top-[11%]">
+                      <Img
+                        media={member.image}
+                        variant="card"
+                        alt={mediaAlt(member.image, member.heading ?? '')}
+                        fill
+                        sizes="(max-width:768px) 80vw, (max-width:1024px) 30vw, 340px"
+                        className="origin-bottom object-contain object-bottom transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.03]"
+                      />
+                    </m.div>
+                  ) : (
+                    <span aria-hidden className="absolute inset-0 grid place-items-center font-display text-7xl font-bold text-charcoal-900/10">
+                      {(member.heading ?? member.eyebrow ?? '').trim().charAt(0)}
+                    </span>
+                  )}
                 </div>
-              )}
-              {m.heading && <h3 className="mb-4 font-display text-xl font-bold leading-snug text-charcoal-950 md:text-2xl">{m.heading}</h3>}
-              <RichText html={m.body} className="!text-[0.98rem]" />
-            </StaggerItem>
-          ))}
+
+                {/* the name and the story */}
+                <div className="flex min-w-0 flex-1 flex-col px-3 pb-5 pt-5 md:justify-center md:px-4 md:py-4 lg:justify-start lg:px-3 lg:pb-6 lg:pt-6">
+                  {member.heading && <h3 className="font-display text-[1.3rem] font-bold leading-snug tracking-tight text-charcoal-950 md:text-[1.45rem] lg:text-[1.3rem] xl:text-[1.4rem]">{member.heading}</h3>}
+                  <m.span aria-hidden variants={draw} custom={i} className={cn('mt-3 block h-1 w-12 origin-left rounded-full', a.rule)} />
+                  <RichText html={member.body} className="mt-4 text-[0.97rem] leading-[1.8] text-slate-600" />
+                </div>
+
+                {/* a coloured foot, so a card with a shorter story still ends in line with its neighbours */}
+                <m.span aria-hidden variants={draw} custom={i} className={cn('absolute inset-x-6 bottom-0 h-1 origin-left rounded-t-full', a.rule)} />
+              </StaggerItem>
+            )
+          })}
         </Stagger>
       </section>
 
