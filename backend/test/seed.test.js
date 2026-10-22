@@ -15,9 +15,9 @@ describe('the bundled website content', () => {
   after(() => srv.stop())
 
   it('loads completely: every document, with the same ids as the old site', async () => {
-    // 235 documents / 171 photos from the old site, plus the three homepage cover photos (Oct 2026)
-    assert.equal(stats.documents, 239)
-    assert.equal(stats.media, 174)
+    // 235 documents / 171 photos from the old site, plus the three homepage cover photos and 186 project photos (Oct 2026)
+    assert.equal(stats.documents, 425)
+    assert.equal(stats.media, 360)
     assert.equal(stats.globals, 5)
     assert.deepEqual(stats.problems, [])
     const post = (await srv.client().get('/api/posts/1?locale=en')).data
@@ -32,6 +32,12 @@ describe('the bundled website content', () => {
     assert.equal(res.status, 201, JSON.stringify(res.data))
     assert.ok(res.data.doc.id > Math.max(...before))
     await admin.delete(`/api/categories/${res.data.doc.id}`)
+  })
+
+  it('every project except Media Coverage has a cover photo and a gallery', async () => {
+    const { docs } = (await srv.client().get('/api/initiatives?limit=0&depth=0')).data
+    const bare = docs.filter((d) => !d.heroImage || !d.gallery?.length).map((d) => d.slug)
+    assert.deepEqual(bare, ['madhyamanchi-dakhal'])
   })
 
   it('is not empty afterwards, and clearContent empties it again', async () => {

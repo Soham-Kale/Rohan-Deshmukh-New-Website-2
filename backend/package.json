@@ -20,6 +20,7 @@
     "content:home-highlights": "node scripts/home-highlights.mjs",
     "content:initiatives": "node scripts/restore-initiatives.mjs",
     "content:english": "node scripts/english-text.mjs",
+    "content:project-photos": "node scripts/project-photos.mjs",
     "test": "node --test --test-concurrency=1 \"test/*.test.js\"",
     "lint": "eslint .",
     "admin": "node src/seed/admin.js"

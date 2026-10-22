@@ -35,15 +35,6 @@
      "newTab": false
     },
     {
-     "id": "6ad5ec2d15929451e812661d",
-     "label": {
-      "en": "Appeal",
-      "mr": "आवाहन"
-     },
-     "url": "/appeal",
-     "newTab": false
-    },
-    {
      "id": "6ad5ec2d15929451e812661e",
      "label": {
       "en": "Blog",
@@ -68,15 +59,6 @@
       "mr": "कौटुंबिक पार्श्वभूमी"
      },
      "url": "/about/biography",
-     "newTab": false
-    },
-    {
-     "id": "6ad5ec2d15929451e8126621",
-     "label": {
-      "en": "Family",
-      "mr": "परिवार"
-     },
-     "url": "/about/family",
      "newTab": false
     },
     {
@@ -158,15 +140,6 @@
       "mr": "जलसंधारण"
      },
      "url": "/social-work/jalsandharan",
-     "newTab": false
-    },
-    {
-     "id": "6ad5ec2d15929451e812662b",
-     "label": {
-      "en": "All initiatives",
-      "mr": "सर्व उपक्रम"
-     },
-     "url": "/social-work",
      "newTab": false
     }
    ]

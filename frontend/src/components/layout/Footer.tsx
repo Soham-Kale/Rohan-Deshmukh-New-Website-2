@@ -1,6 +1,6 @@
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { useLayout } from '@/lib/layout'
-import { LOCALE, useTranslations } from '@/lib/i18n'
+import { useTranslations } from '@/lib/i18n'
 import { mediaUrl } from '@/lib/media'
 import { isLiveLink } from '@/lib/nav'
 import { CMSLink } from '../ui/CMSLink'
@@ -9,9 +9,11 @@ import { socialLabels } from '@/lib/social'
 
 /** Removed from the footer (Oct 2026) — hidden even if an older footer in the database still lists them */
 const HIDDEN_LEGAL = ['/privacy-policy', '/terms', '/disclaimer']
+/** Footer menu links removed (Oct 2026): Appeal, Family, All initiatives */
+const HIDDEN_LINKS = ['/appeal', '/about/family', '/social-work']
 
 /**
- * Footer (Stitch design, Oct 2026): deep navy with a kesariya top edge — contact details, social links and "More locations"
+ * Footer (Stitch design, Oct 2026): deep navy with a kesariya top edge — contact details and social links
  * on the left, the footer menus from the CMS beside it, then the copyright line.
  */
 export function Footer() {
@@ -60,16 +62,13 @@ export function Footer() {
                 ))}
               </ul>
             )}
-            <CMSLink url="/contact" className="inline-flex min-h-11 items-center rounded-lg border border-white/15 px-5 text-sm font-semibold text-white transition-all hover:border-saffron-600 hover:bg-saffron-600">
-              {LOCALE === 'en' ? 'More locations' : 'सर्व कार्यालये'}
-            </CMSLink>
           </div>
 
           {cols.map((col, i) => (
             <div key={col.id} className={i === cols.length - 1 && cols.length < 4 ? 'flex flex-col gap-3 lg:col-span-3' : 'flex flex-col gap-3 lg:col-span-2'}>
               <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-saffron-500">{col.title}</h4>
               <ul className="space-y-2 text-sm text-slate-300">
-                {col.links?.filter((l) => isLiveLink(l.url)).map((l) => (
+                {col.links?.filter((l) => isLiveLink(l.url) && !HIDDEN_LINKS.includes(l.url ?? '')).map((l) => (
                   <li key={l.id}>
                     <CMSLink url={l.url} newTab={l.newTab} className="transition-colors hover:text-saffron-200">
                       {l.label}
