@@ -24,6 +24,8 @@
     "content:initiatives": "npm run content:initiatives -w backend",
     "content:english": "npm run content:english -w backend",
     "content:project-photos": "npm run content:project-photos -w backend",
+    "content:home-text": "npm run content:home-text -w backend",
+    "content:update": "npm run content:update -w backend",
     "test": "npm run test -w backend",
     "lint": "npm run lint -w backend && npm run lint -w frontend",
     "typecheck": "npm run typecheck -w frontend",

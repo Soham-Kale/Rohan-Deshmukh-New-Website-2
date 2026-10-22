@@ -322,7 +322,7 @@ function MobileMenu({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
         onClick={onClose}
       />
       <m.div
@@ -331,11 +331,12 @@ function MobileMenu({
         role="dialog"
         aria-modal="true"
         aria-label={menuLabel}
-        className="absolute inset-y-0 right-0 flex w-[min(24rem,calc(100vw-3rem))] flex-col bg-ivory shadow-2xl"
-        initial={{ x: '100%' }}
+        // slides in from the left edge (Oct 2026), slow enough to read as one smooth movement; transform only, so it stays fluid on phones
+        className="absolute inset-y-0 left-0 flex w-[min(24rem,calc(100vw-3rem))] flex-col bg-ivory shadow-2xl will-change-transform"
+        initial={{ x: '-100%' }}
         animate={{ x: 0 }}
-        exit={{ x: '100%' }}
-        transition={{ type: 'tween', duration: 0.25, ease: EASE_SHEET }}
+        exit={{ x: '-100%' }}
+        transition={{ type: 'tween', duration: 0.42, ease: EASE_SHEET }}
       >
         <div className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-saffron-100 pl-6 pr-3 sm:h-[4.5rem]">
           {logo}

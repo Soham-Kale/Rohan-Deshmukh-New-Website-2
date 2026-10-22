@@ -53,7 +53,7 @@ function Profile({ hero, facts, locale }: { hero: MediaText; facts: Cards | null
       {/* Left: Portrait Card */}
       {hasImg && (
         <Reveal className="flex flex-col lg:col-span-5">
-          <div className="group relative flex flex-1 flex-col overflow-hidden rounded-3xl border border-stone-200/90 bg-white shadow-[0_20px_50px_-12px_rgba(9,20,34,0.18)] transition-all duration-500 hover:shadow-[0_28px_65px_-15px_rgba(9,20,34,0.25)] hover:border-saffron-300">
+          <div className="group relative flex flex-1 flex-col overflow-hidden rounded-3xl border border-stone-200/90 bg-white shadow-[0_24px_55px_-14px_rgba(9,20,34,0.32)] ring-1 ring-black/5 transition-all duration-500 hover:shadow-[0_30px_70px_-16px_rgba(9,20,34,0.4)] hover:border-saffron-300">
             <div className="relative aspect-[4/5] w-full overflow-hidden bg-charcoal-950 sm:aspect-[3/4] lg:aspect-auto lg:min-h-[540px] lg:flex-1">
               <Img
                 media={hero.image}
@@ -65,28 +65,7 @@ function Profile({ hero, facts, locale }: { hero: MediaText; facts: Cards | null
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-103"
                 style={{ objectPosition: mediaPosition(hero.image) }}
               />
-              
-              {/* Gradient lighting & contrast overlay */}
-              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-950/30 to-transparent" />
-              
-              {/* Top location badge */}
-              <div className="absolute left-5 top-5 z-10">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-charcoal-950/65 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md shadow-md">
-                  <MapPin className="size-3.5 text-saffron-400" />
-                  <span>Solapur, Maharashtra</span>
-                </span>
-              </div>
 
-              {/* Bottom nameplate */}
-              {hero.heading && (
-                <div className="absolute inset-x-6 bottom-6 z-10 space-y-2">
-                  <span aria-hidden className="block h-1 w-12 rounded-full bg-gradient-to-r from-saffron-500 to-amber-400" />
-                  <h2 className="font-display text-2xl font-bold tracking-wide text-white drop-shadow-md sm:text-3xl">{hero.heading}</h2>
-                  <p className="text-xs font-semibold tracking-wider text-saffron-200">
-                    {locale === 'mr' ? 'उद्योजक • लेखक • सामाजिक नेते' : 'Entrepreneur • Author • Social Leader'}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </Reveal>
