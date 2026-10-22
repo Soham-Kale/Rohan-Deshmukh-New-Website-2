@@ -75,7 +75,8 @@ describe('the bundled website content', () => {
   it('the menu, footer and settings came across', async () => {
     const c = srv.client()
     const header = (await c.get('/api/globals/header?locale=en')).data
-    assert.deepEqual(header.nav.map((n) => n.label), ['Home', 'About', 'Lokmangal', 'Media', 'Vision', 'Connect'])
+    // no "Connect" item: the header's orange Contact button is the way to the Contact page
+    assert.deepEqual(header.nav.map((n) => n.label), ['Home', 'About', 'Lokmangal', 'Media', 'Vision'])
     assert.equal(header.nav[1].children.length, 4)
     const footer = (await c.get('/api/globals/footer?locale=en')).data
     assert.equal(footer.columns.length, 3)

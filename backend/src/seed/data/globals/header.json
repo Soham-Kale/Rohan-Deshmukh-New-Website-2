@@ -142,27 +142,6 @@
    "url": "/vision",
    "newTab": false,
    "children": []
-  },
-  {
-   "id": "6ad5ec2d15929451e8126619",
-   "label": {
-    "en": "Connect",
-    "mr": "संपर्क"
-   },
-   "url": "/contact",
-   "newTab": false,
-   "children": [
-    {
-     "id": "6ad5ec2d15929451e8126618",
-     "label": {
-      "en": "Contact",
-      "mr": "संपर्क"
-     },
-     "url": "/contact",
-     "newTab": false,
-     "subItems": []
-    }
-   ]
   }
  ]
 }
