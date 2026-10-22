@@ -72,7 +72,7 @@ export function LokmangalParivar({ blocks, locale }: { blocks?: Block[] | null; 
             <div className="relative">
               {intro.eyebrow && <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-saffron-600">{intro.eyebrow}</p>}
               {intro.heading && <h2 className="mb-5 mt-1 font-display text-3xl font-bold leading-tight tracking-tight text-charcoal-950 sm:text-4xl">{intro.heading}</h2>}
-              <RichText html={parts ? parts.lead : intro.body} />
+              <RichText html={parts ? parts.lead : intro.body} readMore />
             </div>
           </Reveal>
           {parts && (

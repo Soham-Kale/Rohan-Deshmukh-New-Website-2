@@ -1,7 +1,7 @@
 {
   "nav": { "home": "Home", "menu": "Menu", "close": "Close", "contact": "Contact", "search": "Search", "skip": "Skip to content" },
   "common": {
-    "readMore": "Read more", "viewAll": "View all", "moreInfo": "More info", "back": "Back", "download": "Download",
+    "readMore": "Read more", "readLess": "Read less", "viewAll": "View all", "moreInfo": "More info", "back": "Back", "download": "Download",
     "share": "Share", "photos": "Photos", "videos": "Videos", "all": "All", "prev": "Previous", "next": "Next",
     "page": "Page", "of": "of", "noResults": "Nothing found.", "home": "Home", "inThisSection": "In this section",
     "backToTop": "Back to top", "slides": "Slides", "slide": "Slide", "pauseSlides": "Pause the slideshow", "playSlides": "Play the slideshow", "chatWhatsapp": "Chat on WhatsApp", "phone": "Phone", "email": "Email", "address": "Address",

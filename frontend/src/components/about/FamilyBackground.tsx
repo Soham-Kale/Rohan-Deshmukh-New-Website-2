@@ -13,29 +13,28 @@ type Content = Extract<Block, { blockType: 'content' }>
 
 /**
  * One colour family per member (kesariya, green, navy — Stitch): the tint of the photo panel, the halo behind the person, the dot on the
- * relation label, the big numeral, the rule under the name and the ring when the card is hovered. The portraits are cut-outs on a transparent
+ * relation label, the rule under the name and the ring when the card is hovered. The portraits are cut-outs on a transparent
  * background, so the panel colour is what they stand on — every panel ends in its own tint (not white), so each one reads as a tile.
  */
 const ACCENTS = [
-  { panel: 'from-saffron-100 to-saffron-50', halo: 'bg-saffron-200/60', dot: 'bg-saffron-600', numeral: 'text-saffron-600/15', rule: 'bg-saffron-600', ring: 'group-hover:ring-saffron-300' },
-  { panel: 'from-leaf-50 to-leaf-50', halo: 'bg-leaf-200/45', dot: 'bg-leaf-600', numeral: 'text-leaf-600/15', rule: 'bg-leaf-600', ring: 'group-hover:ring-leaf-200' },
-  { panel: 'from-slate-200 to-slate-100', halo: 'bg-slate-300/60', dot: 'bg-charcoal-900', numeral: 'text-charcoal-900/10', rule: 'bg-charcoal-900', ring: 'group-hover:ring-slate-300' },
+  { panel: 'from-saffron-100 to-saffron-50', halo: 'bg-saffron-200/60', dot: 'bg-saffron-600', rule: 'bg-saffron-600', ring: 'group-hover:ring-saffron-300' },
+  { panel: 'from-leaf-50 to-leaf-50', halo: 'bg-leaf-200/45', dot: 'bg-leaf-600', rule: 'bg-leaf-600', ring: 'group-hover:ring-leaf-200' },
+  { panel: 'from-slate-200 to-slate-100', halo: 'bg-slate-300/60', dot: 'bg-charcoal-900', rule: 'bg-charcoal-900', ring: 'group-hover:ring-slate-300' },
 ] as const
 
-/* What happens inside a card when it scrolls into view: the halo blooms, the person rises into it, the numeral fades in and the rule under the
+/* What happens inside a card when it scrolls into view: the halo blooms, the person rises into it and the rule under the
    name is drawn. These variants have no `initial` of their own: they follow the card's own hidden → show (see StaggerItem), and `custom` (the
    card's number) staggers them the same way the cards are staggered (a delay written in a variant replaces the one inherited from the card). */
 const EASE = [0.22, 1, 0.36, 1] as const
 const STEP = 0.08
 const bloom: Variants = { hidden: { opacity: 0, scale: 0.82 }, show: (i: number) => ({ opacity: 1, scale: 1, transition: { duration: 0.9, delay: 0.02 + i * STEP, ease: EASE } }) }
 const rise: Variants = { hidden: { opacity: 0, y: 22, scale: 0.97 }, show: (i: number) => ({ opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, delay: 0.12 + i * STEP, ease: EASE } }) }
-const fade: Variants = { hidden: { opacity: 0 }, show: (i: number) => ({ opacity: 1, transition: { duration: 0.8, delay: 0.25 + i * STEP } }) }
 const draw: Variants = { hidden: { scaleX: 0 }, show: (i: number) => ({ scaleX: 1, transition: { duration: 0.7, delay: 0.35 + i * STEP, ease: EASE } }) }
 
 /**
  * कौटुंबिक पार्श्वभूमी page (Stitch design, Oct 2026): the family introduction beside its heading, then the family
  * members (the page's consecutive Media + text blocks, edited under Pages in the admin) as cards — a tinted photo panel with the
- * relation label and a numeral, then the name and the story. Three or more members sit side by side on wide screens; on tablets each
+ * relation label, then the name and the story. Three or more members sit side by side on wide screens; on tablets each
  * card lies down (photo left, words right) so no card is left alone on a row. Blocks before/after render as usual.
  */
 export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?: 'mr' | 'en' }) {
@@ -67,7 +66,7 @@ export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?:
               <span aria-hidden className="mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-saffron-600 to-leaf-600" />
             </Reveal>
             <Reveal delay={0.1} className="rounded-xl border-l-4 border-saffron-500 bg-cream p-6 shadow-sm md:p-8 lg:col-span-7">
-              <RichText html={intro.body} />
+              <RichText html={intro.body} readMore />
             </Reveal>
           </div>
         )}
@@ -87,7 +86,7 @@ export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?:
                   a.ring,
                 )}
               >
-                {/* the photo panel: a soft tint, a halo behind the person, a faint numeral, the relation label */}
+                {/* the photo panel: a soft tint, a halo behind the person, the relation label (no numbering — removed Oct 2026) */}
                 <div
                   className={cn(
                     'relative isolate aspect-[4/3.7] overflow-hidden rounded-xl bg-gradient-to-b md:aspect-[4/4.4] md:w-[38%] md:shrink-0 md:self-start',
@@ -96,9 +95,6 @@ export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?:
                   )}
                 >
                   <m.span aria-hidden variants={bloom} custom={i} className={cn('absolute left-1/2 top-[56%] -z-10 aspect-square w-[74%] -translate-x-1/2 -translate-y-1/2 rounded-full', a.halo)} />
-                  <m.span aria-hidden variants={fade} custom={i} className={cn('pointer-events-none absolute right-4 top-2.5 -z-10 select-none font-display text-6xl font-bold leading-none tabular-nums', a.numeral)}>
-                    {String(i + 1).padStart(2, '0')}
-                  </m.span>
                   {member.eyebrow && (
                     <span className="absolute left-3.5 top-3.5 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-charcoal-900 shadow-sm ring-1 ring-black/5">
                       <span aria-hidden className={cn('size-2 rounded-full', a.dot)} />
@@ -127,7 +123,7 @@ export function FamilyBackground({ blocks }: { blocks?: Block[] | null; locale?:
                 <div className="flex min-w-0 flex-1 flex-col px-3 pb-5 pt-5 md:justify-center md:px-4 md:py-4 lg:justify-start lg:px-3 lg:pb-6 lg:pt-6">
                   {member.heading && <h3 className="font-display text-[1.3rem] font-bold leading-snug tracking-tight text-charcoal-950 md:text-[1.45rem] lg:text-[1.3rem] xl:text-[1.4rem]">{member.heading}</h3>}
                   <m.span aria-hidden variants={draw} custom={i} className={cn('mt-3 block h-1 w-12 origin-left rounded-full', a.rule)} />
-                  <RichText html={member.body} className="mt-4 text-[0.97rem] leading-[1.8] text-slate-600" />
+                  <RichText readMore html={member.body} className="mt-4 text-[0.97rem] leading-[1.8] text-slate-600" />
                 </div>
 
                 {/* a coloured foot, so a card with a shorter story still ends in line with its neighbours */}

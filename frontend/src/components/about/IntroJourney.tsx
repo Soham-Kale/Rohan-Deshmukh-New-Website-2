@@ -95,7 +95,7 @@ function Profile({ hero, facts, locale }: { hero: MediaText; facts: Cards | null
           </div>
 
           <div className="relative text-[1.05rem] leading-[1.8] text-charcoal-900/90">
-            <RichText html={hero.body} />
+            <RichText html={hero.body} readMore />
           </div>
 
           {/* Inspirational Pillar Pills */}

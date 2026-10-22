@@ -10,7 +10,6 @@ import { InnerPage } from '@/components/layout/InnerPage'
 import { Seo } from '@/components/layout/Seo'
 import { ProjectsExplorer, type ProjectCard } from '@/components/social/ProjectsExplorer'
 import { CardSlider, type SlideCard } from '@/components/ui/CardSlider'
-import { SectionTabs } from '@/components/ui/SectionTabs'
 import { notFound } from './helpers'
 
 const PATH = '/lokmangal/foundation'
@@ -48,7 +47,8 @@ const viewAll = (href: string, label: string) => (
 
 /**
  * Lokmangal Foundation: माहिती (the page content edited under Pages in the admin) · कार्यक्रम (Events) ·
- * प्रकल्प (Initiatives), with sticky tabs to jump between them.
+ * प्रकल्प (Initiatives). (The About · Events · Projects tab bar was removed, Oct 2026; the sections keep their #about / #events / #projects
+ * anchors, which the menu links to.)
  */
 export default function FoundationPage() {
   const { page, events, initiatives } = useLoaderData<typeof loader>()
@@ -80,8 +80,6 @@ export default function FoundationPage() {
     <>
       <Seo title={page.meta?.title || page.title} description={page.meta?.description || page.subtitle} image={mediaUrl(page.meta?.image, 'card') || mediaUrl(page.bannerImage, 'card')} />
       <InnerPage path={PATH} title={page.title} subtitle={page.subtitle} image={mediaUrl(page.bannerImage, 'hero')} imagePosition={mediaPosition(page.bannerImage)} variant="navy">
-        <SectionTabs label={x.tabs} tabs={[{ id: 'about', label: x.about }, { id: 'events', label: x.events }, { id: 'projects', label: x.projects }]} />
-
         <section id="about" className="scroll-mt-36">
           <PageBlocks blocks={about} design="stitch" />
         </section>

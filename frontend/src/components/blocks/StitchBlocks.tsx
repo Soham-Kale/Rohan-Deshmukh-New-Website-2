@@ -60,7 +60,7 @@ export function StitchContent({ blocks }: { blocks: Content[] }) {
         <div className="relative max-w-4xl">
           {b.eyebrow && <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-saffron-600">{b.eyebrow}</p>}
           {b.heading && <h2 className="mb-5 mt-1 font-display text-2xl font-bold leading-tight text-charcoal-950 md:text-3xl">{b.heading}</h2>}
-          <RichText html={b.body} />
+          <RichText html={b.body} readMore />
         </div>
       </Reveal>
     )
@@ -113,7 +113,7 @@ export function StitchContent({ blocks }: { blocks: Content[] }) {
                 <span className="font-display text-xs font-bold text-stone-300">{pad(i + 1)}</span>
               </div>
               <div className="text-[0.98rem] leading-relaxed text-charcoal-900/85">
-                <RichText html={b.body} />
+                <RichText html={b.body} readMore />
               </div>
             </div>
 
@@ -160,7 +160,7 @@ export function StitchChapter({ b, n }: { b: MediaText; n?: number }) {
           </Reveal>
         )}
         <Reveal delay={0.1} className={cn('flex flex-col gap-6 rounded-2xl bg-ivory p-8 shadow-sm ring-1 ring-stone-200/70 md:p-10', hasImg && 'lg:col-span-5')}>
-          <RichText html={b.body} />
+          <RichText html={b.body} readMore />
           {!!b.buttons?.length && (
             <div className="flex flex-wrap gap-3 border-t border-stone-200/80 pt-6">
               {b.buttons.map((l, i) => (

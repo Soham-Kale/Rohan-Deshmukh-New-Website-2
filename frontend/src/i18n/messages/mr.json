@@ -1,7 +1,7 @@
 {
   "nav": { "home": "मुख्य पृष्ठ", "menu": "मेनू", "close": "बंद करा", "contact": "संपर्क", "search": "शोधा", "skip": "मुख्य मजकुराकडे जा", "language": "English" },
   "common": {
-    "readMore": "अधिक वाचा", "viewAll": "सर्व पहा", "moreInfo": "अधिक माहिती", "back": "मागे", "download": "डाउनलोड",
+    "readMore": "अधिक वाचा", "readLess": "कमी दाखवा", "viewAll": "सर्व पहा", "moreInfo": "अधिक माहिती", "back": "मागे", "download": "डाउनलोड",
     "share": "शेअर करा", "photos": "छायाचित्रे", "videos": "व्हिडिओ", "all": "सर्व", "prev": "मागील", "next": "पुढील",
     "page": "पृष्ठ", "of": "पैकी", "noResults": "काहीही सापडले नाही.", "home": "मुख्य पृष्ठ", "inThisSection": "या विभागात",
     "backToTop": "वर जा", "slides": "स्लाइड्स", "slide": "स्लाइड", "pauseSlides": "स्लाइडशो थांबवा", "playSlides": "स्लाइडशो सुरू करा", "chatWhatsapp": "व्हॉट्सॲपवर संपर्क", "phone": "फोन नंबर", "email": "ईमेल", "address": "पत्ता",
