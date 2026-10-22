@@ -328,7 +328,7 @@ header `X-Requested-With: XMLHttpRequest` (and, if the browser adds one, an `Ori
 | `TRUST_PROXY` | off | number of proxies in front (usually `1`) so the real visitor address is used for rate limits |
 | `CORS_ORIGINS` | — | extra allowed origins, comma separated (only when the website is hosted separately) |
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD` | `admin@rohandeshmukh.in`, `ChangeMe@123` | the first admin, created by `npm run seed` when there are no users (the example password is refused in production) |
-| `DB_DIALECT` | `sqlite` | `sqlite` or `mysql` |
+| `DB_DIALECT` | `sqlite` | `sqlite`, `mysql` or `postgres` (worked out from `DATABASE_URL` when it starts with `mysql://` / `postgres://`) |
 | `SQLITE_PATH` | `data/rohan.sqlite` | |
 | `DATABASE_URL` or `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | — | MySQL connection (`mysql://user:pass@host:3306/name`); `DB_SSL=true` for hosted databases that need TLS |
 | `AUTO_MIGRATE` | `true` | run migrations at every start |
@@ -487,6 +487,33 @@ One address does it all: the backend serves the built website, the admin, the AP
 and use `COOKIE_SAMESITE=none` with https — but then the search-engine tags are no longer filled in by the backend, so the single-address setup is recommended.)
 
 ---
+
+### Deploying on Vercel
+
+The repository deploys to Vercel as **one project** (website + admin + API), using the **Neon PostgreSQL** database and the
+**Vercel Blob** store connected to it. Everything is in `vercel.json`, `api/index.js` and `backend/scripts/vercel-prepare.mjs`.
+
+| Project setting | Value |
+|---|---|
+| Root Directory | *(empty — the repository root)* |
+| Framework Preset | Other (`vercel.json` sets the build: `npm run vercel-build`, output `frontend/dist`) |
+| Node.js | 20 or newer |
+
+| Environment variable | |
+|---|---|
+| `DATABASE_URL`, `DATABASE_URL_UNPOOLED` | set by the Neon integration (the direct one is used) |
+| `BLOB_READ_WRITE_TOKEN` | set by the Blob integration — files go to Blob automatically |
+| `DB_SCHEMA` | `site` — the site's tables live in their own schema, so other tables in the same database are never touched |
+| `JWT_SECRET` | 32+ random characters (`node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`) |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | the first admin, created on the first deploy (12+ characters; the example password is refused) |
+| `PUBLIC_URL` | optional: the live address once a custom domain is added (otherwise the Vercel address is used) |
+
+Every deploy runs `npm run vercel-build`: it builds the website, then `vercel-prepare` runs the migrations, loads the bundled
+content **only when the database is empty** (the photos are uploaded to Blob), and creates the first admin. Built files are served by
+Vercel's CDN; every other request (pages with their title and share tags, `/api`, `/sitemap.xml`, `/robots.txt`, old-address redirects)
+goes to the function in `api/index.js`. Notes: a Vercel function accepts requests up to 4.5 MB, so larger photos must be made smaller
+before upload; the nightly SQLite backup is off on Vercel (use Neon's own backups / branches). Test the PostgreSQL path locally with
+`TEST_POSTGRES_URL=postgres://postgres@127.0.0.1:5432/postgres npm test`.
 
 ## 15. Maintenance & troubleshooting
 

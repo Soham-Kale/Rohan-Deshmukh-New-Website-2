@@ -168,7 +168,11 @@ type FieldProps = {
 function Field({ id, label, required, error, full, as = 'input', inputProps, textareaProps, selectProps, options }: FieldProps) {
   const t = useTranslations('forms')
   const fieldId = `f-${id}`
-  const cls = cn('w-full rounded-xl border bg-ivory px-4 py-3 text-charcoal-950 outline-none transition placeholder:text-gray-400 hover:border-saffron-300 focus:border-saffron-500 focus:bg-white focus:ring-4 focus:ring-saffron-100', error ? 'border-red-400' : 'border-stone-200')
+  // a 3.1:1 edge (UX pass) on the warm field, a clear orange ring while typing, red when something is wrong
+  const cls = cn(
+    'w-full rounded-xl border bg-ivory px-4 py-3 text-charcoal-950 outline-none transition placeholder:text-gray-400 focus:bg-white focus:ring-4',
+    error ? 'border-danger focus:ring-danger-soft' : 'border-field hover:border-field-hover focus:border-saffron-600 focus:ring-saffron-100',
+  )
   const message = error?.message
   const errorId = `${fieldId}-error`
   const aria = { 'aria-invalid': Boolean(error), 'aria-required': required || undefined, 'aria-describedby': message ? errorId : undefined } as const

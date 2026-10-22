@@ -16,13 +16,22 @@ describe('the bundled website content', () => {
 
   it('loads completely: every document, with the same ids as the old site', async () => {
     // 235 documents / 171 photos from the old site, plus the three homepage cover photos (Oct 2026)
-    assert.equal(stats.documents, 238)
+    assert.equal(stats.documents, 239)
     assert.equal(stats.media, 174)
     assert.equal(stats.globals, 5)
     assert.deepEqual(stats.problems, [])
     const post = (await srv.client().get('/api/posts/1?locale=en')).data
     assert.match(post.title, /LOTUS/)
-    assert.equal((await srv.client().get('/api/initiatives?limit=0')).data.totalDocs, 22)
+    assert.equal((await srv.client().get('/api/initiatives?limit=0')).data.totalDocs, 23) // 23 projects, as on the old site (Media Coverage restored Oct 2026)
+  })
+
+  it('gives new documents fresh ids after loading content that kept its own ids (PostgreSQL id counters)', async () => {
+    const admin = await signedIn(srv)
+    const before = (await srv.client().get('/api/categories?limit=0&depth=0')).data.docs.map((d) => d.id)
+    const res = await admin.post('/api/categories', { json: { title: { en: 'Id counter check' }, slug: 'id-counter-check' } })
+    assert.equal(res.status, 201, JSON.stringify(res.data))
+    assert.ok(res.data.doc.id > Math.max(...before))
+    await admin.delete(`/api/categories/${res.data.doc.id}`)
   })
 
   it('is not empty afterwards, and clearContent empties it again', async () => {
@@ -87,6 +96,37 @@ describe('the bundled website content', () => {
     const posts = (await srv.client().get('/api/posts?limit=0&locale=mr')).data.docs
     assert.ok(posts.some((p) => /<figure><img src="\/uploads\//.test(p.content)))
     for (const p of posts) assert.ok(!/<script|onerror=/i.test(p.content))
+  })
+
+  it('has English for every text that has Marathi (the site is shown in English only)', async () => {
+    const missing = []
+    const walk = (node, where) => {
+      if (Array.isArray(node)) return node.forEach((v, i) => walk(v, `${where}[${i}]`))
+      if (!node || typeof node !== 'object') return
+      const empty = (v) => v == null || v === '' || (Array.isArray(v) && !v.length)
+      if ('en' in node && 'mr' in node && empty(node.en) && !empty(node.mr)) missing.push(where)
+      for (const [k, v] of Object.entries(node)) walk(v, `${where}.${k}`)
+    }
+    const snapshot = await readSnapshot()
+    walk(snapshot, 'content')
+    assert.deepEqual(missing, [])
+  })
+
+  it('fillEnglish turns Marathi-only text into English and leaves English an editor wrote alone', async () => {
+    const { fillEnglish } = await import('../src/seed/english.js')
+    const doc = {
+      icon: '०२',
+      a: { en: null, mr: '<p>रक्ताची निर्मिती कृत्रिम पद्धतीने करता येत नसल्यामुळे गरजू रुग्णांसाठी रक्तदानाचे महत्त्व मोठे आहे.</p>' },
+      b: { en: 'Kept', mr: 'लोटस' },
+      c: { en: '', mr: 'Family Moments' },
+      d: { en: null, mr: 'अज्ञात मजकूर' },
+    }
+    assert.equal(fillEnglish(doc), 3)
+    assert.equal(doc.icon, '02')
+    assert.match(doc.a.en, /^<p>Blood cannot be made artificially/)
+    assert.equal(doc.b.en, 'Kept')
+    assert.equal(doc.c.en, 'Family Moments')
+    assert.equal(doc.d.en, null)
   })
 
   it('clearContent removes the content and the files; accounts stay', async () => {

@@ -344,7 +344,7 @@
     "items": [
      {
       "id": "6ad5ec6615929451e8126682",
-      "icon": "०१",
+      "icon": "01",
       "image": null,
       "title": {
        "en": "Read",
@@ -366,7 +366,7 @@
      },
      {
       "id": "6ad5ec6615929451e8126683",
-      "icon": "०२",
+      "icon": "02",
       "image": null,
       "title": {
        "en": "Pledge",
@@ -388,7 +388,7 @@
      },
      {
       "id": "6ad5ec6615929451e8126684",
-      "icon": "०३",
+      "icon": "03",
       "image": null,
       "title": {
        "en": "Act",
@@ -559,7 +559,7 @@
     "items": [
      {
       "id": "6ad5ec6615929451e8126690",
-      "icon": "०१",
+      "icon": "01",
       "image": null,
       "title": {
        "en": "Know the idea",
@@ -570,7 +570,7 @@
        "mr": null
       },
       "text": {
-       "en": null,
+       "en": "Understand the direction of New India and the thinking behind entrepreneurship for a self-reliant India.",
        "mr": "नवभारताची दिशा आणि स्वावलंबी भारताच्या उद्योजकतेमागचा विचार समजून घ्या."
       },
       "tags": {
@@ -581,7 +581,7 @@
      },
      {
       "id": "6ad5ec6615929451e8126691",
-      "icon": "०२",
+      "icon": "02",
       "image": null,
       "title": {
        "en": "Take the pledge",
@@ -592,7 +592,7 @@
        "mr": null
       },
       "text": {
-       "en": null,
+       "en": "\"Yes, I am ready.\" Connect yourself to the idea of New India — in just one minute.",
        "mr": "\"होय, मी तयार आहे.\" नवभारताच्या विचाराशी स्वतःला जोडा — फक्त एका मिनिटात."
       },
       "tags": {
@@ -603,7 +603,7 @@
      },
      {
       "id": "6ad5ec6615929451e8126692",
-      "icon": "०३",
+      "icon": "03",
       "image": null,
       "title": {
        "en": "Act on it",
@@ -614,7 +614,7 @@
        "mr": null
       },
       "text": {
-       "en": null,
+       "en": "Start your business, become a mentor, or back an entrepreneur.",
        "mr": "तुमचा व्यवसाय सुरू करा, मार्गदर्शक बना किंवा एखाद्या उद्योजकाला पाठबळ द्या."
       },
       "tags": {
@@ -638,7 +638,7 @@
     },
     "hidden": false,
     "text": {
-     "en": null,
+     "en": "Register your name for a self-reliant New India — read the idea, take the pledge and act on it.",
      "mr": "स्वावलंबी नव्या भारतासाठी तुमचे नाव नोंदवा — विचार वाचा, संकल्प करा आणि कृती करा."
     },
     "image": null,

@@ -21,7 +21,8 @@ export const allowedOrigins = (cfg) =>
  */
 export function securityHeaders(cfg) {
   const s3Origin = cfg.storage.driver === 's3' ? originOf(cfg.storage.s3.publicUrl || cfg.storage.s3.endpoint || `https://${cfg.storage.s3.bucket}.s3.${cfg.storage.s3.region}.amazonaws.com`) : null
-  const files = s3Origin ? [s3Origin] : []
+  const blobOrigin = cfg.storage.driver === 'vercel-blob' ? originOf(cfg.storage.blob.publicUrl || `https://${cfg.storage.blob.token.match(/^vercel_blob_rw_([a-z\d]+)_/i)?.[1]?.toLowerCase()}.public.blob.vercel-storage.com`) : null
+  const files = [s3Origin, blobOrigin].filter(Boolean)
   return helmet({
     contentSecurityPolicy: {
       useDefaults: false,

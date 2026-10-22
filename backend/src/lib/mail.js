@@ -58,8 +58,8 @@ export function createNotifier({ cfg, documents, mailer, logger = console }) {
     if (doc.email && doc.referenceNo) {
       await mailer.send({
         to: doc.email,
-        subject: `आपला अर्ज मिळाला — संदर्भ क्र. ${doc.referenceNo}`,
-        html: `<p>नमस्कार ${escapeHtml(doc.name)},</p><p>आपली तक्रार / सूचना आम्हाला मिळाली आहे. आपला संदर्भ क्रमांक <b>${escapeHtml(doc.referenceNo)}</b> आहे. आमची टीम लवकरच आपल्याशी संपर्क साधेल.</p><p>Thank you, we have received your submission. Your reference number is <b>${escapeHtml(doc.referenceNo)}</b>.</p><p>— रोहन सुभाष देशमुख कार्यालय</p>`,
+        subject: `We have received your message — reference no. ${doc.referenceNo}`,
+        html: `<p>Hello ${escapeHtml(doc.name)},</p><p>Thank you, we have received your message. Your reference number is <b>${escapeHtml(doc.referenceNo)}</b>. Our team will get in touch with you soon.</p><p>— Office of Rohan Subhash Deshmukh</p>`,
       })
     }
     logger.info?.(`[mail] notification handled for ${collection.slug}/${doc.id}`)

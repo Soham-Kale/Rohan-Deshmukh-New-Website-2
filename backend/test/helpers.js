@@ -2,6 +2,7 @@ import { mkdtemp, rm, writeFile, mkdir } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import mysql from 'mysql2/promise'
+import pg from 'pg'
 import sharp from 'sharp'
 import { createApp } from '../src/app.js'
 import { loadConfig } from '../src/config.js'
@@ -11,6 +12,18 @@ export const ADMIN = { email: 'admin@test.local', password: 'Correct-Horse-9' }
 
 // TEST_MYSQL_URL=mysql://root@127.0.0.1:3306 runs the whole suite on MySQL / MariaDB instead of SQLite (a fresh database for every server)
 const MYSQL_URL = process.env.TEST_MYSQL_URL
+// TEST_POSTGRES_URL=postgres://postgres@127.0.0.1:5432/postgres runs it on PostgreSQL: a fresh database for every server,
+// with the tables in their own schema ("site"), as on Vercel + Neon
+const POSTGRES_URL = process.env.TEST_POSTGRES_URL
+const pgAdmin = async (sql) => {
+  const c = new pg.Client({ connectionString: POSTGRES_URL })
+  await c.connect()
+  try {
+    await c.query(sql)
+  } finally {
+    await c.end()
+  }
+}
 let databaseCounter = 0
 
 /** A whole application on a random port with an in-memory database (or a fresh MySQL one) and a temporary upload folder */
@@ -24,6 +37,12 @@ export async function startServer({ env = {}, dist = false } = {}) {
     await root.query(`CREATE DATABASE \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`)
     await root.end()
     dbEnv = { DB_DIALECT: 'mysql', DATABASE_URL: `${MYSQL_URL.replace(/\/+$/, '')}/${database}` }
+  } else if (POSTGRES_URL) {
+    database = `rohan_test_${process.pid}_${++databaseCounter}`
+    await pgAdmin(`CREATE DATABASE "${database}"`)
+    const u = new URL(POSTGRES_URL)
+    u.pathname = `/${database}`
+    dbEnv = { DATABASE_URL: u.toString(), DB_SCHEMA: 'site' }
   }
   const frontendDist = path.join(dir, 'dist')
   if (dist) {
@@ -63,11 +82,11 @@ export async function startServer({ env = {}, dist = false } = {}) {
     async stop() {
       await new Promise((r) => server.close(r))
       await close()
-      if (database) {
+      if (database && MYSQL_URL) {
         const root = await mysql.createConnection(MYSQL_URL)
         await root.query(`DROP DATABASE IF EXISTS \`${database}\``)
         await root.end()
-      }
+      } else if (database && POSTGRES_URL) await pgAdmin(`DROP DATABASE IF EXISTS "${database}" WITH (FORCE)`)
       await rm(dir, { recursive: true, force: true })
     },
   }

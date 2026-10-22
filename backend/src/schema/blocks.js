@@ -82,36 +82,34 @@ export const homeBlocks = [
     select(
       'heroStyle',
       [
-        { label: 'With a photo and buttons', value: 'photo' },
-        { label: 'Text only (navy band, no buttons)', value: 'text' },
+        { label: 'With the slide photos', value: 'photo' },
+        { label: 'Text only (navy band, no photo)', value: 'text' },
       ],
       {
         label: 'Hero style',
         defaultValue: 'photo',
-        admin: { description: 'Switch between the two to compare them (the site does not split visitors by itself). Clicks on the hero buttons are reported to Google Analytics as "hero_cta_click".' },
+        admin: { description: 'Switch between the two to compare them (the site does not split visitors by itself).' },
       },
     ),
     upload('photo', 'media', {
-      admin: {
-        description:
-          'The photo behind the words on wide screens: landscape, 2400 px wide or more, Rohan on the right (the left side is darkened for the text). Click his face in the photo library to set the focal point.',
-      },
+      label: 'Single hero photo (not used)',
+      admin: { description: 'Kept from the single-photo hero. The current hero is a carousel: each slide shows its own Slide photo (below).' },
     }),
     upload('photoMobile', 'media', {
-      label: 'Photo for phones',
-      admin: { description: 'Portrait photo for phones and tablets, 1080×1600 or taller. If empty, the wide photo is cropped around its focal point.' },
+      label: 'Single hero photo for phones (not used)',
+      admin: { description: 'Kept from the single-photo hero; the carousel uses each slide\'s photos.' },
     }),
     number('autoplaySeconds', { defaultValue: 5, min: 3, max: 15 }),
     array(
       'slides',
       [
         upload('image', 'media', {
-          label: 'Slide photo (not used)',
-          admin: { description: 'The current hero shows the Photo above behind every slide; this older field is kept so existing content is not lost.' },
+          label: 'Slide photo',
+          admin: { description: 'The photo shown with this slide (4:3 frame). Set the focal point (click the face) so it stays in view. Needed unless the hero style is "Text only".' },
         }),
         upload('imageMobile', 'media', {
-          label: 'Slide photo for phones (not used)',
-          admin: { description: 'Not used by the current hero (see Photo for phones above).' },
+          label: 'Slide photo for phones (optional)',
+          admin: { description: 'A different photo for phones. If empty, the slide photo is used.' },
         }),
         text('kicker', {
           label: 'Small line above the heading (optional)',
@@ -120,7 +118,7 @@ export const homeBlocks = [
         }),
         text('heading', { localized: true }),
         textarea('subheading', { localized: true }),
-        array('buttons', linkFields, { maxRows: 2, admin: { description: 'The first button is the main one (orange), the second an outline. Shown with the "With a photo" style.' } }),
+        array('buttons', linkFields, { maxRows: 2, admin: { description: 'Not shown: the carousel has no buttons (Oct 2026). Kept so existing content is not lost.' } }),
       ],
       { minRows: 1, maxRows: 10, admin: { initCollapsed: true } },
     ),

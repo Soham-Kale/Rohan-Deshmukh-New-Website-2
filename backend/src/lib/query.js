@@ -1,4 +1,4 @@
-import { Op } from 'sequelize'
+import { Op, col as sqlCol, fn, where as sqlWhere } from 'sequelize'
 import { flatFields } from '../schema/index.js'
 import { fieldAllowed } from './access.js'
 import { badRequest, isPlainObject } from './util.js'
@@ -177,7 +177,8 @@ function leafToSql(kinds, n) {
       return { [Op.or]: [{ [col]: { [Op.notIn]: asList(n.value).map((v) => coerce(kind, v)) } }, { [col]: null }] }
     case 'contains':
     case 'like':
-      return kind === 'string' ? { [col]: { [Op.like]: likePattern(n.value) } } : n.op === 'contains' ? { [col]: coerce(kind, n.value) } : null
+      // LOWER() on both sides: case-insensitive on every database (PostgreSQL's LIKE is case-sensitive; SQLite and MySQL's are not)
+      return kind === 'string' ? sqlWhere(fn('LOWER', sqlCol(col)), { [Op.like]: likePattern(n.value).toLowerCase() }) : n.op === 'contains' ? { [col]: coerce(kind, n.value) } : null
     case 'exists':
       return String(n.value) === 'false' ? { [col]: null } : { [col]: { [Op.ne]: null } }
     case 'greater_than':

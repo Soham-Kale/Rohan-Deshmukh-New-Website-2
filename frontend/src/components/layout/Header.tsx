@@ -4,7 +4,7 @@ import { ArrowUpRight, ChevronDown, Menu, X } from 'lucide-react'
 import { Link, useLocation } from 'react-router'
 import { useLayout } from '@/lib/layout'
 import { useTranslations } from '@/lib/i18n'
-import { mediaUrl } from '@/lib/media'
+import { isMedia, mediaUrl } from '@/lib/media'
 import { normalizeNav, type NavNode } from '@/lib/nav'
 import { cn, isExternal } from '@/lib/utils'
 
@@ -38,10 +38,18 @@ const maskStyle = (logoUrl: string) => ({
   WebkitMaskPosition: 'left center',
 })
 
+/**
+ * The site's own name logo (रोहन सुभाष देशमुख) traced as a vector (Oct 2026), so it stays sharp on phone screens; the
+ * uploaded file is only 373 px wide and looked soft and faint there. Used while the logo in Site settings is that original file —
+ * a different logo uploaded in the admin is shown as uploaded.
+ */
+const VECTOR_LOGO = '/brand/logo-name.svg'
+const ORIGINAL_LOGO = 'logo-light.webp'
+
 /** the logo for light backgrounds (or the white one drawn in navy through a mask) */
 function Logo({ siteName, logoUrl, logoDarkUrl, small }: { siteName: string; logoUrl?: string | null; logoDarkUrl?: string | null; small?: boolean }) {
   if (logoDarkUrl) return <img src={logoDarkUrl} alt={siteName} width={190} height={48} fetchPriority="high" className={cn('w-auto shrink-0 object-contain object-left', small ? 'h-8' : 'h-10')} />
-  if (logoUrl) return <span role="img" aria-label={siteName} className={cn('block shrink-0 bg-charcoal-950', small ? 'h-8 w-[118px]' : 'h-10 w-[148px]')} style={maskStyle(logoUrl)} />
+  if (logoUrl) return <span role="img" aria-label={siteName} className={cn('block shrink-0 bg-charcoal-950', small ? 'h-9 w-[134px]' : 'h-11 w-[164px] xl:h-10 xl:w-[148px]')} style={maskStyle(logoUrl)} />
   return <span className="font-display text-xl font-bold text-charcoal-950">{siteName}</span>
 }
 
@@ -54,7 +62,7 @@ export function Header() {
   const tn = useTranslations('nav')
   const nav = normalizeNav(header.nav as never)
   const siteName = settings.siteName
-  const logoUrl = mediaUrl(settings.logoLight)
+  const logoUrl = isMedia(settings.logoLight) && settings.logoLight.filename === ORIGINAL_LOGO ? VECTOR_LOGO : mediaUrl(settings.logoLight)
   const logoDarkUrl = mediaUrl(settings.logoDark)
 
   const { pathname } = useLocation()
@@ -114,20 +122,9 @@ export function Header() {
           scrolled ? 'shadow-[0_6px_24px_rgba(14,30,52,0.08)]' : 'shadow-[0_2px_15px_rgba(14,30,52,0.05)]',
         )}
       >
-        <div className="container-x flex h-[4.5rem] items-center gap-2 sm:gap-4 lg:h-20">
-          <Link to="/" className="flex min-h-11 min-w-0 shrink items-center" aria-label={siteName}>
-            {heroTop && logoUrl && (
-              /* white logo over the photo (phones/tablets) */
-              <img src={logoUrl} alt={siteName} width={190} height={48} fetchPriority="high" className="h-9 w-auto max-w-full object-contain object-left sm:h-10 lg:hidden" />
-            )}
-            {logoDarkUrl ? (
-              <img src={logoDarkUrl} alt={siteName} width={190} height={48} fetchPriority="high" className={cn('h-9 w-auto max-w-full object-contain object-left sm:h-10', heroTop && logoUrl && 'max-lg:hidden')} />
-            ) : logoUrl ? (
-              /* the white logo drawn in ink through a mask (upload a "logo for light backgrounds" to replace it) */
-              <span role="img" aria-label={siteName} className={cn('block h-9 w-[133px] bg-charcoal-900 sm:h-10 sm:w-[148px]', heroTop && 'max-lg:hidden')} style={maskStyle(logoUrl)} />
-            ) : (
-              <span className="font-display text-2xl leading-none">{siteName}</span>
-            )}
+        <div className="container-x flex h-[4.5rem] items-center justify-between gap-2 sm:gap-4 lg:h-20">
+          <Link to="/" className="flex min-h-11 min-w-0 items-center" aria-label={siteName}>
+            <Logo siteName={siteName} logoUrl={logoUrl} logoDarkUrl={logoDarkUrl} />
           </Link>
 
           <nav aria-label="Main" className="hidden xl:block">

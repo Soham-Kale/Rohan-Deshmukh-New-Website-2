@@ -95,6 +95,7 @@ export async function loadSnapshot(ctx, snapshot, { mediaDir = DEFAULT_MEDIA_DIR
       stats.problems.push(`global ${g.slug}: ${detail}`)
     }
   }
+  await db.syncIdCounters?.()
   return stats
 }
 

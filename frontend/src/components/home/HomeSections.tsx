@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import type { Event, Home, Page, Post, Video as VideoDoc } from '@/types/cms'
 import { useLayout } from '@/lib/layout'
 import { LOCALE, useTranslations, type Locale } from '@/lib/i18n'
-import { mediaAlt, mediaPosition, mediaUrl, photoFit } from '@/lib/media'
+import { mediaAlt, mediaPosition, mediaSize, mediaUrl, photoFit } from '@/lib/media'
 import { cn } from '@/lib/utils'
 import { CMSLink } from '../ui/CMSLink'
 import { CountUp } from '../ui/CountUp'
@@ -67,14 +67,28 @@ export function HomeSections({ sections, extras, locale = LOCALE }: { sections: 
 function Hero({ b }: { b: Of<'heroSlider'> }) {
   const { settings } = useLayout()
   const t = useTranslations('common')
+  const textOnly = b.heroStyle === 'text'
   const slides = (b.slides ?? [])
-    .map((s) => ({ kicker: s.kicker, heading: s.heading, subheading: s.subheading, buttons: s.buttons ?? [] }))
-    .filter((s) => s.heading || s.kicker || s.subheading)
+    .map((s) => ({
+      image: mediaUrl(s.image, 'hero') ?? '',
+      position: mediaPosition(s.image),
+      mobileImage: mediaUrl(s.imageMobile, 'card'),
+      mobilePosition: mediaPosition(s.imageMobile),
+      ratio: mediaSize(s.image).width / mediaSize(s.image).height,
+      mobileRatio: mediaUrl(s.imageMobile, 'card') ? mediaSize(s.imageMobile).width / mediaSize(s.imageMobile).height : undefined,
+      alt: mediaAlt(s.image, s.heading ?? ''),
+      kicker: s.kicker,
+      heading: s.heading,
+      subheading: s.subheading,
+      buttons: s.buttons ?? [],
+    }))
+    // "Text only" hero style (admin, from the UX pass): the navy band without the photo — slides then need only words
+    .filter((s) => (textOnly ? s.heading || s.kicker || s.subheading : s.image))
   if (!slides.length) return null
   const social = (Object.entries(settings.social ?? {}).filter(([k, v]) => v && k !== 'id') as [string, string][]).map(([key, url]) => ({ key, url, label: socialLabels[key] ?? key }))
   return (
     <>
-      <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 5} social={social} labels={{ prev: t('prev'), next: t('next') }} />
+      <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 5} social={social} textOnly={textOnly} labels={{ prev: t('prev'), next: t('next') }} />
       <section className="container-x relative z-30 -mt-10">
         <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border-t-4 border-saffron-500 bg-white p-6 shadow-[0_12px_40px_rgba(14,30,52,0.12)] transition-shadow hover:shadow-[0_16px_50px_rgba(14,30,52,0.16)] lg:flex-row lg:p-8">
           <div className="flex max-w-3xl flex-col gap-2">
@@ -124,7 +138,6 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
             <div className="relative mx-auto max-w-md overflow-hidden rounded-2xl border border-saffron-100 bg-white shadow-2xl">
               <Img media={b.image} variant="card" alt={mediaAlt(b.image, b.heading ?? '')} sizes="(max-width:1024px) 90vw, 448px" className="h-auto w-full" />
             </div>
-            <div aria-hidden className="absolute -bottom-4 -right-4 -z-10 hidden h-full w-full rounded-2xl border-2 border-saffron-500/20 bg-saffron-500/10 sm:block lg:max-w-md" />
           </Reveal>
         )}
         <Reveal className="order-1 flex flex-col items-start gap-4 lg:order-2 lg:col-span-7" delay={0.1}>

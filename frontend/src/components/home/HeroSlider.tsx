@@ -1,21 +1,26 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
-import { ArrowRight, Pause, Play } from 'lucide-react'
-import { trackEvent } from '@/lib/analytics'
-import { useTranslations } from '@/lib/i18n'
-import { mediaPosition, mediaUrl, srcSetOf, type MaybeMedia } from '@/lib/media'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { m } from 'motion/react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { usePrefersReducedMotion } from '@/lib/motion'
 import { cn } from '@/lib/utils'
-import { CMSLink } from '../ui/CMSLink'
+import { SocialIcon } from '../ui/SocialIcon'
 
 export type Slide = {
+  image: string
+  position?: string
+  mobileImage?: string | null
+  mobilePosition?: string
+  /** width ÷ height of the photos (kept for callers; the layout no longer depends on it) */
+  ratio?: number
+  mobileRatio?: number
+  alt: string
   kicker?: string | null
   heading?: string | null
   subheading?: string | null
-  buttons: { label?: string | null; url?: string | null; newTab?: boolean | null }[]
+  buttons: { label?: string | null; url?: string | null }[]
 }
 
-/** The photo behind the text: a wide one for large screens and, if there is one, a portrait one for phones and tablets */
-export type HeroPhoto = { wide?: MaybeMedia; tall?: MaybeMedia; alt: string }
+export type HeroSocial = { key: string; url: string; label: string }
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
@@ -34,64 +39,70 @@ function Headline({ text }: { text?: string | null }) {
 }
 
 /**
- * The homepage hero: a stable photo of Rohan with the slides' words on top and one clear next step (the slide's first button).
- *
- *  - With a photo (the default): large screens show the wide photo under a dark tint on the left, where the words are; phones show
- *    the portrait photo full height under the see-through header, words at the bottom over a dark fade.
- *    Without a photo — or when the hero style is "Text only" in the admin — the words sit on the navy band, without buttons.
- *  - The first slide is on screen from the first paint (no entrance animation), so the heading is the largest contentful paint;
- *    later slides fade in line by line. Nothing slides sideways.
- *  - Autoplay pauses on hover and focus, while the tab is hidden, and with the Pause button (WCAG 2.2.2).
- *    People who ask for reduced motion get no autoplay unless they press Play.
+ * Home hero (Stitch design, Oct 2026): a deep navy band with soft kesariya and green glows.
+ * Left: a small badge row (kicker · place · slide counter), the headline with its last words in kesariya, an italic
+ * subheading, then the controls (dots, previous / next and a place line). Right: the slide photo (4:3, so the cover photos are not cut down) in a frame with a
+ * kesariya ring, and the social links docked on its left edge. Photos cross-fade with a slow zoom; text rises in.
+ * Phones show the text first, then the photo (each slide's "mobile image" when there is one).
+ * Autoplay pauses on hover, on focus and when the tab is hidden; swipe left / right on phones.
+ * No buttons in the carousel (Oct 2026); no autoplay for visitors who ask for reduced motion; the "Text only" hero style
+ * (admin) leaves the photo out.
  */
-export function HeroSlider({ slides, photo, autoplay = 5 }: { slides: Slide[]; photo?: HeroPhoto | null; autoplay?: number }) {
-  const t = useTranslations('common')
+export function HeroSlider({
+  slides, autoplay = 7, social = [], place, labels, textOnly = false,
+}: {
+  slides: Slide[]; autoplay?: number; social?: HeroSocial[]; place?: string; textOnly?: boolean
+  labels?: { prev: string; next: string }
+}) {
   const count = slides.length
-  const wideMedia = photo?.wide ?? photo?.tall
-  const tallMedia = photo?.tall ?? photo?.wide
-  const wideUrl = mediaUrl(wideMedia, 'hero')
-  const tallUrl = mediaUrl(tallMedia, 'card')
-  const withPhoto = Boolean(wideUrl)
-  const headingSize = withPhoto ? 'lg:text-5xl xl:text-[length:clamp(3.5rem,4.4vw,4rem)]' : 'lg:text-7xl'
+  const mobileList = useMemo(() => slides.map((s, i) => (s.mobileImage ? i : -1)).filter((i) => i >= 0), [slides])
+  const hasMobile = mobileList.length > 0
 
   const line = { in: { opacity: 1, y: 0, x: 0, transition: { duration: 0.7, ease: [0.2, 0.7, 0.2, 1] as const } }, out: { opacity: 0, x: -24 } }
   const [index, setIndex] = useState(0)
-  const [prev, setPrev] = useState<number | null>(null)
-  const [hold, setHold] = useState(false) // pointer or focus inside, or the tab is hidden
-  const [choice, setChoice] = useState<boolean | null>(null) // true = the visitor pressed Pause, false = Play
-  const reduced = usePrefersReducedMotion()
+  const [paused, setPaused] = useState(false) // held by hover, focus or a hidden tab
+  // visitors who ask their device for reduced motion get no autoplay (the arrows and dots still work)
+  const stopped = usePrefersReducedMotion()
+  const [isMobile, setIsMobile] = useState(false)
   const touch = useRef<number | null>(null)
   const indexRef = useRef(0)
 
-  const paused = choice ?? reduced
-  const playing = count > 1 && !paused && !hold
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)')
+    const on = () => setIsMobile(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  const order = useMemo(() => (isMobile && hasMobile ? mobileList : slides.map((_, i) => i)), [isMobile, hasMobile, mobileList, slides])
 
   const show = useCallback((next: number) => {
     if (next === indexRef.current) return
     indexRef.current = next
     setIndex(next)
   }, [])
-  const step = useCallback((dir: number) => show((indexRef.current + dir + count) % count), [count, show])
-
-  // autoplay
+  const step = useCallback(
+    (dir: number) => {
+      const pos = Math.max(0, order.indexOf(indexRef.current))
+      show(order[(pos + dir + order.length) % order.length])
+    },
+    [order, show],
+  )
   useEffect(() => {
-    if (!playing) return
+    if (!order.includes(indexRef.current)) show(order[0])
+  }, [order, show])
+
+  useEffect(() => {
+    if (order.length < 2 || paused || stopped) return
     const id = window.setTimeout(() => step(1), autoplay * 1000)
     return () => window.clearTimeout(id)
-  }, [index, playing, autoplay, step])
+  }, [index, paused, stopped, autoplay, order, step])
 
   useEffect(() => {
-    const onVis = () => setHold(document.hidden)
+    const onVis = () => setPaused(document.hidden)
     document.addEventListener('visibilitychange', onVis)
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
-
-  // the previous slide only has to stay on screen while it fades out
-  useEffect(() => {
-    if (prev === null) return
-    const id = window.setTimeout(() => setPrev(null), 700)
-    return () => window.clearTimeout(id)
-  }, [prev, index])
 
   if (!count) return null
   const pos = Math.max(0, order.indexOf(index))
@@ -129,16 +140,12 @@ export function HeroSlider({ slides, photo, autoplay = 5 }: { slides: Slide[]; p
 
   return (
     <section
-      data-hero-overlay
-      className={cn(
-        'relative isolate flex flex-col overflow-hidden bg-charcoal-950 text-white max-lg:-mt-[4.5rem]',
-        withPhoto ? 'min-h-[min(100svh,46rem)] lg:min-h-[640px]' : 'lg:min-h-[560px]',
-      )}
+      className="relative isolate w-full overflow-hidden border-b-4 border-saffron-600 bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-[#12233c] text-white"
       aria-roledescription="carousel"
-      onMouseEnter={() => setHold(true)}
-      onMouseLeave={() => setHold(false)}
-      onFocusCapture={() => setHold(true)}
-      onBlurCapture={() => setHold(false)}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
       onTouchStart={(e) => (touch.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
         if (touch.current === null) return
@@ -147,125 +154,107 @@ export function HeroSlider({ slides, photo, autoplay = 5 }: { slides: Slide[]; p
         touch.current = null
       }}
     >
-      {withPhoto && (
-        <>
-          {/* one photo for every slide; the browser fetches only the copy that suits the screen */}
-          <picture className="absolute inset-0 -z-20">
-            {/* on a phone the portrait photo is cropped to the screen's height, so it is drawn about 1.3 times as wide as the screen */}
-            {tallUrl && wideUrl && tallUrl !== wideUrl && <source media="(max-width: 1023px)" srcSet={srcSetOf(tallMedia) ?? tallUrl} sizes="(max-width: 600px) 130vw, 100vw" />}
-            <img
-              src={wideUrl!}
-              srcSet={srcSetOf(wideMedia)}
-              sizes="100vw"
-              alt={photo?.alt ?? ''}
-              decoding="async"
-              fetchPriority="high"
-              className="size-full object-cover [object-position:var(--pos-wide)] max-lg:[object-position:var(--pos-tall)]"
-              style={{ ['--pos-wide' as string]: mediaPosition(wideMedia), ['--pos-tall' as string]: mediaPosition(tallMedia) } as CSSProperties}
-            />
-          </picture>
-          {/* tint: large screens — dark where the words are, clear where Rohan is; phones — a little darker under the header
-              (the dark fade behind the words is attached to the words below, so it follows them whatever their height) */}
-          <div aria-hidden className="absolute inset-0 -z-10 hidden bg-gradient-to-r from-charcoal-950 from-0% via-charcoal-950/80 via-45% to-charcoal-950/5 lg:block" />
-          <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-charcoal-950/60 to-transparent lg:hidden" />
-        </>
-      )}
+      <div aria-hidden className="glow-tl" />
+      <div aria-hidden className="glow-br" />
 
-      {/* text */}
-      <div className="container-x relative flex flex-1 items-end pb-[4.5rem] pt-36 sm:pt-40 lg:items-center lg:pb-28 lg:pr-36 lg:pt-20">
-        {/* all slides share one grid cell, so the block keeps one height and nothing jumps.
-            With the photo, Rohan's face sits at about 56 % of the screen's width (the photo scales with the screen): the words get a column
-            that ends before it (32rem under 1280 px, 38rem above) and a heading that grows with the screen (3rem, then 3.5rem → 4rem).
-            On the plain navy band there is no face to avoid, so the words keep the full width and the big heading. */}
-        <div className={cn('relative grid w-full', withPhoto ? 'max-w-2xl lg:max-w-lg xl:max-w-[38rem]' : 'max-w-4xl')}>
-          {/* phones and tablets: a deep fade from the bottom edge up to a little above the first line, full width — the words (and the pager
-              under them) always sit on a dark ground, even where the photo is light (the kurta) */}
-          {withPhoto && <div aria-hidden className="absolute -inset-x-[100vw] -bottom-[4.5rem] -top-28 -z-10 bg-gradient-to-t from-charcoal-950/95 via-charcoal-950/90 via-80% to-transparent lg:hidden" />}
-          {slides.map((s, i) => {
-            const state = i === index ? 'in' : i === prev ? 'out' : 'idle'
-            const delay = (ms: number) => ({ transitionDelay: state === 'in' ? `${ms}ms` : '0ms' })
-            return (
-              <div
-                key={i}
-                aria-hidden={state !== 'in'}
-                className={cn('[grid-area:1/1] max-lg:self-end lg:self-center', state !== 'in' && 'pointer-events-none', state === 'idle' && 'invisible')}
-              >
-                {s.kicker && (
-                  <p className={cn('hero-line hero-kicker mb-3 text-[0.95rem] font-light uppercase text-saffron-300 sm:text-xl lg:mb-4', withPhoto ? 'lg:text-xl xl:text-[1.4rem]' : 'lg:text-2xl')} data-state={state} style={delay(0)}>
-                    {s.kicker}
-                  </p>
-                )}
-                {i === 0 ? (
-                  <h1 className={cn('hero-line text-[2.3rem] font-semibold leading-[1.12] sm:text-5xl md:text-6xl', headingSize)} data-state={state} style={delay(60)}>
-                    {s.heading}
-                  </h1>
-                ) : (
-                  <p className={cn('hero-line font-display text-[2.3rem] font-semibold leading-[1.12] sm:text-5xl md:text-6xl', headingSize)} data-state={state} style={delay(60)}>
-                    {s.heading}
-                  </p>
-                )}
-                {s.subheading && (
-                  <p className="hero-line mt-4 max-w-2xl text-base text-white sm:text-lg lg:mt-5 lg:text-xl" data-state={state} style={delay(120)}>
-                    {s.subheading}
-                  </p>
-                )}
-                {withPhoto && s.buttons.length > 0 && (
-                  <div className="hero-line mt-6 flex flex-wrap gap-3 lg:mt-9" data-state={state} style={delay(180)}>
-                    {s.buttons.slice(0, 2).map((b, j) => (
-                      <CMSLink
-                        key={j}
-                        url={b.url}
-                        newTab={b.newTab}
-                        tabIndex={state === 'in' ? undefined : -1}
-                        onClick={() => trackEvent('hero_cta_click', { label: b.label, url: b.url, slide: i + 1, button: j === 0 ? 'primary' : 'secondary' })}
-                        className={cn('btn text-base max-lg:!min-h-12 max-lg:px-5 max-lg:text-[0.95rem]', j === 0 ? 'btn-primary' : 'btn-outline-light')}
-                      >
-                        {b.label} <ArrowRight className="size-4" />
-                      </CMSLink>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
+      <div className="container-x relative z-10 pb-20 pt-12 lg:pb-24 lg:pt-16">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-8">
+          {/* words */}
+          <div className={cn('flex min-w-0 flex-col justify-center', textOnly ? 'lg:col-span-8' : 'lg:col-span-6 lg:pr-4')}>
+            <div className="mb-6 flex flex-wrap items-center gap-3">
+              {place && (
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-saffron-200 backdrop-blur-md">
+                  <span className="size-2 animate-pulse rounded-full bg-saffron-500" />
+                  {place}
+                </span>
+              )}
+              {order.length > 1 && (
+                <span className="font-display text-xs tracking-widest text-slate-300" aria-live="polite">
+                  <span className="font-bold text-saffron-500">{pad(pos + 1)}</span> / {pad(order.length)}
+                </span>
+              )}
+            </div>
+
+            {/* all slides share one grid cell, so the block keeps the height of the longest and nothing jumps */}
+            <div className="grid">
+              {slides.map((s, i) => {
+                const active = i === index
+                return (
+                  <m.div
+                    key={i}
+                    aria-hidden={!active}
+                    className={cn('[grid-area:1/1]', !active && 'pointer-events-none', hasMobile && !s.mobileImage && 'max-lg:hidden')}
+                    initial={false}
+                    animate={active ? 'in' : 'out'}
+                    variants={{ in: { opacity: 1, y: 0, transition: { staggerChildren: 0.12, delayChildren: 0.1 } }, out: { opacity: 0, y: 16, transition: { duration: 0.4 } } }}
+                  >
+                    {s.kicker && <m.p variants={line} className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-saffron-300">{s.kicker}</m.p>}
+                    {i === 0 ? (
+                      <m.h1 variants={line} className="mb-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+                        <Headline text={s.heading} />
+                      </m.h1>
+                    ) : (
+                      <m.p variants={line} className="mb-4 font-display text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+                        <Headline text={s.heading} />
+                      </m.p>
+                    )}
+                    {s.subheading && <m.p variants={line} className="font-quote max-w-xl text-lg leading-relaxed text-slate-200 sm:text-xl">{s.subheading}</m.p>}
+                  </m.div>
+                )
+              })}
+            </div>
+
+            {/* desktop: the controls under the words */}
+            {controls(cn('mt-10 border-t border-white/10 pt-6', !textOnly && 'max-lg:hidden'))}
+          </div>
+
+          {/* photo with the social links docked on its left edge (desktop only — phones show the photo alone) */}
+          {!textOnly && (
+          <div className="relative flex items-center justify-center lg:col-span-6">
+            {!!social.length && (
+              <ul aria-label="Follow" className="absolute -left-2 top-1/2 z-20 hidden -translate-y-1/2 lg:flex flex-col gap-2 rounded-xl border border-white/10 bg-charcoal-950/90 p-2 shadow-2xl backdrop-blur-md sm:-left-6">
+                {social.map((s) => (
+                  <li key={s.key}>
+                    <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label} title={s.label} className="grid size-9 place-items-center rounded-lg text-slate-300 transition-all hover:bg-saffron-600 hover:text-white">
+                      <SocialIcon name={s.key === 'whatsappChannel' ? 'whatsapp' : s.key} className="size-4" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <m.div
+              className="relative aspect-[4/3] w-full max-w-xl overflow-hidden rounded-2xl border-2 border-white/10 bg-charcoal-900 shadow-2xl ring-4 ring-saffron-500/30"
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.9, ease: [0.2, 0.7, 0.2, 1], delay: 0.15 }}
+            >
+              {slides.map((s, i) => {
+                const active = i === index
+                const mobile = s.mobileImage && s.mobileImage !== s.image ? s.mobileImage : null
+                return (
+                  <m.div
+                    key={i}
+                    aria-hidden={!active}
+                    className="absolute inset-0"
+                    initial={false}
+                    animate={{ opacity: active ? 1 : 0, scale: active ? 1 : 1.06 }}
+                    transition={{ opacity: { duration: 1.1, ease: 'easeInOut' }, scale: { duration: active ? 7 : 1.1, ease: [0.2, 0.7, 0.2, 1] } }}
+                  >
+                    <img src={s.image} alt={active ? s.alt : ''} loading="eager" fetchPriority={i === 0 ? 'high' : 'low'} decoding="async" className={cn('absolute inset-0 size-full object-cover', mobile && 'max-lg:hidden')} style={{ objectPosition: s.position }} />
+                    {mobile && <img src={mobile} alt={active ? s.alt : ''} loading="eager" decoding="async" className="absolute inset-0 size-full object-cover lg:hidden" style={{ objectPosition: s.mobilePosition }} />}
+                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950/70 via-transparent to-transparent" />
+                  </m.div>
+                )
+              })}
+              <span aria-hidden className="absolute bottom-5 right-6 size-2.5 rounded-full bg-saffron-500 shadow-[0_0_8px_#FF7A00]" />
+            </m.div>
+          </div>
+          )}
+
+          {/* phones: the controls under the photo */}
+          {!textOnly && controls('-mt-4 justify-center lg:hidden')}
         </div>
       </div>
-
-      {/* numbered pager with Pause / Play — phones and tablets: a row along the bottom, on the dark fade; desktop: a column at the
-          right edge, on a dark pill (so the numbers stay readable over any part of the photo) */}
-      {count > 1 && (
-        <nav aria-label={t('slides')} className="absolute bottom-3 left-4 z-10 md:left-8 lg:bottom-auto lg:left-auto lg:right-12 lg:top-1/2 lg:-translate-y-1/2 xl:right-16">
-          <ol className="flex items-center lg:flex-col lg:items-end lg:gap-1 lg:rounded-full lg:bg-charcoal-950/60 lg:px-2 lg:py-2.5 lg:backdrop-blur-sm">
-            {slides.map((_, i) => (
-              <li key={i}>
-                <button
-                  type="button"
-                  onClick={() => show(i)}
-                  aria-current={i === index ? 'true' : undefined}
-                  className={cn('group relative flex min-h-11 min-w-11 items-center justify-center gap-3 px-2 text-base tabular-nums transition-colors lg:justify-end lg:text-lg', i === index ? 'font-semibold text-white' : 'text-white/90 hover:text-white')}
-                >
-                  {/* the current slide: an underline on phones, a line before the number on desktop */}
-                  <span aria-hidden className={cn('absolute inset-x-2 bottom-1.5 h-0.5 rounded-full bg-white transition-opacity lg:hidden', i === index ? 'opacity-100' : 'opacity-0')} />
-                  <span aria-hidden className={cn('hidden h-px bg-white transition-all duration-500 lg:block', i === index ? 'w-12' : 'w-0 group-hover:w-4')} />
-                  <span className="sr-only">{t('slide')} </span>
-                  {pad(i + 1)}
-                </button>
-              </li>
-            ))}
-            <li className="ml-1 lg:ml-0 lg:mt-1">
-              <button
-                type="button"
-                onClick={() => setChoice(!paused)}
-                aria-label={paused ? t('playSlides') : t('pauseSlides')}
-                title={paused ? t('playSlides') : t('pauseSlides')}
-                className="grid size-11 place-items-center rounded-full bg-white/15 text-white ring-1 ring-white/60 transition-colors hover:bg-white/25"
-              >
-                {paused ? <Play aria-hidden className="size-4 fill-current" /> : <Pause aria-hidden className="size-4 fill-current" />}
-              </button>
-            </li>
-          </ol>
-        </nav>
-      )}
     </section>
   )
 }

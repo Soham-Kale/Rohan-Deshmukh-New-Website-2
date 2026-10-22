@@ -40,6 +40,15 @@
   --color-overlay: rgb(9 20 34 / .55);
   --color-btn: #e65100;
   --color-btn-hover: #c2410c;
+  --color-btn-active: #9a3412;    /* while pressed */
+  /* form controls (from the UX pass): field edges 3.1:1 on white — the pale --color-line stays for dividers only */
+  --color-field: #8b93a1;
+  --color-field-hover: #5c6779;
+  /* meaning, not decoration: each colour is at least 4.5:1 on white and on its own soft background */
+  --color-success: #1f7a3a;  --color-success-soft: #ebf5ee;
+  --color-warning: #a84a06;  --color-warning-soft: #fdf1df;
+  --color-danger: #b42318;   --color-danger-soft: #fdeceb;
+  --color-info: #1d4ed8;     --color-info-soft: #e8efff;
 
   --font-display: 'Space Grotesk Variable', 'Space Grotesk', 'Tiro Devanagari Marathi', system-ui, sans-serif;
   --font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Tiro Devanagari Marathi', system-ui, sans-serif;
@@ -91,9 +100,6 @@
   @media (min-width: 640px) { .h-section { font-size: 2.25rem; line-height: 2.6rem; } }
   .on-dark .h-section { color: #fff; }
 
-  /* Buttons (Oct 2026): every button on the site is the dark saffron --color-btn (#c9500b) with white text (4.5:1) and a softly rounded 12px corner;
-     it darkens on hover and once more while pressed. The bright #F26B1D is kept for lines, dots and glows only.
-     The variant names (primary / dark / light / ghost) are kept so no component had to change its markup. */
   /* Stitch buttons: 48px tall, 12px corners, bold small text. Primary = kesariya gradient, dark = navy, ghost = white outline card */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3rem; border-radius: .75rem; padding: .75rem 1.75rem; font-weight: 700; font-size: .875rem; line-height: 1.25rem; color: #fff; background-image: linear-gradient(to right, var(--color-saffron-600), var(--color-saffron-500), #f97316); box-shadow: 0 10px 15px -3px rgb(255 122 0 / .3), 0 4px 6px -4px rgb(255 122 0 / .3); transition: background .2s, transform .15s, box-shadow .2s, filter .2s; white-space: nowrap; }
   .btn:hover { filter: brightness(.94); box-shadow: 0 20px 25px -5px rgb(255 122 0 / .4), 0 8px 10px -6px rgb(255 122 0 / .4); }

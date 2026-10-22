@@ -5,7 +5,7 @@ const { INTEGER, STRING, TEXT, BOOLEAN, DATE, DOUBLE } = DataTypes
 
 /** A JSON document kept in one long TEXT column (portable: works the same on SQLite and every MySQL / MariaDB version) */
 const jsonColumn = (name, dialect) => ({
-  type: dialect === 'sqlite' ? TEXT : TEXT('long'), // SQLite has one TEXT type; MySQL needs LONGTEXT for big documents
+  type: dialect === 'mysql' ? TEXT('long') : TEXT, // MySQL needs LONGTEXT for big documents; SQLite and PostgreSQL have one unlimited TEXT type
   allowNull: false,
   get() {
     const raw = this.getDataValue(name)

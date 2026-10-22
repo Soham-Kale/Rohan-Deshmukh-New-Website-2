@@ -78,7 +78,7 @@ export default function ContactPage() {
                   <ul className="mt-2 flex flex-wrap gap-1">
                     {social.map(([k, v]) => (
                       <li key={k}>
-                        <a href={v} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} title={socialLabels[k] ?? k} className="grid size-8 place-items-center rounded-lg bg-ivory text-charcoal-900 ring-1 ring-stone-200 transition-all hover:bg-saffron-600 hover:text-white hover:ring-saffron-600">
+                        <a href={v} target="_blank" rel="noopener noreferrer" aria-label={socialLabels[k] ?? k} title={socialLabels[k] ?? k} className="grid size-11 place-items-center rounded-lg bg-ivory lg:size-8 text-charcoal-900 ring-1 ring-stone-200 transition-all hover:bg-saffron-600 hover:text-white hover:ring-saffron-600">
                           <SocialIcon name={k === 'whatsappChannel' ? 'whatsapp' : k} className="size-4" />
                         </a>
                       </li>
@@ -122,8 +122,8 @@ export default function ContactPage() {
                       {o.name}
                     </h3>
                     {o.address && <p className="flex gap-2.5 text-sm text-slate-300"><MapPin className="mt-0.5 size-4 shrink-0 text-saffron-500" /><span className="whitespace-pre-line">{o.address}</span></p>}
-                    {o.phone && <p><a className="flex items-center gap-2.5 text-sm text-slate-300 transition hover:text-white" href={`tel:${o.phone.replace(/\s/g, '')}`}><Phone className="size-4 text-saffron-500" /> {o.phone}</a></p>}
-                    {o.email && <p><a className="flex items-center gap-2.5 break-all text-sm text-slate-300 transition hover:text-white" href={`mailto:${o.email}`}><Mail className="size-4 shrink-0 text-saffron-500" /> {o.email}</a></p>}
+                    {o.phone && <p><a className="flex items-center gap-2.5 text-sm text-slate-300 transition hover:text-white max-lg:min-h-11" href={`tel:${o.phone.replace(/\s/g, '')}`}><Phone className="size-4 text-saffron-500" /> {o.phone}</a></p>}
+                    {o.email && <p><a className="flex items-center gap-2.5 break-all text-sm text-slate-300 transition hover:text-white max-lg:min-h-11" href={`mailto:${o.email}`}><Mail className="size-4 shrink-0 text-saffron-500" /> {o.email}</a></p>}
                   </div>
                 </article>
               ))}
