@@ -1,5 +1,6 @@
 import { mkdirSync } from 'node:fs'
 import path from 'node:path'
+import pg from 'pg'
 import { Sequelize } from 'sequelize'
 import { buildModels } from './models.js'
 import { runMigrations } from './migrate.js'
@@ -25,6 +26,9 @@ export function createSequelize(cfg) {
   if (db.dialect === 'postgres') {
     const options = {
       dialect: 'postgres',
+      // handed over explicitly: Sequelize otherwise loads 'pg' by a computed name, which Vercel's bundler cannot see, so the
+      // driver was left out of the deployed function ("Please install pg package manually")
+      dialectModule: pg,
       logging: false,
       // every table lives in db.schema (e.g. "site"), so the site can share a database with other apps without touching their tables
       define: db.schema && db.schema !== 'public' ? { schema: db.schema } : {},

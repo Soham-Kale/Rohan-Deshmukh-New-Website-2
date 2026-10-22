@@ -114,7 +114,7 @@ export function loadConfig(env = process.env) {
     },
 
     recaptchaSecret: env.RECAPTCHA_SECRET_KEY || '',
-    admin: { email: env.ADMIN_EMAIL || 'admin@rohandeshmukh.in', password: env.ADMIN_PASSWORD || 'ChangeMe@123' },
+    admin: { email: env.ADMIN_EMAIL || 'admin@rohandeshmukh.in', password: env.ADMIN_PASSWORD || 'RohanDeshmukh@123' },
 
     frontendDist,
     serveFrontend: bool(env.SERVE_FRONTEND, existsSync(path.join(frontendDist, 'index.html'))),
