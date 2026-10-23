@@ -7558,5 +7558,89 @@
   "folder": null,
   "createdAt": "2026-10-22T05:54:31.000Z",
   "updatedAt": "2026-10-22T05:54:31.000Z"
+ },
+ {
+  "id": 361,
+  "alt": {
+   "en": "Rohan Subhash Deshmukh — speech, Solapur",
+   "mr": "रोहन सुभाष देशमुख — भाषण, सोलापूर"
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "hero-speech-desktop.webp",
+  "mimeType": "image/webp",
+  "filesize": 92704,
+  "width": 1600,
+  "height": 1067,
+  "focalX": 50,
+  "focalY": 10,
+  "folder": null,
+  "createdAt": "2026-10-22T12:02:12.000Z",
+  "updatedAt": "2026-10-22T12:02:12.000Z"
+ },
+ {
+  "id": 362,
+  "alt": {
+   "en": "Rohan Subhash Deshmukh — speech, Solapur",
+   "mr": "रोहन सुभाष देशमुख — भाषण, सोलापूर"
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "hero-speech-mobile.webp",
+  "mimeType": "image/webp",
+  "filesize": 24118,
+  "width": 360,
+  "height": 480,
+  "focalX": 50,
+  "focalY": 50,
+  "folder": null,
+  "createdAt": "2026-10-22T12:02:12.000Z",
+  "updatedAt": "2026-10-22T12:02:12.000Z"
+ },
+ {
+  "id": 363,
+  "alt": {
+   "en": "Rohan Subhash Deshmukh — talking with party workers",
+   "mr": "रोहन सुभाष देशमुख — कार्यकर्त्यांशी संवाद"
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "hero-rally-desktop.webp",
+  "mimeType": "image/webp",
+  "filesize": 232998,
+  "width": 1600,
+  "height": 1067,
+  "focalX": 50,
+  "focalY": 5,
+  "folder": null,
+  "createdAt": "2026-10-22T12:02:12.000Z",
+  "updatedAt": "2026-10-22T12:02:12.000Z"
+ },
+ {
+  "id": 364,
+  "alt": {
+   "en": "Rohan Subhash Deshmukh — talking with party workers",
+   "mr": "रोहन सुभाष देशमुख — कार्यकर्त्यांशी संवाद"
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "hero-rally-mobile.webp",
+  "mimeType": "image/webp",
+  "filesize": 39004,
+  "width": 360,
+  "height": 480,
+  "focalX": 50,
+  "focalY": 50,
+  "folder": null,
+  "createdAt": "2026-10-22T12:02:12.000Z",
+  "updatedAt": "2026-10-22T12:02:12.000Z"
  }
 ]

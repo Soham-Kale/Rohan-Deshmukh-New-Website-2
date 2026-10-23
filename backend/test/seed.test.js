@@ -16,8 +16,8 @@ describe('the bundled website content', () => {
 
   it('loads completely: every document, with the same ids as the old site', async () => {
     // 235 documents / 171 photos from the old site, plus the three homepage cover photos and 186 project photos (Oct 2026)
-    assert.equal(stats.documents, 425)
-    assert.equal(stats.media, 360)
+    assert.equal(stats.documents, 429)
+    assert.equal(stats.media, 364)
     assert.equal(stats.globals, 5)
     assert.deepEqual(stats.problems, [])
     const post = (await srv.client().get('/api/posts/1?locale=en')).data
@@ -52,6 +52,17 @@ describe('the bundled website content', () => {
     assert.match(hero.slides[0].image.url, /^\/uploads\/.+\.webp$/)
     assert.ok(existsSync(path.join(srv.dir, 'uploads', hero.slides[0].image.filename)))
     assert.equal(home.sections.find((s) => s.blockType === 'family').hidden, true)
+  })
+
+  it('the hero has two slides (no photo with Hon. Narendra Modi), each with a 1600 × 1067 desktop photo and a 360 × 480 phone photo', async () => {
+    const home = (await srv.client().get('/api/globals/home?locale=en&depth=1')).data
+    const slides = home.sections[0].slides
+    assert.equal(slides.length, 2)
+    for (const s of slides) {
+      assert.notEqual(s.image.filename, 'hero-greeting.webp')
+      assert.deepEqual([s.image.width, s.image.height], [1600, 1067])
+      assert.deepEqual([s.imageMobile.width, s.imageMobile.height], [360, 480])
+    }
   })
 
   it('the hero shows a photo of Rohan with "Get in touch" as the main button (the hero style can be switched to text only)', async () => {

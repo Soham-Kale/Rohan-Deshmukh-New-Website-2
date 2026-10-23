@@ -11,8 +11,8 @@
       "slides": [
         {
           "id": "6ad5ec7515929451e81266a3",
-          "image": 172,
-          "imageMobile": 172,
+          "image": 361,
+          "imageMobile": 362,
           "kicker": {
             "en": "Chairman, Lokmangal Foundation",
             "mr": "अध्यक्ष, लोकमंगल फाऊंडेशन"
@@ -20,10 +20,6 @@
           "heading": {
             "en": "I am Rohan Subhash Deshmukh",
             "mr": "मी रोहन सुभाष देशमुख"
-          },
-          "subheading": {
-            "en": "Inspired by Prime Minister Narendra Modi’s vision for a developed and self-reliant India, I work towards turning that vision into meaningful change at the grassroots.",
-            "mr": "सोलापूरच्या मातीने घडवलेलं व्यक्तिमत्त्व, संस्कारांनी दिलेली दिशा आणि समाजासाठीची बांधिलकी."
           },
           "buttons": [
             {
@@ -47,37 +43,9 @@
           ]
         },
         {
-          "id": "6ad5ec7515929451e81266a5",
-          "image": 173,
-          "imageMobile": 173,
-          "kicker": {
-            "en": "Lokmangal Foundation",
-            "mr": "लोकमंगल फाऊंडेशन"
-          },
-          "heading": {
-            "en": "Even a small effort to change society is a big one",
-            "mr": "समाजात बदल घडवण्यासाठी केलेला छोटासा प्रयत्नही खूप मोठा असतो"
-          },
-          "subheading": {
-            "en": "Working for rural upliftment through Lokmangal Foundation.",
-            "mr": "लोकमंगल फाऊंडेशनच्या माध्यमातून ग्रामीण समाजाच्या उन्नतीसाठी काम."
-          },
-          "buttons": [
-            {
-              "id": "6ad5ec7515929451e81266a4",
-              "label": {
-                "en": "Social work",
-                "mr": "सामाजिक कार्य"
-              },
-              "url": "/social-work",
-              "newTab": false
-            }
-          ]
-        },
-        {
           "id": "6b0a1c2d3e4f5a6b7c8d9e01",
-          "image": 174,
-          "imageMobile": 174,
+          "image": 363,
+          "imageMobile": 364,
           "kicker": {
             "en": null,
             "mr": null

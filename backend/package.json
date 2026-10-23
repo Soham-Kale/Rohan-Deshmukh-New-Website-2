@@ -23,6 +23,7 @@
     "content:project-photos": "node scripts/project-photos.mjs",
     "content:home-text": "node scripts/home-text.mjs",
     "content:intro-know-more": "node scripts/intro-know-more.mjs",
+    "content:hero-slides": "node scripts/hero-slides.mjs",
     "content:update": "node scripts/content-update.mjs",
     "test": "node --test --test-concurrency=1 \"test/*.test.js\"",
     "lint": "eslint .",
