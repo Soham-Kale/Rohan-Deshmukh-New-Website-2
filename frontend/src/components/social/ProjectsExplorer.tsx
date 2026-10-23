@@ -52,8 +52,9 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
 
   return (
     <div>
-      <div className="flex flex-col items-center gap-4">
-        <div role="group" aria-label={labels.filters} className="flex flex-wrap justify-center gap-2">
+      {/* like lokmangalfoundation.com/projects: the theme pills on the left (wrapping), the search box on the right of the same row */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
+        <div role="group" aria-label={labels.filters} className="flex flex-wrap justify-center gap-2 lg:justify-start">
           {chips.map((c) => {
             const on = cat === c.value
             return (
@@ -63,18 +64,17 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
                 aria-pressed={on}
                 onClick={() => setCat(c.value)}
                 className={cn(
-                  'inline-flex min-h-11 items-center gap-2 rounded-xl border px-4 py-1.5 text-sm font-semibold transition',
-                  on ? 'border-btn bg-btn text-white' : 'border-field bg-white text-charcoal-900 hover:border-field-hover hover:bg-cream',
+                  'inline-flex min-h-10 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition',
+                  on ? 'border-btn bg-btn text-white shadow-sm' : 'border-stone-300 bg-white text-charcoal-800 hover:border-saffron-500 hover:text-saffron-700',
                 )}
               >
                 {c.label}
-                <span className={cn('grid min-w-6 place-items-center rounded-full px-1.5 text-xs leading-5', on ? 'bg-white text-saffron-700' : 'bg-cream text-saffron-700')}>{n(c.count)}</span>
               </button>
             )
           })}
         </div>
 
-        <label className="relative block w-full max-w-md">
+        <label className="relative mx-auto block w-full max-w-md shrink-0 lg:mx-0 lg:w-64">
           <span className="sr-only">{labels.search}</span>
           <Search aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted" />
           <input
@@ -82,7 +82,7 @@ export function ProjectsExplorer({ items, categories, labels, locale }: { items:
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder={labels.search}
-            className="min-h-11 w-full rounded-full border border-field bg-white py-2.5 pl-10 pr-4 text-sm text-charcoal-900 outline-none transition placeholder:text-muted hover:border-field-hover focus:border-saffron-700 focus:ring-2 focus:ring-saffron-700"
+            className="min-h-11 w-full rounded-full border border-stone-300 bg-white py-2.5 pl-10 pr-4 text-sm text-charcoal-900 outline-none transition placeholder:text-muted hover:border-field-hover focus:border-saffron-700 focus:ring-2 focus:ring-saffron-700"
           />
         </label>
       </div>

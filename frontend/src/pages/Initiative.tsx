@@ -57,14 +57,7 @@ export default function InitiativePage() {
         title={d.title}
         path="/social-work"
         crumbs={[{ label: locale === 'mr' ? 'लोकमंगल फाऊंडेशन' : 'Lokmangal Foundation', href: '/lokmangal/foundation' }, { label: locale === 'mr' ? 'प्रकल्प' : 'Projects', href: '/lokmangal/foundation#projects' }, { label: d.title }]}
-      >
-        {d.stat && (
-          <p className="mt-6 inline-flex flex-wrap items-baseline gap-x-3 gap-y-1 border-l-2 border-saffron-500 pl-4">
-            <span className="text-[0.95rem] text-highlight">{x.impact}</span>
-            <span className="font-display text-xl text-white">{d.stat}</span>
-          </p>
-        )}
-      </PageBanner>
+      />
 
       <div className="container-x pb-20 pt-8 md:pb-24 md:pt-10">
         <Link to="/lokmangal/foundation#projects" className="tap-pad inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:gap-3 hover:text-charcoal-900">
@@ -73,6 +66,13 @@ export default function InitiativePage() {
 
         <article className="mt-8 grid gap-14 lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:gap-20">
           <div className="min-w-0">
+            {/* like the project pages on lokmangalfoundation.com: the key impact in a small kesariya box above the cover */}
+            {d.stat && (
+              <p className="mb-6 inline-flex flex-col rounded-xl border border-saffron-200 bg-saffron-50 px-4 py-2.5">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-saffron-600">{x.impact}</span>
+                <span className="font-display text-base font-bold text-charcoal-950 md:text-lg">{d.stat}</span>
+              </p>
+            )}
             {hasCover && (
               <div className="overflow-hidden rounded-[1.75rem] bg-cream">
                 <Img media={d.heroImage} variant="hero" alt={mediaAlt(d.heroImage, d.title)} sizes="(max-width:1024px) 92vw, 860px" priority className="h-auto max-h-[560px] w-full object-cover" style={{ objectPosition: mediaPosition(d.heroImage) }} />

@@ -24,6 +24,7 @@
     "content:home-text": "node scripts/home-text.mjs",
     "content:intro-know-more": "node scripts/intro-know-more.mjs",
     "content:intro-education-heading": "node scripts/intro-education-heading.mjs",
+    "content:lokmangal-projects": "node scripts/lokmangal-projects.mjs",
     "content:hero-slides": "node scripts/hero-slides.mjs",
     "content:social-activities": "node scripts/social-activities.mjs",
     "content:update": "node scripts/content-update.mjs",
