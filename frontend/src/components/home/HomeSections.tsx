@@ -496,7 +496,7 @@ function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
         <HeadRow eyebrow={b.eyebrow} heading={b.heading} intro={b.text} url={b.buttonUrl} label={b.buttonLabel} />
         <Stagger as="ul" className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-5">
           {items.map((g, i) => (
-            <StaggerItem as="li" key={g.id} className={cn('relative flex flex-col overflow-hidden rounded-2xl border border-saffron-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg', i === items.length - 1 && items.length % 2 === 1 && 'col-span-2 md:col-span-1')}>
+            <StaggerItem as="li" key={g.id} className={cn('relative flex flex-col items-center overflow-hidden rounded-2xl border border-saffron-100 bg-white p-5 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg', i === items.length - 1 && items.length % 2 === 1 && 'col-span-2 md:col-span-1')}>
               <div aria-hidden className={cn('absolute left-0 top-0 h-1.5 w-full', bars[i % bars.length])} />
               <span className="mb-1 block font-display text-3xl font-bold text-charcoal-950 sm:text-4xl">{g.value && <CountUp value={g.value} />}</span>
               {g.title && <span className="block text-xs font-bold uppercase tracking-wider text-charcoal-900">{g.title}</span>}
