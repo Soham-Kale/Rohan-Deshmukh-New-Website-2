@@ -16,7 +16,7 @@ describe('the bundled website content', () => {
 
   it('loads completely: every document, with the same ids as the old site', async () => {
     // 235 documents / 171 photos from the old site, plus the three homepage cover photos and 186 project photos (Oct 2026)
-    assert.equal(stats.documents, 429)
+    assert.equal(stats.documents, 430)
     assert.equal(stats.media, 364)
     assert.equal(stats.globals, 5)
     assert.deepEqual(stats.problems, [])
@@ -38,6 +38,23 @@ describe('the bundled website content', () => {
     const { docs } = (await srv.client().get('/api/initiatives?limit=0&depth=0')).data
     const bare = docs.filter((d) => !d.heroImage || !d.gallery?.length).map((d) => d.slug)
     assert.deepEqual(bare, ['madhyamanchi-dakhal'])
+  })
+
+  it('the homepage "Social activities" section has four text cards that open the Social Activities page, and no Political career link', async () => {
+    const home = (await srv.client().get('/api/globals/home?depth=1&locale=en')).data
+    const block = home.sections.find((s) => s.blockType === 'homeHighlights')
+    assert.equal(block.eyebrow, 'Social activities')
+    assert.equal(block.buttonUrl, '/social-activities')
+    assert.deepEqual(block.items.map((c) => c.title), ['Entrepreneur Presentation Competition', 'Chhota Udyojak – Motha Udyojak', 'Solapur University Youth Festival', 'Yuva Sahitya Sammelan'])
+    for (const c of block.items) {
+      assert.match(c.url, /^\/social-activities#[a-z-]+$/)
+      assert.equal(c.image ?? null, null)
+    }
+    assert.ok(!JSON.stringify(home.sections).includes('/political-career'))
+    const page = (await srv.client().get('/api/pages?where[path][equals]=/social-activities&locale=en')).data.docs[0]
+    assert.equal(page._status, 'published')
+    assert.deepEqual(page.layout.map((b) => b.heading), block.items.map((c) => c.title))
+    assert.match(page.layout[2].body, /Rohan Deshmukh \(2013 edition\)/)
   })
 
   it('is not empty afterwards, and clearContent empties it again', async () => {
@@ -99,7 +116,7 @@ describe('the bundled website content', () => {
 
   it('pages, albums, events, videos and offices are all there', async () => {
     const c = srv.client()
-    assert.equal((await c.get('/api/pages?limit=0')).data.totalDocs, 10)
+    assert.equal((await c.get('/api/pages?limit=0')).data.totalDocs, 11)
     assert.equal((await c.get('/api/albums?limit=0')).data.totalDocs, 3)
     assert.equal((await c.get('/api/events?limit=0')).data.totalDocs, 5)
     assert.equal((await c.get('/api/videos?limit=0')).data.totalDocs, 4)

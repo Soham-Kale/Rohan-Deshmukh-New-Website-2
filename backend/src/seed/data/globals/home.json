@@ -188,8 +188,8 @@
       "blockType": "homeHighlights",
       "hidden": false,
       "eyebrow": {
-        "en": "Social initiatives",
-        "mr": "सामाजिक उपक्रम"
+        "en": "Social activities",
+        "mr": null
       },
       "heading": {
         "en": "Leadership built on a direct bond with people",
@@ -201,62 +201,79 @@
       },
       "items": [
         {
-          "id": "6ad5ec7615929451e81266d0",
-          "image": 126,
+          "id": "1d0660dfa7b3a9c1553e244b",
+          "image": null,
           "tag": {
             "en": null,
             "mr": null
           },
           "title": {
-            "en": "Swami Vivekananda Vichar Yatra",
-            "mr": "स्वामी विवेकानंद विचार यात्रा"
+            "en": "Entrepreneur Presentation Competition",
+            "mr": null
           },
           "text": {
-            "en": "Carried Vivekananda’s ideas to young people in towns and villages across Dharashiv.",
-            "mr": "धाराशिव जिल्ह्यातील शहरे आणि गावांमधील तरुणांपर्यंत स्वामी विवेकानंदांचे विचार पोहोचवले."
+            "en": "Turning young ideas into real businesses",
+            "mr": null
           },
-          "url": "/political-career"
+          "url": "/social-activities#entrepreneur-presentation-competition"
         },
         {
-          "id": "6ad5ec7615929451e81266d1",
-          "image": 102,
+          "id": "18048f0788c8e58c4a5b00b9",
+          "image": null,
           "tag": {
             "en": null,
             "mr": null
           },
           "title": {
-            "en": "Bharatiya Janata Yuva Morcha",
-            "mr": "भारतीय जनता युवा मोर्चा"
+            "en": "Chhota Udyojak – Motha Udyojak",
+            "mr": null
           },
           "text": {
-            "en": "Travelled across Maharashtra, connecting youth with politics and social issues.",
-            "mr": "संपूर्ण महाराष्ट्रात प्रवास करून तरुणांना राजकारणाशी आणि सामाजिक प्रश्नांशी जोडले."
+            "en": "A small push for village businesses",
+            "mr": null
           },
-          "url": "/political-career"
+          "url": "/social-activities#chhota-udyojak-motha-udyojak"
         },
         {
-          "id": "6ad5ec7615929451e81266d2",
-          "image": 99,
+          "id": "af577b74f2a0ae003c4fdea4",
+          "image": null,
           "tag": {
             "en": null,
             "mr": null
           },
           "title": {
-            "en": "Dharashiv Lok Sabha election",
-            "mr": "धाराशिव लोकसभा निवडणूक"
+            "en": "Solapur University Youth Festival",
+            "mr": null
           },
           "text": {
-            "en": "No party, only people — village to village, door to door.",
-            "mr": "पक्ष नाही, फक्त लोक — गावागावात, घराघरात थेट संवाद."
+            "en": "Where young talent finds its stage",
+            "mr": null
           },
-          "url": "/political-career"
+          "url": "/social-activities#solapur-university-youth-festival"
+        },
+        {
+          "id": "812e43c47d2b8faa5ad24ed5",
+          "image": null,
+          "tag": {
+            "en": null,
+            "mr": null
+          },
+          "title": {
+            "en": "Yuva Sahitya Sammelan",
+            "mr": null
+          },
+          "text": {
+            "en": "A platform for the next generation of writers",
+            "mr": null
+          },
+          "url": "/social-activities#yuva-sahitya-sammelan"
         }
       ],
       "buttonLabel": {
-        "en": "Political career",
-        "mr": "राजकीय कारकीर्द"
+        "en": "All social activities",
+        "mr": null
       },
-      "buttonUrl": "/political-career"
+      "buttonUrl": "/social-activities"
     },
     {
       "id": "6ad5ec7615929451e81266d4",

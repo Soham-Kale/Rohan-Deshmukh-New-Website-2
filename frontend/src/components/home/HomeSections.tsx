@@ -438,20 +438,26 @@ function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
  * Social initiatives (Stitch design): three white cards — photo with a label badge on it, title, text and an arrow. The middle card carries a kesariya border; badges alternate kesariya / navy / ivory.
  */
 function HighlightsSection({ b }: { b: Of<'homeHighlights'> }) {
-  // the photos carry no label (removed Oct 2026) — the title and text below say what each one is
+  // the photos carry no label (removed Oct 2026) — the title and text below say what each one is. A card without a photo is a
+  // plain text card (Social activities, Oct 2026: photos are added later in the admin); four cards sit in one row on wide screens.
+  const count = b.items?.length ?? 0
   return (
     <section className="container-x py-20 lg:py-28">
       <HeadRow eyebrow={b.eyebrow} heading={b.heading} intro={b.text} url={b.buttonUrl} label={b.buttonLabel} />
-      <Stagger as="ol" className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <Stagger as="ol" className={cn('grid grid-cols-1 gap-8', count === 4 ? 'md:grid-cols-2 lg:grid-cols-4' : count === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
         {b.items?.map((c, i) => {
           const img = mediaUrl(c.image, 'card')
           return (
             <StaggerItem as="li" key={c.id}>
               <Lift className="h-full">
                 <CMSLink url={c.url || b.buttonUrl || '#'} className={cn('group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow hover:shadow-2xl', i === 1 ? 'border-2 border-saffron-500' : 'border border-saffron-100')}>
-                  <div className="relative h-56 w-full overflow-hidden bg-gray-100">
-                    {img && <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" style={photoFit(c.image, 1.6)} />}
-                  </div>
+                  {img ? (
+                    <div className="relative h-56 w-full overflow-hidden bg-gray-100">
+                      <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" style={photoFit(c.image, 1.6)} />
+                    </div>
+                  ) : (
+                    <span aria-hidden className={cn('block h-1.5 w-full', i % 2 ? 'bg-leaf-600' : 'bg-gradient-to-r from-saffron-600 to-saffron-400')} />
+                  )}
                   <div className="flex flex-1 flex-col justify-between p-6">
                     <div>
                       {c.title && <h3 className="mb-3 text-lg text-charcoal-950 transition-colors group-hover:text-saffron-600">{c.title}</h3>}

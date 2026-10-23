@@ -21,7 +21,7 @@ const PARIVAR_PATH = '/lokmangal/parivar'
 /** Vision (New India Manifesto): its own layout (redesign, Oct 2026) */
 const VISION_PATH = '/vision'
 /** pages shown with the Stitch page header (Oct 2026): navy band or warm ivory band */
-const STITCH_HEADER: Record<string, 'navy' | 'light'> = { [INTRO_PATH]: 'navy', [FAMILY_PATH]: 'navy', [PARIVAR_PATH]: 'navy', [VISION_PATH]: 'navy', '/political-career': 'navy' }
+const STITCH_HEADER: Record<string, 'navy' | 'light'> = { [INTRO_PATH]: 'navy', [FAMILY_PATH]: 'navy', [PARIVAR_PATH]: 'navy', [VISION_PATH]: 'navy', '/political-career': 'navy', '/social-activities': 'navy' }
 
 /** Any page made in the admin under Pages (Biography, Political Career, Vision, Appeal, legal pages…), found by its address */
 export async function loader({ params }: LoaderFunctionArgs) {

@@ -51,7 +51,7 @@ try {
     return next
   })
   await documents.updateGlobal('home', { ...home, sections }, { overrideAccess: true, locale: 'all' })
-  console.log(yatra ? '✓ The Vivekananda Vichar Yatra card now shows the yatra photo.' : '! No Vivekananda Vichar Yatra card found — photo not changed.')
+  console.log(yatra ? '✓ The Vivekananda Vichar Yatra card now shows the yatra photo.' : '✓ No Vivekananda Vichar Yatra card in this section (it now shows the Social activities) — nothing to add.')
   console.log('✓ The labels on the Social initiatives photos are cleared.')
 } catch (err) {
   console.error('\n✖ Could not update the homepage:', err.message)

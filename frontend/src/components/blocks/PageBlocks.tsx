@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
+import { useLocation } from 'react-router'
 import { ArrowRight, ArrowUpRight, Download, FileText, Quote } from 'lucide-react'
 import type { Page } from '@/types/cms'
 import { cn } from '@/lib/utils'
@@ -25,22 +26,62 @@ const Heading = ({ eyebrow, heading }: { eyebrow?: string | null; heading?: stri
 type Content = Extract<PageBlock, { blockType: 'content' }>
 
 /** Stitch design: consecutive Content blocks share one row of cards; Media + text blocks become numbered chapters when there are two or more */
+/** "Yuva Sahitya Sammelan" → "yuva-sahitya-sammelan": a section's address on its page (stable when sections are reordered) */
+const anchorFor = (heading?: string | null) =>
+  (heading ?? '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+
+/**
+ * A link to a part of a page (/social-activities#yuva-sahitya-sammelan) lands on that part. The browser's own jump can come too
+ * early on phones — the long texts above it fold into "Read more" just after — so the page aims again once they have settled,
+ * unless the visitor has started scrolling by then.
+ */
+function useHashTarget() {
+  const { hash, pathname } = useLocation()
+  useEffect(() => {
+    const id = decodeURIComponent(hash.slice(1))
+    if (!id) return
+    let moved = false
+    const stop = () => (moved = true)
+    const go = () => !moved && document.getElementById(id)?.scrollIntoView({ block: 'start' })
+    window.addEventListener('wheel', stop, { passive: true, once: true })
+    window.addEventListener('touchstart', stop, { passive: true, once: true })
+    const raf = requestAnimationFrame(go)
+    const timers = [250, 700].map((ms) => window.setTimeout(go, ms))
+    return () => {
+      cancelAnimationFrame(raf)
+      timers.forEach(clearTimeout)
+      window.removeEventListener('wheel', stop)
+      window.removeEventListener('touchstart', stop)
+    }
+  }, [hash, pathname])
+}
+
 function StitchList({ blocks }: { blocks: PageBlock[] }) {
+  useHashTarget()
   const list = blocks.filter((b) => !('hidden' in b && b.hidden))
   const chapters = list.filter((b) => b.blockType === 'mediaText').length
   const groups: { key: string; node: ReactNode; anchor?: string }[] = []
   let chapter = 0
+  // each section with a heading gets an address made from it (#yuva-sahitya-sammelan), so other pages can link straight to it
+  const used = new Set<string>()
+  const anchor = (heading: string | null | undefined, i: number) => {
+    if (!heading) return undefined
+    let a = anchorFor(heading) || `s-${i}`
+    if (used.has(a)) a = `${a}-${i}`
+    used.add(a)
+    return a
+  }
   for (let i = 0; i < list.length; i++) {
     const b = list[i]
     const key = b.id ?? String(i)
     if (b.blockType === 'content') {
       const run: Content[] = [b]
       while (list[i + 1]?.blockType === 'content') run.push(list[++i] as Content)
-      groups.push({ key, node: <StitchContent blocks={run} />, anchor: b.heading ? `s-${i}` : undefined })
+      groups.push({ key, node: <StitchContent blocks={run} />, anchor: anchor(b.heading, i) })
     } else if (b.blockType === 'mediaText') {
       chapter++
-      groups.push({ key, node: <StitchChapter b={b} n={chapters > 1 ? chapter : undefined} />, anchor: b.heading ? `s-${i}` : undefined })
-    } else groups.push({ key, node: <StitchBlock b={b} />, anchor: 'heading' in b && b.heading ? `s-${i}` : undefined })
+      groups.push({ key, node: <StitchChapter b={b} n={chapters > 1 ? chapter : undefined} />, anchor: anchor(b.heading, i) })
+    } else groups.push({ key, node: <StitchBlock b={b} />, anchor: anchor('heading' in b ? b.heading : null, i) })
   }
   return (
     <div className="space-y-16 md:space-y-24">

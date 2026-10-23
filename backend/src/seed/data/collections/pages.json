@@ -1,5 +1,113 @@
 [
  {
+  "id": 11,
+  "title": {
+   "en": "Social Activities",
+   "mr": null
+  },
+  "path": "/social-activities",
+  "section": "other",
+  "menuOrder": 0,
+  "showSideMenu": false,
+  "subtitle": {
+   "en": "Social Activities — Rohan Deshmukh",
+   "mr": null
+  },
+  "bannerImage": null,
+  "layout": [
+   {
+    "id": "f957b09f83454804ceb826b6",
+    "blockType": "mediaText",
+    "eyebrow": {
+     "en": "Social Activities",
+     "mr": null
+    },
+    "heading": {
+     "en": "Entrepreneur Presentation Competition",
+     "mr": null
+    },
+    "hidden": false,
+    "image": null,
+    "imagePosition": "left",
+    "body": {
+     "en": "<p><strong>Turning young ideas into real businesses</strong></p><p>Young people have plenty of ideas, but many of those ideas never move forward simply because there is no money to start. These young people have the drive to do something big and the technical education it takes, yet a lack of funds often forces them into jobs that pay only ₹5,000 to ₹10,000 a month. The Entrepreneur Presentation Competition gives such creative and skilled youth a chance to present their business ideas to a panel of experts. Each idea is checked to see whether it can work, both financially and in terms of production, and the best presentation wins interest-free funding to start the business.</p><ul><li><strong>Participants so far:</strong> About 250 young people</li><li><strong>Prize:</strong> Interest-free funding for the winning business idea</li><li><strong>Funding given:</strong> ₹5 crore to entrepreneurs through Lokmangal Multistate</li><li><strong>Evaluation:</strong> Financial and production viability checked by experts</li></ul>",
+     "mr": null
+    }
+   },
+   {
+    "id": "1a21d6a1cdc804ac4f7c3ffc",
+    "blockType": "mediaText",
+    "eyebrow": {
+     "en": "Social Activities",
+     "mr": null
+    },
+    "heading": {
+     "en": "Chhota Udyojak – Motha Udyojak",
+     "mr": null
+    },
+    "hidden": false,
+    "image": null,
+    "imagePosition": "left",
+    "body": {
+     "en": "<p><strong>A small push for village businesses</strong></p><p>In every village, there are skilled people who keep everyday life running: the potter, the leather worker, the blacksmith, the carpenter. Their skills have been passed down through generations, and their work is what keeps the village going. They don't ask for big loans. All they want is to grow their work a little, buy a new tool, or take on a few more orders. Yet banks turn them away, and with no one influential to speak for them, they are left with nowhere to go.</p><p>Rohan Deshmukh started this scheme with these small entrepreneurs in mind. It brings village artisans and small business owners together, takes the time to understand what each one truly needs, and then provides the right financial support. For many of them, the only thing standing in the way is ₹20,000 to ₹25,000.</p><p>The response has been overwhelming. With this small support, many village entrepreneurs have grown their businesses and achieved goals that, for them, were big dreams. That is what the name means: a small entrepreneur, given the right help at the right time, can become a big one.</p><ul><li><strong>Idea by:</strong> Rohan Deshmukh</li><li><strong>For:</strong> Village artisans and small business owners</li><li><strong>Support:</strong> Need-based financial help of around ₹20,000 to ₹25,000</li><li><strong>Result:</strong> Growing businesses and stronger village economies</li></ul>",
+     "mr": null
+    }
+   },
+   {
+    "id": "d37a121b152b858263115f26",
+    "blockType": "mediaText",
+    "eyebrow": {
+     "en": "Social Activities",
+     "mr": null
+    },
+    "heading": {
+     "en": "Solapur University Youth Festival",
+     "mr": null
+    },
+    "hidden": false,
+    "image": null,
+    "imagePosition": "left",
+    "body": {
+     "en": "<p><strong>Where young talent finds its stage</strong></p><p>A youth festival is more than a celebration. For many students, it is the first time they step onto a stage and show what they can do. Solapur University was founded in 2003, and Lokmangal Foundation, together with the university, had the honour of hosting its very first Youth Festival. Lokmangal hosted it again in 2013 for the 10th edition, a milestone year for the university.</p><p>The 2013 festival was organised entirely under the leadership of Rohan Deshmukh. Thousands of students took part, yet the event ran smoothly from the first day to the last. Every detail was planned with care, every volunteer knew their role, and every task was placed in the right hands. The festival gave thousands of students a platform to perform, compete and be seen, and it showed Rohan's ability to lead a large event with discipline and attention to detail.</p><ul><li><strong>Editions Hosted:</strong> 1st (2004) and 10th (2013)</li><li><strong>Organised With:</strong> Solapur University (now Punyashlok Ahilyadevi Holkar Solapur University)</li><li><strong>Participants:</strong> Thousands of students</li><li><strong>Led By:</strong> Rohan Deshmukh (2013 edition)</li></ul>",
+     "mr": null
+    }
+   },
+   {
+    "id": "1f7afb420b60769cd94e56bc",
+    "blockType": "mediaText",
+    "eyebrow": {
+     "en": "Social Activities",
+     "mr": null
+    },
+    "heading": {
+     "en": "Yuva Sahitya Sammelan",
+     "mr": null
+    },
+    "hidden": false,
+    "image": null,
+    "imagePosition": "left",
+    "body": {
+     "en": "<p><strong>A platform for the next generation of writers</strong></p><p>Maharashtra has a rich tradition of Sahitya Sammelans, where writers, poets and readers come together to celebrate literature. Yet young people, who will carry this tradition forward, rarely had a voice on these stages. The Yuva Sahitya Sammelan was started to change that.</p><p>The first Yuva Sahitya Sammelan was held in Solapur in 2011. With 778 young participants, the event drew wide attention and showed how eager young people were to read, write and be heard. Its purpose was threefold: to build a habit of reading among the youth, to give young writers a platform they could rightfully call their own, and to bring their creativity and fresh thinking before society.</p><ul><li><strong>Year &amp; Venue:</strong> 2011, Solapur</li><li><strong>Participants:</strong> 778 young writers and readers</li><li><strong>Objective:</strong> To promote reading, support young writers and showcase youth creativity</li></ul>",
+     "mr": null
+    }
+   }
+  ],
+  "meta": {
+   "title": {
+    "en": "Social Activities",
+    "mr": null
+   },
+   "description": {
+    "en": "Rohan Deshmukh's social activities: the Entrepreneur Presentation Competition, Chhota Udyojak – Motha Udyojak, the Solapur University Youth Festival and the Yuva Sahitya Sammelan.",
+    "mr": null
+   },
+   "image": null
+  },
+  "_status": "published",
+  "createdAt": "2026-10-23T09:00:00.000Z",
+  "updatedAt": "2026-10-23T09:00:00.000Z"
+ },
+ {
   "id": 10,
   "title": {
    "en": "Disclaimer",

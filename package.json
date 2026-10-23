@@ -27,6 +27,7 @@
     "content:home-text": "npm run content:home-text -w backend",
     "content:intro-know-more": "npm run content:intro-know-more -w backend",
     "content:hero-slides": "npm run content:hero-slides -w backend",
+    "content:social-activities": "npm run content:social-activities -w backend",
     "content:update": "npm run content:update -w backend",
     "test": "npm run test -w backend",
     "lint": "npm run lint -w backend && npm run lint -w frontend",
