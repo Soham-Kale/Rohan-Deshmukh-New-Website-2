@@ -276,9 +276,9 @@ const mobileRow = 'flex min-h-12 items-center rounded-xl px-4 text-[1.02rem] fon
  * in 200 ms, a tap tints the row.
  */
 function MobileMenu({
-  id, nav, pathname, logo, menuLabel, closeLabel, contactLabel, onClose, onNavigate,
+  id, nav, pathname, logo, menuLabel, closeLabel, onClose, onNavigate,
 }: {
-  id: string; nav: NavNode[]; pathname: string; logo: ReactNode; menuLabel: string; closeLabel: string; contactLabel: string
+  id: string; nav: NavNode[]; pathname: string; logo: ReactNode; menuLabel: string; closeLabel: string
   onClose: () => void; onNavigate: () => void
 }) {
   const panel = useRef<HTMLDivElement>(null)
@@ -410,16 +410,6 @@ function MobileMenu({
           </ul>
         </nav>
 
-        <div className="shrink-0 border-t border-saffron-100 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-          <Link
-            to="/contact"
-            onClick={onNavigate}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-saffron-700 text-base font-semibold text-white transition-[background-color] hover:bg-saffron-800 active:bg-saffron-800"
-          >
-            {contactLabel}
-            <ArrowUpRight aria-hidden className="size-4" />
-          </Link>
-        </div>
       </m.div>
     </div>
   )
@@ -429,7 +419,7 @@ function MobileMenu({
 
 /**
  * Site header: a sticky ivory bar with the logo on the left and, on wide screens, plain text links (a kesariya bar marks the current section),
- * dropdowns and one Contact button; phones and tablets get a menu button that opens a drawer. The bar is solid on phones and tablets and
+ * dropdowns (no Contact button — removed Oct 2026; Contact is in the footer); phones and tablets get a menu button that opens a drawer. The bar is solid on phones and tablets and
  * lets a little blur through on desktop. Its heights (64 / 72 / 80 px) are also the `top` of the sticky tab bars under it
  * (PageBanner, SectionTabs, Blog) — change them together.
  */
@@ -483,8 +473,6 @@ export function Header() {
   }, [])
   const leaveDrawer = useCallback(() => setMobileOpen(false), [])
 
-  const contactLabel = tn('contact')
-
   return (
     <>
       <header
@@ -499,15 +487,6 @@ export function Header() {
           </Link>
 
           <DesktopNav nav={nav} pathname={pathname} />
-
-          <Link
-            to="/contact"
-            aria-current={pathname === '/contact' ? 'page' : undefined}
-            className="group ml-4 hidden h-10 shrink-0 items-center gap-1.5 rounded-xl bg-saffron-700 px-5 text-[0.92rem] font-semibold text-white transition-[background-color] hover:bg-saffron-800 lg:inline-flex xl:ml-6"
-          >
-            {contactLabel}
-            <ArrowUpRight aria-hidden className="size-4 transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </Link>
 
           <button
             ref={menuButton}
@@ -532,7 +511,6 @@ export function Header() {
             logo={<Logo siteName={siteName} logoUrl={logoUrl} logoDarkUrl={logoDarkUrl} small />}
             menuLabel={tn('menu')}
             closeLabel={tn('close')}
-            contactLabel={contactLabel}
             onClose={closeDrawer}
             onNavigate={leaveDrawer}
           />

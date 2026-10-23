@@ -94,7 +94,7 @@ export default function PostPage() {
         </div>
       </PageBanner>
 
-      <div className="container-x pb-20 pt-10 md:pb-24 md:pt-12">
+      <div className="container-x pb-20 pt-8 md:pb-24 md:pt-10">
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:gap-20">
           <article className="min-w-0 max-w-3xl">
             <Link to="/blog" className="no-print tap-pad inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:gap-3 hover:text-charcoal-900">

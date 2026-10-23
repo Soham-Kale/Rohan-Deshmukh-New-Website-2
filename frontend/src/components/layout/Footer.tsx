@@ -13,8 +13,9 @@ const HIDDEN_LEGAL = ['/privacy-policy', '/terms', '/disclaimer']
 const HIDDEN_LINKS = ['/appeal', '/about/family', '/social-work']
 
 /**
- * Footer (Stitch design, Oct 2026): deep navy with a kesariya top edge — contact details and social links
- * on the left, the footer menus from the CMS beside it, then the copyright line.
+ * Footer (official-portal layout, after supriyassule.in): deep navy with a kesariya top edge — four equal columns (contact details
+ * and social links first, then the footer menus from the CMS), then the copyright line with the legal links
+ * on the right.
  */
 export function Footer() {
   const { settings, footer } = useLayout()
@@ -26,8 +27,8 @@ export function Footer() {
   return (
     <footer className="on-dark relative z-10 border-t-4 border-saffron-500 bg-charcoal-950 pb-10 pt-16 text-white">
       <div className="container-x">
-        <div className="grid grid-cols-1 gap-10 border-b border-white/10 pb-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
-          <div className="flex flex-col items-start gap-4 lg:col-span-5">
+        <div className="grid grid-cols-1 gap-10 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <div className="flex flex-col items-start gap-4">
             <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-saffron-500">{t('contactUs')}</h4>
             {logo ? <img src={logo} alt={settings.siteName} width={200} height={52} loading="lazy" className="h-12 w-auto" /> : <span className="font-display text-xl font-bold tracking-tight text-white">{settings.siteName}</span>}
             <ul className="space-y-2.5 pt-2 text-sm text-slate-300">
@@ -64,8 +65,8 @@ export function Footer() {
             )}
           </div>
 
-          {cols.map((col, i) => (
-            <div key={col.id} className={i === cols.length - 1 && cols.length < 4 ? 'flex flex-col gap-3 lg:col-span-3' : 'flex flex-col gap-3 lg:col-span-2'}>
+          {cols.map((col) => (
+            <div key={col.id} className="flex flex-col gap-3">
               <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-saffron-500">{col.title}</h4>
               <ul className="space-y-2 text-sm text-slate-300">
                 {col.links?.filter((l) => isLiveLink(l.url) && !HIDDEN_LINKS.includes(l.url ?? '')).map((l) => (

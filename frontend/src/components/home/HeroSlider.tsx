@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { m } from 'motion/react'
 import { usePrefersReducedMotion } from '@/lib/motion'
 import { cn } from '@/lib/utils'
+import { SocialIcon } from '../ui/SocialIcon'
 
 export type Slide = {
   image: string
@@ -21,10 +22,12 @@ export type Slide = {
 
 export type HeroSocial = { key: string; url: string; label: string }
 
-const pad = (n: number) => String(n).padStart(2, '0')
 const EASE = [0.2, 0.7, 0.2, 1] as const
 
 /**
+ * Layout (after supriyassule.in): the social links as a slim vertical rail on the left edge (wide screens), the words at the bottom
+ * left and the slide markers as short dashes right under them.
+ *
  * Home hero (Oct 2026, after ashishsood.in): each slide is a full-width photo under a dark veil, with a small kesariya line,
  * a large white headline and the subheading at the bottom left (clear of the face — the photos are anchored near their top through
  * their focal point), and the slide numbers (01, 02…) stacked on the right — the current one marked with a short line. Slides cross-fade; autoplay pauses on hover, on focus, when the tab is hidden and for visitors
@@ -32,10 +35,10 @@ const EASE = [0.2, 0.7, 0.2, 1] as const
  * at the bottom there. Desktop photos are 1600 × 1067. The "Text only" hero style (admin) shows the words on navy.
  */
 export function HeroSlider({
-  slides, autoplay = 5, textOnly = false, labels,
+  slides, autoplay = 5, textOnly = false, labels, social = [],
 }: {
   slides: Slide[]; autoplay?: number; textOnly?: boolean
-  /** kept for callers: the social links are not shown in this hero */
+  /** social links, shown as a vertical rail on the left edge on wide screens */
   social?: HeroSocial[]
   place?: string
   labels?: { prev: string; next: string }
@@ -127,7 +130,7 @@ export function HeroSlider({
       )}
 
       {/* words: at the bottom left on every screen, so they sit over the shoulders / crowd and never across Rohan's face */}
-      <div className="container-x relative z-10 flex h-full items-end pb-16 pt-24 md:pb-24 md:pr-28 md:pt-16">
+      <div className={cn('container-x relative z-10 flex h-full flex-col justify-end pb-20 pt-24 md:pb-24 md:pt-16', social.length > 0 && 'lg:pl-24')}>
         <div className="grid w-full max-w-3xl">
           {slides.map((s, i) => {
             const active = i === index
@@ -169,32 +172,39 @@ export function HeroSlider({
             )
           })}
         </div>
+        {count > 1 && (
+          <ol aria-label={labels ? `${labels.prev} / ${labels.next}` : 'Slides'} className="mt-8 flex items-center gap-2 md:mt-10">
+            {slides.map((_, i) => {
+              const active = i === index
+              return (
+                <li key={i}>
+                  <button
+                    type="button"
+                    onClick={() => show(i)}
+                    aria-label={`Slide ${i + 1} of ${count}`}
+                    aria-current={active ? 'true' : undefined}
+                    className="group flex min-h-11 items-center md:min-h-6"
+                  >
+                    <span aria-hidden className={cn('block h-1 rounded-full transition-all duration-500', active ? 'w-10 bg-saffron-500' : 'w-6 bg-white/50 group-hover:bg-white')} />
+                  </button>
+                </li>
+              )
+            })}
+          </ol>
+        )}
       </div>
 
-      {/* slide numbers: stacked on the right (desktop), in a row at the top right (phones) */}
-      {count > 1 && (
-        <ol
-          aria-label={labels ? `${labels.prev} / ${labels.next}` : 'Slides'}
-          className="absolute right-4 top-4 z-20 flex gap-4 sm:right-6 md:right-10 md:top-1/2 md:-translate-y-1/2 md:flex-col md:gap-6 lg:right-14"
-        >
-          {slides.map((_, i) => {
-            const active = i === index
-            return (
-              <li key={i}>
-                <button
-                  type="button"
-                  onClick={() => show(i)}
-                  aria-label={`Slide ${i + 1} of ${count}`}
-                  aria-current={active ? 'true' : undefined}
-                  className={cn('flex min-h-11 items-center gap-3 font-display text-sm tabular-nums transition-colors md:min-h-0 md:text-base', active ? 'text-white' : 'text-white/55 hover:text-white')}
-                >
-                  <span aria-hidden className={cn('h-px bg-white transition-all duration-500', active ? 'w-6 md:w-8' : 'w-0')} />
-                  {pad(i + 1)}
-                </button>
-              </li>
-            )
-          })}
-        </ol>
+      {/* social links: a slim vertical rail on the left edge (wide screens) */}
+      {social.length > 0 && (
+        <ul aria-label="Social" className="absolute left-5 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-2.5 lg:flex xl:left-8">
+          {social.map((s) => (
+            <li key={s.key}>
+              <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="grid size-9 place-items-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-sm transition-colors hover:border-saffron-500 hover:bg-saffron-600">
+                <SocialIcon name={s.key === 'whatsappChannel' ? 'whatsapp' : s.key} className="size-4" />
+              </a>
+            </li>
+          ))}
+        </ul>
       )}
     </section>
   )

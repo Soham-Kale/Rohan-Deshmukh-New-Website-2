@@ -55,7 +55,7 @@ export default function BlogPage() {
       <Seo title={t('title')} description={t('intro')} />
       <PageBanner title={t('title')} subtitle={t('intro')} crumbs={[{ label: t('title') }]} path="/blog" variant="navy" />
 
-      <div className="container-x pb-20 pt-12 md:pb-28 md:pt-16">
+      <div className="container-x pb-20 pt-8 md:pb-28 md:pt-10">
         {/* top stories */}
         {isFront && lead && (
           <section className="pb-16 md:pb-20">

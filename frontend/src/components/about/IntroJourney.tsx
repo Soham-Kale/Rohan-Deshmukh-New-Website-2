@@ -99,12 +99,13 @@ function Profile({ hero, facts, locale }: { hero: MediaText; facts: Cards | null
           </div>
 
           {/* Inspirational Pillar Pills */}
-          <div className="relative mt-7 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-5">
-            <span className="rounded-full border border-saffron-200 bg-saffron-50/80 px-3 py-1 text-xs font-bold uppercase tracking-wider text-saffron-700">
-              {locale === 'mr' ? 'तरुणाई • उद्योजकता • स्वावलंबन' : 'Youth • Enterprise • Self-reliance'}
-            </span>
-            <span className="rounded-full border border-leaf-200 bg-leaf-50/80 px-3 py-1 text-xs font-bold uppercase tracking-wider text-leaf-700">
+          {/* each pill keeps its words on one line (phones: smaller letters so the longest still fits the card, centred); Swami Vivekananda first */}
+          <div className="relative mt-7 flex flex-wrap items-center justify-center gap-2 sm:justify-start border-t border-stone-100 pt-5">
+            <span className="whitespace-nowrap rounded-full border border-leaf-200 bg-leaf-50/80 px-2.5 py-1 text-[0.62rem] font-bold uppercase tracking-wide max-[359px]:px-2 max-[359px]:tracking-normal text-leaf-700 sm:px-3 sm:text-xs sm:tracking-wider">
               {locale === 'mr' ? 'स्वामी विवेकानंदांचे विचार' : 'Inspired by Swami Vivekananda'}
+            </span>
+            <span className="whitespace-nowrap rounded-full border border-saffron-200 bg-saffron-50/80 px-2.5 py-1 text-[0.62rem] font-bold uppercase tracking-wide max-[359px]:px-2 max-[359px]:tracking-normal text-saffron-700 sm:px-3 sm:text-xs sm:tracking-wider">
+              {locale === 'mr' ? 'तरुणाई • उद्योजकता • स्वावलंबन' : 'Youth • Enterprise • Self-reliance'}
             </span>
           </div>
         </Reveal>

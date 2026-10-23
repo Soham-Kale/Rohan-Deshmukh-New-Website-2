@@ -26,6 +26,7 @@
     "content:project-photos": "npm run content:project-photos -w backend",
     "content:home-text": "npm run content:home-text -w backend",
     "content:intro-know-more": "npm run content:intro-know-more -w backend",
+    "content:intro-education-heading": "npm run content:intro-education-heading -w backend",
     "content:hero-slides": "npm run content:hero-slides -w backend",
     "content:social-activities": "npm run content:social-activities -w backend",
     "content:update": "npm run content:update -w backend",

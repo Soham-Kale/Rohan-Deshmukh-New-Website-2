@@ -1,4 +1,5 @@
-import { ArrowRight, ArrowUpRight, Award, BookOpen, CalendarDays, Camera, Flag, GraduationCap, HandHeart, Heart, Info, Leaf, Medal, PenLine, Phone, User, Video, Vote } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Award, CircleArrowRight, Quote, BookOpen, CalendarDays, Camera, Flag, GraduationCap, HandHeart, Heart, Info, Leaf, Medal, PenLine, Phone, User, Video, Vote } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import type { Event, Home, Page, Post, Video as VideoDoc } from '@/types/cms'
 import { useLayout } from '@/lib/layout'
@@ -16,13 +17,14 @@ import { LatestList, LeadStory } from '../blog/BlogParts'
 import { FaqAccordion } from './FaqAccordion'
 import { HeroSlider } from './HeroSlider'
 import { InstagramReels } from './InstagramReels'
-import { Lift, Reveal, Stagger, StaggerItem } from '../ui/Motion'
+import { Reveal, Stagger, StaggerItem } from '../ui/Motion'
 
 type Block = NonNullable<Home['sections']>[number]
 type Of<T extends Block['blockType']> = Extract<Block, { blockType: T }>
 
 /** Extra content some homepage sections show (loaded together with the homepage, see pages/Home.tsx) */
-export type HomeExtras = { events: Event[]; posts: Post[]; foundationPage: Page | null; videos: VideoDoc[] }
+export type HomeExtras = { events: Event[]; posts: Post[]; foundationPage: Page | null; videos: VideoDoc[]; ticker?: TickerItem[] }
+export type TickerItem = { label: string; url: string }
 
 const icons = { user: User, heart: Heart, book: BookOpen, camera: Camera, video: Video, vote: Vote, pen: PenLine, phone: Phone, info: Info, flag: Flag, leaf: Leaf, award: Award }
 
@@ -34,7 +36,7 @@ export function HomeSections({ sections, extras, locale = LOCALE }: { sections: 
       {visible.map((b, i) => {
         const key = b.id ?? i
         switch (b.blockType) {
-          case 'heroSlider': return <Hero key={key} b={b} />
+          case 'heroSlider': return <Hero key={key} b={b} ticker={extras.ticker ?? []} />
           case 'quickLinks': return <QuickLinksSection key={key} b={b} />
           case 'aboutIntro': return <AboutIntroSection key={key} b={b} />
           case 'homeJourney': return <JourneySection key={key} b={b} locale={locale} />
@@ -61,10 +63,11 @@ export function HomeSections({ sections, extras, locale = LOCALE }: { sections: 
 }
 
 /**
- * Hero (Stitch design, Oct 2026): the navy slideshow band, then the New India Manifesto bar — a white card with a kesariya
- * top edge that overlaps the bottom of the band (its label, headline, one line and "Apply now").
+ * Hero (official-portal layout, after supriyassule.in): the slideshow, then the engagement bar — one wide card that overlaps the
+ * bottom of the slideshow (label, line and quote on the left, the button on the right) — and, joined to its bottom edge, a light
+ * news ticker that runs the latest articles and the Lokmangal projects from right to left (like the strip on supriyassule.in).
  */
-function Hero({ b }: { b: Of<'heroSlider'> }) {
+function Hero({ b, ticker }: { b: Of<'heroSlider'>; ticker: TickerItem[] }) {
   const { settings } = useLayout()
   const t = useTranslations('common')
   const textOnly = b.heroStyle === 'text'
@@ -89,19 +92,53 @@ function Hero({ b }: { b: Of<'heroSlider'> }) {
   return (
     <>
       <HeroSlider slides={slides} autoplay={b.autoplaySeconds ?? 5} social={social} textOnly={textOnly} labels={{ prev: t('prev'), next: t('next') }} />
-      <section className="container-x relative z-30 -mt-10">
-        <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border-t-4 border-saffron-500 bg-white p-6 shadow-[0_12px_40px_rgba(14,30,52,0.12)] transition-shadow hover:shadow-[0_16px_50px_rgba(14,30,52,0.16)] lg:flex-row lg:p-8">
-          <div className="flex max-w-3xl flex-col gap-2">
-            <span className="self-start rounded-md border border-saffron-200 bg-saffron-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-saffron-600">{t('engageEyebrow')}</span>
-            <h2 className="text-xl text-charcoal-950 lg:text-2xl">{t('engageText')}</h2>
-            <p className="text-sm leading-relaxed text-gray-600">{t('engageQuote')}</p>
+      <section className="container-x relative z-30 -mt-12 md:-mt-14">
+        <div className="overflow-hidden rounded-2xl shadow-[0_12px_40px_rgba(14,30,52,0.12)]">
+          <div className="flex flex-col items-start justify-between gap-5 border-t-4 border-saffron-500 bg-white px-6 py-5 md:flex-row md:items-center lg:gap-10 lg:px-8 lg:py-6">
+            <div className="flex min-w-0 flex-col gap-1.5 md:flex-1">
+              <span className="self-start text-xs font-bold uppercase tracking-wider text-saffron-600">{t('engageEyebrow')}</span>
+              <h2 className="text-lg leading-snug text-charcoal-950 lg:text-xl lg:[text-wrap:wrap]">{t('engageText')}</h2>
+              <p className="flex gap-2 text-sm leading-relaxed text-gray-600 lg:[text-wrap:wrap]">
+                <Quote aria-hidden className="mt-0.5 size-4 shrink-0 rotate-180 fill-saffron-500 text-saffron-500" />
+                <span>{t('engageQuote')}</span>
+              </p>
+            </div>
+            <CMSLink url="https://newindiamanifesto.com/apply/founder" newTab className="btn w-full shrink-0 md:w-auto">
+              {t('engageButton')} <ArrowRight className="size-5" />
+            </CMSLink>
           </div>
-          <CMSLink url="https://newindiamanifesto.com/apply/founder" newTab className="btn w-full shrink-0 sm:w-auto">
-            {t('engageButton')} <ArrowRight className="size-5" />
-          </CMSLink>
+          {ticker.length > 0 && <NewsTicker items={ticker} />}
         </div>
       </section>
     </>
+  )
+}
+
+/**
+ * News ticker (after the strip under the hero on supriyassule.in): a light band whose links run slowly from right to left in a
+ * loop. It stops while the pointer or keyboard focus is on it; with "reduce motion" it stands still and scrolls sideways by hand.
+ * The list is drawn twice so the loop has no gap; the second copy is hidden from screen readers and the keyboard.
+ */
+function NewsTicker({ items }: { items: TickerItem[] }) {
+  const list = (copy: boolean) => (
+    <ul aria-hidden={copy || undefined} className="flex shrink-0 items-center gap-8 pr-8">
+      {items.map((it, i) => (
+        <li key={`${it.url}-${i}`} className="shrink-0">
+          <Link to={it.url} tabIndex={copy ? -1 : undefined} className="group inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-charcoal-900 underline decoration-saffron-300 underline-offset-4 transition-colors hover:text-saffron-700 hover:decoration-saffron-600 md:min-h-10">
+            <CircleArrowRight aria-hidden className="size-4 shrink-0 text-saffron-600" />
+            {it.label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+  return (
+    <div className="ticker border-t border-saffron-100 bg-saffron-50 px-4 lg:px-6">
+      <div className="ticker-track" style={{ ['--ticker-duration' as string]: `${Math.max(30, items.length * 6)}s` }}>
+        {list(false)}
+        {list(true)}
+      </div>
+    </div>
   )
 }
 
@@ -128,27 +165,34 @@ function QuickLinksSection({ b }: { b: Of<'quickLinks'> }) {
   )
 }
 
+/**
+ * About (official-portal layout, after supriyassule.in): a band about 470px high — the words on the left (eyebrow, name with a short
+ * bar, introduction, the pledge as a quote line, two buttons), centred in the band; the portrait on the right, as tall as the band and
+ * standing on its bottom edge (no frame, no gap under it).
+ */
+/** About on phones and tablets: its own portrait of Rohan (frontend/public/images/portraits), shown in a circle */
+const MOBILE_PORTRAIT = '/images/portraits/rohan-deshmukh-kurta.webp'
+
 function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
   const img = mediaUrl(b.image, 'card')
   return (
-    <section className="container-x py-20 lg:py-28">
-      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-        {img && (
-          <Reveal className="relative order-2 lg:order-1 lg:col-span-5">
-            <div className="relative mx-auto max-w-md overflow-hidden rounded-2xl border border-saffron-100 bg-white shadow-2xl">
-              <Img media={b.image} variant="card" alt={mediaAlt(b.image, b.heading ?? '')} sizes="(max-width:1024px) 90vw, 448px" className="h-auto w-full" />
-            </div>
-          </Reveal>
-        )}
-        <Reveal className="order-1 flex flex-col items-start gap-4 lg:order-2 lg:col-span-7" delay={0.1}>
+    <section className="overflow-hidden py-12 lg:py-0">
+      <div className="container-x grid grid-cols-1 gap-8 lg:min-h-[470px] lg:grid-cols-12 lg:gap-12">
+        {/* phones and tablets: a portrait in a circle above the words (as on supriyassule.in) */}
+        <div className="mx-auto size-64 overflow-hidden rounded-full bg-gradient-to-b from-white via-cream to-saffron-200 shadow-[0_12px_30px_-12px_rgb(14_30_52/0.35)] ring-4 ring-white sm:size-72 lg:hidden">
+          {/* a different portrait from the wide-screen one: the kurta photo, hands folded, framed on the face and shoulders */}
+          <img src={MOBILE_PORTRAIT} alt="" width={288} height={288} loading="lazy" decoding="async" className="size-full object-cover" style={{ objectPosition: '50% 12%' }} />
+        </div>
+        <Reveal className="flex flex-col items-start justify-center gap-4 lg:col-span-7 lg:py-14">
           {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-          {b.heading && <h2 className="text-3xl leading-tight tracking-tight text-charcoal-950 sm:text-4xl lg:text-5xl">{b.heading}</h2>}
+          {b.heading && <h2 className="h-section sx-bar !mt-0 lg:!text-[2rem] lg:!leading-[2.4rem]">{b.heading}</h2>}
+          {b.text && <p className="text-base leading-[1.85] text-gray-700">{b.text}</p>}
           {b.pledge && (
-            <blockquote className="font-quote my-2 w-full rounded-r-2xl border-l-4 border-saffron-500 bg-gradient-to-r from-charcoal-950 to-charcoal-900 py-4 pl-6 pr-4 text-lg leading-relaxed text-white shadow-md sm:text-xl">
-              “{b.pledge}”
+            <blockquote className="font-quote flex gap-3 text-lg leading-relaxed text-charcoal-900 sm:text-xl">
+              <Quote aria-hidden className="mt-1 size-6 shrink-0 rotate-180 fill-saffron-500 text-saffron-500" />
+              <span>{b.pledge}</span>
             </blockquote>
           )}
-          {b.text && <p className="text-base leading-relaxed text-gray-700">{b.text}</p>}
           {/* quick facts as small white tiles with a kesariya label */}
           {!!b.stats?.length && (
             <Stagger as="dl" className="grid w-full grid-cols-2 gap-3 pt-2 sm:grid-cols-4">
@@ -161,11 +205,18 @@ function AboutIntroSection({ b }: { b: Of<'aboutIntro'> }) {
             </Stagger>
           )}
           {b.buttonUrl && (
-            <CMSLink url={b.buttonUrl} className="btn btn-dark mt-4">
-              {b.buttonLabel} <ArrowRight className="size-5" />
-            </CMSLink>
+            <div className="mt-2 flex w-full justify-center lg:justify-start">
+              <CMSLink url={b.buttonUrl} className="btn btn-dark">
+                {b.buttonLabel} <ArrowRight className="size-5" />
+              </CMSLink>
+            </div>
           )}
         </Reveal>
+        {img && (
+          <Reveal className="hidden items-end justify-center lg:col-span-5 lg:flex lg:pt-10" delay={0.1}>
+            <Img media={b.image} variant="card" alt={mediaAlt(b.image, b.heading ?? '')} sizes="(max-width:1024px) 80vw, 400px" className="block h-[380px] w-auto max-w-full rounded-t-2xl object-contain object-bottom sm:h-[420px] lg:h-[430px]" />
+          </Reveal>
+        )}
       </div>
     </section>
   )
@@ -206,32 +257,31 @@ function BiographySection({ b }: { b: Of<'biography'> }) {
 }
 
 /**
- * Featured video (Stitch design): a sand band, the eyebrow and the video's title, then one white card — the video on the left
- * (thumbnail until it is played), the description and the YouTube button on the right.
+ * Featured video (official-portal layout): the header row — title on the left, the YouTube link on the right — then one white
+ * card: the video on the left (thumbnail until it is played), the description on the right.
  */
 function FeaturedVideoSection({ b }: { b: Of<'featuredVideo'> }) {
   const links = b.links ?? []
+  const [first, ...more] = links
   return (
-    <section className="w-full border-y border-saffron-100 bg-cream py-20 lg:py-28">
+    <section className="section band-cream">
       <div className="container-x">
-        <Reveal className="mb-12 max-w-3xl">
-          {b.eyebrow && <p className="eyebrow mb-1">{b.eyebrow}</p>}
-          {b.heading && <h2 className="h-section">{b.heading}</h2>}
-        </Reveal>
+        <HeadRow
+          eyebrow={b.eyebrow}
+          heading={b.heading}
+          action={first ? <CMSLink url={first.url} newTab={first.newTab} className="more-link shrink-0">{first.label} <ArrowUpRight className="size-5" /></CMSLink> : null}
+        />
         <Reveal className="grid grid-cols-1 overflow-hidden rounded-2xl border border-saffron-100 bg-white shadow-xl lg:grid-cols-12">
-          <div className="flex items-center bg-charcoal-950 lg:col-span-7 [&>div]:rounded-none">
+          <div className="flex items-center bg-charcoal-950 lg:col-span-8 [&>div]:rounded-none">
             <YouTube url={b.youtubeUrl} title={null} />
           </div>
-          <div className="flex flex-col justify-between p-8 lg:col-span-5 lg:p-10">
-            <div>
-              {b.text && <p className="mb-6 text-[0.95rem] leading-relaxed text-gray-600">{b.text}</p>}
-            </div>
-            {links.length > 0 && (
-              <div className="flex flex-wrap gap-3 pt-2">
-                {links.map((l, i) => (
-                  <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className={cn('btn', i > 0 && 'btn-ghost')}>
-                    {l.label} <ArrowUpRight className="size-5" />
-                  </CMSLink>
+          <div className="flex flex-col justify-center gap-6 p-6 lg:col-span-4 lg:p-8">
+            {b.text && <p className="text-[0.95rem] leading-relaxed text-gray-600">{b.text}</p>}
+            {first && (
+              <div className="flex flex-wrap justify-center gap-3 lg:justify-start">
+                <CMSLink url={first.url} newTab={first.newTab} className="btn">{first.label} <ArrowUpRight className="size-5" /></CMSLink>
+                {more.map((l, i) => (
+                  <CMSLink key={l.id ?? i} url={l.url} newTab={l.newTab} className="btn btn-ghost">{l.label} <ArrowUpRight className="size-5" /></CMSLink>
                 ))}
               </div>
             )}
@@ -308,16 +358,20 @@ function MoreLink({ url, label }: { url?: string | null; label?: string | null; 
   )
 }
 
-/** eyebrow + heading on the left, the "more" link on the right (Stitch section header) */
-function HeadRow({ eyebrow, heading, intro, url, label }: { eyebrow?: string | null; heading?: string | null; intro?: string | null; url?: string | null; label?: string | null }) {
+/**
+ * Section header (official-portal layout, after supriyassule.in): eyebrow and title on the left with a short kesariya bar under
+ * the title, the "View all →" link on the right on the same line. `center` = the title block centred (no link beside it).
+ */
+function HeadRow({ eyebrow, heading, intro, url, label, center, action }: { eyebrow?: string | null; heading?: string | null; intro?: string | null; url?: string | null; label?: string | null; center?: boolean; action?: ReactNode }) {
+  if (!eyebrow && !heading && !intro) return null
   return (
-    <Reveal className="mb-14 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-      <div className="max-w-3xl">
+    <Reveal className={cn('sx-head', center && 'is-center')}>
+      <div className="sx-head-text">
         {eyebrow && <p className="eyebrow mb-1">{eyebrow}</p>}
         {heading && <h2 className="h-section">{heading}</h2>}
         {intro && <p className="lead">{intro}</p>}
       </div>
-      <MoreLink url={url} label={label} />
+      {!center && (action ?? <MoreLink url={url} label={label} />)}
     </Reveal>
   )
 }
@@ -327,48 +381,76 @@ const digits = (n: number, locale: Locale) => (locale === 'mr' ? String(n).repla
 const JOURNEY_ICONS = [Medal, Award, GraduationCap, HandHeart]
 
 /**
- * Journey (Stitch design): a sand band with four milestone cards joined by a kesariya-to-green line on wide screens.
- * Each card: a numbered circle and the place as a small chip, the title, the text, and a footer line with an icon
- * (the part of "Place — Subtitle" after the dash). The latest milestone is highlighted with a kesariya border.
+ * Journey (official-portal layout, after the "Political Journey" timeline on supriyassule.in): a centred heading, then the
+ * milestones along one horizontal kesariya line — numbered dots on the line, the milestones above and below it in turn.
+ * Phones and tablets get the same milestones down a vertical line. The latest milestone carries a kesariya border.
  */
 function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale }) {
   const items = b.items ?? []
   if (!items.length) return null
+  const num = (i: number) => digits(i + 1, locale).padStart(2, locale === 'mr' ? '०' : '0')
+  const card = (it: (typeof items)[number], i: number) => {
+    const last = i === items.length - 1
+    const [place, sub] = (it.place ?? '').split(/\s+[—–-]\s+/)
+    const Icon = JOURNEY_ICONS[i % JOURNEY_ICONS.length]
+    return (
+      <div className={cn('rounded-2xl bg-white p-5 shadow-sm transition-shadow hover:shadow-lg', last ? 'border-2 border-saffron-500' : 'border border-saffron-100')}>
+        {place && <p className="mb-2 text-xs font-bold uppercase tracking-wider text-saffron-600">{place}</p>}
+        {it.title && <h3 className="mb-2 text-lg leading-snug text-charcoal-950">{it.title}</h3>}
+        {it.text && <p className="text-sm leading-relaxed text-gray-600">{it.text}</p>}
+        {sub && (
+          <p className="mt-4 flex items-center gap-1.5 border-t border-gray-100 pt-3 text-xs font-bold text-charcoal-900">
+            <Icon aria-hidden className="size-4 text-saffron-600" /> {sub}
+          </p>
+        )}
+      </div>
+    )
+  }
+  const dot = (i: number) => (
+    <span className={cn('relative z-10 grid size-10 shrink-0 place-items-center rounded-full text-sm font-bold ring-4 ring-cream', i === items.length - 1 ? 'bg-saffron-600 text-white' : 'border-2 border-saffron-500 bg-white text-saffron-700')}>
+      {num(i)}
+    </span>
+  )
   return (
-    <section className="w-full border-y border-saffron-100 bg-cream py-20 lg:py-28">
+    <section className="section band-cream">
       <div className="container-x">
-        <HeadRow eyebrow={b.eyebrow} heading={b.heading} url={b.buttonUrl} label={b.buttonLabel} />
-        <div className="relative">
-          <div aria-hidden className="absolute left-12 right-12 top-7 hidden h-0.5 bg-gradient-to-r from-saffron-200 via-saffron-500 to-leaf-200 lg:block" />
-          <Stagger as="ol" className="relative z-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <HeadRow eyebrow={b.eyebrow} heading={b.heading} center />
+
+        {/* wide screens: one horizontal line, milestones above and below it in turn */}
+        <div className="relative hidden lg:block">
+          <div aria-hidden className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-gradient-to-r from-saffron-200 via-saffron-500 to-leaf-200" />
+          <ol className="relative grid gap-x-6" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`, gridTemplateRows: 'auto auto auto' }}>
             {items.map((it, i) => {
-              const last = i === items.length - 1
-              const [place, sub] = (it.place ?? '').split(/\s+[—–-]\s+/)
-              const Icon = JOURNEY_ICONS[i % JOURNEY_ICONS.length]
-              const accents = ['text-saffron-600', 'text-leaf-600', 'text-charcoal-900', 'text-saffron-600']
+              const up = i % 2 === 0
               return (
-                <StaggerItem as="li" key={it.id} className={cn('group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-white p-6 shadow-sm transition-all hover:shadow-lg', last ? 'border-2 border-saffron-500' : 'border border-saffron-100 hover:border-saffron-500')}>
-                  {last && <div aria-hidden className="absolute right-0 top-0 size-16 rounded-bl-3xl bg-saffron-500/10" />}
-                  <div>
-                    <div className="mb-4 flex flex-wrap items-center gap-3">
-                      <span className={cn('grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold', last ? 'bg-gradient-to-r from-saffron-600 to-saffron-500 text-white shadow-sm' : 'border border-saffron-200 bg-saffron-50 text-saffron-600')}>
-                        {digits(i + 1, locale).padStart(2, locale === 'mr' ? '०' : '0')}
-                      </span>
-                      {place && <span className={cn('rounded-md px-2.5 py-1 text-xs font-bold uppercase', last ? 'border border-saffron-200 bg-saffron-50 text-saffron-600' : 'bg-paper text-gray-700')}>{place}</span>}
-                    </div>
-                    {it.title && <h3 className="mb-2 text-lg text-charcoal-950">{it.title}</h3>}
-                    {it.text && <p className="text-sm leading-relaxed text-gray-600">{it.text}</p>}
+                <li key={it.id} className="contents">
+                  <div style={{ gridColumn: i + 1, gridRow: up ? 1 : 3 }} className={cn('relative flex flex-col', up ? 'justify-end pb-6' : 'pt-6')}>
+                    {/* connector: a short line from the card to its number on the timeline */}
+                    <span aria-hidden className={cn('absolute left-1/2 h-6 w-0.5 -translate-x-1/2 bg-saffron-400', up ? 'bottom-0' : 'top-0')} />
+                    <Reveal delay={i * 0.08}>{card(it, i)}</Reveal>
                   </div>
-                  {sub && (
-                    <div className={cn('mt-6 flex items-center border-t border-gray-100 pt-4 text-xs font-bold', accents[i % accents.length])}>
-                      <Icon className="mr-1.5 size-[18px]" /> {sub}
-                    </div>
-                  )}
-                </StaggerItem>
+                  <div style={{ gridColumn: i + 1, gridRow: 2 }} className="flex justify-center">
+                    {dot(i)}
+                  </div>
+                </li>
               )
             })}
-          </Stagger>
+          </ol>
         </div>
+
+        {/* phones and tablets: the same milestones down a vertical line */}
+        <ol className="relative space-y-6 lg:hidden">
+          <span aria-hidden className="absolute bottom-0 left-5 top-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-saffron-200 via-saffron-500 to-leaf-200" />
+          {items.map((it, i) => (
+            <li key={it.id} className="relative flex gap-4">
+              {/* connector: a short line from the number to its card */}
+              <span aria-hidden className="absolute left-10 top-5 h-0.5 w-4 -translate-y-1/2 bg-saffron-400" />
+              {dot(i)}
+              <div className="min-w-0 flex-1">{card(it, i)}</div>
+            </li>
+          ))}
+        </ol>
+
       </div>
     </section>
   )
@@ -400,77 +482,68 @@ function FamilySection({ b }: { b: Of<'family'> }) {
 }
 
 /**
- * Lokmangal Parivar (Stitch design): heading and introduction, five number tiles with a coloured top bar
- * (kesariya, green, navy, deep kesariya, slate), then the "more" link.
+ * Lokmangal Parivar (official-portal layout, like "Achievements & Awards" on supriyassule.in): the header row — title on the left,
+ * "Explore →" on the right — then the groups as one row of equal number tiles with a coloured top bar.
  */
 function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
   const bars = ['bg-saffron-500', 'bg-leaf-600', 'bg-charcoal-900', 'bg-saffron-600', 'bg-slate-500']
   const items = b.items ?? []
   return (
-    <section className="container-x py-20 lg:py-28">
-      <Reveal className="mb-14 max-w-3xl">
-        {b.eyebrow && <p className="eyebrow mb-1">{b.eyebrow}</p>}
-        {b.heading && <h2 className="h-section mb-3">{b.heading}</h2>}
-        {b.text && <p className="text-base leading-relaxed text-gray-700">{b.text}</p>}
-      </Reveal>
-      <Stagger as="ul" className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-6">
-        {items.map((g, i) => (
-          <StaggerItem as="li" key={g.id} className={cn('relative flex flex-col justify-between overflow-hidden rounded-2xl border border-saffron-100 bg-white p-6 shadow-sm transition-all hover:shadow-lg', i === items.length - 1 && items.length % 2 === 1 && 'col-span-2 md:col-span-1')}>
-            <div aria-hidden className={cn('absolute left-0 top-0 h-1.5 w-full', bars[i % bars.length])} />
-            <div>
+    <section className="section">
+      <div className="container-x">
+        <HeadRow eyebrow={b.eyebrow} heading={b.heading} intro={b.text} url={b.buttonUrl} label={b.buttonLabel} />
+        <Stagger as="ul" className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-5">
+          {items.map((g, i) => (
+            <StaggerItem as="li" key={g.id} className={cn('relative flex flex-col overflow-hidden rounded-2xl border border-saffron-100 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg', i === items.length - 1 && items.length % 2 === 1 && 'col-span-2 md:col-span-1')}>
+              <div aria-hidden className={cn('absolute left-0 top-0 h-1.5 w-full', bars[i % bars.length])} />
               <span className="mb-1 block font-display text-3xl font-bold text-charcoal-950 sm:text-4xl">{g.value && <CountUp value={g.value} />}</span>
               {g.title && <span className="block text-xs font-bold uppercase tracking-wider text-charcoal-900">{g.title}</span>}
-            </div>
-            {g.text && <p className="mt-3 text-xs text-gray-500">{g.text}</p>}
-          </StaggerItem>
-        ))}
-      </Stagger>
-      {b.buttonUrl && (
-        <div className="mt-8 text-center sm:text-left">
-          <MoreLink url={b.buttonUrl} label={b.buttonLabel} />
-        </div>
-      )}
+              {g.text && <p className="mt-3 text-xs text-gray-500">{g.text}</p>}
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
     </section>
   )
 }
 
 /**
- * Social initiatives (Stitch design): three white cards — photo with a label badge on it, title, text and an arrow. The middle card carries a kesariya border; badges alternate kesariya / navy / ivory.
+ * Social activities (official-portal layout, like "Press Note" on supriyassule.in): the header row — title on the left, "View all →"
+ * on the right — then one row of equal cards: photo (when there is one), a small label, the title, two lines of text, "Read more".
  */
 function HighlightsSection({ b }: { b: Of<'homeHighlights'> }) {
-  // the photos carry no label (removed Oct 2026) — the title and text below say what each one is. A card without a photo is a
-  // plain text card (Social activities, Oct 2026: photos are added later in the admin); four cards sit in one row on wide screens.
+  const t = useTranslations('common')
   const count = b.items?.length ?? 0
   return (
-    <section className="container-x py-20 lg:py-28">
-      <HeadRow eyebrow={b.eyebrow} heading={b.heading} intro={b.text} url={b.buttonUrl} label={b.buttonLabel} />
-      <Stagger as="ol" className={cn('grid grid-cols-1 gap-8', count === 4 ? 'md:grid-cols-2 lg:grid-cols-4' : count === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3')}>
-        {b.items?.map((c, i) => {
-          const img = mediaUrl(c.image, 'card')
-          return (
-            <StaggerItem as="li" key={c.id}>
-              <Lift className="h-full">
-                <CMSLink url={c.url || b.buttonUrl || '#'} className={cn('group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow hover:shadow-2xl', i === 1 ? 'border-2 border-saffron-500' : 'border border-saffron-100')}>
+    <section className="section">
+      <div className="container-x">
+        <HeadRow eyebrow={b.eyebrow} heading={b.heading} intro={b.text} url={b.buttonUrl} label={b.buttonLabel} />
+        <Stagger as="ol" className={cn('grid grid-cols-1 gap-5 sm:grid-cols-2', count >= 4 ? 'lg:grid-cols-4' : count === 3 ? 'lg:grid-cols-3' : '')}>
+          {b.items?.map((c, i) => {
+            const img = mediaUrl(c.image, 'card')
+            return (
+              <StaggerItem as="li" key={c.id}>
+                <CMSLink url={c.url || b.buttonUrl || '#'} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-saffron-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-saffron-500 hover:shadow-lg">
                   {img ? (
-                    <div className="relative h-56 w-full overflow-hidden bg-gray-100">
-                      <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" style={photoFit(c.image, 1.6)} />
+                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-100">
+                      <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" style={photoFit(c.image, 1.6)} />
+                      {c.tag && <span className="absolute bottom-3 left-3 rounded-md bg-saffron-600 px-2.5 py-1 text-xs font-bold text-white">{c.tag}</span>}
                     </div>
                   ) : (
-                    <span aria-hidden className={cn('block h-1.5 w-full', i % 2 ? 'bg-leaf-600' : 'bg-gradient-to-r from-saffron-600 to-saffron-400')} />
+                    <span aria-hidden className={cn('block h-1.5 w-full', i % 2 ? 'bg-leaf-600' : 'bg-saffron-500')} />
                   )}
-                  <div className="flex flex-1 flex-col justify-between p-6">
-                    <div>
-                      {c.title && <h3 className="mb-3 text-lg text-charcoal-950 transition-colors group-hover:text-saffron-600">{c.title}</h3>}
-                      {c.text && <p className="text-sm leading-relaxed text-gray-600">{c.text}</p>}
-                    </div>
-                    <ArrowRight aria-hidden className="mt-6 size-5 text-saffron-600 transition-transform group-hover:translate-x-1" />
+                  <div className="flex flex-1 flex-col p-5">
+                    {!img && c.tag && <p className="mb-2 text-xs font-bold uppercase tracking-wider text-saffron-600">{c.tag}</p>}
+                    {c.title && <h3 className="mb-2 text-[1.05rem] leading-snug text-charcoal-950 transition-colors group-hover:text-saffron-700">{c.title}</h3>}
+                    {c.text && <p className="line-clamp-3 text-sm leading-relaxed text-gray-600">{c.text}</p>}
+                    <span className="more-link mt-auto pt-4">{t('readMore')} <ArrowRight className="size-4" /></span>
                   </div>
                 </CMSLink>
-              </Lift>
-            </StaggerItem>
-          )
-        })}
-      </Stagger>
+              </StaggerItem>
+            )
+          })}
+        </Stagger>
+      </div>
     </section>
   )
 }
@@ -512,37 +585,40 @@ function EventsSection({ b, events: all, locale }: { b: Of<'homeEvents'>; events
 }
 
 /**
- * Vision (Stitch design): a deep navy band with a kesariya top edge and soft glows — the book cover tilted on the left
- * with a kesariya glow under it, the eyebrow, heading, text and a kesariya button on the right.
+ * Vision (official-portal layout): a deep navy band with a kesariya top edge and soft glows — the eyebrow, heading, text and a
+ * kesariya button on the left (centred on phones), the book cover standing straight on the right with a kesariya glow under it (words left, picture right,
+ * like the About block above).
  */
 function VisionSection({ b }: { b: Of<'homeVision'> }) {
   const img = mediaUrl(b.image)
   return (
-    <section className="on-dark band-navy relative w-full overflow-hidden py-20 lg:py-28">
+    <section className="section on-dark band-navy relative w-full overflow-hidden">
       <div aria-hidden className="glow-tl !right-1/4 !top-0" />
       <div aria-hidden className="glow-br" />
       <div className="container-x relative z-10">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+          <Reveal className="flex flex-col items-start gap-4 lg:col-span-7">
+            {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
+            {b.heading && <h2 className="h-section sx-bar !text-3xl leading-tight sm:!text-4xl lg:!text-[2.75rem] lg:!leading-[1.15]">{b.heading}</h2>}
+            {b.text && <p className="font-quote text-lg leading-relaxed text-slate-200">{b.text}</p>}
+            {b.buttonUrl && (
+              <div className="mt-2 flex w-full justify-center lg:justify-start">
+                <CMSLink url={b.buttonUrl} className="btn px-8">
+                  {b.buttonLabel} <ArrowRight className="size-5" />
+                </CMSLink>
+              </div>
+            )}
+          </Reveal>
           <Reveal className="flex justify-center lg:col-span-5">
             {img ? (
               <div className="group relative">
-                <div className="w-60 -rotate-2 overflow-hidden rounded-xl border border-saffron-500/40 shadow-2xl transition-transform duration-500 group-hover:rotate-0 sm:w-72">
+                <div className="w-60 overflow-hidden rounded-xl border border-saffron-500/40 shadow-2xl sm:w-72">
                   <Img media={b.image} alt={mediaAlt(b.image, b.heading ?? '')} sizes="288px" className="h-auto w-full" />
                 </div>
                 <div aria-hidden className="mx-auto mt-2 h-6 w-60 rounded-full bg-saffron-500/30 blur-xl sm:w-72" />
               </div>
             ) : (
               <BookOpen className="size-24 text-saffron-500" />
-            )}
-          </Reveal>
-          <Reveal className="flex flex-col items-start gap-4 lg:col-span-7">
-            {b.eyebrow && <p className="eyebrow">{b.eyebrow}</p>}
-            {b.heading && <h2 className="text-3xl leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">{b.heading}</h2>}
-            {b.text && <p className="font-quote text-lg leading-relaxed text-slate-200">{b.text}</p>}
-            {b.buttonUrl && (
-              <CMSLink url={b.buttonUrl} className="btn mt-2 px-8">
-                {b.buttonLabel} <ArrowRight className="size-5" />
-              </CMSLink>
             )}
           </Reveal>
         </div>
@@ -633,57 +709,46 @@ function BlogSection({ b, posts, locale }: { b: Of<'latestBlog'>; posts: Post[];
 }
 
 /**
- * Reels (Stitch design): heading on the left and "More reels on Instagram" as a white button on the right,
- * then the chosen Instagram reels as three tall cards (a swipeable row on phones), each loading only near the screen.
+ * Reels (official-portal layout, like "Stay connected with …" on supriyassule.in): a centred heading, then the chosen Instagram reels as three tall cards (a swipeable row on
+ * phones), each loading only near the screen, and the latest videos / the Facebook page when they are switched on.
  */
 function SocialSection({ b, videos: all }: { b: Of<'socialFeeds'>; videos: VideoDoc[] }) {
   const { settings } = useLayout()
-  const t = useTranslations('common')
   const videos = b.showYoutube ? all.slice(0, 3) : []
   const fb = settings.social?.facebook
-  const insta = settings.social?.instagram
   return (
-    <section className="container-x py-20 lg:py-28">
-      <Reveal className="mb-14 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div className="max-w-3xl">
-          {b.eyebrow && <p className="eyebrow mb-1">{b.eyebrow}</p>}
-          {b.heading && <h2 className="h-section">{b.heading}</h2>}
-          {b.text && <p className="lead">{b.text}</p>}
-        </div>
-        {insta && (
-          <a href={`${insta.replace(/\/$/, '')}/reels/`} target="_blank" rel="noopener noreferrer" className="btn btn-ghost shrink-0 self-start md:self-auto">
-            {t('moreReels')} <ArrowUpRight className="size-[18px]" />
-          </a>
+    <section className="section">
+      <div className="container-x">
+        <HeadRow eyebrow={b.eyebrow} heading={b.heading} intro={b.text} center />
+        {!!b.instagramPosts?.length && (
+          <Reveal>
+            <InstagramReels reels={b.instagramPosts.map((x) => ({ url: x.url, title: x.title ?? '' }))} />
+          </Reveal>
         )}
-      </Reveal>
-      {!!b.instagramPosts?.length && (
-        <Reveal>
-          <InstagramReels reels={b.instagramPosts.map((x) => ({ url: x.url, title: x.title ?? '' }))} />
-        </Reveal>
-      )}
-      {(videos.length > 0 || (fb && b.showFacebook)) && (
-        <div className={cn('mt-12 grid gap-8', fb && b.showFacebook ? 'lg:grid-cols-[1fr_380px]' : '')}>
-          {videos.length > 0 && (
-            <div className="grid gap-6 sm:grid-cols-2">
-              {videos.slice(0, 2).map((v) => <YouTube key={v.id} url={v.youtubeUrl} title={v.title} />)}
-              <Link to="/media/videos" className="btn btn-dark self-start sm:col-span-2 sm:justify-self-start">YouTube <ArrowRight className="size-4" /></Link>
-            </div>
-          )}
-          {fb && b.showFacebook && (
-            <div className="overflow-hidden rounded-2xl bg-white">
-              <iframe
-                title="Facebook"
-                loading="lazy"
-                src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=380&height=520&small_header=true&hide_cover=false&show_facepile=false`}
-                width="100%"
-                height="520"
-                style={{ border: 0 }}
-                allow="encrypted-media"
-              />
-            </div>
-          )}
-        </div>
-      )}
+        {(videos.length > 0 || (fb && b.showFacebook)) && (
+          <div className={cn('mt-12 grid gap-8', fb && b.showFacebook ? 'lg:grid-cols-[1fr_380px]' : '')}>
+            {videos.length > 0 && (
+              <div className="grid gap-6 sm:grid-cols-2">
+                {videos.slice(0, 2).map((v) => <YouTube key={v.id} url={v.youtubeUrl} title={v.title} />)}
+                <Link to="/media/videos" className="btn btn-dark self-start sm:col-span-2 sm:justify-self-start">YouTube <ArrowRight className="size-4" /></Link>
+              </div>
+            )}
+            {fb && b.showFacebook && (
+              <div className="overflow-hidden rounded-2xl bg-white">
+                <iframe
+                  title="Facebook"
+                  loading="lazy"
+                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=380&height=520&small_header=true&hide_cover=false&show_facepile=false`}
+                  width="100%"
+                  height="520"
+                  style={{ border: 0 }}
+                  allow="encrypted-media"
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </section>
   )
 }

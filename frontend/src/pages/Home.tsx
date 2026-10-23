@@ -13,13 +13,21 @@ export async function loader() {
   const blog = sections.find((s) => s.blockType === 'latestBlog')
   const postCount = Math.max(4, ((blog?.blockType === 'latestBlog' ? blog.limit : null) ?? 3) + 1)
 
-  const [events, posts, foundationPage, videos] = await Promise.all([
+  const hero = sections.some((s) => s.blockType === 'heroSlider')
+  const [events, posts, foundationPage, videos, tickerPosts, tickerInitiatives] = await Promise.all([
     has('homeEvents') ? cms.find('events', { limit: 50, sort: 'createdAt', depth: 1 }).then((r) => r.docs) : [],
     has('latestBlog') ? cms.find('posts', { limit: postCount, sort: '-publishedAt', depth: 1 }).then((r) => r.docs) : [],
     has('initiativesShowcase') ? cms.findOne('pages', { where: { path: { equals: '/lokmangal/foundation' } }, depth: 1 }) : null,
     has('socialFeeds') ? cms.find('videos', { limit: 3, sort: '-publishedAt' }).then((r) => r.docs) : [],
+    // the news ticker under the hero: the latest articles and the Lokmangal projects
+    hero ? cms.find('posts', { limit: 5, sort: '-publishedAt', depth: 0 }).then((r) => r.docs) : [],
+    hero ? cms.find('initiatives', { limit: 8, sort: 'order', depth: 0 }).then((r) => r.docs) : [],
   ])
-  const extras: HomeExtras = { events, posts, foundationPage, videos }
+  const ticker = [
+    ...tickerPosts.map((d) => ({ label: d.title, url: `/blog/${d.slug}` })),
+    ...tickerInitiatives.map((d) => ({ label: d.title, url: `/social-work/${d.slug}` })),
+  ].filter((x) => x.label)
+  const extras: HomeExtras = { events, posts, foundationPage, videos, ticker }
   return { home, extras }
 }
 

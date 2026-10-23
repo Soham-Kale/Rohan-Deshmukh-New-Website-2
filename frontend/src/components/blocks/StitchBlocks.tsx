@@ -311,7 +311,7 @@ export function StitchBlock({ b }: { b: PageBlock }): ReactNode {
             <figcaption className="flex items-center gap-4 border-t border-white/15 pt-5">
               <span aria-hidden className="h-0.5 w-10 bg-gradient-to-r from-saffron-500 to-amber-400" />
               <span className="font-display text-sm font-bold tracking-wider uppercase text-saffron-200">
-                {b.author || 'रोहन सुभाष देशमुख | Rohan Subhash Deshmukh'}
+                {b.author || 'Rohan Subhash Deshmukh'}
               </span>
             </figcaption>
           </div>
