@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { m } from 'motion/react'
 import { usePrefersReducedMotion } from '@/lib/motion'
 import { cn } from '@/lib/utils'
-import { SocialIcon } from '../ui/SocialIcon'
 
 export type Slide = {
   image: string
@@ -24,21 +23,21 @@ export type HeroSocial = { key: string; url: string; label: string }
 
 const EASE = [0.2, 0.7, 0.2, 1] as const
 
+const pad = (n: number) => String(n).padStart(2, '0')
+
 /**
- * Layout (after supriyassule.in): the social links as a slim vertical rail on the left edge (wide screens), the words at the bottom
- * left and the slide markers as short dashes right under them.
- *
- * Home hero (Oct 2026, after ashishsood.in): each slide is a full-width photo under a dark veil, with a small kesariya line,
- * a large white headline and the subheading at the bottom left (clear of the face — the photos are anchored near their top through
- * their focal point), and the slide numbers (01, 02…) stacked on the right — the current one marked with a short line. Slides cross-fade; autoplay pauses on hover, on focus, when the tab is hidden and for visitors
- * who ask their device for reduced motion. Phones get each slide's own 3:4 photo (360 × 480) and can swipe; the words sit
- * at the bottom there. Desktop photos are 1600 × 1067. The "Text only" hero style (admin) shows the words on navy.
+ * Home hero (Oct 2026, after the slider on ashishsood.in): a photo slider that fills the screen right under the header — each slide's photo
+ * fills the screen under an even dark veil, the words sit at the bottom left, under the faces: a light kesariya line in wide-spaced capitals,
+ * a large bold white headline (and the subheading when there is one) — and the slide numbers (01, 02) stand on the right, the current
+ * one marked with a short white line. Slides move in from the right while they fade (the photo settles, the words rise in after it);
+ * autoplay pauses on hover, on focus, when the tab is hidden and for visitors who ask their device for reduced motion. Phones get
+ * each slide's own phone photo when there is one and can swipe. The "Text only" hero style (admin) shows the words on navy.
  */
 export function HeroSlider({
-  slides, autoplay = 5, textOnly = false, labels, social = [],
+  slides, autoplay = 5, textOnly = false, labels,
 }: {
   slides: Slide[]; autoplay?: number; textOnly?: boolean
-  /** social links, shown as a vertical rail on the left edge on wide screens */
+  /** kept for callers: this hero shows no social links */
   social?: HeroSocial[]
   place?: string
   labels?: { prev: string; next: string }
@@ -67,11 +66,8 @@ export function HeroSlider({
 
   return (
     <section
-      className={cn(
-        'relative isolate w-full overflow-hidden bg-charcoal-950 text-white',
-        // phones: the 3:4 phone photo at full width; tablets and desktops: the 3:2 photo, never taller than the screen
-        textOnly ? 'min-h-[420px] md:min-h-[520px]' : 'aspect-[3/4] max-h-[calc(100svh-4rem)] min-h-[420px] md:aspect-[3/2] md:max-h-[calc(100svh-5rem)] md:min-h-[520px]',
-      )}
+      data-hero-overlay
+      className="relative isolate h-[460px] w-full overflow-hidden bg-charcoal-950 text-white sm:h-[540px] md:h-[600px] lg:h-[calc(100svh-5rem)] lg:max-h-[900px] lg:min-h-[560px]"
       aria-roledescription="carousel"
       aria-label="Highlights"
       onMouseEnter={() => setPaused(true)}
@@ -90,7 +86,7 @@ export function HeroSlider({
         touch.current = null
       }}
     >
-      {/* photos: all slides stacked, the current one faded in (with a very slow zoom) */}
+      {/* photos: all slides stacked; the current one slides in from the right while it fades in */}
       {textOnly ? (
         <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-charcoal-950 via-charcoal-900 to-[#12233c]" />
       ) : (
@@ -100,7 +96,10 @@ export function HeroSlider({
             <div
               key={i}
               aria-hidden={!active}
-              className={cn('absolute inset-0 transition-opacity duration-[1200ms] ease-in-out', active ? 'opacity-100' : 'opacity-0')}
+              className={cn(
+                'absolute inset-0 transition-[opacity,transform] duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-opacity',
+                active ? 'z-[1] translate-x-0 opacity-100' : 'z-0 opacity-0 motion-safe:translate-x-[8%]',
+              )}
             >
               <picture>
                 {s.mobileImage && <source media="(max-width: 767px)" srcSet={s.mobileImage} width={360} height={480} />}
@@ -112,7 +111,7 @@ export function HeroSlider({
                   loading={i === 0 ? 'eager' : 'lazy'}
                   fetchPriority={i === 0 ? 'high' : 'low'}
                   decoding="async"
-                  className={cn('absolute inset-0 size-full object-cover transition-transform ease-out', active && !stopped ? 'scale-105 duration-[8000ms]' : 'scale-100 duration-[1200ms]')}
+                  className={cn('absolute inset-0 size-full object-cover transition-transform ease-out', active && !stopped ? 'scale-105 duration-[7000ms]' : 'scale-100 duration-[1100ms]')}
                   style={{ objectPosition: s.position }}
                 />
               </picture>
@@ -121,16 +120,16 @@ export function HeroSlider({
         })
       )}
 
-      {/* the veil: even all over (as on the reference), darker at the bottom where the words sit */}
+      {/* the veil: even all over, as on the reference */}
       {!textOnly && (
         <>
-          <div aria-hidden className="absolute inset-0 bg-black/30" />
-          <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent md:from-black/70 md:via-black/15" />
+          <div aria-hidden className="absolute inset-0 z-[2] bg-black/30" />
+          <div aria-hidden className="absolute inset-0 z-[2] bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         </>
       )}
 
-      {/* words: at the bottom left on every screen, so they sit over the shoulders / crowd and never across Rohan's face */}
-      <div className={cn('container-x relative z-10 flex h-full flex-col justify-end pb-20 pt-24 md:pb-24 md:pt-16', social.length > 0 && 'lg:pl-24')}>
+      {/* words: at the bottom left, under the faces (the photos are anchored near their top), just above the card that overlaps the bottom */}
+      <div className="container-x relative z-10 flex h-full items-end pb-20 pr-16 pt-6 md:pb-24 md:pr-28 lg:pb-28">
         <div className="grid w-full max-w-3xl">
           {slides.map((s, i) => {
             const active = i === index
@@ -142,20 +141,20 @@ export function HeroSlider({
                 className={cn('[grid-area:1/1] self-end', !active && 'pointer-events-none')}
                 initial={false}
                 animate={active ? 'in' : 'out'}
-                variants={{ in: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.25 } }, out: { opacity: 0, transition: { duration: 0.35 } } }}
+                variants={{ in: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.35 } }, out: { opacity: 0, transition: { duration: 0.3 } } }}
               >
                 {s.kicker && (
                   <m.p
-                    variants={{ in: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } }, out: { opacity: 0, y: 18 } }}
-                    className="mb-3 text-[0.8rem] font-medium uppercase tracking-[0.2em] text-saffron-500 sm:text-sm md:mb-4 md:text-lg md:tracking-[0.18em]"
+                    variants={{ in: { opacity: 1, x: 0, transition: { duration: 0.8, ease: EASE } }, out: { opacity: 0, x: -30 } }}
+                    className="mb-2 text-[0.9rem] font-light uppercase tracking-[2px] text-saffron-500 sm:text-xl sm:tracking-[3px] md:mb-4 lg:text-[1.875rem] lg:leading-tight"
                   >
                     {s.kicker}
                   </m.p>
                 )}
                 {s.heading && (
                   <Heading
-                    variants={{ in: { opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE } }, out: { opacity: 0, y: 26 } }}
-                    className="font-display text-[1.85rem] font-bold leading-[1.15] tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)] sm:text-5xl lg:text-6xl"
+                    variants={{ in: { opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE } }, out: { opacity: 0, y: 30 } }}
+                    className="font-sans text-[1.6rem] font-bold capitalize leading-[1.12] tracking-[0.5px] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] sm:text-[2.5rem] sm:tracking-[1px] lg:text-[3.125rem] lg:leading-none lg:tracking-[2px]"
                   >
                     {s.heading}
                   </Heading>
@@ -172,39 +171,32 @@ export function HeroSlider({
             )
           })}
         </div>
-        {count > 1 && (
-          <ol aria-label={labels ? `${labels.prev} / ${labels.next}` : 'Slides'} className="mt-8 flex items-center gap-2 md:mt-10">
-            {slides.map((_, i) => {
-              const active = i === index
-              return (
-                <li key={i}>
-                  <button
-                    type="button"
-                    onClick={() => show(i)}
-                    aria-label={`Slide ${i + 1} of ${count}`}
-                    aria-current={active ? 'true' : undefined}
-                    className="group flex min-h-11 items-center md:min-h-6"
-                  >
-                    <span aria-hidden className={cn('block h-1 rounded-full transition-all duration-500', active ? 'w-10 bg-saffron-500' : 'w-6 bg-white/50 group-hover:bg-white')} />
-                  </button>
-                </li>
-              )
-            })}
-          </ol>
-        )}
       </div>
 
-      {/* social links: a slim vertical rail on the left edge (wide screens) */}
-      {social.length > 0 && (
-        <ul aria-label="Social" className="absolute left-5 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-2.5 lg:flex xl:left-8">
-          {social.map((s) => (
-            <li key={s.key}>
-              <a href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="grid size-9 place-items-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-sm transition-colors hover:border-saffron-500 hover:bg-saffron-600">
-                <SocialIcon name={s.key === 'whatsappChannel' ? 'whatsapp' : s.key} className="size-4" />
-              </a>
-            </li>
-          ))}
-        </ul>
+      {/* slide numbers: stacked on the right — centred in the height on wide screens, lower down on phones */}
+      {count > 1 && (
+        <ol
+          aria-label={labels ? `${labels.prev} / ${labels.next}` : 'Slides'}
+          className="absolute bottom-24 right-4 z-20 flex flex-col gap-0 sm:right-6 md:bottom-auto md:right-10 md:top-1/2 md:-translate-y-1/2 md:gap-4 lg:right-16"
+        >
+          {slides.map((_, i) => {
+            const active = i === index
+            return (
+              <li key={i}>
+                <button
+                  type="button"
+                  onClick={() => show(i)}
+                  aria-label={`Slide ${i + 1} of ${count}`}
+                  aria-current={active ? 'true' : undefined}
+                  className={cn('flex min-h-11 items-center justify-end gap-3 font-sans text-sm tabular-nums transition-colors md:min-h-8 md:text-base', active ? 'text-white' : 'text-white/55 hover:text-white')}
+                >
+                  <span aria-hidden className={cn('h-px bg-white transition-all duration-500', active ? 'w-6 md:w-9' : 'w-0')} />
+                  {pad(i + 1)}
+                </button>
+              </li>
+            )
+          })}
+        </ol>
       )}
     </section>
   )

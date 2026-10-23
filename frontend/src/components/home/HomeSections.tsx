@@ -87,6 +87,8 @@ function Hero({ b, ticker }: { b: Of<'heroSlider'>; ticker: TickerItem[] }) {
     }))
     // "Text only" hero style (admin, from the UX pass): the navy band without the photo — slides then need only words
     .filter((s) => (textOnly ? s.heading || s.kicker || s.subheading : s.image))
+    // two slides in the hero (Oct 2026)
+    .slice(0, 2)
   if (!slides.length) return null
   const social = (Object.entries(settings.social ?? {}).filter(([k, v]) => v && k !== 'id') as [string, string][]).map(([key, url]) => ({ key, url, label: socialLabels[key] ?? key }))
   return (
