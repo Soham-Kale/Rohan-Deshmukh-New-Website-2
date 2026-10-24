@@ -18,6 +18,7 @@ import { FaqAccordion } from './FaqAccordion'
 import { HeroSlider } from './HeroSlider'
 import { InstagramReels } from './InstagramReels'
 import { Reveal, Stagger, StaggerItem } from '../ui/Motion'
+import { m } from 'motion/react'
 
 type Block = NonNullable<Home['sections']>[number]
 type Of<T extends Block['blockType']> = Extract<Block, { blockType: T }>
@@ -386,6 +387,8 @@ const JOURNEY_ICONS = [Medal, Award, GraduationCap, HandHeart]
  * Journey (official-portal layout, after the "Political Journey" timeline on supriyassule.in): a centred heading, then the
  * milestones along one horizontal kesariya line — numbered dots on the line, the milestones above and below it in turn.
  * Phones and tablets get the same milestones down a vertical line. The latest milestone carries a kesariya border.
+ * Animation (Oct 2026, kept light): as the timeline scrolls into view its line draws in, the numbers pop onto it one after another
+ * and each card rises in just after its number; cards lift a little on hover. Off for visitors who ask for reduced motion.
  */
 function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale }) {
   const items = b.items ?? []
@@ -396,7 +399,7 @@ function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale })
     const [place, sub] = (it.place ?? '').split(/\s+[—–-]\s+/)
     const Icon = JOURNEY_ICONS[i % JOURNEY_ICONS.length]
     return (
-      <div className={cn('rounded-2xl bg-white p-5 shadow-sm transition-shadow hover:shadow-lg', last ? 'border-2 border-saffron-500' : 'border border-saffron-100')}>
+      <div className={cn('rounded-2xl bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg motion-reduce:hover:translate-y-0', last ? 'border-2 border-saffron-500' : 'border border-saffron-100')}>
         {place && <p className="mb-2 text-xs font-bold uppercase tracking-wider text-saffron-600">{place}</p>}
         {it.title && <h3 className="mb-2 text-lg leading-snug text-charcoal-950">{it.title}</h3>}
         {it.text && <p className="text-sm leading-relaxed text-gray-600">{it.text}</p>}
@@ -408,10 +411,17 @@ function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale })
       </div>
     )
   }
-  const dot = (i: number) => (
-    <span className={cn('relative z-10 grid size-10 shrink-0 place-items-center rounded-full text-sm font-bold ring-4 ring-cream', i === items.length - 1 ? 'bg-saffron-600 text-white' : 'border-2 border-saffron-500 bg-white text-saffron-700')}>
+  const step = (i: number) => 0.25 + i * 0.18
+  const dot = (i: number, delay = step(i)) => (
+    <m.span
+      initial={{ opacity: 0, scale: 0.4 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, amount: 0.6 }}
+      transition={{ type: 'spring', stiffness: 380, damping: 18, delay }}
+      className={cn('relative z-10 grid size-10 shrink-0 place-items-center rounded-full text-sm font-bold ring-4 ring-cream', i === items.length - 1 ? 'bg-saffron-600 text-white' : 'border-2 border-saffron-500 bg-white text-saffron-700')}
+    >
       {num(i)}
-    </span>
+    </m.span>
   )
   return (
     <section className="section band-cream">
@@ -420,7 +430,14 @@ function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale })
 
         {/* wide screens: one horizontal line, milestones above and below it in turn */}
         <div className="relative hidden lg:block">
-          <div aria-hidden className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-gradient-to-r from-saffron-200 via-saffron-500 to-leaf-200" />
+          <m.div
+            aria-hidden
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 1.1, ease: [0.2, 0.7, 0.2, 1] }}
+            className="absolute inset-x-0 top-1/2 h-0.5 origin-left -translate-y-1/2 bg-gradient-to-r from-saffron-200 via-saffron-500 to-leaf-200"
+          />
           <ol className="relative grid gap-x-6" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`, gridTemplateRows: 'auto auto auto' }}>
             {items.map((it, i) => {
               const up = i % 2 === 0
@@ -429,7 +446,7 @@ function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale })
                   <div style={{ gridColumn: i + 1, gridRow: up ? 1 : 3 }} className={cn('relative flex flex-col', up ? 'justify-end pb-6' : 'pt-6')}>
                     {/* connector: a short line from the card to its number on the timeline */}
                     <span aria-hidden className={cn('absolute left-1/2 h-6 w-0.5 -translate-x-1/2 bg-saffron-400', up ? 'bottom-0' : 'top-0')} />
-                    <Reveal delay={i * 0.08}>{card(it, i)}</Reveal>
+                    <Reveal delay={step(i) + 0.1} y={up ? 24 : -24}>{card(it, i)}</Reveal>
                   </div>
                   <div style={{ gridColumn: i + 1, gridRow: 2 }} className="flex justify-center">
                     {dot(i)}
@@ -442,13 +459,20 @@ function JourneySection({ b, locale }: { b: Of<'homeJourney'>; locale: Locale })
 
         {/* phones and tablets: the same milestones down a vertical line */}
         <ol className="relative space-y-6 lg:hidden">
-          <span aria-hidden className="absolute bottom-0 left-5 top-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-saffron-200 via-saffron-500 to-leaf-200" />
+          <m.span
+            aria-hidden
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 1.2, ease: [0.2, 0.7, 0.2, 1] }}
+            className="absolute bottom-0 left-5 top-0 w-0.5 origin-top -translate-x-1/2 bg-gradient-to-b from-saffron-200 via-saffron-500 to-leaf-200"
+          />
           {items.map((it, i) => (
             <li key={it.id} className="relative flex gap-4">
               {/* connector: a short line from the number to its card */}
               <span aria-hidden className="absolute left-10 top-5 h-0.5 w-4 -translate-y-1/2 bg-saffron-400" />
-              {dot(i)}
-              <div className="min-w-0 flex-1">{card(it, i)}</div>
+              {dot(i, 0)}
+              <Reveal className="min-w-0 flex-1" delay={0.12}>{card(it, i)}</Reveal>
             </li>
           ))}
         </ol>
@@ -510,35 +534,69 @@ function ParivarSection({ b }: { b: Of<'homeParivar'> }) {
 }
 
 /**
- * Social activities (official-portal layout, like "Press Note" on supriyassule.in): the header row — title on the left, "View all →"
- * on the right — then one row of equal cards: photo (when there is one), a small label, the title, two lines of text, "Read more".
+ * Social activities (Oct 2026): the header row — title on the left, "All social activities →" on the right — then the activities as
+ * photo cards with the number, title, tagline and "Read more" over a dark fade at the bottom. Four activities make a mosaic on wide
+ * screens (the first one large, two small, one wide); tablets show two columns and phones one row to swipe through. A card without
+ * a photo shows the words on navy. The photo zooms in slowly on hover.
  */
 function HighlightsSection({ b }: { b: Of<'homeHighlights'> }) {
   const t = useTranslations('common')
-  const count = b.items?.length ?? 0
+  const items = b.items ?? []
+  if (!items.length) return null
+  // four activities: a mosaic on wide screens — the first one large on the left, two small ones, then one wide one under them
+  const mosaic = items.length === 4
+  const place = (i: number) => (mosaic ? ['lg:col-span-2 lg:row-span-2', '', '', 'lg:col-span-2'][i] : '')
   return (
     <section className="section">
       <div className="container-x">
         <HeadRow eyebrow={b.eyebrow} heading={b.heading} intro={b.text} url={b.buttonUrl} label={b.buttonLabel} />
-        <Stagger as="ol" className={cn('grid grid-cols-1 gap-5 sm:grid-cols-2', count >= 4 ? 'lg:grid-cols-4' : count === 3 ? 'lg:grid-cols-3' : '')}>
-          {b.items?.map((c, i) => {
-            const img = mediaUrl(c.image, 'card')
+        <Stagger
+          as="ol"
+          className={cn(
+            // phones: one row to swipe through (the next card peeks in); tablets: two columns; wide screens: the mosaic
+            'no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0',
+            mosaic ? 'lg:grid-cols-4 lg:grid-rows-[repeat(2,minmax(16rem,1fr))]' : items.length === 3 ? 'lg:grid-cols-3' : '',
+          )}
+        >
+          {items.map((c, i) => {
+            const photo = !!mediaUrl(c.image, 'card')
+            const big = mosaic && i === 0
             return (
-              <StaggerItem as="li" key={c.id}>
-                <CMSLink url={c.url || b.buttonUrl || '#'} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-saffron-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-saffron-500 hover:shadow-lg">
-                  {img ? (
-                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-100">
-                      <Img media={c.image} variant="card" alt={mediaAlt(c.image, c.title ?? '')} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" style={photoFit(c.image, 1.6)} />
-                      {c.tag && <span className="absolute bottom-3 left-3 rounded-md bg-saffron-600 px-2.5 py-1 text-xs font-bold text-white">{c.tag}</span>}
-                    </div>
-                  ) : (
-                    <span aria-hidden className={cn('block h-1.5 w-full', i % 2 ? 'bg-leaf-600' : 'bg-saffron-500')} />
+              <StaggerItem as="li" key={c.id} className={cn('w-[82%] shrink-0 snap-start sm:w-auto', place(i))}>
+                <CMSLink
+                  url={c.url || b.buttonUrl || '#'}
+                  className={cn(
+                    'group relative isolate flex h-full min-h-[22rem] flex-col justify-end overflow-hidden rounded-2xl bg-charcoal-950 text-white sm:min-h-[19rem]',
+                    mosaic && 'lg:min-h-0',
                   )}
-                  <div className="flex flex-1 flex-col p-5">
-                    {!img && c.tag && <p className="mb-2 text-xs font-bold uppercase tracking-wider text-saffron-600">{c.tag}</p>}
-                    {c.title && <h3 className="mb-2 text-[1.05rem] leading-snug text-charcoal-950 transition-colors group-hover:text-saffron-700">{c.title}</h3>}
-                    {c.text && <p className="line-clamp-3 text-sm leading-relaxed text-gray-600">{c.text}</p>}
-                    <span className="more-link mt-auto pt-4">{t('readMore')} <ArrowRight className="size-4" /></span>
+                >
+                  {photo ? (
+                    <Img
+                      media={c.image}
+                      variant={big ? 'hero' : 'card'}
+                      alt={mediaAlt(c.image, c.title ?? '')}
+                      fill
+                      sizes={big ? '(max-width:640px) 82vw, (max-width:1024px) 50vw, 50vw' : '(max-width:640px) 82vw, (max-width:1024px) 50vw, 25vw'}
+                      className="-z-10 object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] motion-reduce:transition-none"
+                      // always fill the card (it is a background here), around the photo's focal point
+                      style={{ objectPosition: mediaPosition(c.image) }}
+                    />
+                  ) : (
+                    <span aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-br from-charcoal-900 via-[#12233c] to-charcoal-950" />
+                  )}
+                  {/* the fade that keeps the words readable on any photo */}
+                  <span aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-black/90 via-black/40 to-black/0 transition-opacity duration-500 group-hover:opacity-95" />
+                  <div className={cn('p-5 sm:p-6', big && 'lg:p-9')}>
+                    <p className="mb-3 flex items-center gap-2.5 text-xs font-semibold tabular-nums tracking-[0.2em] text-saffron-400">
+                      {String(i + 1).padStart(2, '0')}
+                      <span aria-hidden className="h-px w-8 bg-saffron-400/70 transition-all duration-500 group-hover:w-12" />
+                    </p>
+                    {c.title && <h3 className={cn('font-display font-bold leading-tight text-white', big ? 'text-2xl lg:text-[2.1rem]' : 'text-xl')}>{c.title}</h3>}
+                    {c.text && <p className={cn('mt-2 leading-relaxed text-white/80', big ? 'text-[0.95rem] lg:text-lg' : 'text-sm')}>{c.text}</p>}
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                      <span className="border-b border-white/40 pb-0.5 transition-colors group-hover:border-saffron-400 group-hover:text-saffron-300">{t('readMore')}</span>
+                      <ArrowUpRight aria-hidden className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-saffron-300" />
+                    </span>
                   </div>
                 </CMSLink>
               </StaggerItem>

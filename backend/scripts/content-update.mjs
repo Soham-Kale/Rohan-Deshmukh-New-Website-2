@@ -9,7 +9,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
-const steps = ['intro-education.mjs', 'home-highlights.mjs', 'restore-initiatives.mjs', 'english-text.mjs', 'project-photos.mjs', 'home-text.mjs', 'intro-know-more.mjs', 'intro-education-heading.mjs', 'hero-slides.mjs', 'social-activities.mjs']
+const steps = ['intro-education.mjs', 'home-highlights.mjs', 'restore-initiatives.mjs', 'english-text.mjs', 'project-photos.mjs', 'home-text.mjs', 'intro-know-more.mjs', 'intro-education-heading.mjs', 'hero-slides.mjs', 'social-activities.mjs', 'social-photos.mjs']
 for (const step of steps) {
   console.log(`\n▶ ${step}`)
   const { status } = spawnSync(process.execPath, [path.join(here, step)], { stdio: 'inherit' })

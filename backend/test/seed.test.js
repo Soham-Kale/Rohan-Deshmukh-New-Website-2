@@ -16,8 +16,8 @@ describe('the bundled website content', () => {
 
   it('loads completely: every document, with the same ids as the old site', async () => {
     // 235 documents / 171 photos from the old site, plus the three homepage cover photos and 186 project photos (Oct 2026)
-    assert.equal(stats.documents, 430)
-    assert.equal(stats.media, 364)
+    assert.equal(stats.documents, 432)
+    assert.equal(stats.media, 366)
     assert.equal(stats.globals, 5)
     assert.deepEqual(stats.problems, [])
     const post = (await srv.client().get('/api/posts/1?locale=en')).data
@@ -48,13 +48,20 @@ describe('the bundled website content', () => {
     assert.deepEqual(block.items.map((c) => c.title), ['Entrepreneur Presentation Competition', 'Chhota Udyojak – Motha Udyojak', 'Solapur University Youth Festival', 'Yuva Sahitya Sammelan'])
     for (const c of block.items) {
       assert.match(c.url, /^\/social-activities#[a-z-]+$/)
-      assert.equal(c.image ?? null, null)
+      assert.match(c.image?.url ?? '', /\.webp$/, `${c.title} has a photo`)
     }
     assert.ok(!JSON.stringify(home.sections).includes('/political-career'))
     const page = (await srv.client().get('/api/pages?where[path][equals]=/social-activities&locale=en')).data.docs[0]
     assert.equal(page._status, 'published')
     assert.deepEqual(page.layout.map((b) => b.heading), block.items.map((c) => c.title))
     assert.match(page.layout[2].body, /Rohan Deshmukh \(2013 edition\)/)
+  })
+
+  it('the homepage Journey section has no "From Solapur to the world" line above its heading', async () => {
+    const home = (await srv.client().get('/api/globals/home?locale=en')).data
+    const journey = home.sections.find((s) => s.blockType === 'homeJourney')
+    assert.equal(journey.heading, 'Journey')
+    assert.ok(!journey.eyebrow)
   })
 
   it('is not empty afterwards, and clearContent empties it again', async () => {

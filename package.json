@@ -30,6 +30,7 @@
     "content:lokmangal-projects": "npm run content:lokmangal-projects -w backend --",
     "content:hero-slides": "npm run content:hero-slides -w backend",
     "content:social-activities": "npm run content:social-activities -w backend",
+    "content:social-photos": "npm run content:social-photos -w backend",
     "content:update": "npm run content:update -w backend",
     "test": "npm run test -w backend",
     "lint": "npm run lint -w backend && npm run lint -w frontend",

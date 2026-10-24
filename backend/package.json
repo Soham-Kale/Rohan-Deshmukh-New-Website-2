@@ -27,6 +27,7 @@
     "content:lokmangal-projects": "node scripts/lokmangal-projects.mjs",
     "content:hero-slides": "node scripts/hero-slides.mjs",
     "content:social-activities": "node scripts/social-activities.mjs",
+    "content:social-photos": "node scripts/social-photos.mjs",
     "content:update": "node scripts/content-update.mjs",
     "test": "node --test --test-concurrency=1 \"test/*.test.js\"",
     "lint": "eslint .",

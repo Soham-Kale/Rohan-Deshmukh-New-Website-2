@@ -1,6 +1,7 @@
 /**
  * Brings two homepage texts in line with the bundled content (Oct 2026):
- *   - Home → Journey section: heading "His Journey" → "Journey", first point "His journey began…" → "Journey began…"
+ *   - Home → Journey section: heading "His Journey" → "Journey", first point "His journey began…" → "Journey began…",
+ *     and the small line above the heading, "From Solapur to the world", is removed (Oct 2026)
  *   - Site settings → tagline: the new line from the bundled content
  *
  *   npm run content:home-text
@@ -25,6 +26,7 @@ try {
   const { id: _h, createdAt: _hc, updatedAt: _hu, ...home } = await documents.getGlobalRaw('home')
   const journey = (home.sections ?? []).find((s) => s.blockType === 'homeJourney')
   if (journey?.heading?.en === 'His Journey') { journey.heading.en = 'Journey'; changed++ }
+  if (journey?.eyebrow?.en === 'From Solapur to the world') { journey.eyebrow = { en: null, mr: null }; changed++ }
   const first = journey?.items?.[0]?.text
   if (first?.en?.startsWith('His journey began')) { first.en = first.en.replace(/^His journey began/, 'Journey began'); changed++ }
   if (changed) await documents.updateGlobal('home', home, { overrideAccess: true, locale: 'all' })

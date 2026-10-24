@@ -108,8 +108,8 @@
       "blockType": "homeJourney",
       "hidden": false,
       "eyebrow": {
-        "en": "From Solapur to the world",
-        "mr": "सोलापूर ते जग"
+        "en": null,
+        "mr": null
       },
       "heading": {
         "en": "Journey",
@@ -202,7 +202,7 @@
       "items": [
         {
           "id": "1d0660dfa7b3a9c1553e244b",
-          "image": null,
+          "image": 251,
           "tag": {
             "en": null,
             "mr": null
@@ -219,7 +219,7 @@
         },
         {
           "id": "18048f0788c8e58c4a5b00b9",
-          "image": null,
+          "image": 365,
           "tag": {
             "en": null,
             "mr": null
@@ -236,7 +236,7 @@
         },
         {
           "id": "af577b74f2a0ae003c4fdea4",
-          "image": null,
+          "image": 52,
           "tag": {
             "en": null,
             "mr": null
@@ -253,7 +253,7 @@
         },
         {
           "id": "812e43c47d2b8faa5ad24ed5",
-          "image": null,
+          "image": 366,
           "tag": {
             "en": null,
             "mr": null

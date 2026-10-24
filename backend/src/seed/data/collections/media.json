@@ -7642,5 +7642,47 @@
   "folder": null,
   "createdAt": "2026-10-22T12:02:12.000Z",
   "updatedAt": "2026-10-22T12:02:12.000Z"
+ },
+ {
+  "id": 365,
+  "alt": {
+   "en": "A local entrepreneur receives his new vehicle, bought with a Lokmangal Bank loan",
+   "mr": null
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "social-small-business.webp",
+  "mimeType": "image/webp",
+  "filesize": 171348,
+  "width": 1104,
+  "height": 578,
+  "focalX": 45,
+  "focalY": 40,
+  "folder": null,
+  "createdAt": "2026-10-24T05:30:00.000Z",
+  "updatedAt": "2026-10-24T05:30:00.000Z"
+ },
+ {
+  "id": 366,
+  "alt": {
+   "en": "Lokmangal Literature Award ceremony",
+   "mr": null
+  },
+  "caption": {
+   "en": null,
+   "mr": null
+  },
+  "filename": "social-literature-stage.webp",
+  "mimeType": "image/webp",
+  "filesize": 53166,
+  "width": 750,
+  "height": 564,
+  "focalX": 50,
+  "focalY": 50,
+  "folder": null,
+  "createdAt": "2026-10-24T05:30:00.000Z",
+  "updatedAt": "2026-10-24T05:30:00.000Z"
  }
 ]
